@@ -55,7 +55,7 @@ struct SignInView: View {
                 Spacer()
                     .frame(height: 16)
                 Button {
-                    print("login")
+                    transitionToMainTabView()
                 } label: {
                     Text("로그인하지 않고 둘러보기")
                         .font(.system(size: 14))
@@ -70,6 +70,20 @@ struct SignInView: View {
         .ignoresSafeArea()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.Common.primaryTintColor)
+    }
+}
+
+extension SignInView {
+    private func transitionToMainTabView() {
+        guard let window = UIApplication.shared.keyWindow else { return }
+        
+        let transition = CATransition()
+        transition.type = .fade
+        transition.duration = 0.2
+        window.layer.add(transition, forKey: kCATransition)
+        
+        window.rootViewController = UIHostingController(rootView: MainTabView())
+        window.makeKeyAndVisible()
     }
 }
 
@@ -175,7 +189,7 @@ struct AppleSignInButton: View {
     }
 }
 
-struct HomeView_Previews: PreviewProvider {
+struct SignInView_Previews: PreviewProvider {
     static var previews: some View {
         SignInView(viewModel: SignInViewModel())
     }
