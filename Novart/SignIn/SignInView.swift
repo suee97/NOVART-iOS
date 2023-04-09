@@ -17,7 +17,7 @@ struct SignInView: View {
     var body: some View {
         VStack(alignment: .center) {
             Spacer()
-                .frame(height: 144)
+                .frame(height: 174)
             
             // top logo
             Group {
@@ -27,12 +27,23 @@ struct SignInView: View {
                     .padding(.leading, 84)
                     .padding(.trailing, 84)
                 Spacer()
-                    .frame(height: 32)
-                Text("'예술작품부터 인테리어까지! 종합 중개 플랫폼'")
+                    .frame(height: 40)
+                
+                Text("나만의 새로운 작품")
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(Color.white)
+                
+                Spacer()
+                    .frame(height: 16)
+                
+                Text("예술작품 중개 플랫폼\n예술작품에서 인테리어까지!")
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(Color.white)
             }
             Spacer()
+                .frame(height: 56)
             
             // bottom buttons
             Group {
@@ -65,7 +76,6 @@ struct SignInView: View {
                 .buttonStyle(NoHighlightButtonStyle())
             }
             Spacer()
-                .frame(height: 131)
         }
         .ignoresSafeArea()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
