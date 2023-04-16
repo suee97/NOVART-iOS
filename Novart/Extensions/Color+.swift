@@ -10,6 +10,10 @@ import SwiftUI
 extension Color {
     enum Common {
         static let primaryTintColor = Color("primary_tint_color")
+        static let subtextColor = Color("subtext_color")
+        static let primaryTextColor = Color("primary_text_color")
+        static let primaryDarkTextColor = Color("primary_dark_text_color")
+        static let subtextDarkColor = Color("subtext_dark_color")
     }
 }
 

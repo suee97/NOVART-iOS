@@ -112,7 +112,7 @@ struct SignInButtonStack: View {
 struct KakaoSignInButton: View {
     var body: some View {
         Button {
-            print("apple")
+            print("kakao")
         } label: {
             ZStack {
                 HStack {

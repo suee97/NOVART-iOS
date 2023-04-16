@@ -16,6 +16,7 @@ struct NovartApp: App {
     init() {
         configureKakaoSignIn()
         configureGoogleSignIn()
+        configureBarAppearance()
     }
     
     var body: some Scene {
@@ -36,5 +37,20 @@ struct NovartApp: App {
     private func configureGoogleSignIn() {
         let signInConfig = GIDConfiguration.init(clientID: "937960757565-2verfe9hqvo4jrkfo9oenuukqtatpt7b.apps.googleusercontent.com")
         GIDSignIn.sharedInstance.configuration = signInConfig
+    }
+    
+    private func configureBarAppearance() {
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.configureWithOpaqueBackground()
+        navBarAppearance.backgroundColor = .white
+        navBarAppearance.shadowColor = .clear
+        UINavigationBar.appearance().standardAppearance = navBarAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+        
+        let tabbarAppearance = UITabBarAppearance()
+        tabbarAppearance.configureWithOpaqueBackground()
+        tabbarAppearance.backgroundColor = .white
+        UITabBar.appearance().standardAppearance = tabbarAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabbarAppearance
     }
 }
