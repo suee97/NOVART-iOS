@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ArtistIntroView: View {
     
-    let items = Array(0..<5)
+    let items = Array(0..<3)
     
     var body: some View {
         LazyVStack(spacing: 0) {

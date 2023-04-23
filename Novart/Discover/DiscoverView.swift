@@ -9,7 +9,26 @@ import SwiftUI
 
 struct DiscoverView: View {
     var body: some View {
-        Text("Discover")
+        GeometryReader { geometry in
+            ZStack(alignment: .bottom) {
+                VStack(alignment: .center, spacing: 0) {
+                    CategoryFilterView()
+                        .frame(width: geometry.size.width, height: 54)
+                    Rectangle()
+                        .frame(width: geometry.size.width, height: 1)
+                        .foregroundColor(.Common.subtextColor)
+                    ProductGridView()
+                }
+                
+                Button {
+                    print("add")
+                } label: {
+                    Image("add_product_button")
+                }
+                .padding(.bottom, 16)
+
+            }
+        }
     }
 }
 

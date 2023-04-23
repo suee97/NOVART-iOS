@@ -13,10 +13,6 @@ struct MainTabView: View {
     
     var body: some View {
         TabView(selection: $selection) {
-
-            
-            
-            
             NavigationView {
                 
                 ZStack(alignment: .top) {
@@ -27,34 +23,39 @@ struct MainTabView: View {
                     }
                     
                     VStack {
-                        customNavigationBar
+                        homeNavigationBar
                         Spacer()
                     }
                 }
                 .navigationBarHidden(true)
                 
-        
-//                    .toolbar {
-//                        ToolbarItemGroup(placement: .navigationBarTrailing) {
-//                            notiItem
-//                            searchItem
-//
-//                        }
-//                        ToolbarItem(placement: .navigationBarLeading) {
-//                            titleImage
-//                        }
-//                    }
             }
             .tabItem {
                 Image(selection == 0 ? "home_icon_selected" : "home_icon_deselected")
             }
             .tag(0)
             
-            DiscoverView()
-                .tabItem {
-                    Image(selection == 1 ? "discover_icon_selected" : "discover_icon_deselected")
+            
+            NavigationView {
+                
+                ZStack(alignment: .top) {
+                    VStack {
+                        Spacer()
+                            .frame(height: 63)
+                        DiscoverView()
+                    }
+                    
+                    VStack {
+                        discoverNavigationBar
+                        Spacer()
+                    }
                 }
-                .tag(1)
+                .navigationBarHidden(true)
+            }
+            .tabItem {
+                Image(selection == 1 ? "discover_icon_selected" : "discover_icon_deselected")
+            }
+            .tag(1)
             
             MyPageView()
                 .tabItem {
@@ -64,7 +65,7 @@ struct MainTabView: View {
         }
     }
     
-    var customNavigationBar: some View {
+    var homeNavigationBar: some View {
         VStack(spacing: 0) {
             Spacer()
             HStack(spacing: 0) {
@@ -79,6 +80,33 @@ struct MainTabView: View {
                     .frame(width: 24)
             }
             .background(Color.white)
+            .frame(height: 23)
+            Spacer()
+                .frame(height: 20)
+        }
+        .frame(height: 63) // Adjust the height of the custom navigation bar
+        
+    }
+    
+    var discoverNavigationBar: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            ZStack {
+                HStack(spacing: 0) {
+                    Spacer()
+
+                    notiItem
+                    searchItem
+                    
+                    Spacer()
+                        .frame(width: 24)
+                }
+                .background(Color.white)
+                .frame(height: 23)
+                Text("둘러보기")
+                    .foregroundColor(Color.Common.primaryDarkTextColor)
+                    .font(.system(size: 16, weight: .bold))
+            }
             Spacer()
                 .frame(height: 20)
         }

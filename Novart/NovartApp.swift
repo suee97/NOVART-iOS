@@ -49,7 +49,7 @@ struct NovartApp: App {
         
         let tabbarAppearance = UITabBarAppearance()
         tabbarAppearance.configureWithOpaqueBackground()
-        tabbarAppearance.backgroundColor = .white
+        tabbarAppearance.backgroundColor = UIColor(named: "primary_text_color")
         UITabBar.appearance().standardAppearance = tabbarAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabbarAppearance
     }

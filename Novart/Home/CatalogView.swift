@@ -70,22 +70,3 @@ struct CatalogView_Previews: PreviewProvider {
         CatalogView()
     }
 }
-
-//
-//let data = (1...10).map { "Item \($0)" }
-//
-//var body: some View {
-//    ScrollView(.horizontal, showsIndicators: false) {
-//        LazyHStack(spacing: 14) {
-//               Spacer()
-//                .frame(width: 10, height: 260)
-//            ForEach(data, id: \.self) { _ in
-//                Image("mock_chair")
-//                    .resizable()
-//                    .frame(width: 260, height: 260)
-//                    .aspectRatio(contentMode: .fill)
-//                    .cornerRadius(8)
-//            }
-//        }
-//    }
-//}
