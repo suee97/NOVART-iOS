@@ -32,7 +32,7 @@ struct HomeView: View {
                         .frame(height: 54)
                     
                     ArtistIntroView()
-                        .frame(height: 645)
+                        .frame(height: 415)
                 }
                 .navigationBarTitleDisplayMode(.inline)
             }
