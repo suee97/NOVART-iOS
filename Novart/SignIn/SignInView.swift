@@ -62,7 +62,7 @@ struct SignInView: View {
                 .padding(.trailing, 24)
                 Spacer()
                     .frame(height: 24)
-                SignInButtonStack()
+                signInButtonStack
                 Spacer()
                     .frame(height: 16)
                 Button {
@@ -80,39 +80,18 @@ struct SignInView: View {
         .ignoresSafeArea()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.Common.primaryTintColor)
-    }
-}
-
-extension SignInView {
-    private func transitionToMainTabView() {
-        guard let window = UIApplication.shared.keyWindow else { return }
-        
-        let transition = CATransition()
-        transition.type = .fade
-        transition.duration = 0.2
-        window.layer.add(transition, forKey: kCATransition)
-        
-        window.rootViewController = UIHostingController(rootView: MainTabView())
-        window.makeKeyAndVisible()
-    }
-}
-
-struct SignInButtonStack: View {
-    var body: some View {
-        VStack(alignment: .center, spacing: 8) {
-            KakaoSignInButton()
-            GoogleSignInButton()
-            AppleSignInButton()
+        .onChange(of: viewModel.signInResult) { success in
+            if success {
+                transitionToMainTabView()
+            }
         }
-        .padding(.leading, 24)
-        .padding(.trailing, 24)
     }
-}
-
-struct KakaoSignInButton: View {
-    var body: some View {
+    
+    
+    
+    var kakaoSignInButton: some View {
         Button {
-            print("kakao")
+            viewModel.signIn(with: .kakao)
         } label: {
             ZStack {
                 HStack {
@@ -137,12 +116,10 @@ struct KakaoSignInButton: View {
         }
         .buttonStyle(NoHighlightButtonStyle())
     }
-}
-
-struct GoogleSignInButton: View {
-    var body: some View {
+    
+    var googleSignInButton: some View {
         Button {
-            print("google")
+            viewModel.signIn(with: .google)
         } label: {
             ZStack {
                 HStack {
@@ -167,10 +144,8 @@ struct GoogleSignInButton: View {
         }
         .buttonStyle(NoHighlightButtonStyle())
     }
-}
-
-struct AppleSignInButton: View {
-    var body: some View {
+    
+    var appleSignInButton: some View {
         Button {
             print("apple")
         } label: {
@@ -196,6 +171,31 @@ struct AppleSignInButton: View {
             }
         }
         .buttonStyle(NoHighlightButtonStyle())
+    }
+    
+    var signInButtonStack: some View {
+        VStack(alignment: .center, spacing: 8) {
+            kakaoSignInButton
+            googleSignInButton
+            appleSignInButton
+        }
+        .padding(.leading, 24)
+        .padding(.trailing, 24)
+    }
+    
+}
+
+extension SignInView {
+    private func transitionToMainTabView() {
+        guard let window = UIApplication.shared.keyWindow else { return }
+        
+        let transition = CATransition()
+        transition.type = .fade
+        transition.duration = 0.2
+        window.layer.add(transition, forKey: kCATransition)
+        
+        window.rootViewController = UIHostingController(rootView: MainTabView())
+        window.makeKeyAndVisible()
     }
 }
 
