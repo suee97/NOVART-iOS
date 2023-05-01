@@ -5,18 +5,13 @@
 //  Created by Jinwook Huh on 2023/04/02.
 //
 
+import Combine
 import SwiftUI
 import GoogleSignIn
 
-enum SignInType {
-    case kakao
-    case google
-}
-
 class SignInViewModel: ObservableObject {
     
-    @Published var email: String? = ""
-    @Published var userID: String? = ""
+    @Published var signInResult: Bool = false
     
     var interactor: SignInInteractor = SignInInteractor()
     
@@ -24,27 +19,30 @@ class SignInViewModel: ObservableObject {
     }
 
     
-    func signIn(with type: SignInType){
+    func signIn(with type: SignInProvider){
         
         switch type {
         case .kakao:
             Task { @MainActor in
                 do {
-                    let user = try await interactor.performKakaoSignIn()
-                    self.email = user.kakaoAccount?.email
-                    self.userID = "\(user.id ?? 0)"
+                    let authToken = try await interactor.performKakaoSignIn()
+                    let accessToken = authToken.accessToken
+                    try await interactor.signInToServer(accessToken: accessToken, provider: .kakao)
+                    signInResult = true
                 } catch {
-                    
+                    signInResult = false
                 }
             }
         case .google:
             Task { @MainActor in
                 do {
                     let result = try await interactor.performGoogleSignIn()
-                    self.email = result.user.profile?.email
-                    self.userID = result.user.userID
+                    let accessToken = result.user.accessToken.tokenString
+                    try await interactor.signInToServer(accessToken: accessToken, provider: .google)
+                    signInResult = true
                 } catch {
                     print(error)
+                    signInResult = false
                 }
             }
 

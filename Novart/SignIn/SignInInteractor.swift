@@ -10,6 +10,11 @@ import KakaoSDKAuth
 import KakaoSDKUser
 import SwiftUI
 
+enum SignInProvider: String {
+    case kakao
+    case google
+}
+
 final class SignInInteractor {
     
     @MainActor
@@ -18,25 +23,8 @@ final class SignInInteractor {
         return try await GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController)
     }
     
-    func performKakaoSignIn() async throws -> User {
-        _ = try await signInToKakaoTalk()
-        return try await withCheckedThrowingContinuation({
-                (continuation: CheckedContinuation<User, Error>) in
-            UserApi.shared.me { user, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                }
-                
-                if let user = user {
-                    continuation.resume(returning: user)
-                } else {
-                    continuation.resume(throwing: ServiceError.kakaoTalkLoginUnavailable)
-                }
-            }
-        })
-    }
-    
-    private func signInToKakaoTalk() async throws -> OAuthToken {
+    @MainActor
+    func performKakaoSignIn() async throws -> OAuthToken {
         return try await withCheckedThrowingContinuation({
                 (continuation: CheckedContinuation<OAuthToken, Error>) in
             if (UserApi.isKakaoTalkLoginAvailable()) {
@@ -55,6 +43,14 @@ final class SignInInteractor {
                 continuation.resume(throwing: ServiceError.kakaoTalkLoginUnavailable)
             }
         })
+    }
+    
+    func signInToServer(accessToken: String, provider: SignInProvider) async throws {
+        let signInResponse = try await APIClient.signIn(accessToken: accessToken, provider: provider.rawValue)
+        guard let token = signInResponse.data else { return }
+        KeychainService.shared.saveAccessToken(token.accessToken)
+        KeychainService.shared.saveRefreshToken(token.refreshToken)
+        print("access token success!")
     }
 }
 
