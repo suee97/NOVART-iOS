@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct CatalogItem: View {
     
@@ -17,9 +18,18 @@ struct CatalogItem: View {
     
     var body: some View {
         ZStack {
-            Image("mock_home_poster")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
+            if let imageUrl = item.imageUrl, let url = URL(string: imageUrl) {
+                KFImage(url)
+                    .placeholder {
+                        Image("mock_home_poster")
+                    }
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } else {
+                Image("mock_home_poster")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            }
             
             Image("catalog_dim")
                 .resizable()
