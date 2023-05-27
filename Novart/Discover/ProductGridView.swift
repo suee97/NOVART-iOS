@@ -20,8 +20,10 @@ struct ProductGridView: View {
                 
                 LazyVGrid(columns: columns, spacing: 40) {
                     ForEach(0..<8) { _ in
-                        ProductGridItem()
-                            .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 73)
+                        NavigationLink(destination: ProductDetailView()) {
+                            ProductGridItem()
+                                .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 73)
+                        }
 
                     }
                 }

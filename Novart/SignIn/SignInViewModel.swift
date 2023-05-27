@@ -28,6 +28,7 @@ class SignInViewModel: ObservableObject {
                     let authToken = try await interactor.performKakaoSignIn()
                     let accessToken = authToken.accessToken
                     try await interactor.signInToServer(accessToken: accessToken, provider: .kakao)
+                    try await interactor.getUserInfo()
                     signInResult = true
                 } catch {
                     signInResult = false

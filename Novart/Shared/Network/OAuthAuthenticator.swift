@@ -30,7 +30,7 @@ class OAuthAuthenticator: Authenticator {
     
     func apply(_ credential: OAuthCredential, to urlRequest: inout URLRequest) {
         if let accessToken = credential.accessToken {
-            urlRequest.headers.add(name: HTTPHeaderField.authentication.rawValue, value: accessToken)
+            urlRequest.headers.add(name: HTTPHeaderField.authentication.rawValue, value: "Bearer \(accessToken)")
         }
     }
     
