@@ -13,6 +13,7 @@ import SwiftUI
 struct SignInView: View {
     
     @ObservedObject var viewModel: SignInViewModel
+    @State private var shouldShowSetNicknameView = false
     
     var body: some View {
         VStack(alignment: .center) {
@@ -81,10 +82,17 @@ struct SignInView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.Common.primaryTintColor)
         .onChange(of: viewModel.signInResult) { success in
-            if success {
+            guard success else { return }
+            if AuthProperties.shared.isInitialSignUp {
+                shouldShowSetNicknameView = true
+            } else {
                 transitionToMainTabView()
             }
         }
+        .navigationBarHidden(true)
+        .background(
+            NavigationLink("", destination: SetNameView(), isActive: $shouldShowSetNicknameView).opacity(0)
+        )
     }
     
     

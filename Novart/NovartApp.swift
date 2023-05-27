@@ -21,12 +21,14 @@ struct NovartApp: App {
     
     var body: some Scene {
         WindowGroup {
-            SignInView(viewModel: SignInViewModel())
-                .onOpenURL { url in
-                    if (AuthApi.isKakaoTalkLoginUrl(url)) {
-                        _ = AuthController.handleOpenUrl(url: url)
-                    }
+            NavigationView {
+                SignInView(viewModel: SignInViewModel())
+            }
+            .onOpenURL { url in
+                if (AuthApi.isKakaoTalkLoginUrl(url)) {
+                    _ = AuthController.handleOpenUrl(url: url)
                 }
+            }
         }
     }
     

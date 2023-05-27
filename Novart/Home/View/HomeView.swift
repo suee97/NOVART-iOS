@@ -5,15 +5,19 @@
 //  Created by Jinwook Huh on 2023/04/09.
 //
 
+import Combine
 import SwiftUI
 
 struct HomeView: View {
+    
+    @ObservedObject var viewModel = HomeViewModel()
+
     var body: some View {
         
         GeometryReader { geometry in
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
-                    CatalogView()
+                    CatalogView(items: viewModel.catalogItems)
                         .frame(width: geometry.size.width, height: 590)
                     
                     SectionHeaderView(title: "인기 예술품", isLogoEnabled: true)
@@ -37,6 +41,9 @@ struct HomeView: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
 
+        }
+        .onAppear {
+            viewModel.fetchHomeItems()
         }
     }
 }

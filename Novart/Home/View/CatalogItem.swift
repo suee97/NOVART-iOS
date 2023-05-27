@@ -8,6 +8,13 @@
 import SwiftUI
 
 struct CatalogItem: View {
+    
+    let item: CatalogItemModel
+    
+    init(item: CatalogItemModel) {
+        self.item = item
+    }
+    
     var body: some View {
         ZStack {
             Image("mock_home_poster")
@@ -23,7 +30,7 @@ struct CatalogItem: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Spacer()
                     
-                    Text("졸업 전시")
+                    Text(tagName(type: item.category))
                         .font(.system(size: 12, weight: .regular))
                         .padding([.leading, .trailing], 8)
                         .padding([.top, .bottom], 4)
@@ -35,12 +42,12 @@ struct CatalogItem: View {
                                 .stroke(Color(hex: "999999"), lineWidth: 1)
                         )
                     
-                    Text("서울과학기술대학교\n제40회 디자인학과 산업디자인전공")
+                    Text(item.name ?? "")
                         .font(.system(size: 20, weight: .bold))
                         .lineSpacing(4)
                         .foregroundColor(Color.white)
                     
-                    Text("기간ㅣ2023.12.06~2023.12.21\n위치ㅣ서울과학기술대학교 100주년기념관 목산갤러리")
+                    Text("기간ㅣ\(item.duration ?? "미정")\n위치ㅣ\(item.location ?? "미정")")
                         .font(.system(size: 12, weight: .regular))
                         .lineSpacing(4)
                         .foregroundColor(Color.Common.subtextColor)
@@ -60,8 +67,15 @@ struct CatalogItem: View {
     }
 }
 
-struct CatalogItem_Previews: PreviewProvider {
-    static var previews: some View {
-        CatalogItem()
+extension CatalogItem {
+    private func tagName(type: CatalogCategory) -> String {
+        switch type {
+        case .art:
+            return "작품"
+        case .artist:
+            return "작가"
+        case .graduation:
+            return "졸업 전시"
+        }
     }
 }

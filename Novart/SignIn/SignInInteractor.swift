@@ -52,6 +52,18 @@ final class SignInInteractor {
         KeychainService.shared.saveRefreshToken(token.refreshToken)
         print("access token success!")
     }
+    
+    func getUserInfo() async throws {
+        let userResponse = try await APIClient.getUser()
+        let user = userResponse.data
+        AuthProperties.shared.user = user
+    }
+    
+    func setNickname(as nickname: String) async throws {
+        let result = try await APIClient.setNickname(as: nickname)
+        print("set nickname")
+        print(result.message)
+    }
 }
 
 
