@@ -8,8 +8,14 @@
 import SwiftUI
 
 struct ProductGridView: View {
+    
+    let items: [PopularProductItemModel]
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 2)
 
+    init(items: [PopularProductItemModel]) {
+        self.items = items
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             ScrollView(showsIndicators: false) {
@@ -19,9 +25,9 @@ struct ProductGridView: View {
                     .padding([.leading], 24)
                 
                 LazyVGrid(columns: columns, spacing: 40) {
-                    ForEach(0..<8) { _ in
+                    ForEach(items, id: \.id) { item in
                         NavigationLink(destination: ProductDetailView()) {
-                            ProductGridItem()
+                            ProductGridItem(item: item)
                                 .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 73)
                         }
 
@@ -57,6 +63,6 @@ struct ProductGridView: View {
 
 struct ProductGridView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductGridView()
+        ProductGridView(items: [])
     }
 }

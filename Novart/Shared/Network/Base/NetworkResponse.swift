@@ -12,6 +12,7 @@ struct NetworkResponse<T: Codable>: Codable {
     let code: Int
     let message: String
     let dataList: T?
+    let data: T?
 }
 
 extension NetworkResponse {
@@ -23,5 +24,7 @@ extension NetworkResponse {
         message = try values.decodeIfPresent(String.self, forKey: .message) ?? ""
         
         dataList = try values.decodeIfPresent(T.self, forKey: .dataList)
+        data = try values.decodeIfPresent(T.self, forKey: .data)
+
     }
 }

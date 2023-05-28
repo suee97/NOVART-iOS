@@ -41,7 +41,7 @@ struct CategoryFilterView: View {
                         .foregroundColor(Color.Common.subtextDarkColor)
                         .font(.system(size: 14, weight: .regular))
                         .padding([.leading, .trailing], 14)
-                        .padding([.top, .bottom], 7)
+                        .padding([.top, .bottom], 8)
                         .background(Color.Common.primaryTextColor)
                         .foregroundColor(Color.white)
                         .cornerRadius(4)
