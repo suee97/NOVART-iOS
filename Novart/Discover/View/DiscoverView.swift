@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct DiscoverView: View {
+    
+    @ObservedObject var viewModel = DiscoverViewModel()
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .bottom) {
@@ -17,7 +20,7 @@ struct DiscoverView: View {
                     Rectangle()
                         .frame(width: geometry.size.width, height: 1)
                         .foregroundColor(.Common.subtextColor)
-                    ProductGridView()
+                    ProductGridView(items: viewModel.products)
                 }
                 
                 Button {
@@ -28,6 +31,9 @@ struct DiscoverView: View {
                 .padding(.bottom, 16)
 
             }
+        }
+        .onAppear {
+            viewModel.fetchProducts()
         }
     }
 }
