@@ -9,15 +9,19 @@ import SwiftUI
 
 struct PopularProductView: View {
     
-    let data = (1...10).map { "Item \($0)" }
+    var items: [PopularProductItemModel]
     
+    init(items: [PopularProductItemModel]) {
+        self.items = items
+    }
+        
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 14) {
                    Spacer()
                     .frame(width: 10, height: 260)
-                ForEach(data, id: \.self) { _ in
-                    PopularProductItem()
+                ForEach(items, id: \.id) { item in
+                    PopularProductItem(item: item)
                         .frame(width: 260, height: 260)
                         .cornerRadius(8)
                 }
@@ -28,6 +32,6 @@ struct PopularProductView: View {
 
 struct PopularProductView_Previews: PreviewProvider {
     static var previews: some View {
-        PopularProductView()
+        PopularProductView(items: [])
     }
 }

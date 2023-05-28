@@ -6,37 +6,52 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct RecentProductItem: View {
+    
+    let item: RecentProductItemModel
+    
+    init(item: RecentProductItemModel) {
+        self.item = item
+    }
+    
     var body: some View {
         
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 4) {
-                Image("mock_table")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+                if let imageUrl = item.thumbnail, let url = URL(string: imageUrl) {
+                    KFImage(url)
+                        .placeholder {
+                            Image("mock_table")
+                        }
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } else {
+                    Image("mock_table")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                }
                 
                 HStack {
-                    Text("작품 이름")
+                    Text(item.name ?? "")
                         .foregroundColor(Color.Common.primaryDarkTextColor)
                         .font(.system(size: 16, weight: .bold))
                     .padding(.bottom, 2)
                     
                     Spacer()
                     
-                    Image("icon_heart_fill")
+                    if item.likes {
+                        Image("icon_heart_fill")
+                    } else {
+                        Image("icon_heart")
+                    }
                 }
                 
-                Text("작가 이름")
+                Text(item.seller ?? "")
                     .foregroundColor(Color.Common.subtextDarkColor)
                     .font(.system(size: 14, weight: .regular))
             }
         }
-    }
-}
-
-struct RecentProductItem_Previews: PreviewProvider {
-    static var previews: some View {
-        RecentProductItem()
     }
 }

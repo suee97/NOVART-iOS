@@ -8,13 +8,19 @@
 import SwiftUI
 
 struct RecentProductView: View {
+    
+    var items: [RecentProductItemModel]
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 2)
+    
+    init(items: [RecentProductItemModel]) {
+        self.items = items
+    }
     
     var body: some View {
         GeometryReader { geometry in
             LazyVGrid(columns: columns, spacing: 40) {
-                ForEach(0..<4) { _ in
-                    RecentProductItem()
+                ForEach(items, id: \.id) { item in
+                    RecentProductItem(item: item)
                         .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 48)
 
                 }
@@ -27,6 +33,6 @@ struct RecentProductView: View {
 
 struct RecentProductView_Previews: PreviewProvider {
     static var previews: some View {
-        RecentProductView()
+        RecentProductView(items: [])
     }
 }

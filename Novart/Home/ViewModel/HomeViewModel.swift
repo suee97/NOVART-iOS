@@ -16,18 +16,10 @@ class HomeViewModel: ObservableObject {
     @Published var popularItems: [PopularProductItemModel] = []
     @Published var recentItems: [RecentProductItemModel] = []
     @Published var artistItems: [ArtistIntroItemModel] = []
-    
-    var catimg = PassthroughSubject<[CatalogItemModel], Never>()
-    
+        
     var downloadInteractor: HomeDownloadInteractor = HomeDownloadInteractor()
     
     init() {
-        catimg
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] items in
-                self?.catalogItems = items
-        }
-            .store(in: &cancellables)
     }
     
     func fetchHomeItems() {
@@ -39,11 +31,9 @@ class HomeViewModel: ObservableObject {
     
     private func fetchCatalogItems() {
         
-        Task {
+        Task { @MainActor in
             do {
-                let items = try await downloadInteractor.fetchCatalogItems() ?? []
-                catimg.send(items)
-                print(items.count)
+                catalogItems = try await downloadInteractor.fetchCatalogItems() ?? []
             } catch {
                 print(error)
             }
@@ -51,14 +41,32 @@ class HomeViewModel: ObservableObject {
     }
     
     private func fetchPopularItems() {
-        popularItems = downloadInteractor.fetchPopularItems()
+        Task { @MainActor in
+            do {
+                popularItems = try await downloadInteractor.fetchPopularItems() ?? []
+            } catch {
+                print(error)
+            }
+        }
     }
     
     private func fetchRecentItems() {
-        recentItems = downloadInteractor.fetchRecentItems()
+        Task { @MainActor in
+            do {
+                recentItems = try await downloadInteractor.fetchRecentItems() ?? []
+            } catch {
+                print(error)
+            }
+        }
     }
     
     private func fetchArtistIntroItems() {
-        artistItems = downloadInteractor.fetchArtistIntroItems()
+        Task { @MainActor in
+            do {
+                artistItems = try await downloadInteractor.fetchArtistIntroItems() ?? []
+            } catch {
+                print(error)
+            }
+        }
     }
 }

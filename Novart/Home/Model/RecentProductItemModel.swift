@@ -7,6 +7,12 @@
 
 import Foundation
 
-struct RecentProductItemModel {
-
+struct RecentProductItemModel: Codable {
+    let id: String
+    let thumbnail: String?
+    let name: String?
+    let category: NovartItemCategory?
+    let seller: String?
+    let likes: Bool
+    let price: Int
 }

@@ -201,12 +201,12 @@ struct ProductDetailView: View {
                         Spacer()
                             .frame(height: 16)
                         
-                        LazyVGrid(columns: columns, spacing: 14) {
-                            ForEach(0..<4, id: \.self) { _ in
-                                RecentProductItem()
-                                    .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 48)
-                            }
-                        }
+//                        LazyVGrid(columns: columns, spacing: 14) {
+//                            ForEach(0..<4, id: \.self) { _ in
+//                                RecentProductItem(item: <#T##RecentProductItemModel#>)
+//                                    .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 48)
+//                            }
+//                        }
                     }
                     .padding([.leading, .trailing], 24)
                 }

@@ -13,18 +13,18 @@ final class HomeDownloadInteractor {
         return response.dataList
     }
     
-    func fetchPopularItems() -> [PopularProductItemModel] {
-        
-        return []
+    func fetchPopularItems() async throws -> [PopularProductItemModel]? {
+        let response = try await APIClient.fetchPopularItems()
+        return response.dataList
     }
     
-    func fetchRecentItems() -> [RecentProductItemModel] {
-        
-        return []
+    func fetchRecentItems() async throws  -> [RecentProductItemModel]? {
+        let response = try await APIClient.fetchRecentItems()
+        return response.dataList
     }
     
-    func fetchArtistIntroItems() -> [ArtistIntroItemModel] {
-        
-        return []
+    func fetchArtistIntroItems() async throws -> [ArtistIntroItemModel]? {
+        let response = try await APIClient.fetchArtists()
+        return response.dataList
     }
 }

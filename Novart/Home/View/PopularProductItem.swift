@@ -6,14 +6,34 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct PopularProductItem: View {
+    
+    let item: PopularProductItemModel
+    
+    init(item: PopularProductItemModel) {
+        self.item = item
+    }
+    
     var body: some View {
         ZStack {
-            Image("mock_chair")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .cornerRadius(8)
+            
+            if let imageUrl = item.thumbnail, let url = URL(string: imageUrl) {
+                KFImage(url)
+                    .placeholder {
+                        Image("mock_chair")
+                    }
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .cornerRadius(8)
+                
+            } else {
+                Image("mock_chair")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .cornerRadius(8)
+            }
             
             Image("popular_dim")
                 .resizable()
@@ -22,7 +42,7 @@ struct PopularProductItem: View {
             
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("가구")
+                    Text(tagName(type: item.category))
                         .font(.system(size: 10, weight: .regular))
                         .padding([.leading, .trailing], 8)
                         .padding([.top, .bottom], 4)
@@ -32,11 +52,11 @@ struct PopularProductItem: View {
 
                     Spacer()
                     
-                    Text("작품 이름")
+                    Text(item.name ?? "")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(Color.Common.primaryTextColor)
                     HStack {
-                        Text("작가 이름")
+                        Text(item.seller ?? "")
                             .font(.system(size: 14, weight: .regular))
                         .foregroundColor(Color.Common.primaryTextColor)
                         Spacer()
@@ -57,8 +77,11 @@ struct PopularProductItem: View {
     }
 }
 
-struct PopularProductItem_Previews: PreviewProvider {
-    static var previews: some View {
-        PopularProductItem()
+extension PopularProductItem {
+    private func tagName(type: NovartItemCategory) -> String {
+        switch type {
+        case .table:
+            return "탁자"
+        }
     }
 }
