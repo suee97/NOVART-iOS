@@ -9,13 +9,17 @@ import SwiftUI
 
 struct ArtistIntroView: View {
     
-    let items = Array(0..<3)
+    let items: [ArtistIntroItemModel]
+    
+    init(items: [ArtistIntroItemModel]) {
+        self.items = items
+    }
     
     var body: some View {
         LazyVStack(spacing: 0) {
-            ForEach(items, id: \.self) { _ in
+            ForEach(items, id: \.id) { item in
                 VStack(spacing: 0) {
-                    ArtistIntroItem()
+                    ArtistIntroItem(item: item)
                     Spacer()
                         .frame(height: 24)
                     Rectangle()
@@ -32,6 +36,6 @@ struct ArtistIntroView: View {
 
 struct ArtistIntroView_Previews: PreviewProvider {
     static var previews: some View {
-        ArtistIntroView()
+        ArtistIntroView(items: [])
     }
 }

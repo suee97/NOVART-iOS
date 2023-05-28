@@ -23,20 +23,20 @@ struct HomeView: View {
                     SectionHeaderView(title: "인기 예술품", isLogoEnabled: true)
                         .frame(height: 54)
                     
-                    PopularProductView()
+                    PopularProductView(items: viewModel.popularItems)
                         .padding(.bottom, 32)
                     SectionHeaderView(title: "최근 등록된 예술품", isLogoEnabled: false)
                         .frame(height: 54)
                     
-                    RecentProductView()
+                    RecentProductView(items: viewModel.recentItems)
                         .frame(height: geometry.size.width + 74)
                         .padding(.bottom, 32)
                     
                     SectionHeaderView(title: "작가 소개", isLogoEnabled: true)
                         .frame(height: 54)
                     
-                    ArtistIntroView()
-                        .frame(height: 415)
+                    ArtistIntroView(items: viewModel.artistItems)
+                        .frame(height: CGFloat(129 * viewModel.artistItems.count + 28))
                 }
                 .navigationBarTitleDisplayMode(.inline)
             }

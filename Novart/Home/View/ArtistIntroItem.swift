@@ -6,33 +6,47 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ArtistIntroItem: View {
+    
+    let item: ArtistIntroItemModel
+    
+    init(item: ArtistIntroItemModel) {
+        self.item = item
+    }
+    
     var body: some View {
         HStack(alignment: .center, spacing: 40) {
-            Image("mock_artist")
-                .resizable()
-                .frame(width: 80, height: 80)
-                .aspectRatio(contentMode: .fill)
-                .cornerRadius(40)
+            
+            if let imageUrl = item.profile, let url = URL(string: imageUrl) {
+                KFImage(url)
+                    .placeholder {
+                        Image("mock_artist")
+                    }
+                    .resizable()
+                    .frame(width: 80, height: 80)
+                    .aspectRatio(contentMode: .fill)
+                    .cornerRadius(40)
+            } else {
+                Image("mock_artist")
+                    .resizable()
+                    .frame(width: 80, height: 80)
+                    .aspectRatio(contentMode: .fill)
+                    .cornerRadius(40)
+            }
             
             VStack(alignment: .leading, spacing: 8) {
-                Text("김민지")
+                Text(item.nickname ?? "")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(Color.Common.primaryDarkTextColor)
                 
-                Text("안녕하세요 가치있는 가구를 만들기\n위해 노력하는 디자이너입니다.")
+                Text(item.introduction ?? "")
                     .font(.system(size: 12, weight: .regular))
                     .foregroundColor(Color.Common.subtextDarkColor)
 
             }
             Spacer()
         }
-    }
-}
-
-struct ArtistIntroItem_Previews: PreviewProvider {
-    static var previews: some View {
-        ArtistIntroItem()
     }
 }

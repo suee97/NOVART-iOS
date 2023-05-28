@@ -78,7 +78,7 @@ struct CatalogItem: View {
 }
 
 extension CatalogItem {
-    private func tagName(type: CatalogCategory) -> String {
+    private func tagName(type: CatalogItemCategory) -> String {
         switch type {
         case .art:
             return "작품"

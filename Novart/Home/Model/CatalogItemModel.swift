@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CatalogCategory: String, Codable {
+enum CatalogItemCategory: String, Codable {
     case graduation = "GRADUATION"
     case artist = "ARTIST"
     case art = "ART"
@@ -17,7 +17,7 @@ struct CatalogItemModel: Codable, Equatable {
     let id: String
     let imageUrl: String?
     let name: String?
-    let category: CatalogCategory
+    let category: CatalogItemCategory
     let duration: String?
     let location: String?
     let price: String?

@@ -7,6 +7,9 @@
 
 import Foundation
 
-struct ArtistIntroItemModel {
-    
+struct ArtistIntroItemModel: Codable {
+    let id: String
+    let nickname: String?
+    let introduction: String?
+    let profile: String?
 }

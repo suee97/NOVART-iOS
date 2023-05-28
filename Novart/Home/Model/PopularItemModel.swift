@@ -1,17 +1,14 @@
 //
-//  PopularProjectItemModel.swift
+//  PopularItemModel.swift
 //  Novart
 //
-//  Created by Jinwook Huh on 2023/05/26.
+//  Created by Jinwook Huh on 2023/05/27.
 //
 
 import Foundation
 
-enum NovartItemCategory: String, Codable {
-    case table = "탁자"
-}
 
-struct PopularProductItemModel: Codable {
+struct PopularItemModel: Codable, Equatable {
     let id: String
     let thumbnail: String?
     let name: String?
@@ -20,3 +17,4 @@ struct PopularProductItemModel: Codable {
     let likes: Bool
     let price: Int
 }
+
