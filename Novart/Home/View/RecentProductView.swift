@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecentProductView: View {
     
+    @State private var isShowingProductDetail: Bool = false
     var items: [RecentProductItemModel]
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 2)
     
@@ -20,9 +21,15 @@ struct RecentProductView: View {
         GeometryReader { geometry in
             LazyVGrid(columns: columns, spacing: 40) {
                 ForEach(items, id: \.id) { item in
-                    RecentProductItem(item: item)
-                        .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 48)
-
+//                    NavigationLink(destination: ProductDetailView(viewModel: ProductDetailViewModel(productId: item.id))) {
+//                        RecentProductItem(item: item)
+//                            .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 48)
+//                    }
+                    
+                    NavigationLink(destination: ProductDetailView(viewModel: ProductDetailViewModel(productId: item.id), isShowing: $isShowingProductDetail), isActive: $isShowingProductDetail) {
+                        RecentProductItem(item: item)
+                            .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 48)
+                    }
                 }
             }
             .padding([.leading, .trailing], 24)

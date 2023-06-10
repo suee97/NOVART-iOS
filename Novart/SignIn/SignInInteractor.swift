@@ -31,16 +31,20 @@ final class SignInInteractor {
                 UserApi.shared.loginWithKakaoTalk {(oauthToken, error) in
                     if let error = error {
                         continuation.resume(throwing: error)
+                        return
                     }
                     
                     if let oauthToken = oauthToken {
                         continuation.resume(returning: oauthToken)
+                        return
                     } else {
                         continuation.resume(throwing: ServiceError.kakaoTalkLoginUnavailable)
+                        return
                     }
                 }
             } else {
                 continuation.resume(throwing: ServiceError.kakaoTalkLoginUnavailable)
+                return 
             }
         })
     }
@@ -59,10 +63,9 @@ final class SignInInteractor {
         AuthProperties.shared.user = user
     }
     
-    func setNickname(as nickname: String) async throws {
+    func setNickname(as nickname: String) async throws -> Bool {
         let result = try await APIClient.setNickname(as: nickname)
-        print("set nickname")
-        print(result.message)
+        return result.success
     }
 }
 

@@ -6,22 +6,58 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ProductDetailView: View {
+    
+    @Binding var isShowing: Bool
+    @ObservedObject var viewModel: ProductDetailViewModel
     
     let mock_picks = ["mock_table", "mock_chair_2"]
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 2)
 
+    init(viewModel: ProductDetailViewModel, isShowing: Binding<Bool>) {
+        self._isShowing = isShowing
+        self.viewModel = viewModel
+    }
+    
     var body: some View {
+        
+        ZStack(alignment: .top) {
+            VStack {
+                Spacer()
+                    .frame(height: 63)
+                mainView
+            }
+            
+            VStack {
+                productDetailNavigationBar
+                Spacer()
+            }
+        }
+    }
+    
+    var mainView: some View {
         GeometryReader { geometry in
             
             ScrollView(showsIndicators: true) {
                 VStack(spacing: 0) {
                     Group {
-                        Image("mock_table")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: geometry.size.width, height: geometry.size.width)
+                        
+                        if let imageUrl = viewModel.productDetail?.thumbnailImageUrl, let url = URL(string: imageUrl) {
+                            KFImage(url)
+                                .placeholder {
+                                    Image("mock_table")
+                                }
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: geometry.size.width, height: geometry.size.width)
+                        } else {
+                            Image("mock_table")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: geometry.size.width, height: geometry.size.width)
+                        }
                         
                         Spacer()
                             .frame(height: 24)
@@ -38,11 +74,21 @@ struct ProductDetailView: View {
                         
                         // 소개 사진
                         VStack(spacing: 14) {
-                            ForEach(mock_picks, id: \.self) { pic in
-                                Image(pic)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: geometry.size.width - 48, height: geometry.size.width - 48)
+                            ForEach(viewModel.productDetail?.detailedImageUrls ?? [], id: \.self) { image in
+                                if let url = URL(string: image) {
+                                    KFImage(url)
+                                        .placeholder {
+                                            Image("mock_table")
+                                        }
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: geometry.size.width - 48, height: geometry.size.width - 48)
+                                } else {
+                                    Image("mock_table")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: geometry.size.width - 48, height: geometry.size.width - 48)
+                                }
                             }
                         }
                         
@@ -62,11 +108,21 @@ struct ProductDetailView: View {
                             .frame(height: 16)
                         
                         LazyVGrid(columns: columns, spacing: 4) {
-                            ForEach(0..<4, id: \.self) { _ in
-                                Image("mock_table")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: geometry.size.width / 2 - 26, height: geometry.size.width / 2 - 26)
+                            ForEach(viewModel.productDetail?.validationImageUrls ?? [], id: \.self) { image in
+                                if let url = URL(string: image) {
+                                    KFImage(url)
+                                        .placeholder {
+                                            Image("mock_table")
+                                        }
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: geometry.size.width / 2 - 26, height: geometry.size.width / 2 - 26)
+                                } else {
+                                    Image("mock_table")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: geometry.size.width / 2 - 26, height: geometry.size.width / 2 - 26)
+                                }
                             }
                         }
                         Spacer()
@@ -95,7 +151,7 @@ struct ProductDetailView: View {
                                         .font(.system(size: 16, weight: .regular))
                                         .foregroundColor(.Common.subtextDarkColor)
                                     Spacer()
-                                    Text("ABS, Silicon")
+                                    Text((viewModel.productDetail?.materials ?? []).joined(separator: ", "))
                                         .font(.system(size: 16, weight: .regular))
                                         .foregroundColor(.Common.primaryDarkTextColor)
                                 }
@@ -124,7 +180,7 @@ struct ProductDetailView: View {
                                         .font(.system(size: 16, weight: .regular))
                                         .foregroundColor(.Common.subtextDarkColor)
                                     Spacer()
-                                    Text("297*420*320")
+                                    Text("\(viewModel.productDetail?.width ?? 0) * \(viewModel.productDetail?.height ?? 0) * \(viewModel.productDetail?.depth ?? 0)")
                                         .font(.system(size: 16, weight: .regular))
                                         .foregroundColor(.Common.primaryDarkTextColor)
                                 }
@@ -153,9 +209,12 @@ struct ProductDetailView: View {
                                         .font(.system(size: 16, weight: .regular))
                                         .foregroundColor(.Common.subtextDarkColor)
                                     Spacer()
-                                    Text("2022/10/11 ~ 2022/12/13")
-                                        .font(.system(size: 16, weight: .regular))
-                                        .foregroundColor(.Common.primaryDarkTextColor)
+                                    
+                                    if let startDate = viewModel.productDetail?.productStartDate, let endDate = viewModel.productDetail?.productEndDate {
+                                        Text("\(startDate) ~ \(endDate)")
+                                            .font(.system(size: 16, weight: .regular))
+                                            .foregroundColor(.Common.primaryDarkTextColor)
+                                    }
                                 }
                                 HStack(spacing: 0) {
                                     Spacer()
@@ -200,32 +259,73 @@ struct ProductDetailView: View {
                         }
                         Spacer()
                             .frame(height: 16)
-                        
-//                        LazyVGrid(columns: columns, spacing: 14) {
-//                            ForEach(0..<4, id: \.self) { _ in
-//                                RecentProductItem(item: <#T##RecentProductItemModel#>)
-//                                    .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 48)
-//                            }
-//                        }
                     }
                     .padding([.leading, .trailing], 24)
                 }
             }
+            .onAppear {
+                viewModel.fetchProductDetail()
+            }
+            .navigationBarHidden(true)
+
         }
+
     }
 }
 
 extension ProductDetailView {
+    
+    var productDetailNavigationBar: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            ZStack {
+                HStack(spacing: 0) {
+                    Spacer()
+                        .frame(width: 24)
+                    Button {
+                        isShowing = false
+                    } label: {
+                        Image("icon_back")
+                    }
+                    .buttonStyle(NoHighlightButtonStyle())
+
+                    Spacer()
+                }
+                .background(Color.white)
+                .frame(height: 23)
+                Text("제품상세")
+                    .foregroundColor(Color.Common.primaryDarkTextColor)
+                    .font(.system(size: 16, weight: .bold))
+            }
+            Spacer()
+                .frame(height: 20)
+        }
+        .frame(height: 63) // Adjust the height of the custom navigation bar
+        
+    }
+    
+    var backButton: some View {
+        Button {
+            print("back")
+        } label: {
+            Image("icon_back")
+        }
+    }
+    
     var productInfoView: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("서랍형 탁자")
+                Text(viewModel.productDetail?.name ?? "")
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.Common.primaryDarkTextColor)
                 
                 Spacer()
                 
-                Image("icon_heart_fill")
+                if viewModel.productDetail?.likes ?? false {
+                    Image("icon_heart_fill")
+                } else {
+                    Image("icon_heart")
+                }
             }
             
             Spacer()
@@ -251,7 +351,7 @@ extension ProductDetailView {
             HStack {
                 Spacer()
                 
-                Text("100,000원")
+                Text("\(viewModel.productDetail?.price ?? 0)원")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.Common.primaryDarkTextColor)
             }
@@ -263,15 +363,25 @@ extension ProductDetailView {
                 print("작가")
             } label: {
                 HStack {
-                    Image("mock_artist_square")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 36, height: 36)
+                    if let imageUrl = viewModel.productDetail?.seller.profileImageUrl, let url = URL(string: imageUrl) {
+                        KFImage(url)
+                            .placeholder {
+                                Image("mock_artist_square")
+                            }
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 36, height: 36)
+                    } else {
+                        Image("mock_artist_square")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 36, height: 36)
+                    }
                     
                     Spacer()
                         .frame(width: 14)
                     
-                    Text("작가ㅣ작가이름")
+                    Text("작가ㅣ\(viewModel.productDetail?.seller.nickname ?? "")")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.Common.primaryDarkTextColor)
                     Spacer()
@@ -313,15 +423,9 @@ extension ProductDetailView {
 
             Spacer()
                 .frame(height: 16)
-            Text("본작품은이러이러한가치가있고어떤 것을의도하여정말좋다라는것입니본작품은이러이러한가치가있고어떤것을의도하여정본 작품은이러이러한가치가있고어떤 것을의도하여정말좋다라")
+            Text(viewModel.productDetail?.description ?? "작품 설명 미등록")
                 .multilineTextAlignment(.leading)
                 .padding([.leading, .trailing], 24)
         }
-    }
-}
-
-struct ProductDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProductDetailView()
     }
 }

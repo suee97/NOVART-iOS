@@ -9,10 +9,11 @@ import Foundation
 
 struct RecentProductItemModel: Codable {
     let id: String
-    let thumbnail: String?
+    let thumbnailImageUrl: String?
     let name: String?
-    let category: NovartItemCategory?
+    let category: NovartItemCategory
     let seller: String?
     let likes: Bool
     let price: Int
+    let productStatus: ItemStatus
 }

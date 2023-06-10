@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ProductGridView: View {
     
+    @State private var isShowingProductDetail: Bool = false
+
     let items: [PopularProductItemModel]
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 2)
 
@@ -26,7 +28,13 @@ struct ProductGridView: View {
                 
                 LazyVGrid(columns: columns, spacing: 40) {
                     ForEach(items, id: \.id) { item in
-                        NavigationLink(destination: ProductDetailView()) {
+                        
+//                        NavigationLink(destination: ProductDetailView(viewModel: ProductDetailViewModel(productId: item.id))) {
+//                            ProductGridItem(item: item)
+//                                .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 73)
+//                        }
+                        
+                        NavigationLink(destination: ProductDetailView(viewModel: ProductDetailViewModel(productId: item.id), isShowing: $isShowingProductDetail), isActive: $isShowingProductDetail) {
                             ProductGridItem(item: item)
                                 .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 73)
                         }

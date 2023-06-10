@@ -15,6 +15,13 @@ extension Color {
         static let primaryTextColor = Color("primary_text_color")
         static let primaryDarkTextColor = Color("primary_dark_text_color")
         static let subtextDarkColor = Color("subtext_dark_color")
+        static let gray00 = Color("gray_00")
+        static let gray01 = Color("gray_01")
+        static let gray02 = Color("gray_02")
+        static let gray03 = Color("gray_03")
+        static let white = Color("white")
+        static let sub = Color("sub")
+        static let wireDarkGray = Color("wire_darkgray")
     }
 }
 

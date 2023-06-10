@@ -10,7 +10,6 @@ import SwiftUI
 struct DiscoverView: View {
     
     @ObservedObject var viewModel = DiscoverViewModel()
-    
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .bottom) {

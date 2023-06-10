@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PopularProductView: View {
     
+    @State private var isShowingProductDetail: Bool = false
     var items: [PopularProductItemModel]
     
     init(items: [PopularProductItemModel]) {
@@ -21,9 +22,18 @@ struct PopularProductView: View {
                    Spacer()
                     .frame(width: 10, height: 260)
                 ForEach(items, id: \.id) { item in
-                    PopularProductItem(item: item)
-                        .frame(width: 260, height: 260)
-                        .cornerRadius(8)
+                    
+                    NavigationLink(destination: ProductDetailView(viewModel: ProductDetailViewModel(productId: item.id), isShowing: $isShowingProductDetail), isActive: $isShowingProductDetail) {
+                        PopularProductItem(item: item)
+                            .frame(width: 260, height: 260)
+                            .cornerRadius(8)
+                    }
+                    
+//                    NavigationLink(destination: ProductDetailView(viewModel: ProductDetailViewModel(productId: item.id), isShowing: $isShowingProductDetail)) {
+//                        PopularProductItem(item: item)
+//                            .frame(width: 260, height: 260)
+//                            .cornerRadius(8)
+//                    }
                 }
             }
         }
