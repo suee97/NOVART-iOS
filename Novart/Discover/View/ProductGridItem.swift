@@ -19,7 +19,7 @@ struct ProductGridItem: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             
-            if let imageUrl = item.thumbnail, let url = URL(string: imageUrl) {
+            if let imageUrl = item.thumbnailImageUrl, let url = URL(string: imageUrl) {
                 KFImage(url)
                     .placeholder {
                         Image("mock_table")
@@ -47,7 +47,7 @@ struct ProductGridItem: View {
                 }
             }
             
-            Text("\(item.price)")
+            Text("\(item.price)원")
                 .foregroundColor(Color.Common.subtextDarkColor)
                 .font(.system(size: 14, weight: .regular))
             

@@ -20,7 +20,7 @@ struct RecentProductItem: View {
         
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 4) {
-                if let imageUrl = item.thumbnail, let url = URL(string: imageUrl) {
+                if let imageUrl = item.thumbnailImageUrl, let url = URL(string: imageUrl) {
                     KFImage(url)
                         .placeholder {
                             Image("mock_table")

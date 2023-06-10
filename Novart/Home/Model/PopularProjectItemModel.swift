@@ -8,15 +8,19 @@
 import Foundation
 
 enum NovartItemCategory: String, Codable {
-    case table = "탁자"
+    case painting = "painting"
+    case furniture = "furniture"
+    case light = "light"
+    case craft = "craft"
 }
 
 struct PopularProductItemModel: Codable {
     let id: String
-    let thumbnail: String?
+    let thumbnailImageUrl: String?
     let name: String?
     let category: NovartItemCategory
     let seller: String?
     let likes: Bool
     let price: Int
+    let productStatus: ItemStatus
 }

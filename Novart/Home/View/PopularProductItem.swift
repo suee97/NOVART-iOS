@@ -19,7 +19,7 @@ struct PopularProductItem: View {
     var body: some View {
         ZStack {
             
-            if let imageUrl = item.thumbnail, let url = URL(string: imageUrl) {
+            if let imageUrl = item.thumbnailImageUrl, let url = URL(string: imageUrl) {
                 KFImage(url)
                     .placeholder {
                         Image("mock_chair")
@@ -80,8 +80,14 @@ struct PopularProductItem: View {
 extension PopularProductItem {
     private func tagName(type: NovartItemCategory) -> String {
         switch type {
-        case .table:
-            return "탁자"
+        case .painting:
+            return "그림"
+        case .furniture:
+            return "가구"
+        case .light:
+            return "조명"
+        case .craft:
+            return "공예"
         }
     }
 }

@@ -10,6 +10,7 @@ import Foundation
 
 enum DiscoverTarget: TargetType {
     case fetchProduct(parameters: Encodable?)
+    case fetchProductDetail(id: String)
     
     var baseURL: String {
         API.baseURL
@@ -19,12 +20,14 @@ enum DiscoverTarget: TargetType {
         switch self {
         case .fetchProduct:
             return "product"
+        case .fetchProductDetail(id: let id):
+            return "product/\(id)"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .fetchProduct:
+        case .fetchProduct, .fetchProductDetail:
             return .get
         }
     }
@@ -33,6 +36,8 @@ enum DiscoverTarget: TargetType {
         switch self {
         case .fetchProduct(let parameters):
             return .query(parameters)
+        case .fetchProductDetail:
+            return .query(nil)
         }
     }
 }

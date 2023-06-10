@@ -24,10 +24,10 @@ enum UserRole: String, Codable {
 }
 
 struct UserDTO: Codable {
-    let id: Int
+    let id: String
     let nickname: String
     let role: UserRole
-    let introduction: String?
+    let email: String?
 }
 
 extension UserResponse {

@@ -10,21 +10,21 @@ import Foundation
 final class HomeDownloadInteractor {
     func fetchCatalogItems() async throws -> [CatalogItemModel]? {
         let response = try await APIClient.fetchCatalog()
-        return response.dataList
+        return response.data
     }
     
     func fetchPopularItems() async throws -> [PopularProductItemModel]? {
         let response = try await APIClient.fetchPopularItems()
-        return response.dataList
+        return response.data
     }
     
     func fetchRecentItems() async throws  -> [RecentProductItemModel]? {
         let response = try await APIClient.fetchRecentItems()
-        return response.dataList
+        return response.data
     }
     
     func fetchArtistIntroItems() async throws -> [ArtistIntroItemModel]? {
         let response = try await APIClient.fetchArtists()
-        return response.dataList
+        return response.data
     }
 }
