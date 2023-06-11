@@ -12,6 +12,7 @@ struct CatalogView: View {
     var items: [CatalogItemModel]
     @State private var currentIndex = 0
     @State private var timer: Timer?
+    @State private var isShowingCatalogDetail: Bool = false
     
     init(items: [CatalogItemModel]) {
         self.items = items
@@ -27,9 +28,11 @@ struct CatalogView: View {
                         LazyHStack(spacing: 0) {
                             
                             ForEach(items, id: \.id) { item in
-                                CatalogItem(item: item)
-                                    .frame(width: geometry.size.width, height: 552)
-                                    .id(item.id)
+                                NavigationLink(destination: CatalogDetailView(isShowing: $isShowingCatalogDetail), isActive: $isShowingCatalogDetail) {
+                                    CatalogItem(item: item)
+                                        .frame(width: geometry.size.width, height: 552)
+                                        .id(item.id)
+                                }
                             }
                         }
                         .onChange(of: items, perform: { newValue in
@@ -56,7 +59,7 @@ struct CatalogView: View {
                         })
 
                     }
-                    .allowsHitTesting(false)
+                    .allowsHitTesting(true)
                     
                     .onDisappear {
                         timer?.invalidate()

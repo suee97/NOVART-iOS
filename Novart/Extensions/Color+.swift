@@ -22,6 +22,7 @@ extension Color {
         static let white = Color("white")
         static let sub = Color("sub")
         static let wireDarkGray = Color("wire_darkgray")
+        static let yellow = Color("yellow")
     }
 }
 
