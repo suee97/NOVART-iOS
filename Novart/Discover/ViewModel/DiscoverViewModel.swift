@@ -17,6 +17,7 @@ class DiscoverViewModel: ObservableObject {
     let downloadInteractor: DiscoverDownloadInteractor = DiscoverDownloadInteractor()
     
     init() {
+        print("init")
     }
     
     func fetchProducts() {
@@ -24,6 +25,8 @@ class DiscoverViewModel: ObservableObject {
             do {
                 let searchResult = try await downloadInteractor.fetchProducts(parameters: nil)
                 products = searchResult?.content ?? []
+                print("i got it")
+                print(products.count)
             } catch {
                 print(error)
             }

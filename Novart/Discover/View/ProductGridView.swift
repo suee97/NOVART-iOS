@@ -10,30 +10,21 @@ import SwiftUI
 struct ProductGridView: View {
     
     @State private var isShowingProductDetail: Bool = false
-
-    let items: [PopularProductItemModel]
+    @ObservedObject private var viewModel: DiscoverViewModel
+    
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 2)
 
-    init(items: [PopularProductItemModel]) {
-        self.items = items
+    init(viewModel: DiscoverViewModel) {
+        self.viewModel = viewModel
+        print("me to")
+        print(viewModel.products)
     }
     
     var body: some View {
         GeometryReader { geometry in
-            ScrollView(showsIndicators: false) {
-//                availabilityCheckView
-//                    .padding([.top], 8)
-//                    .padding([.bottom], 12)
-//                    .padding([.leading], 24)
-//                
+            ScrollView(showsIndicators: false) {        
                 LazyVGrid(columns: columns, spacing: 40) {
-                    ForEach(items, id: \.id) { item in
-                        
-//                        NavigationLink(destination: ProductDetailView(viewModel: ProductDetailViewModel(productId: item.id))) {
-//                            ProductGridItem(item: item)
-//                                .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 73)
-//                        }
-                        
+                    ForEach(viewModel.products, id: \.id) { item in
                         NavigationLink(destination: ProductDetailView(viewModel: ProductDetailViewModel(productId: item.id), isShowing: $isShowingProductDetail), isActive: $isShowingProductDetail) {
                             ProductGridItem(item: item)
                                 .frame(width: (geometry.size.width - 62) / 2, height: (geometry.size.width - 62) / 2 + 73)
@@ -46,6 +37,9 @@ struct ProductGridView: View {
                 Spacer()
                     .frame(height: 40)
             }
+        }
+        .onAppear {
+            viewModel.fetchProducts()
         }
     }
     
@@ -71,6 +65,6 @@ struct ProductGridView: View {
 
 struct ProductGridView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductGridView(items: [])
+        ProductGridView(viewModel: DiscoverViewModel())
     }
 }
