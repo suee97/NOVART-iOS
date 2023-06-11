@@ -336,7 +336,7 @@ extension ProductDetailView {
             Spacer()
                 .frame(height: 20)
         }
-        .frame(height: 63) // Adjust the height of the custom navigation bar
+        .frame(height: 63)
         
     }
     
@@ -470,8 +470,9 @@ extension ProductDetailView {
             Spacer()
                 .frame(height: 16)
             Text(viewModel.productDetail?.description ?? "작품 설명 미등록")
+                .font(.system(size: 14, weight: .regular))
+                .lineSpacing(10)
                 .multilineTextAlignment(.leading)
-                .padding([.leading, .trailing], 24)
         }
     }
     
