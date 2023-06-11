@@ -269,6 +269,9 @@ struct ProductDetailView: View {
                                 .frame(height: 16)
                         }
                         .padding([.leading, .trailing], 24)
+                        
+                        Spacer()
+                            .frame(height: 80)
                     }
                 }
                 .onAppear {
@@ -354,10 +357,20 @@ extension ProductDetailView {
                 
                 Spacer()
                 
-                if viewModel.productDetail?.likes ?? false {
-                    Image("icon_heart_fill")
+                if viewModel.like {
+                    Button {
+                        viewModel.postLike()
+                    } label: {
+                        Image("icon_heart_fill")
+                    }
+
                 } else {
-                    Image("icon_heart")
+                    Button {
+                        viewModel.postLike()
+                    } label: {
+                        Image("icon_heart")
+                    }
+
                 }
             }
             
@@ -464,16 +477,22 @@ extension ProductDetailView {
     
     var bottomDoneButtonView: some View {
         VStack(spacing: 0) {
+            
+            Rectangle()
+                .foregroundColor(Color.Common.gray01)
+                .frame(height: 1)
+            
             Spacer()
-                .frame(height: 12)
+                .frame(height: 11)
+            
             Button {
             } label: {
-                Text("완료")
+                Text("1:1 채팅")
                     .foregroundColor(Color.Common.white)
                     .font(.system(size: 16, weight: .bold))
                     .frame(maxWidth: .infinity)
                     .frame(height: 46)
-                    .background(Color.Common.gray01)
+                    .background(Color.Common.primaryTintColor)
                     .cornerRadius(4)
                     .padding([.leading, .trailing], 24)
             }

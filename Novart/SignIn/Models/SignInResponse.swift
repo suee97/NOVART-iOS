@@ -27,4 +27,5 @@ extension SignInResponse {
 struct AccessToken: Codable {
     let accessToken: String
     let refreshToken: String
+    let isFirstLogin: Bool
 }
