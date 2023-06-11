@@ -10,8 +10,12 @@ import Foundation
 final class ProductDetailViewModel: ObservableObject {
     
     @Published var productDetail: ProductDetailModel?
+    @Published var like: Bool = false
+    
     let productId: String
     let downloadInteractor: ProductDetailDownloadInteractor = ProductDetailDownloadInteractor()
+    
+    private var hasPostedLike: Bool = false
     
     init(productId: String) {
         self.productId = productId
@@ -21,11 +25,17 @@ final class ProductDetailViewModel: ObservableObject {
         Task { @MainActor in
             do {
                 productDetail = try await downloadInteractor.fetchProdcutDetail(id: productId)
-                print("this is product detail")
-                print(productDetail?.name)
+                like = productDetail?.likes ?? false
             } catch {
-                
             }
+        }
+    }
+    
+    func postLike() {
+        Task {
+            hasPostedLike = true
+            _ = try await downloadInteractor.postLike(id: productId)
+            like.toggle()
         }
     }
 }

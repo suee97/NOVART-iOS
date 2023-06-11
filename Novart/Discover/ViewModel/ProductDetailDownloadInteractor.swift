@@ -12,4 +12,9 @@ final class ProductDetailDownloadInteractor {
         let response = try await APIClient.fetchProductDetail(id: id)
         return response.data
     }
+    
+    func postLike(id: String) async throws -> LikeResultModel? {
+        let response = try await APIClient.postLike(id: id)
+        return response.data
+    }
 }

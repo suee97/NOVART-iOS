@@ -17,8 +17,8 @@ enum AuthTarget: TargetType {
     
     var path: String {
         switch self {
-        case let .signIn(_, provider):
-            return "auth/\(provider)"
+        case .signIn:
+            return "signup"
         }
     }
     
@@ -28,8 +28,11 @@ enum AuthTarget: TargetType {
     
     var parameters: RequestParams {
         switch self {
-        case let .signIn(accessToken, _):
-            return .body(["accessToken": accessToken])
+        case let .signIn(accessToken, provider):
+            return .body([
+                "provider": provider,
+                "accessToken": accessToken
+            ])
         }
     }
 }
