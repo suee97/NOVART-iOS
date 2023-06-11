@@ -12,6 +12,9 @@ struct ProductDetailView: View {
     
     @Binding var isShowing: Bool
     @ObservedObject var viewModel: ProductDetailViewModel
+    @State private var scrollOffset: CGFloat = 0
+    @State private var previousScrollOffset: CGFloat = 0
+    @State private var showBottomView: Bool = true
     
     let mock_picks = ["mock_table", "mock_chair_2"]
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 2)
@@ -39,237 +42,267 @@ struct ProductDetailView: View {
     
     var mainView: some View {
         GeometryReader { geometry in
-            
-            ScrollView(showsIndicators: true) {
-                VStack(spacing: 0) {
-                    Group {
-                        
-                        if let imageUrl = viewModel.productDetail?.thumbnailImageUrl, let url = URL(string: imageUrl) {
-                            KFImage(url)
-                                .placeholder {
-                                    Image("mock_table")
-                                }
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: geometry.size.width, height: geometry.size.width)
-                        } else {
-                            Image("mock_table")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: geometry.size.width, height: geometry.size.width)
-                        }
-                        
-                        Spacer()
-                            .frame(height: 24)
-                        
-                        productInfoView
-                        
-                        Spacer()
-                            .frame(height: 48)
-                        
-                        productIntroView
-                        
-                        Spacer()
-                            .frame(height: 16)
-                        
-                        // 소개 사진
-                        VStack(spacing: 14) {
-                            ForEach(viewModel.productDetail?.detailedImageUrls ?? [], id: \.self) { image in
-                                if let url = URL(string: image) {
-                                    KFImage(url)
-                                        .placeholder {
-                                            Image("mock_table")
-                                        }
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: geometry.size.width - 48, height: geometry.size.width - 48)
-                                } else {
-                                    Image("mock_table")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: geometry.size.width - 48, height: geometry.size.width - 48)
-                                }
-                            }
-                        }
-                        
-                        Spacer()
-                            .frame(height: 48)
-                    }
+            ZStack {
+                ScrollView(showsIndicators: true) {
+                    GeometryReader { proxy in
+                                        Color.clear.preference(key: ScrollOffsetKey.self, value: proxy.frame(in: .named("scroll")).origin.y)
+                                    }
+                                    .frame(height: 0)
                     
-                    Group {
-                        // 다각도 이미지
-                        HStack {
-                            Text("다각도 이미지")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.Common.primaryDarkTextColor)
-                            Spacer()
-                        }
-                        Spacer()
-                            .frame(height: 16)
-                        
-                        LazyVGrid(columns: columns, spacing: 4) {
-                            ForEach(viewModel.productDetail?.validationImageUrls ?? [], id: \.self) { image in
-                                if let url = URL(string: image) {
-                                    KFImage(url)
-                                        .placeholder {
-                                            Image("mock_table")
-                                        }
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: geometry.size.width / 2 - 26, height: geometry.size.width / 2 - 26)
-                                } else {
-                                    Image("mock_table")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: geometry.size.width / 2 - 26, height: geometry.size.width / 2 - 26)
-                                }
+                    VStack(spacing: 0) {
+                        Group {
+                            
+                            if let imageUrl = viewModel.productDetail?.thumbnailImageUrl, let url = URL(string: imageUrl) {
+                                KFImage(url)
+                                    .placeholder {
+                                        Image("mock_table")
+                                    }
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: geometry.size.width, height: geometry.size.width)
+                            } else {
+                                Image("mock_table")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: geometry.size.width, height: geometry.size.width)
                             }
-                        }
-                        Spacer()
-                            .frame(height: 48)
-                    }
-                    .padding([.leading, .trailing], 24)
-                    
-                    // 상세정보
-                    Group {
-                        
-                        HStack {
-                            Text("상세정보")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.Common.primaryDarkTextColor)
-
+                            
                             Spacer()
-                        }
-                        
-                        Spacer()
-                            .frame(height: 16)
-                        
-                        VStack(spacing: 6) {
-                            ZStack {
-                                HStack {
-                                    Text("Material")
-                                        .font(.system(size: 16, weight: .regular))
-                                        .foregroundColor(.Common.subtextDarkColor)
-                                    Spacer()
-                                    Text((viewModel.productDetail?.materials ?? []).joined(separator: ", "))
-                                        .font(.system(size: 16, weight: .regular))
-                                        .foregroundColor(.Common.primaryDarkTextColor)
-                                }
-                                HStack(spacing: 0) {
-                                    Spacer()
-                                        .frame(width: 90)
-                                    Rectangle()
-                                        .foregroundColor(.Common.subtextColor)
-                                        .frame(width: 1, height: 14)
-                                    Spacer()
+                                .frame(height: 24)
+                            
+                            productInfoView
+                            
+                            Spacer()
+                                .frame(height: 48)
+                            
+                            productIntroView
+                            
+                            Spacer()
+                                .frame(height: 16)
+                            
+                            // 소개 사진
+                            VStack(spacing: 14) {
+                                ForEach(viewModel.productDetail?.detailedImageUrls ?? [], id: \.self) { image in
+                                    if let url = URL(string: image) {
+                                        KFImage(url)
+                                            .placeholder {
+                                                Image("mock_table")
+                                            }
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: geometry.size.width - 48, height: geometry.size.width - 48)
+                                    } else {
+                                        Image("mock_table")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: geometry.size.width - 48, height: geometry.size.width - 48)
+                                    }
                                 }
                             }
                             
-                            Rectangle()
-                                .foregroundColor(.Common.subtextColor)
-                                .frame(height: 1)
+                            Spacer()
+                                .frame(height: 48)
                         }
                         
-                        Spacer()
-                            .frame(height: 16)
-                        
-                        VStack(spacing: 6) {
-                            ZStack {
-                                HStack {
-                                    Text("Size")
-                                        .font(.system(size: 16, weight: .regular))
-                                        .foregroundColor(.Common.subtextDarkColor)
-                                    Spacer()
-                                    Text("\(viewModel.productDetail?.width ?? 0) * \(viewModel.productDetail?.height ?? 0) * \(viewModel.productDetail?.depth ?? 0)")
-                                        .font(.system(size: 16, weight: .regular))
-                                        .foregroundColor(.Common.primaryDarkTextColor)
-                                }
-                                HStack(spacing: 0) {
-                                    Spacer()
-                                        .frame(width: 90)
-                                    Rectangle()
-                                        .foregroundColor(.Common.subtextColor)
-                                        .frame(width: 1, height: 14)
-                                    Spacer()
+                        Group {
+                            // 다각도 이미지
+                            HStack {
+                                Text("다각도 이미지")
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundColor(.Common.primaryDarkTextColor)
+                                Spacer()
+                            }
+                            Spacer()
+                                .frame(height: 16)
+                            
+                            LazyVGrid(columns: columns, spacing: 4) {
+                                ForEach(viewModel.productDetail?.validationImageUrls ?? [], id: \.self) { image in
+                                    if let url = URL(string: image) {
+                                        KFImage(url)
+                                            .placeholder {
+                                                Image("mock_table")
+                                            }
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: geometry.size.width / 2 - 26, height: geometry.size.width / 2 - 26)
+                                    } else {
+                                        Image("mock_table")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: geometry.size.width / 2 - 26, height: geometry.size.width / 2 - 26)
+                                    }
                                 }
                             }
-                            
-                            Rectangle()
-                                .foregroundColor(.Common.subtextColor)
-                                .frame(height: 1)
+                            Spacer()
+                                .frame(height: 48)
                         }
-                                                
-                        Spacer()
-                            .frame(height: 16)
+                        .padding([.leading, .trailing], 24)
+                        
+                        // 상세정보
+                        Group {
+                            
+                            HStack {
+                                Text("상세정보")
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundColor(.Common.primaryDarkTextColor)
 
-                        VStack(spacing: 6) {
-                            ZStack {
-                                HStack {
-                                    Text("Period")
-                                        .font(.system(size: 16, weight: .regular))
-                                        .foregroundColor(.Common.subtextDarkColor)
-                                    Spacer()
-                                    
-                                    if let startDate = viewModel.productDetail?.productStartDate, let endDate = viewModel.productDetail?.productEndDate {
-                                        Text("\(startDate) ~ \(endDate)")
+                                Spacer()
+                            }
+                            
+                            Spacer()
+                                .frame(height: 16)
+                            
+                            VStack(spacing: 6) {
+                                ZStack {
+                                    HStack {
+                                        Text("Material")
+                                            .font(.system(size: 16, weight: .regular))
+                                            .foregroundColor(.Common.subtextDarkColor)
+                                        Spacer()
+                                        Text((viewModel.productDetail?.materials ?? []).joined(separator: ", "))
                                             .font(.system(size: 16, weight: .regular))
                                             .foregroundColor(.Common.primaryDarkTextColor)
                                     }
+                                    HStack(spacing: 0) {
+                                        Spacer()
+                                            .frame(width: 90)
+                                        Rectangle()
+                                            .foregroundColor(.Common.subtextColor)
+                                            .frame(width: 1, height: 14)
+                                        Spacer()
+                                    }
                                 }
-                                HStack(spacing: 0) {
-                                    Spacer()
-                                        .frame(width: 90)
-                                    Rectangle()
-                                        .foregroundColor(.Common.subtextColor)
-                                        .frame(width: 1, height: 14)
-                                    Spacer()
-                                }
+                                
+                                Rectangle()
+                                    .foregroundColor(.Common.subtextColor)
+                                    .frame(height: 1)
                             }
                             
-                            Rectangle()
-                                .foregroundColor(.Common.subtextColor)
-                                .frame(height: 1)
-                        }
-                    }
-                    .padding([.leading, .trailing], 24)
-                    
-                    Spacer()
-                        .frame(height: 48)
-                    
-                    // 작가의 다른 작품
-                    Group {
-                        HStack {
-                            Text("작가의 다른 작품")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.Common.primaryDarkTextColor)
-
                             Spacer()
+                                .frame(height: 16)
                             
-                            Button {
-                                print("전체보기")
-                            } label: {
-                                HStack(spacing: 0) {
-                                    Text("전체보기")
-                                        .font(.system(size: 14, weight: .regular))
-                                        .foregroundColor(.Common.subtextDarkColor)
-                                    Image("icon_chevron_right")
+                            VStack(spacing: 6) {
+                                ZStack {
+                                    HStack {
+                                        Text("Size")
+                                            .font(.system(size: 16, weight: .regular))
+                                            .foregroundColor(.Common.subtextDarkColor)
+                                        Spacer()
+                                        Text("\(viewModel.productDetail?.width ?? 0) * \(viewModel.productDetail?.height ?? 0) * \(viewModel.productDetail?.depth ?? 0)")
+                                            .font(.system(size: 16, weight: .regular))
+                                            .foregroundColor(.Common.primaryDarkTextColor)
+                                    }
+                                    HStack(spacing: 0) {
+                                        Spacer()
+                                            .frame(width: 90)
+                                        Rectangle()
+                                            .foregroundColor(.Common.subtextColor)
+                                            .frame(width: 1, height: 14)
+                                        Spacer()
+                                    }
                                 }
+                                
+                                Rectangle()
+                                    .foregroundColor(.Common.subtextColor)
+                                    .frame(height: 1)
                             }
+                                                    
+                            Spacer()
+                                .frame(height: 16)
 
+                            VStack(spacing: 6) {
+                                ZStack {
+                                    HStack {
+                                        Text("Period")
+                                            .font(.system(size: 16, weight: .regular))
+                                            .foregroundColor(.Common.subtextDarkColor)
+                                        Spacer()
+                                        
+                                        if let startDate = viewModel.productDetail?.productStartDate, let endDate = viewModel.productDetail?.productEndDate {
+                                            Text("\(startDate) ~ \(endDate)")
+                                                .font(.system(size: 16, weight: .regular))
+                                                .foregroundColor(.Common.primaryDarkTextColor)
+                                        }
+                                    }
+                                    HStack(spacing: 0) {
+                                        Spacer()
+                                            .frame(width: 90)
+                                        Rectangle()
+                                            .foregroundColor(.Common.subtextColor)
+                                            .frame(width: 1, height: 14)
+                                        Spacer()
+                                    }
+                                }
+                                
+                                Rectangle()
+                                    .foregroundColor(.Common.subtextColor)
+                                    .frame(height: 1)
+                            }
                         }
+                        .padding([.leading, .trailing], 24)
+                        
                         Spacer()
-                            .frame(height: 16)
+                            .frame(height: 48)
+                        
+                        // 작가의 다른 작품
+                        Group {
+                            HStack {
+                                Text("작가의 다른 작품")
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundColor(.Common.primaryDarkTextColor)
+
+                                Spacer()
+                                
+                                Button {
+                                    print("전체보기")
+                                } label: {
+                                    HStack(spacing: 0) {
+                                        Text("전체보기")
+                                            .font(.system(size: 14, weight: .regular))
+                                            .foregroundColor(.Common.subtextDarkColor)
+                                        Image("icon_chevron_right")
+                                    }
+                                }
+
+                            }
+                            Spacer()
+                                .frame(height: 16)
+                        }
+                        .padding([.leading, .trailing], 24)
                     }
-                    .padding([.leading, .trailing], 24)
+                }
+                .onAppear {
+                    viewModel.fetchProductDetail()
+                }
+                .navigationBarHidden(true)
+                .coordinateSpace(name: "scroll")
+                .onPreferenceChange(ScrollOffsetKey.self) { offset in
+                    scrollOffset = offset
+                    if scrollOffset > previousScrollOffset && abs(scrollOffset - previousScrollOffset) > 10 {
+                        // We scrolled up
+                        withAnimation {
+                            showBottomView = false
+                        }
+                    } else if scrollOffset < previousScrollOffset && abs(scrollOffset - previousScrollOffset) > 10 {
+                        // We scrolled down
+                        withAnimation {
+                            showBottomView = true
+                        }
+                    }
+                    
+                    previousScrollOffset = scrollOffset
+                }
+                
+                if showBottomView {
+                    VStack {
+                        Spacer()
+                        
+                        bottomDoneButtonView
+                    }
                 }
             }
-            .onAppear {
-                viewModel.fetchProductDetail()
-            }
-            .navigationBarHidden(true)
-
         }
-
+        
     }
 }
 
@@ -427,5 +460,38 @@ extension ProductDetailView {
                 .multilineTextAlignment(.leading)
                 .padding([.leading, .trailing], 24)
         }
+    }
+    
+    var bottomDoneButtonView: some View {
+        VStack(spacing: 0) {
+            Spacer()
+                .frame(height: 12)
+            Button {
+            } label: {
+                Text("완료")
+                    .foregroundColor(Color.Common.white)
+                    .font(.system(size: 16, weight: .bold))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 46)
+                    .background(Color.Common.gray01)
+                    .cornerRadius(4)
+                    .padding([.leading, .trailing], 24)
+            }
+            .buttonStyle(NoHighlightButtonStyle())
+            Spacer()
+                .frame(height: 12)
+        }
+        .background(Color.Common.primaryTextColor)
+        .overlay(
+            Rectangle()
+                .stroke(Color.Common.subtextColor, lineWidth: 1)
+        )
+    }
+}
+
+struct ScrollOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value += nextValue()
     }
 }

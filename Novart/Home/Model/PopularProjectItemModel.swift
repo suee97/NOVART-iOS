@@ -12,6 +12,7 @@ enum NovartItemCategory: String, Codable {
     case furniture = "furniture"
     case light = "light"
     case craft = "craft"
+    case all = "all"
 }
 
 struct PopularProductItemModel: Codable {

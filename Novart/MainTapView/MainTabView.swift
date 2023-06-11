@@ -74,6 +74,8 @@ struct MainTabView: View {
                 titleImage
                 Spacer()
                 notiItem
+                Spacer()
+                    .frame(width: 16)
                 searchItem
                 
                 Spacer()
@@ -96,6 +98,8 @@ struct MainTabView: View {
                     Spacer()
 
                     notiItem
+                    Spacer()
+                        .frame(width: 16)
                     searchItem
                     
                     Spacer()
@@ -126,25 +130,18 @@ struct MainTabView: View {
             Image("icon_search")
         }
             .buttonStyle(NoHighlightButtonStyle())
-            .padding(.top, 2)
     }
     
     var notiItem: some View {
         Button(action: {
             print("noti")
         }) {
-            ZStack {
-                Image("icon_noti")
-                
-                if hasNewNotification {
-                    Circle()
-                        .frame(width: 6, height: 6)
-                        .foregroundColor(Color.Common.primaryTintColor)
-                        .offset(x: 13, y: -10)
-                }
+            if hasNewNotification {
+                Image("icon_noti_on")
+            } else {
+                Image("icon_noti_off")
             }
         }
             .buttonStyle(NoHighlightButtonStyle())
-            .padding(.trailing, 20)
     }
 }

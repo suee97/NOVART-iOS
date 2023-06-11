@@ -21,11 +21,11 @@ struct ProductGridView: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView(showsIndicators: false) {
-                availabilityCheckView
-                    .padding([.top], 8)
-                    .padding([.bottom], 12)
-                    .padding([.leading], 24)
-                
+//                availabilityCheckView
+//                    .padding([.top], 8)
+//                    .padding([.bottom], 12)
+//                    .padding([.leading], 24)
+//                
                 LazyVGrid(columns: columns, spacing: 40) {
                     ForEach(items, id: \.id) { item in
                         

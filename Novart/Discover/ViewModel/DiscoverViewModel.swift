@@ -10,6 +10,9 @@ import Foundation
 class DiscoverViewModel: ObservableObject {
     
     @Published var products: [PopularProductItemModel] = []
+    @Published var selectedCategory: NovartItemCategory = .all
+    @Published var isOnlyPurchasable: Bool = false
+    @Published var listOrderType: ListOrderType = .popular
     
     let downloadInteractor: DiscoverDownloadInteractor = DiscoverDownloadInteractor()
     
@@ -26,4 +29,11 @@ class DiscoverViewModel: ObservableObject {
             }
         }
     }
+}
+
+enum ListOrderType {
+    case new
+    case popular
+    case highPrice
+    case lowPrice
 }
