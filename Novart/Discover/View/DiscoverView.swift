@@ -9,7 +9,12 @@ import SwiftUI
 
 struct DiscoverView: View {
     
-    @ObservedObject var viewModel = DiscoverViewModel()
+    @ObservedObject var viewModel: DiscoverViewModel
+    
+    init(viewModel: DiscoverViewModel) {
+        self.viewModel = viewModel
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .bottom) {
@@ -26,7 +31,7 @@ struct DiscoverView: View {
                     Spacer()
                         .frame(height: 12)
                     
-                    ProductGridView(items: viewModel.products)
+                    ProductGridView(viewModel: viewModel)
                 }
                 
                 Button {
@@ -37,9 +42,6 @@ struct DiscoverView: View {
                 .padding(.bottom, 16)
 
             }
-        }
-        .onAppear {
-            viewModel.fetchProducts()
         }
     }
 }
@@ -108,6 +110,6 @@ extension DiscoverView {
 
 struct DiscoverView_Previews: PreviewProvider {
     static var previews: some View {
-        DiscoverView()
+        DiscoverView(viewModel: DiscoverViewModel())
     }
 }

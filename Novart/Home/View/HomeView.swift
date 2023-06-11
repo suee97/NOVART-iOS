@@ -10,7 +10,11 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @ObservedObject var viewModel = HomeViewModel()
+    @ObservedObject var viewModel: HomeViewModel
+    
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         
@@ -50,6 +54,6 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView(viewModel: HomeViewModel())
     }
 }

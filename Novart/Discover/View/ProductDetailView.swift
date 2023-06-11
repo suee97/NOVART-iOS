@@ -482,10 +482,6 @@ extension ProductDetailView {
                 .frame(height: 12)
         }
         .background(Color.Common.primaryTextColor)
-        .overlay(
-            Rectangle()
-                .stroke(Color.Common.subtextColor, lineWidth: 1)
-        )
     }
 }
 

@@ -10,16 +10,17 @@ import SwiftUI
 struct MainTabView: View {
     @State private var selection = 0
     @State private var hasNewNotification = true
+    @StateObject var discoverViewModel = DiscoverViewModel()
+    @StateObject var homeViewModel = HomeViewModel()
     
     var body: some View {
-        TabView(selection: $selection) {
-            NavigationView {
-                
+        NavigationView {
+            TabView(selection: $selection) {
                 ZStack(alignment: .top) {
                     VStack {
                         Spacer()
                             .frame(height: 63)
-                        HomeView()
+                        HomeView(viewModel: homeViewModel)
                     }
                     
                     VStack {
@@ -28,21 +29,17 @@ struct MainTabView: View {
                     }
                 }
                 .navigationBarHidden(true)
+                .tabItem {
+                    Image(selection == 0 ? "home_icon_selected" : "home_icon_deselected")
+                }
+                .tag(0)
                 
-            }
-            .tabItem {
-                Image(selection == 0 ? "home_icon_selected" : "home_icon_deselected")
-            }
-            .tag(0)
-            
-            
-            NavigationView {
                 
                 ZStack(alignment: .top) {
                     VStack {
                         Spacer()
                             .frame(height: 63)
-                        DiscoverView()
+                        DiscoverView(viewModel: discoverViewModel)
                     }
                     
                     VStack {
@@ -51,18 +48,19 @@ struct MainTabView: View {
                     }
                 }
                 .navigationBarHidden(true)
-            }
-            .tabItem {
-                Image(selection == 1 ? "discover_icon_selected" : "discover_icon_deselected")
-            }
-            .tag(1)
-            
-            MyPageView()
                 .tabItem {
-                    Image(selection == 2 ? "mypage_icon_selected" : "mypage_icon_deselected")
+                    Image(selection == 1 ? "discover_icon_selected" : "discover_icon_deselected")
                 }
-                .tag(2)
+                .tag(1)
+                
+                MyPageView()
+                    .tabItem {
+                        Image(selection == 2 ? "mypage_icon_selected" : "mypage_icon_deselected")
+                    }
+                    .tag(2)
+            }
         }
+        
     }
     
     var homeNavigationBar: some View {
