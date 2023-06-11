@@ -88,6 +88,8 @@ extension PopularProductItem {
             return "조명"
         case .craft:
             return "공예"
+        default:
+            return ""
         }
     }
 }
