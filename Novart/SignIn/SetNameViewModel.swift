@@ -23,7 +23,7 @@ class SetNameViewModel: ObservableObject {
     
     let maxNicknameLength = 15
 
-    var interactor: SignInInteractor = SignInInteractor()
+    var interactor: LoginInteractor = LoginInteractor()
         
     init() {
         setBindings()

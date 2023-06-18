@@ -12,6 +12,7 @@ struct MainTabView: View {
     @State private var hasNewNotification = true
     @StateObject var discoverViewModel = DiscoverViewModel()
     @StateObject var homeViewModel = HomeViewModel()
+    @State private var isShowingSearch = false
     
     var body: some View {
         NavigationView {
@@ -122,12 +123,10 @@ struct MainTabView: View {
     
     
     var searchItem: some View {
-        Button {
-            print("search")
-        } label: {
+        NavigationLink(destination: SearchView(isShowing: $isShowingSearch), isActive: $isShowingSearch) {
             Image("icon_search")
+
         }
-            .buttonStyle(NoHighlightButtonStyle())
     }
     
     var notiItem: some View {
