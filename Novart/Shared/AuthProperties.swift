@@ -14,5 +14,5 @@ final class AuthProperties {
     var isInitialSignUp: Bool = true
     var signInProvider: SignInProvider?
     var providerAccessToken: String?
-    var user: UserDTO?
+    var user: NovartUser?
 }

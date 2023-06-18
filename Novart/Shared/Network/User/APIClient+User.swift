@@ -9,12 +9,12 @@ import Alamofire
 import Foundation
 
 extension APIClient {
-    static func getUser() async throws -> UserResponse {
-        try await APIClient.request(target: UserTarget.getUser, type: UserResponse.self)
+    static func getUser() async throws -> NetworkResponse<NovartUser> {
+        try await APIClient.request(target: UserTarget.getUser, type: NetworkResponse<NovartUser>.self)
     }
     
-    static func setNickname(as nickname: String) async throws -> SetNameResponse {
-        try await APIClient.request(target: UserTarget.setNickname(nickname: nickname), type: SetNameResponse.self)
+    static func setNickname(as nickname: String) async throws -> NetworkResponse<SetNameResponse> {
+        try await APIClient.request(target: UserTarget.setNickname(nickname: nickname), type: NetworkResponse<SetNameResponse>.self)
     }
 }
 
