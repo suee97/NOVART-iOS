@@ -473,6 +473,7 @@ extension ProductDetailView {
                 .font(.system(size: 14, weight: .regular))
                 .lineSpacing(10)
                 .multilineTextAlignment(.leading)
+                .padding([.leading, .trailing], 24)
         }
     }
     

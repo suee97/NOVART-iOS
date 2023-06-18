@@ -1,5 +1,5 @@
 //
-//  SignInInteractor.swift
+//  LoginInteractor.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/04/02.
@@ -15,12 +15,16 @@ enum SignInProvider: String {
     case google
 }
 
-final class SignInInteractor {
+final class LoginInteractor {
     
     @MainActor
-    func performGoogleSignIn() async throws -> GIDSignInResult {
+    func performGoogleSignIn() async throws -> String {
         guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else { throw ServiceError.rootViewControllerNotFound }
-        return try await GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController)
+        let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController)
+        let accessToken = result.user.accessToken.tokenString
+        AuthProperties.shared.signInProvider = .google
+        AuthProperties.shared.providerAccessToken = accessToken
+        return accessToken
     }
     
     @MainActor
@@ -35,6 +39,8 @@ final class SignInInteractor {
                     }
                     
                     if let oauthToken = oauthToken {
+                        AuthProperties.shared.signInProvider = .kakao
+                        AuthProperties.shared.providerAccessToken = oauthToken.accessToken
                         continuation.resume(returning: oauthToken)
                         return
                     } else {
@@ -49,15 +55,21 @@ final class SignInInteractor {
         })
     }
     
-    func signInToServer(accessToken: String, provider: SignInProvider) async throws {
-        let signInResponse = try await APIClient.signIn(accessToken: accessToken, provider: provider.rawValue)
-        guard let token = signInResponse.data else { return }
-        KeychainService.shared.saveAccessToken(token.accessToken)
-        KeychainService.shared.saveRefreshToken(token.refreshToken)
-        print("access token success!")
+    func login(accessToken: String, provider: SignInProvider) async throws -> Bool {
+        let loginResponse = try await APIClient.login(accessToken: accessToken, provider: provider.rawValue)
+        guard let isFirst = loginResponse.data?.isFirstLogin else { return true }
+        if isFirst {
+            return isFirst
+        } else {
+            guard let accessToken = loginResponse.data?.accessToken, let refreshToken = loginResponse.data?.refreshToken else { return true }
+            KeychainService.shared.saveAccessToken(accessToken)
+            KeychainService.shared.saveRefreshToken(refreshToken)
+            try await getUserInfo()
+            return false
+        }
     }
     
-    func getUserInfo() async throws {
+    private func getUserInfo() async throws {
         let userResponse = try await APIClient.getUser()
         let user = userResponse.data
         AuthProperties.shared.user = user

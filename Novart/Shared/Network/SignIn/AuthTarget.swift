@@ -9,7 +9,8 @@ import Alamofire
 import Foundation
 
 enum AuthTarget: TargetType {
-    case signIn(accessToken: String, provider: String)
+    case signUp(signUpInfo: SignUpRequestBody)
+    case login(accessToken: String, provider: String)
     
     var baseURL: String {
         API.baseURL
@@ -17,8 +18,10 @@ enum AuthTarget: TargetType {
     
     var path: String {
         switch self {
-        case .signIn:
+        case .signUp:
             return "signup"
+        case .login:
+            return "auth"
         }
     }
     
@@ -28,7 +31,9 @@ enum AuthTarget: TargetType {
     
     var parameters: RequestParams {
         switch self {
-        case let .signIn(accessToken, provider):
+        case let .signUp(signUpInfo):
+            return .body(signUpInfo)
+        case let .login(accessToken, provider):
             return .body([
                 "provider": provider,
                 "accessToken": accessToken

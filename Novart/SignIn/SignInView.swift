@@ -13,7 +13,7 @@ import SwiftUI
 struct SignInView: View {
     
     @ObservedObject var viewModel: SignInViewModel
-    @State private var shouldShowSetNicknameView = false
+    @State private var shouldShowPolicyAgreeView = false
     
     var body: some View {
         VStack(alignment: .center) {
@@ -81,25 +81,25 @@ struct SignInView: View {
         .ignoresSafeArea()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.Common.primaryTintColor)
-        .onChange(of: viewModel.signInResult) { success in
-            guard success else { return }
-            if AuthProperties.shared.isInitialSignUp {
-                shouldShowSetNicknameView = true
+        .onReceive(viewModel.isFirstLogin, perform: { isFirstLogin in
+            if isFirstLogin {
+                shouldShowPolicyAgreeView = true
             } else {
                 transitionToMainTabView()
             }
-        }
+        })
         .navigationBarHidden(true)
         .background(
-            NavigationLink("", destination: SetNameView(), isActive: $shouldShowSetNicknameView).opacity(0)
+            NavigationLink("", destination: PolicyArgreeView(), isActive: $shouldShowPolicyAgreeView).opacity(0)
         )
+        
     }
     
     
     
     var kakaoSignInButton: some View {
         Button {
-            viewModel.signIn(with: .kakao)
+            viewModel.login(with: .kakao)
         } label: {
             ZStack {
                 HStack {
@@ -127,7 +127,7 @@ struct SignInView: View {
     
     var googleSignInButton: some View {
         Button {
-            viewModel.signIn(with: .google)
+            viewModel.login(with: .google)
         } label: {
             ZStack {
                 HStack {

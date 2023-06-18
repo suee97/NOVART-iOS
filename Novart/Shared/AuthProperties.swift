@@ -12,5 +12,7 @@ final class AuthProperties {
     static let shared: AuthProperties = AuthProperties()
     
     var isInitialSignUp: Bool = true
+    var signInProvider: SignInProvider?
+    var providerAccessToken: String?
     var user: UserDTO?
 }

@@ -11,48 +11,42 @@ import GoogleSignIn
 
 class SignInViewModel: ObservableObject {
     
-    @Published var signInResult: Bool = false
-    
-    var interactor: SignInInteractor = SignInInteractor()
+    var isFirstLogin: PassthroughSubject<Bool, Never> = PassthroughSubject<Bool, Never>()
+    var interactor: LoginInteractor = LoginInteractor()
     
     init(){
     }
 
-    
-    func signIn(with type: SignInProvider){
-        
+    func login(with type: SignInProvider) {
         switch type {
         case .kakao:
-            Task { @MainActor in
+            Task {
                 do {
                     let authToken = try await interactor.performKakaoSignIn()
-                    let accessToken = authToken.accessToken
-                    try await interactor.signInToServer(accessToken: accessToken, provider: .kakao)
-                    try await interactor.getUserInfo()
-                    signInResult = true
+                    let isFirst = try await interactor.login(accessToken: authToken.accessToken, provider: .kakao)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.isFirstLogin.send(isFirst)
+                    }
                 } catch {
-                    signInResult = false
+                    print(error.localizedDescription)
                 }
             }
+            
         case .google:
-            Task { @MainActor in
+            Task {
                 do {
-                    let result = try await interactor.performGoogleSignIn()
-                    let accessToken = result.user.accessToken.tokenString
-                    try await interactor.signInToServer(accessToken: accessToken, provider: .google)
-                    signInResult = true
+                    let accessToken = try await interactor.performGoogleSignIn()
+                    let isFirst = try await interactor.login(accessToken: accessToken, provider: .google)
+                    DispatchQueue.main.async {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.isFirstLogin.send(isFirst)
+                        }
+                    }
                 } catch {
-                    print(error)
-                    signInResult = false
+                    print(error.localizedDescription)
                 }
             }
-
         }
-    }
-    
-    private func signInWithGoogle() async throws -> (String?, String?) {
-        let result = try await interactor.performGoogleSignIn()
-        return (result.user.profile?.email, result.user.userID)
     }
     
     func signOut(){
