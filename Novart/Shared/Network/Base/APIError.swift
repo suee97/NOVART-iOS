@@ -9,6 +9,7 @@ import Foundation
 
 enum ErrorCode: String {
     case UNKNOWN
+    case TokenRefreshFail
     
     init(fromRawValue: String) {
         self = ErrorCode(rawValue: fromRawValue) ?? .UNKNOWN
