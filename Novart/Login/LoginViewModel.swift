@@ -1,0 +1,78 @@
+//
+//  LoginViewModel.swift
+//  Novart
+//
+//  Created by Jinwook Huh on 2023/07/02.
+//
+
+import Foundation
+import Combine
+
+
+final class LoginViewModel {
+    
+    var isFirstLogin: PassthroughSubject<Bool, Never> = PassthroughSubject<Bool, Never>()
+    
+    private weak var coordinator: LoginCoordinator?
+    private let interactor: LoginInteractor
+    
+    convenience init(
+        coordinator: LoginCoordinator
+    ) {
+        self.init(coordinator: coordinator, interactor: LoginInteractor())
+    }
+    
+    private init(
+        coordinator: LoginCoordinator,
+        interactor: LoginInteractor
+    ) {
+        self.coordinator = coordinator
+        self.interactor = interactor
+    }
+    
+    @MainActor
+    func showMainScene() {
+        coordinator?.navigate(to: .main)
+    }
+    
+    func login(with type: SignInProvider) {
+        switch type {
+        case .google:
+            Task {
+                do {
+                    let accessToken = try await interactor.performGoogleSignIn()
+                    let isFirst = try await interactor.login(accessToken: accessToken, provider: .google)
+                    DispatchQueue.main.async {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.isFirstLogin.send(isFirst)
+                        }
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+            
+        case .kakao:
+            Task {
+                do {
+                    let authToken = try await interactor.performKakaoSignIn()
+                    let isFirst = try await interactor.login(accessToken: authToken.accessToken, provider: .kakao)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.isFirstLogin.send(isFirst)
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    func transitionToMainScene() {
+        print("home view controller")
+    }
+    
+    @MainActor
+    func showPolicyAgreeViewController() {
+        coordinator?.navigate(to: .policy)
+    }
+}
