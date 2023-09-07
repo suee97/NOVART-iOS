@@ -1,6 +1,24 @@
 import UIKit
+import SnapKit
 
 final class MyPageViewController: BaseViewController {
+    
+    // MARK: - Constants
+    private enum Constants {
+        static let screenWidth = UIScreen.main.bounds.width
+        static let backgroundRat: CGFloat = 22/39
+        static var appearance: UINavigationBarAppearance = {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .clear
+            appearance.shadowColor = .clear
+            return appearance
+        }()
+    }
+    
+    // MARK: - Properties
+    var backgroundImage: UIImage?
+    
     
     // MARK: - UI
     override func setupNavigationBar() {
@@ -27,7 +45,53 @@ final class MyPageViewController: BaseViewController {
         self.navigationItem.rightBarButtonItems = [settingItem, spacer, notificationItem]
         self.navigationItem.leftBarButtonItem = meatballsItem
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Constants.appearance.backgroundColor = .clear
+        navigationController?.navigationBar.compactAppearance = Constants.appearance
+        navigationController?.navigationBar.standardAppearance = Constants.appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = Constants.appearance
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        Constants.appearance.backgroundColor = .white
+        navigationController?.navigationBar.compactAppearance = Constants.appearance
+        navigationController?.navigationBar.standardAppearance = Constants.appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = Constants.appearance
+    }
+    
+    private let defaultBackgroundImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "default_user_background_image")
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    override func setupView() {
+        view.backgroundColor = .white
+        
+        view.addSubview(defaultBackgroundImageView)
+        defaultBackgroundImageView.snp.makeConstraints({ m in
+            m.left.right.top.equalTo(view)
+            m.height.equalTo(Constants.screenWidth * Constants.backgroundRat)
+        })
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = defaultBackgroundImageView.bounds
+        let colors: [CGColor] = [UIColor.white.withAlphaComponent(0.0).cgColor, UIColor.white.cgColor]
+        gradientLayer.colors = colors
+        
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        gradientLayer.locations = [0.5, 1.0]
+        defaultBackgroundImageView.layer.addSublayer(gradientLayer)
+    }
     
     // MARK: - Selectors
     @objc private func onTapNotification() {
