@@ -16,9 +16,6 @@ final class MyPageViewController: BaseViewController {
         }()
     }
     
-    // MARK: - Properties
-    var backgroundImage: UIImage?
-    
     
     // MARK: - UI
     override func setupNavigationBar() {
@@ -62,36 +59,141 @@ final class MyPageViewController: BaseViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = Constants.appearance
     }
     
-    private let defaultBackgroundImageView: UIImageView = {
+    private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "default_user_background_image")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
+    private let profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "default_user_profile_image")
+        return imageView
+    }()
+    
+    private let userNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "게스트"
+        label.font = UIFont(name: "Apple SD Gothic Neo Bold", size: 28)
+        return label
+    }()
+    
+    private let categoryView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .Common.grey00
+        view.layer.cornerRadius = 12
+        
+        let barView1 = UIView()
+        let barView2 = UIView()
+        let barView3 = UIView()
+        barView1.backgroundColor = .Common.grey01
+        barView2.backgroundColor = .Common.grey01
+        barView3.backgroundColor = .Common.grey01
+        
+        let interestButton = MyPageCategoryButton(title: "관심")
+        let followingButton = MyPageCategoryButton(title: "팔로잉")
+        let workButton = MyPageCategoryButton(title: "작업")
+        let exhibitionButton = MyPageCategoryButton(title: "전시")
+        
+        view.addSubview(interestButton)
+        view.addSubview(followingButton)
+        view.addSubview(workButton)
+        view.addSubview(exhibitionButton)
+        view.addSubview(barView1)
+        view.addSubview(barView2)
+        view.addSubview(barView3)
+        
+        interestButton.snp.makeConstraints({ m in
+            m.width.equalTo(84)
+            m.height.equalTo(44)
+            m.left.top.equalTo(view)
+        })
+        barView1.snp.makeConstraints({ m in
+            m.width.equalTo(1)
+            m.height.equalTo(16)
+            m.left.equalTo(interestButton.snp.right)
+            m.centerY.equalTo(view)
+        })
+        followingButton.snp.makeConstraints({ m in
+            m.width.equalTo(84)
+            m.height.equalTo(44)
+            m.left.equalTo(barView1.snp.right)
+            m.top.equalTo(view)
+        })
+        barView2.snp.makeConstraints({ m in
+            m.width.equalTo(1)
+            m.height.equalTo(16)
+            m.left.equalTo(followingButton.snp.right)
+            m.centerY.equalTo(view)
+        })
+        workButton.snp.makeConstraints({ m in
+            m.width.equalTo(84)
+            m.height.equalTo(44)
+            m.top.equalTo(view)
+            m.left.equalTo(barView2.snp.right)
+        })
+        barView3.snp.makeConstraints({ m in
+            m.width.equalTo(1)
+            m.height.equalTo(16)
+            m.left.equalTo(workButton.snp.right)
+            m.centerY.equalTo(view)
+        })
+        exhibitionButton.snp.makeConstraints({ m in
+            m.width.equalTo(84)
+            m.height.equalTo(44)
+            m.left.equalTo(barView3.snp.right)
+            m.top.equalTo(view)
+        })
+        
+        return view
+    }()
+    
     override func setupView() {
         view.backgroundColor = .white
         
-        view.addSubview(defaultBackgroundImageView)
-        defaultBackgroundImageView.snp.makeConstraints({ m in
+        view.addSubview(backgroundImageView)
+        view.addSubview(profileImageView)
+        view.addSubview(userNameLabel)
+        view.addSubview(categoryView)
+        
+        backgroundImageView.snp.makeConstraints({ m in
             m.left.right.top.equalTo(view)
             m.height.equalTo(Constants.screenWidth * Constants.backgroundRat)
         })
         
+        profileImageView.snp.makeConstraints({ m in
+            m.width.height.equalTo(108)
+            m.centerX.equalTo(view)
+            m.centerY.equalTo(backgroundImageView.snp.bottom)
+        })
+        
+        userNameLabel.snp.makeConstraints({ m in
+            m.centerX.equalTo(view)
+            m.top.equalTo(profileImageView.snp.bottom).offset(12)
+        })
+        
+        categoryView.snp.makeConstraints({ m in
+            m.top.equalTo(userNameLabel.snp.bottom).offset(18)
+            m.width.equalTo(342)
+            m.height.equalTo(44)
+            m.centerX.equalTo(view)
+        })
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = defaultBackgroundImageView.bounds
+        gradientLayer.frame = backgroundImageView.bounds
         let colors: [CGColor] = [UIColor.white.withAlphaComponent(0.0).cgColor, UIColor.white.cgColor]
         gradientLayer.colors = colors
         
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
         gradientLayer.locations = [0.5, 1.0]
-        defaultBackgroundImageView.layer.addSublayer(gradientLayer)
+        backgroundImageView.layer.addSublayer(gradientLayer)
     }
+    
     
     // MARK: - Selectors
     @objc private func onTapNotification() {
