@@ -1,12 +1,12 @@
 import UIKit
 import SnapKit
+import Combine
 
 final class MyPageViewController: BaseViewController {
     
     // MARK: - Constants
     private enum Constants {
         static let screenWidth = UIScreen.main.bounds.width
-        static let backgroundRat: CGFloat = 22/39
         static var appearance: UINavigationBarAppearance = {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
@@ -14,10 +14,35 @@ final class MyPageViewController: BaseViewController {
             appearance.shadowColor = .clear
             return appearance
         }()
+        enum CellSize {
+            static let InterestCellSize = CGSize(width: 165, height: 221)
+            static let FollowingCellSize = CGSize(width: 165, height: 110)
+            static let WorkCellSize = CGSize(width: 165, height: 205)
+            static let ExhibitionCellSize = CGSize(width: 165, height: 276)
+        }
     }
     
     
+    // MARK: - Properties
+    private let viewModel = MyPageViewModel()
+    private var cancellables = Set<AnyCancellable>()
+    private var headerSize: CGSize = .init(width: Constants.screenWidth, height: 382+12)
+    private var cellSize = CGSize(width: 165, height: 221)
+    
+    
     // MARK: - UI
+    private let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 12
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        collectionView.contentInsetAdjustmentBehavior = .never
+        collectionView.bounces = false
+        collectionView.showsVerticalScrollIndicator = false
+        return collectionView
+    }()
+    
     override func setupNavigationBar() {
         let iconSize = CGRect(origin: CGPoint.zero, size: CGSize(width: 24, height: 24))
 
@@ -43,6 +68,38 @@ final class MyPageViewController: BaseViewController {
         self.navigationItem.leftBarButtonItem = meatballsItem
     }
     
+    override func setupView() {
+        view.backgroundColor = .white
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(MyPageHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageHeaderView.id)
+        
+        view.addSubview(collectionView)
+        
+        collectionView.snp.makeConstraints({ m in
+            m.left.right.top.bottom.equalTo(view)
+        })
+    }
+    
+    
+    // MARK: - LifeCycle
+    override func setupBindings() {
+        viewModel.$selectedCategory.sink(receiveValue: { value in
+            switch value! {
+            case .Interest:
+                self.cellSize = Constants.CellSize.InterestCellSize
+            case .Following:
+                self.cellSize = Constants.CellSize.FollowingCellSize
+            case .Work:
+                self.cellSize = Constants.CellSize.WorkCellSize
+            case .Exhibition:
+                self.cellSize = Constants.CellSize.ExhibitionCellSize
+            }
+            self.collectionView.reloadData()
+        }).store(in: &cancellables)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Constants.appearance.backgroundColor = .clear
@@ -59,141 +116,6 @@ final class MyPageViewController: BaseViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = Constants.appearance
     }
     
-    private let backgroundImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "default_user_background_image")
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-    
-    private let profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "default_user_profile_image")
-        return imageView
-    }()
-    
-    private let userNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "게스트"
-        label.font = UIFont(name: "Apple SD Gothic Neo Bold", size: 28)
-        return label
-    }()
-    
-    private let categoryView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .Common.grey00
-        view.layer.cornerRadius = 12
-        
-        let barView1 = UIView()
-        let barView2 = UIView()
-        let barView3 = UIView()
-        barView1.backgroundColor = .Common.grey01
-        barView2.backgroundColor = .Common.grey01
-        barView3.backgroundColor = .Common.grey01
-        
-        let interestButton = MyPageCategoryButton(title: "관심")
-        let followingButton = MyPageCategoryButton(title: "팔로잉")
-        let workButton = MyPageCategoryButton(title: "작업")
-        let exhibitionButton = MyPageCategoryButton(title: "전시")
-        
-        view.addSubview(interestButton)
-        view.addSubview(followingButton)
-        view.addSubview(workButton)
-        view.addSubview(exhibitionButton)
-        view.addSubview(barView1)
-        view.addSubview(barView2)
-        view.addSubview(barView3)
-        
-        interestButton.snp.makeConstraints({ m in
-            m.width.equalTo(84)
-            m.height.equalTo(44)
-            m.left.top.equalTo(view)
-        })
-        barView1.snp.makeConstraints({ m in
-            m.width.equalTo(1)
-            m.height.equalTo(16)
-            m.left.equalTo(interestButton.snp.right)
-            m.centerY.equalTo(view)
-        })
-        followingButton.snp.makeConstraints({ m in
-            m.width.equalTo(84)
-            m.height.equalTo(44)
-            m.left.equalTo(barView1.snp.right)
-            m.top.equalTo(view)
-        })
-        barView2.snp.makeConstraints({ m in
-            m.width.equalTo(1)
-            m.height.equalTo(16)
-            m.left.equalTo(followingButton.snp.right)
-            m.centerY.equalTo(view)
-        })
-        workButton.snp.makeConstraints({ m in
-            m.width.equalTo(84)
-            m.height.equalTo(44)
-            m.top.equalTo(view)
-            m.left.equalTo(barView2.snp.right)
-        })
-        barView3.snp.makeConstraints({ m in
-            m.width.equalTo(1)
-            m.height.equalTo(16)
-            m.left.equalTo(workButton.snp.right)
-            m.centerY.equalTo(view)
-        })
-        exhibitionButton.snp.makeConstraints({ m in
-            m.width.equalTo(84)
-            m.height.equalTo(44)
-            m.left.equalTo(barView3.snp.right)
-            m.top.equalTo(view)
-        })
-        
-        return view
-    }()
-    
-    override func setupView() {
-        view.backgroundColor = .white
-        
-        view.addSubview(backgroundImageView)
-        view.addSubview(profileImageView)
-        view.addSubview(userNameLabel)
-        view.addSubview(categoryView)
-        
-        backgroundImageView.snp.makeConstraints({ m in
-            m.left.right.top.equalTo(view)
-            m.height.equalTo(Constants.screenWidth * Constants.backgroundRat)
-        })
-        
-        profileImageView.snp.makeConstraints({ m in
-            m.width.height.equalTo(108)
-            m.centerX.equalTo(view)
-            m.centerY.equalTo(backgroundImageView.snp.bottom)
-        })
-        
-        userNameLabel.snp.makeConstraints({ m in
-            m.centerX.equalTo(view)
-            m.top.equalTo(profileImageView.snp.bottom).offset(12)
-        })
-        
-        categoryView.snp.makeConstraints({ m in
-            m.top.equalTo(userNameLabel.snp.bottom).offset(18)
-            m.width.equalTo(342)
-            m.height.equalTo(44)
-            m.centerX.equalTo(view)
-        })
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = backgroundImageView.bounds
-        let colors: [CGColor] = [UIColor.white.withAlphaComponent(0.0).cgColor, UIColor.white.cgColor]
-        gradientLayer.colors = colors
-        
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        gradientLayer.locations = [0.5, 1.0]
-        backgroundImageView.layer.addSublayer(gradientLayer)
-    }
-    
     
     // MARK: - Selectors
     @objc private func onTapNotification() {
@@ -206,5 +128,51 @@ final class MyPageViewController: BaseViewController {
     
     @objc private func onTapMeatballs() {
         print("Meatballs Button Tapped")
+    }
+}
+
+
+// MARK: - CollectionView
+extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return cellSize
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as UICollectionViewCell
+        cell.backgroundColor = .gray
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return headerSize
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader,
+                  let header = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind,
+                    withReuseIdentifier: MyPageHeaderView.id,
+                    for: indexPath
+                  ) as? MyPageHeaderView else {return UICollectionReusableView()}
+        
+        header.userNameLabel.text = "게스트"
+        header.backgroundImageView.image = UIImage(named: "default_user_background_image")
+        header.profileImageView.image = UIImage(named: "default_user_profile_image")
+        
+        header.onTap = ({ category in
+            self.viewModel.setCategory(category)
+        })
+        
+        return header
     }
 }
