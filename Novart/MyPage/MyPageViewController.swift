@@ -69,6 +69,9 @@ final class MyPageViewController: BaseViewController {
     }
     
     override func setupView() {
+        viewModel.getUserInfo()
+        viewModel.getAllItems()
+        
         view.backgroundColor = .white
         collectionView.delegate = self
         collectionView.dataSource = self
