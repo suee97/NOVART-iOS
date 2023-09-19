@@ -2,11 +2,29 @@ import UIKit
 
 final class MyPageCategoryButton: UIButton {
 
-    var title: String!
+    private enum Constants {
+        static let unSelectedFont = UIFont(name: "Apple SD Gothic Neo Regular", size: 14)
+        static let selectedFont = UIFont(name: "Apple SD Gothic Neo Bold", size: 14)
+    }
     
-    init(title: String) {
+    var category: MyPageCategory!
+    
+    override var isSelected: Bool {
+        didSet {
+            if isSelected {
+                setTitleColor(.Common.black, for: .normal)
+                titleLabel?.font = Constants.selectedFont
+            } else {
+                setTitleColor(.Common.grey03, for: .normal)
+                titleLabel?.font = Constants.unSelectedFont
+            }
+        }
+    }
+    
+    init(category: MyPageCategory) {
         super.init(frame: .zero)
-        self.title = title
+        self.category = category
+        self.setTitle(category.rawValue, for: .normal)
         setUpView()
     }
     
@@ -17,9 +35,11 @@ final class MyPageCategoryButton: UIButton {
     private func setUpView() {
         backgroundColor = .clear
         layer.cornerRadius = 12
-        setTitle(title, for: .normal)
-        setTitleColor(.Common.grey03, for: .normal)
-        titleLabel?.font = UIFont(name: "Apple SD Gothic Neo Regular", size: 14)
+        isSelected = false
+    }
+    
+    func setState(_ state: Bool) {
+        isSelected = state
     }
 
 }

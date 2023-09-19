@@ -174,6 +174,13 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         header.onTap = ({ category in
             self.viewModel.setCategory(category)
+            for e in header.categoryButtons {
+                if e.category == category {
+                    e.setState(true)
+                } else {
+                    e.setState(false)
+                }
+            }
         })
         
         return header

@@ -33,7 +33,14 @@ final class MyPageHeaderView: UICollectionReusableView {
         return label
     }()
     
-    private let categoryView: UIView = {
+    let interestButton = MyPageCategoryButton(category: .Interest)
+    let followingButton = MyPageCategoryButton(category: .Following)
+    let workButton = MyPageCategoryButton(category: .Work)
+    let exhibitionButton = MyPageCategoryButton(category: .Exhibition)
+    
+    lazy var categoryButtons = [interestButton, followingButton, workButton, exhibitionButton]
+    
+    private lazy var categoryView: UIView = {
         let view = UIView()
         view.backgroundColor = .Common.grey00
         view.layer.cornerRadius = 12
@@ -44,11 +51,6 @@ final class MyPageHeaderView: UICollectionReusableView {
         barView1.backgroundColor = .Common.grey01
         barView2.backgroundColor = .Common.grey01
         barView3.backgroundColor = .Common.grey01
-        
-        let interestButton = MyPageCategoryButton(title: MyPageCategory.Interest.rawValue)
-        let followingButton = MyPageCategoryButton(title: MyPageCategory.Following.rawValue)
-        let workButton = MyPageCategoryButton(title: MyPageCategory.Work.rawValue)
-        let exhibitionButton = MyPageCategoryButton(title: MyPageCategory.Exhibition.rawValue)
         
         interestButton.addTarget(self, action: #selector(onTapInterestButton), for: .touchUpInside)
         followingButton.addTarget(self, action: #selector(onTapFollowingButton), for: .touchUpInside)
@@ -114,6 +116,7 @@ final class MyPageHeaderView: UICollectionReusableView {
         print("MyPageHeaderView - init()")
         super.init(frame: frame)
         setUpView()
+        interestButton.setState(true)
     }
     
     required init?(coder: NSCoder) {
