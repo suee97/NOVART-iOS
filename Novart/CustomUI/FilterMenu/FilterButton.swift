@@ -13,6 +13,8 @@ final class FilterButton: UIView {
     
     enum Constants {
         static let size: CGFloat = 50
+        static let menuMargin: CGFloat = 8
+        static let color = UIColor.Common.white.withAlphaComponent(0.9)
         
         enum Shadow {
             static let color: CGColor = UIColor.black.withAlphaComponent(0.25).cgColor
@@ -31,11 +33,14 @@ final class FilterButton: UIView {
         return imageView
     }()
     
-    // MARK: Initialization
+    // MARK: - Properties
+    var filterTypes: [FilterType]
     
-    init() {
+    // MARK: - Initialization
+    
+    init(filterTypes: [FilterType]) {
+        self.filterTypes = filterTypes
         super.init(frame: .zero)
-        
         setupView()
     }
     
@@ -47,6 +52,9 @@ final class FilterButton: UIView {
     
     private func setupView() {
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapButton))
+        self.addGestureRecognizer(tapGesture)
+
         layer.cornerRadius = Constants.size / 2
         
         layer.shadowColor = Constants.Shadow.color
@@ -54,7 +62,7 @@ final class FilterButton: UIView {
         layer.shadowRadius = Constants.Shadow.radius
         layer.shadowOpacity = Constants.Shadow.opacity
         
-        backgroundColor = UIColor.Common.white.withAlphaComponent(0.9)
+        backgroundColor = Constants.color
         
         NSLayoutConstraint.activate([
             self.widthAnchor.constraint(equalToConstant: Constants.size),
@@ -66,5 +74,22 @@ final class FilterButton: UIView {
             iconImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             iconImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         ])
+    }
+    
+    private func showFilterMenu() {
+        guard let window = UIApplication.shared.keyWindowScene, let buttonOrigin = superview?.convert(frame.origin, to: nil) else { return }
+        
+        let xPos = buttonOrigin.x
+        let yPos = buttonOrigin.y - Constants.menuMargin
+        let anchorPosition = CGPoint(x: xPos, y: yPos)
+        
+        let menuView = FilterMenuView(filterTypes: filterTypes, anchorPosition: anchorPosition)
+        menuView.frame = CGRect(x: 0, y: 0, width: window.frame.width, height: window.frame.height)
+        window.addSubview(menuView)
+    }
+    
+    @objc
+    private func didTapButton() {
+        showFilterMenu()
     }
 }

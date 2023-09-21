@@ -106,6 +106,11 @@
 		0EE019D32A6BEBA500389A95 /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019D22A6BEBA500389A95 /* PrivacyPolicyViewController.swift */; };
 		0EE019D52A6BF22B00389A95 /* PrivacyPolicyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019D42A6BF22B00389A95 /* PrivacyPolicyViewModel.swift */; };
 		0EE019D72A6C36B300389A95 /* PolicyContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019D62A6C36B300389A95 /* PolicyContentView.swift */; };
+		0EF59AAA2AAB015E00FD39E3 /* FilterMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AA92AAB015E00FD39E3 /* FilterMenuView.swift */; };
+		0EF59AAE2AAB02C700FD39E3 /* FilterMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AAD2AAB02C700FD39E3 /* FilterMenuCell.swift */; };
+		0EF59AB12AAB0ABA00FD39E3 /* ReuseableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AB02AAB0ABA00FD39E3 /* ReuseableView.swift */; };
+		0EF59AB52AAB0DC300FD39E3 /* AutoResizableTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AB42AAB0DC300FD39E3 /* AutoResizableTableView.swift */; };
+		0EF59AB72AACC4A600FD39E3 /* FilterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AB62AACC4A600FD39E3 /* FilterType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -202,6 +207,11 @@
 		0EE019D22A6BEBA500389A95 /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
 		0EE019D42A6BF22B00389A95 /* PrivacyPolicyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewModel.swift; sourceTree = "<group>"; };
 		0EE019D62A6C36B300389A95 /* PolicyContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyContentView.swift; sourceTree = "<group>"; };
+		0EF59AA92AAB015E00FD39E3 /* FilterMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterMenuView.swift; sourceTree = "<group>"; };
+		0EF59AAD2AAB02C700FD39E3 /* FilterMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterMenuCell.swift; sourceTree = "<group>"; };
+		0EF59AB02AAB0ABA00FD39E3 /* ReuseableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseableView.swift; sourceTree = "<group>"; };
+		0EF59AB42AAB0DC300FD39E3 /* AutoResizableTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoResizableTableView.swift; sourceTree = "<group>"; };
+		0EF59AB62AACC4A600FD39E3 /* FilterType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -521,7 +531,8 @@
 				0EE019742A61A5AF00389A95 /* NoHighlightButton.swift */,
 				0EE019842A63C59300389A95 /* BadgeView.swift */,
 				0EE019D62A6C36B300389A95 /* PolicyContentView.swift */,
-				0EA8F83E2A91DD4300ADFBFB /* FilterButton.swift */,
+				0EF59AB42AAB0DC300FD39E3 /* AutoResizableTableView.swift */,
+				0EF59AA82AAB014600FD39E3 /* FilterMenu */,
 			);
 			path = CustomUI;
 			sourceTree = "<group>";
@@ -556,6 +567,7 @@
 		0EE0198F2A6BAFE200389A95 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				0EF59AAF2AAB0AAB00FD39E3 /* Protocols */,
 				0E9ED86A2A938AAE001E1C51 /* Keychain */,
 				0EE0199E2A6BC3DC00389A95 /* Network */,
 				0EE019902A6BAFEE00389A95 /* Error */,
@@ -616,6 +628,25 @@
 				0EE019CE2A6BCD3900389A95 /* APIClient+User.swift */,
 			);
 			path = User;
+			sourceTree = "<group>";
+		};
+		0EF59AA82AAB014600FD39E3 /* FilterMenu */ = {
+			isa = PBXGroup;
+			children = (
+				0EA8F83E2A91DD4300ADFBFB /* FilterButton.swift */,
+				0EF59AA92AAB015E00FD39E3 /* FilterMenuView.swift */,
+				0EF59AAD2AAB02C700FD39E3 /* FilterMenuCell.swift */,
+				0EF59AB62AACC4A600FD39E3 /* FilterType.swift */,
+			);
+			path = FilterMenu;
+			sourceTree = "<group>";
+		};
+		0EF59AAF2AAB0AAB00FD39E3 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				0EF59AB02AAB0ABA00FD39E3 /* ReuseableView.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -736,8 +767,10 @@
 				0EE019622A56F31100389A95 /* MainTabBarViewController.swift in Sources */,
 				0EA8F81E2A6D0CD700ADFBFB /* HomeDownloadInteractor.swift in Sources */,
 				0EE019B12A6BC65500389A95 /* HTTPHeaderField.swift in Sources */,
+				0EF59AB52AAB0DC300FD39E3 /* AutoResizableTableView.swift in Sources */,
 				0EE018F52A48175600389A95 /* AppCoordinator.swift in Sources */,
 				0EE019D52A6BF22B00389A95 /* PrivacyPolicyViewModel.swift in Sources */,
+				0EF59AB12AAB0ABA00FD39E3 /* ReuseableView.swift in Sources */,
 				0EE0195D2A56F1DE00389A95 /* MyPageStep.swift in Sources */,
 				0EE019752A61A5AF00389A95 /* NoHighlightButton.swift in Sources */,
 				0EE019492A56EF2A00389A95 /* HomeCoordinator.swift in Sources */,
@@ -747,6 +780,7 @@
 				0EE019A22A6BC59B00389A95 /* APIEventMonitor.swift in Sources */,
 				0EE019CD2A6BCD2B00389A95 /* UserTarget.swift in Sources */,
 				0EE0190B2A4827BB00389A95 /* BaseNavigationController+BarButton.swift in Sources */,
+				0EF59AAA2AAB015E00FD39E3 /* FilterMenuView.swift in Sources */,
 				0EE019AD2A6BC62D00389A95 /* NetworkResponse.swift in Sources */,
 				0EA8F83F2A91DD4300ADFBFB /* FilterButton.swift in Sources */,
 				0EE019152A482F0C00389A95 /* AppWindow.swift in Sources */,
@@ -778,9 +812,11 @@
 				0EE019392A514C6700389A95 /* UIApplication+AppSharable.swift in Sources */,
 				0EE019572A56F16A00389A95 /* ChattingStep.swift in Sources */,
 				0EE019432A56EED900389A95 /* DiscoverViewController.swift in Sources */,
+				0EF59AAE2AAB02C700FD39E3 /* FilterMenuCell.swift in Sources */,
 				0E9ED86C2A938AC4001E1C51 /* KeychainKey.swift in Sources */,
 				0EE019242A51445900389A95 /* Authentication.swift in Sources */,
 				0EE0195F2A56F1F600389A95 /* MyPageCoordinator.swift in Sources */,
+				0EF59AB72AACC4A600FD39E3 /* FilterType.swift in Sources */,
 				0EE019072A48265700389A95 /* WindowNavigator.swift in Sources */,
 				0EE019A62A6BC5D300389A95 /* OAuthAuthenticator.swift in Sources */,
 				0EE018FB2A4818D800389A95 /* Step.swift in Sources */,
