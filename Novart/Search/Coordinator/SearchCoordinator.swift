@@ -9,7 +9,8 @@ import UIKit
 
 final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
     override func start() {
-        let viewController = SearchViewController()
+        let viewModel = SearchViewModel(coordinator: self)
+        let viewController = SearchViewController(viewModel: viewModel)
         
         let tabBarItem = UITabBarItem(
             title: nil,

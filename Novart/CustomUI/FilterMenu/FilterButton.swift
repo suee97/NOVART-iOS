@@ -34,11 +34,11 @@ final class FilterButton: UIView {
     }()
     
     // MARK: - Properties
-    var filterTypes: [FilterType]
+    var filterTypes: [CategoryType]
     
     // MARK: - Initialization
     
-    init(filterTypes: [FilterType]) {
+    init(filterTypes: [CategoryType]) {
         self.filterTypes = filterTypes
         super.init(frame: .zero)
         setupView()

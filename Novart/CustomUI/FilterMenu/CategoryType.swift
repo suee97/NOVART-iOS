@@ -1,5 +1,5 @@
 //
-//  FilterType.swift
+//  CategoryType.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/09/10.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum FilterType: String, CaseIterable {
+enum CategoryType: String, CaseIterable {
     case all = "전체"
     case product = "제품"
     case craft = "공예"
