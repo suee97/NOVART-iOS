@@ -55,14 +55,14 @@
 		0EE0193D2A56EA6000389A95 /* LoginStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0193C2A56EA6000389A95 /* LoginStep.swift */; };
 		0EE019412A56EEB200389A95 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019402A56EEB200389A95 /* HomeViewController.swift */; };
 		0EE019432A56EED900389A95 /* DiscoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019422A56EED900389A95 /* DiscoverViewController.swift */; };
-		0EE019452A56EEF300389A95 /* ChattingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019442A56EEF300389A95 /* ChattingViewController.swift */; };
+		0EE019452A56EEF300389A95 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019442A56EEF300389A95 /* SearchViewController.swift */; };
 		0EE019472A56EEFE00389A95 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019462A56EEFE00389A95 /* MyPageViewController.swift */; };
 		0EE019492A56EF2A00389A95 /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019482A56EF2A00389A95 /* HomeCoordinator.swift */; };
 		0EE0194B2A56EF6F00389A95 /* HomeStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0194A2A56EF6F00389A95 /* HomeStep.swift */; };
 		0EE019512A56F09B00389A95 /* DiscoverCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019502A56F09B00389A95 /* DiscoverCoordinator.swift */; };
 		0EE019532A56F0A200389A95 /* DiscoverStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019522A56F0A200389A95 /* DiscoverStep.swift */; };
-		0EE019572A56F16A00389A95 /* ChattingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019562A56F16A00389A95 /* ChattingStep.swift */; };
-		0EE019592A56F18500389A95 /* ChattingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019582A56F18500389A95 /* ChattingCoordinator.swift */; };
+		0EE019572A56F16A00389A95 /* SearchStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019562A56F16A00389A95 /* SearchStep.swift */; };
+		0EE019592A56F18500389A95 /* SearchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019582A56F18500389A95 /* SearchCoordinator.swift */; };
 		0EE0195D2A56F1DE00389A95 /* MyPageStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0195C2A56F1DE00389A95 /* MyPageStep.swift */; };
 		0EE0195F2A56F1F600389A95 /* MyPageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0195E2A56F1F600389A95 /* MyPageCoordinator.swift */; };
 		0EE019622A56F31100389A95 /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019612A56F31100389A95 /* MainTabBarViewController.swift */; };
@@ -163,14 +163,14 @@
 		0EE0193C2A56EA6000389A95 /* LoginStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginStep.swift; sourceTree = "<group>"; };
 		0EE019402A56EEB200389A95 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		0EE019422A56EED900389A95 /* DiscoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverViewController.swift; sourceTree = "<group>"; };
-		0EE019442A56EEF300389A95 /* ChattingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingViewController.swift; sourceTree = "<group>"; };
+		0EE019442A56EEF300389A95 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		0EE019462A56EEFE00389A95 /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		0EE019482A56EF2A00389A95 /* HomeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
 		0EE0194A2A56EF6F00389A95 /* HomeStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStep.swift; sourceTree = "<group>"; };
 		0EE019502A56F09B00389A95 /* DiscoverCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverCoordinator.swift; sourceTree = "<group>"; };
 		0EE019522A56F0A200389A95 /* DiscoverStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverStep.swift; sourceTree = "<group>"; };
-		0EE019562A56F16A00389A95 /* ChattingStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingStep.swift; sourceTree = "<group>"; };
-		0EE019582A56F18500389A95 /* ChattingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingCoordinator.swift; sourceTree = "<group>"; };
+		0EE019562A56F16A00389A95 /* SearchStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStep.swift; sourceTree = "<group>"; };
+		0EE019582A56F18500389A95 /* SearchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCoordinator.swift; sourceTree = "<group>"; };
 		0EE0195C2A56F1DE00389A95 /* MyPageStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageStep.swift; sourceTree = "<group>"; };
 		0EE0195E2A56F1F600389A95 /* MyPageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageCoordinator.swift; sourceTree = "<group>"; };
 		0EE019612A56F31100389A95 /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
@@ -290,7 +290,7 @@
 				0EE019602A56F2F100389A95 /* Main */,
 				0EE0192F2A51493E00389A95 /* Login */,
 				0EE0194C2A56F05F00389A95 /* Home */,
-				0EE019542A56F15300389A95 /* Chatting */,
+				0EE019542A56F15300389A95 /* Search */,
 				0EE0194E2A56F08300389A95 /* Discover */,
 				0EE0195A2A56F1BD00389A95 /* MyPage */,
 				0EE018E92A48156D00389A95 /* Assets.xcassets */,
@@ -458,20 +458,20 @@
 			path = Coordinator;
 			sourceTree = "<group>";
 		};
-		0EE019542A56F15300389A95 /* Chatting */ = {
+		0EE019542A56F15300389A95 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				0EE019442A56EEF300389A95 /* ChattingViewController.swift */,
+				0EE019442A56EEF300389A95 /* SearchViewController.swift */,
 				0EE019552A56F15B00389A95 /* Coordinator */,
 			);
-			path = Chatting;
+			path = Search;
 			sourceTree = "<group>";
 		};
 		0EE019552A56F15B00389A95 /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
-				0EE019562A56F16A00389A95 /* ChattingStep.swift */,
-				0EE019582A56F18500389A95 /* ChattingCoordinator.swift */,
+				0EE019562A56F16A00389A95 /* SearchStep.swift */,
+				0EE019582A56F18500389A95 /* SearchCoordinator.swift */,
 			);
 			path = Coordinator;
 			sourceTree = "<group>";
@@ -739,7 +739,7 @@
 				0EE019112A482DE600389A95 /* MainCoordinator.swift in Sources */,
 				0EE019092A48274B00389A95 /* BaseNavigationController.swift in Sources */,
 				0EE0197F2A63B60000389A95 /* DiscoverProductCollectionViewCell.swift in Sources */,
-				0EE019592A56F18500389A95 /* ChattingCoordinator.swift in Sources */,
+				0EE019592A56F18500389A95 /* SearchCoordinator.swift in Sources */,
 				0EE0194B2A56EF6F00389A95 /* HomeStep.swift in Sources */,
 				0EE019412A56EEB200389A95 /* HomeViewController.swift in Sources */,
 				0EE019C82A6BCCC400389A95 /* AccessTokenResponse.swift in Sources */,
@@ -759,7 +759,7 @@
 				0EA8F83B2A90AA9100ADFBFB /* FeedImageDataSource.swift in Sources */,
 				0EE019CA2A6BCCF200389A95 /* SignUpRequestBody.swift in Sources */,
 				0EE019922A6BAFFA00389A95 /* ServiceError.swift in Sources */,
-				0EE019452A56EEF300389A95 /* ChattingViewController.swift in Sources */,
+				0EE019452A56EEF300389A95 /* SearchViewController.swift in Sources */,
 				0EA8F8352A90967300ADFBFB /* HomeFeedCell.swift in Sources */,
 				0EE019832A63C0EB00389A95 /* DiscoverViewModel.swift in Sources */,
 				0EE019A02A6BC57E00389A95 /* APIConstants.swift in Sources */,
@@ -810,7 +810,7 @@
 				0EE019372A514AE500389A95 /* LoginInteractor.swift in Sources */,
 				0EA8F8302A6D0DC400ADFBFB /* APIClient+Home.swift in Sources */,
 				0EE019392A514C6700389A95 /* UIApplication+AppSharable.swift in Sources */,
-				0EE019572A56F16A00389A95 /* ChattingStep.swift in Sources */,
+				0EE019572A56F16A00389A95 /* SearchStep.swift in Sources */,
 				0EE019432A56EED900389A95 /* DiscoverViewController.swift in Sources */,
 				0EF59AAE2AAB02C700FD39E3 /* FilterMenuCell.swift in Sources */,
 				0E9ED86C2A938AC4001E1C51 /* KeychainKey.swift in Sources */,

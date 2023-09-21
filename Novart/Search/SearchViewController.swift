@@ -1,5 +1,5 @@
 //
-//  ChattingViewController.swift
+//  SearchViewController.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/07/06.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ChattingViewController: UIViewController {
+class SearchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
