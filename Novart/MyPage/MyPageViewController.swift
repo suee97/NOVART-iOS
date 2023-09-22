@@ -28,6 +28,9 @@ final class MyPageViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private var headerSize: CGSize = .init(width: Constants.screenWidth, height: 382+12)
     private var cellSize = CGSize(width: 165, height: 221)
+    private var cellCount = 0
+    private var cellName: String = MyPageCategory.Interest.rawValue + "_cell"
+    private var cellType: UICollectionViewCell.Type = MyPageInterestCell.self
     
     
     // MARK: - UI
@@ -75,7 +78,7 @@ final class MyPageViewController: BaseViewController {
         view.backgroundColor = .white
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(MyPageInterestCell.self, forCellWithReuseIdentifier: MyPageCategory.Interest.rawValue)
         collectionView.register(MyPageHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageHeaderView.id)
         
         view.addSubview(collectionView)
@@ -92,12 +95,24 @@ final class MyPageViewController: BaseViewController {
             switch value! {
             case .Interest:
                 self.cellSize = Constants.CellSize.InterestCellSize
+                self.cellCount = self.viewModel.interests.count
+                self.cellName = MyPageCategory.Interest.rawValue + "_cell"
+                self.cellType = MyPageInterestCell.self
             case .Following:
                 self.cellSize = Constants.CellSize.FollowingCellSize
+                self.cellCount = self.viewModel.followings.count
+                self.cellName = MyPageCategory.Following.rawValue + "_cell"
+                self.cellType = MyPageFollowingCell.self
             case .Work:
                 self.cellSize = Constants.CellSize.WorkCellSize
+                self.cellCount = self.viewModel.works.count
+                self.cellName = MyPageCategory.Work.rawValue + "_cell"
+                self.cellType = MyPageWorkCell.self
             case .Exhibition:
                 self.cellSize = Constants.CellSize.ExhibitionCellSize
+                self.cellCount = self.viewModel.exhibitions.count
+                self.cellName = MyPageCategory.Exhibition.rawValue + "_cell"
+                self.cellType = MyPageExhibitionCell.self
             }
             self.collectionView.reloadData()
         }).store(in: &cancellables)
@@ -139,7 +154,7 @@ final class MyPageViewController: BaseViewController {
 extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return cellCount
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -147,8 +162,36 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as UICollectionViewCell
-        cell.backgroundColor = .gray
+        collectionView.register(cellType, forCellWithReuseIdentifier: cellName)
+        switch viewModel.selectedCategory {
+        case .Interest:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellName, for: indexPath) as? MyPageInterestCell else {
+                return UICollectionViewCell()
+            }
+            cell.interest = viewModel.interests[indexPath.row]
+            return cell
+        case .Following:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellName, for: indexPath) as? MyPageFollowingCell else {
+                return UICollectionViewCell()
+            }
+            return cell
+        case .Work:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellName, for: indexPath) as? MyPageWorkCell else {
+                return UICollectionViewCell()
+            }
+            return cell
+        case .Exhibition:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellName, for: indexPath) as? MyPageExhibitionCell else {
+                return UICollectionViewCell()
+            }
+            return cell
+        case .none:
+            break
+        }
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellName, for: indexPath) as? MyPageInterestCell else {
+            return UICollectionViewCell()
+        }
         return cell
     }
     
@@ -172,7 +215,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         header.backgroundImageView.image = UIImage(named: "default_user_background_image")
         header.profileImageView.image = UIImage(named: "default_user_profile_image")
         
-        header.onTap = ({ category in
+        header.onTapCategoryButton = ({ category in
             self.viewModel.setCategory(category)
             for e in header.categoryButtons {
                 if e.category == category {

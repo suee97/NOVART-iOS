@@ -1,12 +1,16 @@
-//
-//  MyPageExhibitionCell.swift
-//  Novart
-//
-//  Created by 오승언 on 2023/09/21.
-//
-
 import UIKit
 
-class MyPageExhibitionCell: UICollectionViewCell {
+final class MyPageExhibitionCell: UICollectionViewCell {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setUpView()
+    }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setUpView() {
+        backgroundColor = .systemPink
+    }
 }

@@ -8,7 +8,7 @@ final class MyPageViewModel {
         }
     }
     
-    var likes = [MyPageLike]()
+    var interests = [MyPageInterest]()
     var followings = [MyPageFollowing]()
     var works = [MyPageWork]()
     var exhibitions = [MyPageExhibition]()
@@ -37,16 +37,16 @@ final class MyPageViewModel {
         // 서버에서 가져오기 (이미지 불러오기 x)
         // 아래는 임시 데이터
         for i in 0..<10 {
-            likes.append(MyPageLike(id: i, name: "탁자", thumbnailImgUrl: "https://loremflickr.com/600/400", artistName: "오승언"))
+            interests.append(MyPageInterest(id: i, name: "탁자", thumbnailImgUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc", artistName: "오승언"))
         }
         for i in 0..<0 {
-            likes.append(MyPageLike(id: i, name: "의자", thumbnailImgUrl: "https://loremflickr.com/600/400", artistName: "오승언"))
+            followings.append(MyPageFollowing(id: i, name: "의자", thumbnailImgUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc", artistName: "오승언"))
         }
         for i in 0..<3 {
-            likes.append(MyPageLike(id: i, name: "책 표지", thumbnailImgUrl: "https://loremflickr.com/600/400", artistName: "양용수"))
+            works.append(MyPageWork(id: i, name: "책 표지", thumbnailImgUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc", artistName: "양용수"))
         }
         for i in 0..<40 {
-            likes.append(MyPageLike(id: i, name: "공예", thumbnailImgUrl: "https://loremflickr.com/600/400", artistName: "김예원"))
+            exhibitions.append(MyPageExhibition(id: i, name: "공예", thumbnailImgUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc", artistName: "김예원"))
         }
     }
 }

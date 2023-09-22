@@ -1,17 +1,17 @@
 import UIKit
 
-struct MyPageLikeWithImage {
+struct MyPageInterestWithImage {
     let id: Int
     let name: String
     let thumbnailImg: UIImage
     let artistName: String
 }
 
-struct MyPageLikes: Decodable {
-    let myPageLikes: [MyPageLike]
+struct MyPageInterests: Decodable {
+    let myPageInterests: [MyPageInterest]
 }
 
-struct MyPageLike: Decodable {
+struct MyPageInterest: Decodable {
     let id: Int
     let name: String
     let thumbnailImgUrl: String
