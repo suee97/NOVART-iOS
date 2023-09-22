@@ -11,7 +11,8 @@ final class MyPageHeaderView: UICollectionReusableView {
     
     // MARK: - Properties
     static let id = "my_page_header_view"
-    var onTap: ((_ category: MyPageCategory) -> ()) = {category in}
+    var isGradient = false
+    var onTapCategoryButton: ((_ category: MyPageCategory) -> ()) = {category in}
     
     
     // MARK: - UI
@@ -160,6 +161,13 @@ final class MyPageHeaderView: UICollectionReusableView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        if !isGradient {
+            addGradient()
+            isGradient = true
+        }
+    }
+    
+    private func addGradient() {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = backgroundImageView.bounds
         let colors: [CGColor] = [UIColor.white.withAlphaComponent(0.0).cgColor, UIColor.white.cgColor]
@@ -171,21 +179,20 @@ final class MyPageHeaderView: UICollectionReusableView {
         backgroundImageView.layer.addSublayer(gradientLayer)
     }
     
-    
     // MARK: - Selectors
     @objc private func onTapInterestButton() {
-        onTap(MyPageCategory.Interest)
+        onTapCategoryButton(MyPageCategory.Interest)
     }
     
     @objc private func onTapFollowingButton() {
-        onTap(MyPageCategory.Following)
+        onTapCategoryButton(MyPageCategory.Following)
     }
     
     @objc private func onTapWorkButton() {
-        onTap(MyPageCategory.Work)
+        onTapCategoryButton(MyPageCategory.Work)
     }
     
     @objc private func onTapExhibitionButton() {
-        onTap(MyPageCategory.Exhibition)
+        onTapCategoryButton(MyPageCategory.Exhibition)
     }
 }
