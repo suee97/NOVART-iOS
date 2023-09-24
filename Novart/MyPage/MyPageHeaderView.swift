@@ -13,6 +13,11 @@ final class MyPageHeaderView: UICollectionReusableView {
     static let id = "my_page_header_view"
     var isGradient = false
     var onTapCategoryButton: ((_ category: MyPageCategory) -> ()) = {category in}
+    var isHeaderSticky = false {
+        didSet {
+            setUpView()
+        }
+    }
     
     
     // MARK: - UI
@@ -20,6 +25,12 @@ final class MyPageHeaderView: UICollectionReusableView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView
+    }()
+    
+    private let stickyBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .Common.white
+        return view
     }()
     
     let profileImageView: UIImageView = {
@@ -116,7 +127,7 @@ final class MyPageHeaderView: UICollectionReusableView {
     override init(frame: CGRect) {
         print("MyPageHeaderView - init()")
         super.init(frame: frame)
-        setUpView()
+        setUpInitView()
         interestButton.setState(true)
     }
     
@@ -128,12 +139,20 @@ final class MyPageHeaderView: UICollectionReusableView {
         print("MyPageHeaderView - deinit()")
     }
     
-    private func setUpView() {
+    private func setUpInitView() {
         backgroundColor = .clear
         addSubview(backgroundImageView)
+        addSubview(stickyBackgroundView)
         addSubview(profileImageView)
         addSubview(userNameLabel)
         addSubview(categoryView)
+    }
+    
+    private func setUpView() {
+        backgroundImageView.isHidden = isHeaderSticky
+        stickyBackgroundView.isHidden = !isHeaderSticky
+        profileImageView.isHidden = isHeaderSticky
+        userNameLabel.isHidden = isHeaderSticky
         
         backgroundImageView.snp.makeConstraints({ m in
             m.left.right.top.equalToSuperview()
@@ -151,12 +170,29 @@ final class MyPageHeaderView: UICollectionReusableView {
             m.top.equalTo(profileImageView.snp.bottom).offset(8)
         })
         
-        categoryView.snp.makeConstraints({ m in
-            m.top.equalTo(userNameLabel.snp.bottom).offset(18)
-            m.width.equalTo(342)
-            m.height.equalTo(44)
-            m.centerX.equalToSuperview()
-        })
+        stickyBackgroundView.snp.removeConstraints()
+        categoryView.snp.removeConstraints()
+        
+        if !isHeaderSticky {
+            categoryView.snp.makeConstraints({ m in
+                m.top.equalTo(userNameLabel.snp.bottom).offset(18)
+                m.width.equalTo(342)
+                m.height.equalTo(44)
+                m.centerX.equalToSuperview()
+            })
+        } else {
+            stickyBackgroundView.snp.makeConstraints({ m in
+                m.left.right.top.equalToSuperview()
+                m.height.equalTo(201)
+            })
+            
+            categoryView.snp.makeConstraints({ m in
+                m.bottom.equalTo(stickyBackgroundView.snp.bottom).offset(-6)
+                m.width.equalTo(342)
+                m.height.equalTo(44)
+                m.centerX.equalToSuperview()
+            })
+        }
     }
     
     override func layoutSubviews() {

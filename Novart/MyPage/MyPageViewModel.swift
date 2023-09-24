@@ -2,11 +2,8 @@ import Combine
 import UIKit
 
 final class MyPageViewModel {
-    @Published private (set) var selectedCategory: MyPageCategory! {
-        didSet {
-            print("MyPageViewModel selectedCategory - \(selectedCategory.rawValue)")
-        }
-    }
+    @Published private (set) var selectedCategory: MyPageCategory
+    @Published private (set) var scrollHeight: Double
     
     var interests = [MyPageInterest]()
     var followings = [MyPageFollowing]()
@@ -16,6 +13,7 @@ final class MyPageViewModel {
     init() {
         print("MyPageViewModel init()")
         selectedCategory = .Interest
+        scrollHeight = 0.0
     }
     
     deinit {
@@ -24,6 +22,10 @@ final class MyPageViewModel {
     
     func setCategory(_ category: MyPageCategory) {
         selectedCategory = category
+    }
+    
+    func setScrollHeight(_ height: Double) {
+        scrollHeight = height
     }
     
     func getUserInfo() {

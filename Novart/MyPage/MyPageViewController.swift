@@ -31,14 +31,19 @@ final class MyPageViewController: BaseViewController {
     private var cellCount = 0
     private var cellName: String = MyPageCategory.Interest.rawValue + "_cell"
     private var cellType: UICollectionViewCell.Type = MyPageInterestCell.self
+    private var isHeaderSticky = false
     
     
     // MARK: - UI
-    private let collectionView: UICollectionView = {
+    private let collectionViewLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 12
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        return layout
+    }()
+    
+    private lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.backgroundColor = .clear
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.bounces = false
@@ -92,7 +97,7 @@ final class MyPageViewController: BaseViewController {
     // MARK: - LifeCycle
     override func setupBindings() {
         viewModel.$selectedCategory.sink(receiveValue: { value in
-            switch value! {
+            switch value {
             case .Interest:
                 self.cellSize = Constants.CellSize.InterestCellSize
                 self.cellCount = self.viewModel.interests.count
@@ -115,6 +120,18 @@ final class MyPageViewController: BaseViewController {
                 self.cellType = MyPageExhibitionCell.self
             }
             self.collectionView.reloadData()
+        }).store(in: &cancellables)
+        
+        viewModel.$scrollHeight.sink(receiveValue: { value in
+            if value >= 180 && !self.isHeaderSticky {
+                self.collectionViewLayout.sectionHeadersPinToVisibleBounds = true
+                self.isHeaderSticky = true
+                self.collectionView.reloadData()
+            } else if value < 180 && self.isHeaderSticky {
+                self.collectionViewLayout.sectionHeadersPinToVisibleBounds = false
+                self.isHeaderSticky = false
+                self.collectionView.reloadData()
+            }
         }).store(in: &cancellables)
     }
     
@@ -185,14 +202,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return UICollectionViewCell()
             }
             return cell
-        case .none:
-            break
         }
-        
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellName, for: indexPath) as? MyPageInterestCell else {
-            return UICollectionViewCell()
-        }
-        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -211,6 +221,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     for: indexPath
                   ) as? MyPageHeaderView else {return UICollectionReusableView()}
         
+        header.isHeaderSticky = isHeaderSticky
         header.userNameLabel.text = "게스트"
         header.backgroundImageView.image = UIImage(named: "default_user_background_image")
         header.profileImageView.image = UIImage(named: "default_user_profile_image")
@@ -227,5 +238,9 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         })
         
         return header
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        viewModel.setScrollHeight(collectionView.bounds.minY)
     }
 }
