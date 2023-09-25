@@ -14,11 +14,24 @@ final class MyPageViewController: BaseViewController {
             appearance.shadowColor = .clear
             return appearance
         }()
+        
+        enum Layout {
+            static let headerSize = CGSize(width: Constants.screenWidth, height: 394)
+            static let sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+        }
+        
         enum CellSize {
             static let InterestCellSize = CGSize(width: 165, height: 221)
             static let FollowingCellSize = CGSize(width: 165, height: 110)
             static let WorkCellSize = CGSize(width: 165, height: 205)
             static let ExhibitionCellSize = CGSize(width: 165, height: 276)
+        }
+        
+        enum CellId {
+            static let InterestCellId = "\(MyPageCategory.Interest.rawValue)_cell"
+            static let FollowingCellId = "\(MyPageCategory.Following.rawValue)_cell"
+            static let WorkCellId = "\(MyPageCategory.Work.rawValue)_cell"
+            static let ExhibitionCellId = "\(MyPageCategory.Exhibition.rawValue)_cell"
         }
     }
     
@@ -26,10 +39,9 @@ final class MyPageViewController: BaseViewController {
     // MARK: - Properties
     private let viewModel = MyPageViewModel()
     private var cancellables = Set<AnyCancellable>()
-    private var headerSize: CGSize = .init(width: Constants.screenWidth, height: 382+12)
-    private var cellSize = CGSize(width: 165, height: 221)
+    private var cellSize = Constants.CellSize.InterestCellSize
     private var cellCount = 0
-    private var cellName: String = MyPageCategory.Interest.rawValue + "_cell"
+    private var cellId = Constants.CellId.InterestCellId
     private var cellType: UICollectionViewCell.Type = MyPageInterestCell.self
     private var isHeaderSticky = false
     
@@ -101,22 +113,22 @@ final class MyPageViewController: BaseViewController {
             case .Interest:
                 self.cellSize = Constants.CellSize.InterestCellSize
                 self.cellCount = self.viewModel.interests.count
-                self.cellName = MyPageCategory.Interest.rawValue + "_cell"
+                self.cellId = Constants.CellId.InterestCellId
                 self.cellType = MyPageInterestCell.self
             case .Following:
                 self.cellSize = Constants.CellSize.FollowingCellSize
                 self.cellCount = self.viewModel.followings.count
-                self.cellName = MyPageCategory.Following.rawValue + "_cell"
+                self.cellId = Constants.CellId.FollowingCellId
                 self.cellType = MyPageFollowingCell.self
             case .Work:
                 self.cellSize = Constants.CellSize.WorkCellSize
                 self.cellCount = self.viewModel.works.count
-                self.cellName = MyPageCategory.Work.rawValue + "_cell"
+                self.cellId = Constants.CellId.WorkCellId
                 self.cellType = MyPageWorkCell.self
             case .Exhibition:
                 self.cellSize = Constants.CellSize.ExhibitionCellSize
                 self.cellCount = self.viewModel.exhibitions.count
-                self.cellName = MyPageCategory.Exhibition.rawValue + "_cell"
+                self.cellId = Constants.CellId.ExhibitionCellId
                 self.cellType = MyPageExhibitionCell.self
             }
             self.collectionView.reloadData()
@@ -179,26 +191,26 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        collectionView.register(cellType, forCellWithReuseIdentifier: cellName)
+        collectionView.register(cellType, forCellWithReuseIdentifier: cellId)
         switch viewModel.selectedCategory {
         case .Interest:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellName, for: indexPath) as? MyPageInterestCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageInterestCell else {
                 return UICollectionViewCell()
             }
             cell.interest = viewModel.interests[indexPath.row]
             return cell
         case .Following:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellName, for: indexPath) as? MyPageFollowingCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageFollowingCell else {
                 return UICollectionViewCell()
             }
             return cell
         case .Work:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellName, for: indexPath) as? MyPageWorkCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageWorkCell else {
                 return UICollectionViewCell()
             }
             return cell
         case .Exhibition:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellName, for: indexPath) as? MyPageExhibitionCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageExhibitionCell else {
                 return UICollectionViewCell()
             }
             return cell
@@ -206,11 +218,11 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+        return Constants.Layout.sectionInset
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return headerSize
+        return Constants.Layout.headerSize
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
