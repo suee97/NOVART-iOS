@@ -33,6 +33,12 @@ final class MyPageHeaderView: UICollectionReusableView {
         return view
     }()
     
+    private let divider: UIView = {
+        let view = UIView()
+        view.backgroundColor = .Common.grey01
+        return view
+    }()
+    
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
         return imageView
@@ -143,6 +149,7 @@ final class MyPageHeaderView: UICollectionReusableView {
         backgroundColor = .clear
         addSubview(backgroundImageView)
         addSubview(stickyBackgroundView)
+        addSubview(divider)
         addSubview(profileImageView)
         addSubview(userNameLabel)
         addSubview(categoryView)
@@ -151,29 +158,41 @@ final class MyPageHeaderView: UICollectionReusableView {
     private func setUpView() {
         backgroundImageView.isHidden = isHeaderSticky
         stickyBackgroundView.isHidden = !isHeaderSticky
-        profileImageView.isHidden = isHeaderSticky
-        userNameLabel.isHidden = isHeaderSticky
+        divider.isHidden = !isHeaderSticky
         
         backgroundImageView.snp.makeConstraints({ m in
             m.left.right.top.equalToSuperview()
             m.height.equalTo(Constants.screenWidth * Constants.backgroundRat)
         })
         
-        profileImageView.snp.makeConstraints({ m in
-            m.centerX.equalToSuperview()
-            m.width.height.equalTo(108)
-            m.centerY.equalTo(backgroundImageView.snp.bottom)
+        stickyBackgroundView.snp.makeConstraints({ m in
+            m.left.right.top.equalToSuperview()
+            m.height.equalTo(201)
         })
         
-        userNameLabel.snp.makeConstraints({ m in
-            m.centerX.equalToSuperview()
-            m.top.equalTo(profileImageView.snp.bottom).offset(8)
+        divider.snp.makeConstraints({ m in
+            m.height.equalTo(1)
+            m.left.right.equalToSuperview()
+            m.bottom.equalTo(stickyBackgroundView.snp.bottom)
         })
         
-        stickyBackgroundView.snp.removeConstraints()
+        profileImageView.snp.removeConstraints()
         categoryView.snp.removeConstraints()
+        userNameLabel.snp.removeConstraints()
         
         if !isHeaderSticky {
+            profileImageView.snp.makeConstraints({ m in
+                m.centerX.equalToSuperview()
+                m.width.height.equalTo(108)
+                m.centerY.equalTo(backgroundImageView.snp.bottom)
+            })
+            
+            userNameLabel.font = userNameLabel.font.withSize(28)
+            userNameLabel.snp.makeConstraints({ m in
+                m.centerX.equalToSuperview()
+                m.top.equalTo(profileImageView.snp.bottom).offset(8)
+            })
+            
             categoryView.snp.makeConstraints({ m in
                 m.top.equalTo(userNameLabel.snp.bottom).offset(18)
                 m.width.equalTo(342)
@@ -181,9 +200,16 @@ final class MyPageHeaderView: UICollectionReusableView {
                 m.centerX.equalToSuperview()
             })
         } else {
-            stickyBackgroundView.snp.makeConstraints({ m in
-                m.left.right.top.equalToSuperview()
-                m.height.equalTo(201)
+            profileImageView.snp.makeConstraints({ m in
+                m.top.equalToSuperview().inset(103)
+                m.left.equalToSuperview().inset(24)
+                m.width.height.equalTo(32)
+            })
+            
+            userNameLabel.font = userNameLabel.font.withSize(18)
+            userNameLabel.snp.makeConstraints({ m in
+                m.centerY.equalTo(profileImageView)
+                m.left.equalTo(profileImageView.snp.right).offset(8)
             })
             
             categoryView.snp.makeConstraints({ m in

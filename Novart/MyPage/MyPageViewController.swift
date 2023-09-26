@@ -72,7 +72,7 @@ final class MyPageViewController: BaseViewController {
         let notificationItem = UIBarButtonItem(customView: notificationButton)
         
         let spacer = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        spacer.width = 16 // figma에서는 20인데, 기본으로 들어가는 space가 있어서 16으로 함
+        spacer.width = 16 // figma에서는 16인데, 기본으로 들어가는 space가 있어서 12로 함
         
         let settingButton = UIButton(frame: iconSize)
         settingButton.setBackgroundImage(UIImage(named: "icon_setting"), for: .normal)
