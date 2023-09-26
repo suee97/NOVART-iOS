@@ -39,6 +39,13 @@ final class MyPageHeaderView: UICollectionReusableView {
         return view
     }()
     
+    private let profileImageFrame: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 54
+        return view
+    }()
+    
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
         return imageView
@@ -150,6 +157,7 @@ final class MyPageHeaderView: UICollectionReusableView {
         addSubview(backgroundImageView)
         addSubview(stickyBackgroundView)
         addSubview(divider)
+        addSubview(profileImageFrame)
         addSubview(profileImageView)
         addSubview(userNameLabel)
         addSubview(categoryView)
@@ -158,6 +166,7 @@ final class MyPageHeaderView: UICollectionReusableView {
     private func setUpView() {
         backgroundImageView.isHidden = isHeaderSticky
         stickyBackgroundView.isHidden = !isHeaderSticky
+        profileImageFrame.isHidden = isHeaderSticky
         divider.isHidden = !isHeaderSticky
         
         backgroundImageView.snp.makeConstraints({ m in
@@ -168,6 +177,12 @@ final class MyPageHeaderView: UICollectionReusableView {
         stickyBackgroundView.snp.makeConstraints({ m in
             m.left.right.top.equalToSuperview()
             m.height.equalTo(201)
+        })
+        
+        profileImageFrame.snp.makeConstraints({ m in
+            m.centerX.equalToSuperview()
+            m.width.height.equalTo(108)
+            m.centerY.equalTo(backgroundImageView.snp.bottom)
         })
         
         divider.snp.makeConstraints({ m in
@@ -183,7 +198,7 @@ final class MyPageHeaderView: UICollectionReusableView {
         if !isHeaderSticky {
             profileImageView.snp.makeConstraints({ m in
                 m.centerX.equalToSuperview()
-                m.width.height.equalTo(108)
+                m.width.height.equalTo(100)
                 m.centerY.equalTo(backgroundImageView.snp.bottom)
             })
             
