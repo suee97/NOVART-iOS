@@ -131,6 +131,9 @@ final class MyPageViewController: BaseViewController {
                 self.cellId = Constants.CellId.ExhibitionCellId
                 self.cellType = MyPageExhibitionCell.self
             }
+            if self.isHeaderSticky {
+                self.collectionView.contentOffset = CGPoint(x: 0, y: 180)
+            }
             self.collectionView.reloadData()
         }).store(in: &cancellables)
         
