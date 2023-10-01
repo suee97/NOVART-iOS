@@ -9,7 +9,43 @@ import UIKit
 import Combine
 
 class HomeViewController: BaseViewController {
-
+    
+    // MARK: - SnappingLayout
+    
+    private class SnappingUICollectionViewLayout: UICollectionViewCompositionalLayout {
+                
+        let topContentInset: CGFloat
+        
+        init(topContentInset: CGFloat , sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider) {
+            self.topContentInset = topContentInset
+            super.init(sectionProvider: sectionProvider)
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+            guard let collectionView = collectionView else {
+                return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
+            }
+            
+            let parent = super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
+            
+            let itemSpace = Constants.Feed.itemHeight + Constants.Feed.spacing
+            var currentItemIdx = round(collectionView.contentOffset.y / itemSpace)
+            
+            if velocity.y > 0.3 {
+                currentItemIdx += 1
+            } else if velocity.y < -0.3 {
+                currentItemIdx -= 1
+            }
+            
+            let nearestPageOffset = currentItemIdx * itemSpace - topContentInset
+            return CGPoint(x: parent.x, y: nearestPageOffset)
+        }
+    }
+    
     // MARK: - Constants
     
     enum Constants {
@@ -29,17 +65,22 @@ class HomeViewController: BaseViewController {
         }
     }
     
+    private func verticalContentInset() -> CGFloat {
+        (view.safeAreaLayoutGuide.layoutFrame.height - Constants.Feed.itemHeight) / 4
+    }
+    
     // MARK: - UI
     
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
         collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.decelerationRate = .fast
         return collectionView
     }()
     
     private lazy var filterButton: FilterButton = {
-        let button = FilterButton()
+        let button = FilterButton(filterTypes: FilterType.allCases)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -86,6 +127,8 @@ class HomeViewController: BaseViewController {
         ])
         collectionView.setCollectionViewLayout(homeCollectionViewLayout, animated: false)
         
+        collectionView.contentInset = UIEdgeInsets(top: verticalContentInset(), left: 0, bottom: verticalContentInset(), right: 0)
+        
         view.addSubview(filterButton)
         NSLayoutConstraint.activate([
             filterButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.FilterButton.leadingMargin),
@@ -120,7 +163,7 @@ private extension HomeViewController {
     }
     
     var homeCollectionViewLayout: UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex: Int, layoutEnv: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+        let layout = SnappingUICollectionViewLayout(topContentInset: verticalContentInset()) { [weak self] (sectionIndex: Int, layoutEnv: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
             
             guard let self else { return nil }
             return self.feedSectionLayout
