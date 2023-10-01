@@ -108,6 +108,10 @@
 		0EE019D72A6C36B300389A95 /* PolicyContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019D62A6C36B300389A95 /* PolicyContentView.swift */; };
 		0EE255882ABC6662008CE0D1 /* CategoryTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */; };
 		0EE2558A2ABC6B37008CE0D1 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */; };
+		0EE2558C2AC0134A008CE0D1 /* SearchProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2558B2AC0134A008CE0D1 /* SearchProductCell.swift */; };
+		0EE255902AC013A1008CE0D1 /* SearchProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2558F2AC013A1008CE0D1 /* SearchProductModel.swift */; };
+		0EE255922AC01456008CE0D1 /* SearchDownloadInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255912AC01456008CE0D1 /* SearchDownloadInteractor.swift */; };
+		0EE255942AC018B4008CE0D1 /* SearchDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255932AC018B4008CE0D1 /* SearchDataSource.swift */; };
 		0EF59AAA2AAB015E00FD39E3 /* FilterMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AA92AAB015E00FD39E3 /* FilterMenuView.swift */; };
 		0EF59AAE2AAB02C700FD39E3 /* FilterMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AAD2AAB02C700FD39E3 /* FilterMenuCell.swift */; };
 		0EF59AB12AAB0ABA00FD39E3 /* ReuseableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AB02AAB0ABA00FD39E3 /* ReuseableView.swift */; };
@@ -211,6 +215,10 @@
 		0EE019D62A6C36B300389A95 /* PolicyContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyContentView.swift; sourceTree = "<group>"; };
 		0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTabButton.swift; sourceTree = "<group>"; };
 		0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		0EE2558B2AC0134A008CE0D1 /* SearchProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchProductCell.swift; sourceTree = "<group>"; };
+		0EE2558F2AC013A1008CE0D1 /* SearchProductModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchProductModel.swift; sourceTree = "<group>"; };
+		0EE255912AC01456008CE0D1 /* SearchDownloadInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDownloadInteractor.swift; sourceTree = "<group>"; };
+		0EE255932AC018B4008CE0D1 /* SearchDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDataSource.swift; sourceTree = "<group>"; };
 		0EF59AA92AAB015E00FD39E3 /* FilterMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterMenuView.swift; sourceTree = "<group>"; };
 		0EF59AAD2AAB02C700FD39E3 /* FilterMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterMenuCell.swift; sourceTree = "<group>"; };
 		0EF59AB02AAB0ABA00FD39E3 /* ReuseableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseableView.swift; sourceTree = "<group>"; };
@@ -467,7 +475,11 @@
 			children = (
 				0EE019442A56EEF300389A95 /* SearchViewController.swift */,
 				0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */,
+				0EE255912AC01456008CE0D1 /* SearchDownloadInteractor.swift */,
+				0EE255932AC018B4008CE0D1 /* SearchDataSource.swift */,
 				0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */,
+				0EE2558D2AC0134D008CE0D1 /* Cell */,
+				0EE2558E2AC0138D008CE0D1 /* Model */,
 				0EE019552A56F15B00389A95 /* Coordinator */,
 			);
 			path = Search;
@@ -636,6 +648,22 @@
 			path = User;
 			sourceTree = "<group>";
 		};
+		0EE2558D2AC0134D008CE0D1 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				0EE2558B2AC0134A008CE0D1 /* SearchProductCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		0EE2558E2AC0138D008CE0D1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0EE2558F2AC013A1008CE0D1 /* SearchProductModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		0EF59AA82AAB014600FD39E3 /* FilterMenu */ = {
 			isa = PBXGroup;
 			children = (
@@ -754,6 +782,7 @@
 				0EE018FD2A48195400389A95 /* NavigationActionable.swift in Sources */,
 				0EE019352A514A5900389A95 /* LoginCoordinator.swift in Sources */,
 				0EE0193D2A56EA6000389A95 /* LoginStep.swift in Sources */,
+				0EE255942AC018B4008CE0D1 /* SearchDataSource.swift in Sources */,
 				0EA8F8372A90970300ADFBFB /* FeedItem.swift in Sources */,
 				0EE019052A481F2E00389A95 /* BaseViewController.swift in Sources */,
 				0EA8F82E2A6D0DB400ADFBFB /* HomeTarget.swift in Sources */,
@@ -815,9 +844,11 @@
 				0EE019132A482E0500389A95 /* MainStep.swift in Sources */,
 				0EE019732A6152D200389A95 /* TagView.swift in Sources */,
 				0EE019B32A6BCAB900389A95 /* TargetType.swift in Sources */,
+				0EE2558C2AC0134A008CE0D1 /* SearchProductCell.swift in Sources */,
 				0EE019372A514AE500389A95 /* LoginInteractor.swift in Sources */,
 				0EA8F8302A6D0DC400ADFBFB /* APIClient+Home.swift in Sources */,
 				0EE019392A514C6700389A95 /* UIApplication+AppSharable.swift in Sources */,
+				0EE255902AC013A1008CE0D1 /* SearchProductModel.swift in Sources */,
 				0EE019572A56F16A00389A95 /* SearchStep.swift in Sources */,
 				0EE019432A56EED900389A95 /* DiscoverViewController.swift in Sources */,
 				0EF59AAE2AAB02C700FD39E3 /* FilterMenuCell.swift in Sources */,
@@ -832,6 +863,7 @@
 				0EE0192E2A5146EF00389A95 /* UIColor+.swift in Sources */,
 				0EE019472A56EEFE00389A95 /* MyPageViewController.swift in Sources */,
 				0EE019272A51449300389A95 /* NovartUser.swift in Sources */,
+				0EE255922AC01456008CE0D1 /* SearchDownloadInteractor.swift in Sources */,
 				0EE0193B2A5157DF00389A95 /* UIColor+Hex.swift in Sources */,
 				0EE019D12A6BCD5400389A95 /* SetNameResponse.swift in Sources */,
 				0EE018E12A48156C00389A95 /* AppDelegate.swift in Sources */,

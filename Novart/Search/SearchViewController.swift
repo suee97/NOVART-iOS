@@ -6,14 +6,22 @@
 //
 
 import UIKit
+import Combine
 
 class SearchViewController: BaseViewController {
 
     // MARK: - Constants
     
-    private enum Constants {
+    enum Constants {
         
+        static let screenWidth: CGFloat = UIScreen.main.bounds.width
         static let leadingMargin: CGFloat = 24
+        static let trailingMargin: CGFloat = 24
+        static let horizontalInsets: CGFloat = 24
+        static let itemSpacing: CGFloat = 12
+        
+        static let itemWidth: CGFloat = (screenWidth - SearchViewController.Constants.horizontalInsets * 2 - SearchViewController.Constants.itemSpacing) / 2
+        static let itemHeight: CGFloat = itemWidth * 1.34
         
         enum SearchBar {
             static let placeholderText: String = "검색"
@@ -23,6 +31,12 @@ class SearchViewController: BaseViewController {
         enum CategoryTab {
             static let spacing: CGFloat = 8
             static let height: CGFloat = 38
+        }
+        
+        enum Product {
+            static let itemWidth: CGFloat = (screenWidth - horizontalInsets * 2 - itemSpacing) / 2
+            static let itemHeight: CGFloat = itemWidth * 1.34
+            
         }
     }
     
@@ -58,14 +72,24 @@ class SearchViewController: BaseViewController {
         return scrollView
     }()
     
+    private let collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }()
+    
     // MARK: - Properties
     
     private var viewModel: SearchViewModel
+    private var dataSource: SearchDataSource
     
+    private var subscriptions: Set<AnyCancellable> = .init()
+
     // MARK: - Initialization
 
     init(viewModel: SearchViewModel) {
         self.viewModel = viewModel
+        self.dataSource = SearchDataSource(collectionView: collectionView)
         super.init()
     }
     
@@ -77,7 +101,7 @@ class SearchViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        viewModel.fetchData()
         view.backgroundColor = .white
     }
     
@@ -127,9 +151,63 @@ class SearchViewController: BaseViewController {
             categoryStackView.bottomAnchor.constraint(equalTo: categoryScrollView.bottomAnchor),
             categoryStackView.heightAnchor.constraint(equalTo: categoryScrollView.heightAnchor)
         ])
+        
+        view.addSubview(collectionView)
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: categoryScrollView.bottomAnchor, constant: 12),
+            collectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+        ])
+        
+        collectionView.setCollectionViewLayout(searchCollectionViewLayout, animated: false)
+
+    }
+    
+    override func setupBindings() {
+        viewModel.searchResultSubject
+            .receive(on: DispatchQueue.main)
+            .sink { items in
+                self.dataSource.apply(items)
+            }
+            .store(in: &subscriptions)
     }
 }
 
 extension SearchViewController: UISearchBarDelegate {
     
+}
+
+// MARK: - CollectionViewLayout
+private extension SearchViewController {
+    
+    func verticalSectionLayout() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(Constants.itemWidth), heightDimension: .absolute(Constants.itemHeight))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(Constants.itemHeight))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = NSCollectionLayoutSpacing.fixed(Constants.itemSpacing)
+
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = Constants.itemSpacing
+        section.contentInsets = .init(top: 0, leading: Constants.horizontalInsets, bottom: 0, trailing: Constants.horizontalInsets)
+        return section
+    }
+    
+    var leftSection: NSCollectionLayoutSection {
+        verticalSectionLayout()
+    }
+    
+    var rightSection: NSCollectionLayoutSection {
+        verticalSectionLayout()
+    }
+    
+    var searchCollectionViewLayout: UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex: Int, layoutEnv: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+            return self?.verticalSectionLayout()
+        }
+        return layout
+    }
 }
