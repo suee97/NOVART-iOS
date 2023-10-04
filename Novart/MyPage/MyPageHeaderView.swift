@@ -10,7 +10,6 @@ final class MyPageHeaderView: UICollectionReusableView {
     
     
     // MARK: - Properties
-    static let id = "my_page_header_view"
     var isGradient = false
     var onTapCategoryButton: ((_ category: MyPageCategory) -> ()) = {category in}
     var isHeaderSticky = false {

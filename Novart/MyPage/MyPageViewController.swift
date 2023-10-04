@@ -26,13 +26,6 @@ final class MyPageViewController: BaseViewController {
             static let WorkCellSize = CGSize(width: 165, height: 205)
             static let ExhibitionCellSize = CGSize(width: 165, height: 276)
         }
-        
-        enum CellId {
-            static let InterestCellId = "\(MyPageCategory.Interest.rawValue)_cell"
-            static let FollowingCellId = "\(MyPageCategory.Following.rawValue)_cell"
-            static let WorkCellId = "\(MyPageCategory.Work.rawValue)_cell"
-            static let ExhibitionCellId = "\(MyPageCategory.Exhibition.rawValue)_cell"
-        }
     }
     
     
@@ -41,7 +34,7 @@ final class MyPageViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private var cellSize = Constants.CellSize.InterestCellSize
     private var cellCount = 0
-    private var cellId = Constants.CellId.InterestCellId
+    private var cellId = MyPageInterestCell.reuseIdentifier
     private var cellType: UICollectionViewCell.Type = MyPageInterestCell.self
     private var isHeaderSticky = false
     
@@ -95,8 +88,7 @@ final class MyPageViewController: BaseViewController {
         view.backgroundColor = .white
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(MyPageInterestCell.self, forCellWithReuseIdentifier: MyPageCategory.Interest.rawValue)
-        collectionView.register(MyPageHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageHeaderView.id)
+        collectionView.register(MyPageHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageHeaderView.reuseIdentifier)
         
         view.addSubview(collectionView)
         
@@ -113,22 +105,22 @@ final class MyPageViewController: BaseViewController {
             case .Interest:
                 self.cellSize = Constants.CellSize.InterestCellSize
                 self.cellCount = self.viewModel.interests.count
-                self.cellId = Constants.CellId.InterestCellId
+                self.cellId = MyPageInterestCell.reuseIdentifier
                 self.cellType = MyPageInterestCell.self
             case .Following:
                 self.cellSize = Constants.CellSize.FollowingCellSize
                 self.cellCount = self.viewModel.followings.count
-                self.cellId = Constants.CellId.FollowingCellId
+                self.cellId = MyPageFollowingCell.reuseIdentifier
                 self.cellType = MyPageFollowingCell.self
             case .Work:
                 self.cellSize = Constants.CellSize.WorkCellSize
                 self.cellCount = self.viewModel.works.count
-                self.cellId = Constants.CellId.WorkCellId
+                self.cellId = MyPageWorkCell.reuseIdentifier
                 self.cellType = MyPageWorkCell.self
             case .Exhibition:
                 self.cellSize = Constants.CellSize.ExhibitionCellSize
                 self.cellCount = self.viewModel.exhibitions.count
-                self.cellId = Constants.CellId.ExhibitionCellId
+                self.cellId = MyPageExhibitionCell.reuseIdentifier
                 self.cellType = MyPageExhibitionCell.self
             }
             if self.isHeaderSticky {
@@ -232,7 +224,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         guard kind == UICollectionView.elementKindSectionHeader,
                   let header = collectionView.dequeueReusableSupplementaryView(
                     ofKind: kind,
-                    withReuseIdentifier: MyPageHeaderView.id,
+                    withReuseIdentifier: MyPageHeaderView.reuseIdentifier,
                     for: indexPath
                   ) as? MyPageHeaderView else {return UICollectionReusableView()}
         
