@@ -97,10 +97,25 @@ final class MyPageHeaderView: UICollectionReusableView {
         barView2.backgroundColor = .Common.grey01
         barView3.backgroundColor = .Common.grey01
         
-        interestButton.addTarget(self, action: #selector(onTapInterestButton), for: .touchUpInside)
-        followingButton.addTarget(self, action: #selector(onTapFollowingButton), for: .touchUpInside)
-        workButton.addTarget(self, action: #selector(onTapWorkButton), for: .touchUpInside)
-        exhibitionButton.addTarget(self, action: #selector(onTapExhibitionButton), for: .touchUpInside)
+        interestButton.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.onTapCategoryButton(MyPageCategory.Interest)
+        }), for: .touchUpInside)
+        
+        followingButton.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.onTapCategoryButton(MyPageCategory.Following)
+        }), for: .touchUpInside)
+        
+        workButton.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.onTapCategoryButton(MyPageCategory.Work)
+        }), for: .touchUpInside)
+        
+        exhibitionButton.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.onTapCategoryButton(MyPageCategory.Exhibition)
+        }), for: .touchUpInside)
         
         view.addSubview(interestButton)
         view.addSubview(followingButton)
@@ -274,22 +289,5 @@ final class MyPageHeaderView: UICollectionReusableView {
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
         gradientLayer.locations = [0.5, 1.0]
         backgroundImageView.layer.addSublayer(gradientLayer)
-    }
-    
-    // MARK: - Selectors
-    @objc private func onTapInterestButton() {
-        onTapCategoryButton(MyPageCategory.Interest)
-    }
-    
-    @objc private func onTapFollowingButton() {
-        onTapCategoryButton(MyPageCategory.Following)
-    }
-    
-    @objc private func onTapWorkButton() {
-        onTapCategoryButton(MyPageCategory.Work)
-    }
-    
-    @objc private func onTapExhibitionButton() {
-        onTapCategoryButton(MyPageCategory.Exhibition)
     }
 }
