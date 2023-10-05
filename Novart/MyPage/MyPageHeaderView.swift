@@ -5,7 +5,28 @@ final class MyPageHeaderView: UICollectionReusableView {
     // MARK: - Constants
     private enum Constants {
         static let screenWidth = UIScreen.main.bounds.width
-        static let backgroundRat: CGFloat = 22/39
+        static let categoryButtonSize = (width: 84, height: 44)
+        static let categoryBarSize = (width: 1, height: 16)
+        static let categoryViewSize = (width: 342, height: 44)
+        static let categoryRadius: CGFloat = 12
+        
+        enum Sticky {
+            static let backgroundHeight: CGFloat = 201
+            static let profileImageDiameter: CGFloat = 32
+            static let profileFont = UIFont(name: "Apple SD Gothic Neo Bold", size: 18)
+            static let profileLabelLeftMargin: CGFloat = 8
+            static let profileImageMargin = (top: 103, left: 24)
+            static let categoryBottomMargin: CGFloat = -6
+        }
+        
+        enum NonSticky {
+            static let backgroundRat: CGFloat = 22/39
+            static let profileFrameDiameter: CGFloat = 108
+            static let profileImageDiameter: CGFloat = 100
+            static let profileFont = UIFont(name: "Apple SD Gothic Neo Bold", size: 28)
+            static let profileLabelTopMargin: CGFloat = 8
+            static let categoryTopMargin: CGFloat = 18
+        }
     }
     
     
@@ -41,7 +62,7 @@ final class MyPageHeaderView: UICollectionReusableView {
     private let profileImageFrame: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        view.layer.cornerRadius = 54
+        view.layer.cornerRadius = Constants.NonSticky.profileFrameDiameter / 2
         return view
     }()
     
@@ -50,10 +71,10 @@ final class MyPageHeaderView: UICollectionReusableView {
         return imageView
     }()
     
-    let userNameLabel: UILabel = {
+    let profileLabel: UILabel = {
         let label = UILabel()
         label.text = "게스트"
-        label.font = UIFont(name: "Apple SD Gothic Neo Bold", size: 28)
+        label.font = Constants.NonSticky.profileFont
         return label
     }()
     
@@ -67,7 +88,7 @@ final class MyPageHeaderView: UICollectionReusableView {
     private lazy var categoryView: UIView = {
         let view = UIView()
         view.backgroundColor = .Common.grey00
-        view.layer.cornerRadius = 12
+        view.layer.cornerRadius = Constants.categoryRadius
         
         let barView1 = UIView()
         let barView2 = UIView()
@@ -90,43 +111,43 @@ final class MyPageHeaderView: UICollectionReusableView {
         view.addSubview(barView3)
         
         interestButton.snp.makeConstraints({ m in
-            m.width.equalTo(84)
-            m.height.equalTo(44)
+            m.width.equalTo(Constants.categoryButtonSize.width)
+            m.height.equalTo(Constants.categoryButtonSize.height)
             m.left.top.equalTo(view)
         })
         barView1.snp.makeConstraints({ m in
-            m.width.equalTo(1)
-            m.height.equalTo(16)
+            m.width.equalTo(Constants.categoryBarSize.width)
+            m.height.equalTo(Constants.categoryBarSize.height)
             m.left.equalTo(interestButton.snp.right)
             m.centerY.equalTo(view)
         })
         followingButton.snp.makeConstraints({ m in
-            m.width.equalTo(84)
-            m.height.equalTo(44)
+            m.width.equalTo(Constants.categoryButtonSize.width)
+            m.height.equalTo(Constants.categoryButtonSize.height)
             m.left.equalTo(barView1.snp.right)
             m.top.equalTo(view)
         })
         barView2.snp.makeConstraints({ m in
-            m.width.equalTo(1)
-            m.height.equalTo(16)
+            m.width.equalTo(Constants.categoryBarSize.width)
+            m.height.equalTo(Constants.categoryBarSize.height)
             m.left.equalTo(followingButton.snp.right)
             m.centerY.equalTo(view)
         })
         workButton.snp.makeConstraints({ m in
-            m.width.equalTo(84)
-            m.height.equalTo(44)
+            m.width.equalTo(Constants.categoryButtonSize.width)
+            m.height.equalTo(Constants.categoryButtonSize.height)
             m.top.equalTo(view)
             m.left.equalTo(barView2.snp.right)
         })
         barView3.snp.makeConstraints({ m in
-            m.width.equalTo(1)
-            m.height.equalTo(16)
+            m.width.equalTo(Constants.categoryBarSize.width)
+            m.height.equalTo(Constants.categoryBarSize.height)
             m.left.equalTo(workButton.snp.right)
             m.centerY.equalTo(view)
         })
         exhibitionButton.snp.makeConstraints({ m in
-            m.width.equalTo(84)
-            m.height.equalTo(44)
+            m.width.equalTo(Constants.categoryButtonSize.width)
+            m.height.equalTo(Constants.categoryButtonSize.height)
             m.left.equalTo(barView3.snp.right)
             m.top.equalTo(view)
         })
@@ -158,7 +179,7 @@ final class MyPageHeaderView: UICollectionReusableView {
         addSubview(divider)
         addSubview(profileImageFrame)
         addSubview(profileImageView)
-        addSubview(userNameLabel)
+        addSubview(profileLabel)
         addSubview(categoryView)
     }
     
@@ -170,17 +191,17 @@ final class MyPageHeaderView: UICollectionReusableView {
         
         backgroundImageView.snp.makeConstraints({ m in
             m.left.right.top.equalToSuperview()
-            m.height.equalTo(Constants.screenWidth * Constants.backgroundRat)
+            m.height.equalTo(Constants.screenWidth * Constants.NonSticky.backgroundRat)
         })
         
         stickyBackgroundView.snp.makeConstraints({ m in
             m.left.right.top.equalToSuperview()
-            m.height.equalTo(201)
+            m.height.equalTo(Constants.Sticky.backgroundHeight)
         })
         
         profileImageFrame.snp.makeConstraints({ m in
             m.centerX.equalToSuperview()
-            m.width.height.equalTo(108)
+            m.width.height.equalTo(Constants.NonSticky.profileFrameDiameter)
             m.centerY.equalTo(backgroundImageView.snp.bottom)
         })
         
@@ -192,44 +213,44 @@ final class MyPageHeaderView: UICollectionReusableView {
         
         profileImageView.snp.removeConstraints()
         categoryView.snp.removeConstraints()
-        userNameLabel.snp.removeConstraints()
+        profileLabel.snp.removeConstraints()
         
-        if !isHeaderSticky {
+        if isHeaderSticky {
             profileImageView.snp.makeConstraints({ m in
-                m.centerX.equalToSuperview()
-                m.width.height.equalTo(100)
-                m.centerY.equalTo(backgroundImageView.snp.bottom)
+                m.top.equalToSuperview().inset(Constants.Sticky.profileImageMargin.top)
+                m.left.equalToSuperview().inset(Constants.Sticky.profileImageMargin.left)
+                m.width.height.equalTo(Constants.Sticky.profileImageDiameter)
             })
             
-            userNameLabel.font = userNameLabel.font.withSize(28)
-            userNameLabel.snp.makeConstraints({ m in
-                m.centerX.equalToSuperview()
-                m.top.equalTo(profileImageView.snp.bottom).offset(8)
+            profileLabel.font = Constants.Sticky.profileFont
+            profileLabel.snp.makeConstraints({ m in
+                m.centerY.equalTo(profileImageView)
+                m.left.equalTo(profileImageView.snp.right).offset(Constants.Sticky.profileLabelLeftMargin)
             })
             
             categoryView.snp.makeConstraints({ m in
-                m.top.equalTo(userNameLabel.snp.bottom).offset(18)
-                m.width.equalTo(342)
-                m.height.equalTo(44)
+                m.bottom.equalTo(stickyBackgroundView.snp.bottom).offset(Constants.Sticky.categoryBottomMargin)
+                m.width.equalTo(Constants.categoryViewSize.width)
+                m.height.equalTo(Constants.categoryViewSize.height)
                 m.centerX.equalToSuperview()
             })
         } else {
             profileImageView.snp.makeConstraints({ m in
-                m.top.equalToSuperview().inset(103)
-                m.left.equalToSuperview().inset(24)
-                m.width.height.equalTo(32)
+                m.centerX.equalToSuperview()
+                m.width.height.equalTo(Constants.NonSticky.profileImageDiameter)
+                m.centerY.equalTo(backgroundImageView.snp.bottom)
             })
             
-            userNameLabel.font = userNameLabel.font.withSize(18)
-            userNameLabel.snp.makeConstraints({ m in
-                m.centerY.equalTo(profileImageView)
-                m.left.equalTo(profileImageView.snp.right).offset(8)
+            profileLabel.font = Constants.NonSticky.profileFont
+            profileLabel.snp.makeConstraints({ m in
+                m.centerX.equalToSuperview()
+                m.top.equalTo(profileImageView.snp.bottom).offset(Constants.NonSticky.profileLabelTopMargin)
             })
             
             categoryView.snp.makeConstraints({ m in
-                m.bottom.equalTo(stickyBackgroundView.snp.bottom).offset(-6)
-                m.width.equalTo(342)
-                m.height.equalTo(44)
+                m.top.equalTo(profileLabel.snp.bottom).offset(Constants.NonSticky.categoryTopMargin)
+                m.width.equalTo(Constants.categoryViewSize.width)
+                m.height.equalTo(Constants.categoryViewSize.height)
                 m.centerX.equalToSuperview()
             })
         }
