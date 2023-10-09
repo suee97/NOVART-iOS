@@ -7,6 +7,10 @@ final class MyPageViewController: BaseViewController {
     // MARK: - Constants
     private enum Constants {
         static let screenWidth = UIScreen.main.bounds.width
+        static let screenHeight = UIScreen.main.bounds.height
+        static let navIconSize = CGRect(origin: CGPoint.zero, size: CGSize(width: 24, height: 24))
+        static let headerTransitionHeight: CGFloat = 180
+        
         static var appearance: UINavigationBarAppearance = {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
@@ -18,6 +22,7 @@ final class MyPageViewController: BaseViewController {
         enum Layout {
             static let headerSize = CGSize(width: Constants.screenWidth, height: 394)
             static let sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+            static let navigationBarSpacerWidth: CGFloat = 16
         }
         
         enum CellSize {
@@ -30,7 +35,7 @@ final class MyPageViewController: BaseViewController {
     
     
     // MARK: - Properties
-    private let viewModel = MyPageViewModel()
+    private let viewModel: MyPageViewModel
     private var cancellables = Set<AnyCancellable>()
     private var cellSize = Constants.CellSize.InterestCellSize
     private var cellCount = 0
@@ -38,6 +43,14 @@ final class MyPageViewController: BaseViewController {
     private var cellType: UICollectionViewCell.Type = MyPageInterestCell.self
     private var isHeaderSticky = false
     
+    init(viewModel: MyPageViewModel) {
+        self.viewModel = viewModel
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - UI
     private let collectionViewLayout: UICollectionViewFlowLayout = {
@@ -56,27 +69,47 @@ final class MyPageViewController: BaseViewController {
         return collectionView
     }()
     
+    private lazy var meatballsMenu: UIMenu = {
+        let menuItems: [UIAction] = {
+            return [
+                UIAction(title: "프로필 편집", handler: { _ in
+                    self.viewModel.showProfileEdit()
+                }),
+                UIAction(title: "공유", handler: { _ in}),
+            ]
+        }()
+        let menu: UIMenu = UIMenu(options: [], children: menuItems)
+        return menu
+    }()
+    
+    private lazy var meatballsButton: UIButton = {
+        let button = UIButton(frame: Constants.navIconSize)
+        button.setBackgroundImage(UIImage(named: "icon_meatballs"), for: .normal)
+        button.menu = meatballsMenu
+        button.showsMenuAsPrimaryAction = true
+        return button
+    }()
+    
+    private let notificationButton: UIButton = {
+        let button = UIButton(frame: Constants.navIconSize)
+        button.setBackgroundImage(UIImage(named: "icon_notification2"), for: .normal) // 기존 icon_notification이 존재해서 숫자 2를 붙임. 기존 아이콘 사용 안하는거면 수정이 필요합니다
+        return button
+    }()
+    
+    private let settingButton: UIButton = {
+        let button = UIButton(frame: Constants.navIconSize)
+        button.setBackgroundImage(UIImage(named: "icon_setting"), for: .normal)
+        return button
+    }()
+    
     override func setupNavigationBar() {
-        let iconSize = CGRect(origin: CGPoint.zero, size: CGSize(width: 24, height: 24))
-
-        let notificationButton = UIButton(frame: iconSize)
-        notificationButton.setBackgroundImage(UIImage(named: "icon_notification2"), for: .normal) // 기존 icon_notification이 존재해서 숫자 2를 붙임. 기존 아이콘 사용 안하는거면 수정이 필요합니다
-        notificationButton.addTarget(self, action: #selector(onTapNotification), for: .touchUpInside)
-        let notificationItem = UIBarButtonItem(customView: notificationButton)
-        
         let spacer = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        spacer.width = 16 // figma에서는 16인데, 기본으로 들어가는 space가 있어서 12로 함
+        spacer.width = Constants.Layout.navigationBarSpacerWidth
         
-        let settingButton = UIButton(frame: iconSize)
-        settingButton.setBackgroundImage(UIImage(named: "icon_setting"), for: .normal)
-        settingButton.addTarget(self, action: #selector(onTapSetting), for: .touchUpInside)
+        let notificationItem = UIBarButtonItem(customView: notificationButton)
         let settingItem = UIBarButtonItem(customView: settingButton)
-
-        let meatballsButton = UIButton(frame: iconSize)
-        meatballsButton.setBackgroundImage(UIImage(named: "icon_meatballs"), for: .normal)
-        meatballsButton.addTarget(self, action: #selector(onTapMeatballs), for: .touchUpInside)
         let meatballsItem = UIBarButtonItem(customView: meatballsButton)
-        
+
         self.navigationItem.rightBarButtonItems = [settingItem, spacer, notificationItem]
         self.navigationItem.leftBarButtonItem = meatballsItem
     }
@@ -124,17 +157,17 @@ final class MyPageViewController: BaseViewController {
                 self.cellType = MyPageExhibitionCell.self
             }
             if self.isHeaderSticky {
-                self.collectionView.contentOffset = CGPoint(x: 0, y: 180)
+                self.collectionView.contentOffset = CGPoint(x: 0, y: Constants.headerTransitionHeight)
             }
             self.collectionView.reloadData()
         }).store(in: &cancellables)
         
         viewModel.$scrollHeight.sink(receiveValue: { value in
-            if value >= 180 && !self.isHeaderSticky {
+            if value >= Constants.headerTransitionHeight && !self.isHeaderSticky {
                 self.collectionViewLayout.sectionHeadersPinToVisibleBounds = true
                 self.isHeaderSticky = true
                 self.collectionView.reloadData()
-            } else if value < 180 && self.isHeaderSticky {
+            } else if value < Constants.headerTransitionHeight && self.isHeaderSticky {
                 self.collectionViewLayout.sectionHeadersPinToVisibleBounds = false
                 self.isHeaderSticky = false
                 self.collectionView.reloadData()
@@ -156,20 +189,6 @@ final class MyPageViewController: BaseViewController {
         navigationController?.navigationBar.compactAppearance = Constants.appearance
         navigationController?.navigationBar.standardAppearance = Constants.appearance
         navigationController?.navigationBar.scrollEdgeAppearance = Constants.appearance
-    }
-    
-    
-    // MARK: - Selectors
-    @objc private func onTapNotification() {
-        print("Notification Button Tapped")
-    }
-    
-    @objc private func onTapSetting() {
-        print("Setting Button Tapped")
-    }
-    
-    @objc private func onTapMeatballs() {
-        print("Meatballs Button Tapped")
     }
 }
 
