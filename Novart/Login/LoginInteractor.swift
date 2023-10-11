@@ -12,6 +12,8 @@ import KakaoSDKUser
 
 final class LoginInteractor {
     
+    let userInteractor = UserInteractor()
+    
     @MainActor
     func performGoogleSignIn() async throws -> String {
         guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else { throw ServiceError.rootViewControllerNotFound }
@@ -52,23 +54,15 @@ final class LoginInteractor {
     
     func login(accessToken: String, provider: SignInProvider) async throws -> Bool {
         let loginResponse = try await APIClient.login(accessToken: accessToken, provider: provider.rawValue)
-        guard let isFirst = loginResponse.data?.isFirstLogin else { return true }
+        let isFirst = loginResponse.isFirstLogin
         if isFirst {
             return isFirst
         } else {
-            guard let accessToken = loginResponse.data?.accessToken, let refreshToken = loginResponse.data?.refreshToken else { return true }
+            guard let accessToken = loginResponse.accessToken, let refreshToken = loginResponse.refreshToken else { return true }
             KeychainService.shared.saveAccessToken(accessToken)
             KeychainService.shared.saveRefreshToken(refreshToken)
-            try await getUserInfo()
+            _ = try await userInteractor.getUserInfo()
             return false
         }
-    }
-}
-
-private extension LoginInteractor {
-    private func getUserInfo() async throws {
-        let userResponse = try await APIClient.getUser()
-        let user = userResponse.data
-        Authentication.shared.user = user
     }
 }

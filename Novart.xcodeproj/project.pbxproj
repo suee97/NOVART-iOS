@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E08B2772AC96B46001F1CB3 /* SetNicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E08B2762AC96B46001F1CB3 /* SetNicknameViewModel.swift */; };
+		0E08B2792AC9766B001F1CB3 /* NicknameTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E08B2782AC9766B001F1CB3 /* NicknameTextField.swift */; };
+		0E9BB0932AD6E2990002A76D /* SignUpInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BB0922AD6E2990002A76D /* SignUpInteractor.swift */; };
+		0E9BB0972AD6E6920002A76D /* UserInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BB0962AD6E6920002A76D /* UserInteractor.swift */; };
 		0E9ED86C2A938AC4001E1C51 /* KeychainKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9ED86B2A938AC4001E1C51 /* KeychainKey.swift */; };
 		0E9ED86E2A938ADB001E1C51 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9ED86D2A938ADB001E1C51 /* KeychainService.swift */; };
 		0E9ED8702A938AF6001E1C51 /* KeyValueStorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9ED86F2A938AF6001E1C51 /* KeyValueStorable.swift */; };
@@ -43,7 +47,7 @@
 		0EE019152A482F0C00389A95 /* AppWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019142A482F0C00389A95 /* AppWindow.swift */; };
 		0EE019192A482FF000389A95 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019182A482FF000389A95 /* SplashViewController.swift */; };
 		0EE019242A51445900389A95 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019232A51445900389A95 /* Authentication.swift */; };
-		0EE019272A51449300389A95 /* NovartUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019262A51449300389A95 /* NovartUser.swift */; };
+		0EE019272A51449300389A95 /* PlainUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019262A51449300389A95 /* PlainUser.swift */; };
 		0EE019292A5145E000389A95 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EE019282A5145E000389A95 /* Colors.xcassets */; };
 		0EE0192E2A5146EF00389A95 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0192D2A5146EF00389A95 /* UIColor+.swift */; };
 		0EE019312A51495500389A95 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019302A51495500389A95 /* LoginViewController.swift */; };
@@ -127,6 +131,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E08B2762AC96B46001F1CB3 /* SetNicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetNicknameViewModel.swift; sourceTree = "<group>"; };
+		0E08B2782AC9766B001F1CB3 /* NicknameTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameTextField.swift; sourceTree = "<group>"; };
+		0E9BB0922AD6E2990002A76D /* SignUpInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpInteractor.swift; sourceTree = "<group>"; };
+		0E9BB0962AD6E6920002A76D /* UserInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInteractor.swift; sourceTree = "<group>"; };
 		0E9ED86B2A938AC4001E1C51 /* KeychainKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainKey.swift; sourceTree = "<group>"; };
 		0E9ED86D2A938ADB001E1C51 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		0E9ED86F2A938AF6001E1C51 /* KeyValueStorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueStorable.swift; sourceTree = "<group>"; };
@@ -164,7 +172,7 @@
 		0EE019142A482F0C00389A95 /* AppWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppWindow.swift; sourceTree = "<group>"; };
 		0EE019182A482FF000389A95 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		0EE019232A51445900389A95 /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
-		0EE019262A51449300389A95 /* NovartUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovartUser.swift; sourceTree = "<group>"; };
+		0EE019262A51449300389A95 /* PlainUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainUser.swift; sourceTree = "<group>"; };
 		0EE019282A5145E000389A95 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		0EE0192D2A5146EF00389A95 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		0EE019302A51495500389A95 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -259,6 +267,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E08B2752AC96185001F1CB3 /* Nickname */ = {
+			isa = PBXGroup;
+			children = (
+				0EA8F81B2A6CFBAA00ADFBFB /* SetNicknameViewController.swift */,
+				0E08B2782AC9766B001F1CB3 /* NicknameTextField.swift */,
+				0E08B2762AC96B46001F1CB3 /* SetNicknameViewModel.swift */,
+			);
+			path = Nickname;
+			sourceTree = "<group>";
+		};
 		0E9ED86A2A938AAE001E1C51 /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
@@ -315,6 +333,7 @@
 				0EE019182A482FF000389A95 /* SplashViewController.swift */,
 				0EE019602A56F2F100389A95 /* Main */,
 				0EE0192F2A51493E00389A95 /* Login */,
+				0E08B2752AC96185001F1CB3 /* Nickname */,
 				0EE0194C2A56F05F00389A95 /* Home */,
 				0EE019542A56F15300389A95 /* Chatting */,
 				0EE0194E2A56F08300389A95 /* Discover */,
@@ -392,7 +411,7 @@
 			isa = PBXGroup;
 			children = (
 				0EE019232A51445900389A95 /* Authentication.swift */,
-				0EE019262A51449300389A95 /* NovartUser.swift */,
+				0EE019262A51449300389A95 /* PlainUser.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -423,7 +442,8 @@
 				0EE019362A514AE500389A95 /* LoginInteractor.swift */,
 				0EE019D22A6BEBA500389A95 /* PrivacyPolicyViewController.swift */,
 				0EE019D42A6BF22B00389A95 /* PrivacyPolicyViewModel.swift */,
-				0EA8F81B2A6CFBAA00ADFBFB /* SetNicknameViewController.swift */,
+				0E9BB0922AD6E2990002A76D /* SignUpInteractor.swift */,
+				0E9BB0962AD6E6920002A76D /* UserInteractor.swift */,
 				0EE0198C2A6BAF8400389A95 /* Model */,
 				0EE0193E2A56EE5400389A95 /* Coordinator */,
 			);
@@ -590,7 +610,6 @@
 			children = (
 				0EE0198D2A6BAF9B00389A95 /* SignInProvider.swift */,
 				0EE019C72A6BCCC400389A95 /* AccessTokenResponse.swift */,
-				0EE019C92A6BCCF200389A95 /* SignUpRequestBody.swift */,
 				0EE019D02A6BCD5400389A95 /* SetNameResponse.swift */,
 			);
 			path = Model;
@@ -649,6 +668,7 @@
 			children = (
 				0EE019C32A6BCC8B00389A95 /* AuthTarget.swift */,
 				0EE019C52A6BCCA000389A95 /* APIClient+SignIn.swift */,
+				0EE019C92A6BCCF200389A95 /* SignUpRequestBody.swift */,
 			);
 			path = SignIn;
 			sourceTree = "<group>";
@@ -832,6 +852,7 @@
 				0EF59AB52AAB0DC300FD39E3 /* AutoResizableTableView.swift in Sources */,
 				0EE018F52A48175600389A95 /* AppCoordinator.swift in Sources */,
 				0EE019D52A6BF22B00389A95 /* PrivacyPolicyViewModel.swift in Sources */,
+				0E9BB0932AD6E2990002A76D /* SignUpInteractor.swift in Sources */,
 				0EF59AB12AAB0ABA00FD39E3 /* ReuseableView.swift in Sources */,
 				0EE0195D2A56F1DE00389A95 /* MyPageStep.swift in Sources */,
 				0EE019752A61A5AF00389A95 /* NoHighlightButton.swift in Sources */,
@@ -864,6 +885,7 @@
 				0EE019332A51498100389A95 /* LoginViewModel.swift in Sources */,
 				0EE019AF2A6BC63B00389A95 /* APIError.swift in Sources */,
 				0EE0198E2A6BAF9B00389A95 /* SignInProvider.swift in Sources */,
+				0E08B2772AC96B46001F1CB3 /* SetNicknameViewModel.swift in Sources */,
 				0EE019D72A6C36B300389A95 /* PolicyContentView.swift in Sources */,
 				5BDD4A232AC955C100937352 /* MyPageExhibitions.swift in Sources */,
 				0EE019CF2A6BCD3900389A95 /* APIClient+User.swift in Sources */,
@@ -887,15 +909,17 @@
 				0EF59AB72AACC4A600FD39E3 /* FilterType.swift in Sources */,
 				0EE019072A48265700389A95 /* WindowNavigator.swift in Sources */,
 				0EE019A62A6BC5D300389A95 /* OAuthAuthenticator.swift in Sources */,
+				0E08B2792AC9766B001F1CB3 /* NicknameTextField.swift in Sources */,
 				0EE018FB2A4818D800389A95 /* Step.swift in Sources */,
 				0EA8F8392A90A94300ADFBFB /* FeedImageCell.swift in Sources */,
 				0EE0192E2A5146EF00389A95 /* UIColor+.swift in Sources */,
 				0EE019472A56EEFE00389A95 /* MyPageViewController.swift in Sources */,
-				0EE019272A51449300389A95 /* NovartUser.swift in Sources */,
+				0EE019272A51449300389A95 /* PlainUser.swift in Sources */,
 				0EE0193B2A5157DF00389A95 /* UIColor+Hex.swift in Sources */,
 				0EE019D12A6BCD5400389A95 /* SetNameResponse.swift in Sources */,
 				0EE018E12A48156C00389A95 /* AppDelegate.swift in Sources */,
 				0EE018E32A48156C00389A95 /* SceneDelegate.swift in Sources */,
+				0E9BB0972AD6E6920002A76D /* UserInteractor.swift in Sources */,
 				0EE019192A482FF000389A95 /* SplashViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

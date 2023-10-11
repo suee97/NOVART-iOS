@@ -13,7 +13,7 @@ final class PrivacyPolicyViewController: BaseViewController {
     // MARK: - Constants
     
     enum Constants {
-        static let topMargin: CGFloat = 24
+        static let topMargin: CGFloat = 77
         static let leadingMargin: CGFloat = 24
         static let trailingMargin: CGFloat = 24
         static let bottomMargin: CGFloat = 22
@@ -26,13 +26,13 @@ final class PrivacyPolicyViewController: BaseViewController {
         
         enum SubtitleLabel {
             static let font: UIFont = UIFont.systemFont(ofSize: 12, weight: .regular)
-            static let textColor: UIColor = UIColor.Common.grey02
+            static let textColor: UIColor = UIColor.Common.grey03
         }
         
         enum AllButton {
             static let borderColor: UIColor = UIColor.Common.grey01
-            static let backgroundColor: UIColor = UIColor.Common.white
-            static let cornerRadius: CGFloat = 4
+            static let backgroundColor: UIColor = UIColor.Common.grey00
+            static let cornerRadius: CGFloat = 12
             static let textColor: UIColor = UIColor.Common.black
             static let font: UIFont = UIFont.systemFont(ofSize: 14, weight: .regular)
             static let leadingMargin: CGFloat = 12
@@ -48,10 +48,12 @@ final class PrivacyPolicyViewController: BaseViewController {
         }
         
         enum NextButton {
-            static let backgroundColor: UIColor = UIColor.Common.grey01
+            static let backgroundColor: UIColor = UIColor.Common.main
             static let textColor: UIColor = UIColor.Common.white
+            static let disabledBackgroundColor: UIColor = UIColor.Common.grey00
+            static let disabledTextColor: UIColor = UIColor.Common.grey01
             static let font: UIFont = UIFont.systemFont(ofSize: 16, weight: .semibold)
-            static let cornerRadius: CGFloat = 4
+            static let cornerRadius: CGFloat = 12
             static let height: CGFloat = 46
             static let topMargin: CGFloat = 56
         }
@@ -65,7 +67,7 @@ final class PrivacyPolicyViewController: BaseViewController {
         label.font = Constants.TitleLabel.font
         label.textAlignment = .left
         label.numberOfLines = 2
-        label.text = "NOVART 서비스에 대한\n동의가 필요해요"
+        label.text = "플레인 서비스에\n대한 동의가 필요해요"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -112,6 +114,9 @@ final class PrivacyPolicyViewController: BaseViewController {
             label.leadingAnchor.constraint(equalTo: allCheckBox.trailingAnchor, constant: 12),
             label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(allButtonTapped))
+        view.addGestureRecognizer(tapGestureRecognizer)
         return view
     }()
     
@@ -119,6 +124,7 @@ final class PrivacyPolicyViewController: BaseViewController {
         let button = UIButton()
         button.setTitle("다음으로", for: .normal)
         button.setTitleColor(Constants.NextButton.textColor, for: .normal)
+        button.setTitleColor(Constants.NextButton.disabledTextColor, for: .disabled)
         button.titleLabel?.font = Constants.NextButton.font
         button.backgroundColor = Constants.NextButton.backgroundColor
         button.layer.cornerRadius = Constants.NextButton.cornerRadius
@@ -126,16 +132,21 @@ final class PrivacyPolicyViewController: BaseViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         
         button.addAction(UIAction(handler: { [weak self] _ in
-            self?.viewModel.transitionToMainScene()
+            self?.viewModel.signUp()
         }), for: .touchUpInside)
         
         return button
     }()
     
     private lazy var servicePolicyBox: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "icon_check_box"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.servicePolicySelected.toggle()
+            self.updateAllSelected()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -147,14 +158,19 @@ final class PrivacyPolicyViewController: BaseViewController {
         return view
     }()
     
-    private lazy var infoPolicyBox: UIButton = {
-        let button = UIButton()
+    private lazy var privacyPolicyBox: UIButton = {
+        let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "icon_check_box"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.privacyPolicySelected.toggle()
+            self.updateAllSelected()
+        }), for: .touchUpInside)
         return button
     }()
     
-    private lazy var infoPolicyView: PolicyContentView = {
+    private lazy var privacyPolicyView: PolicyContentView = {
         let view = PolicyContentView()
         view.title = "개인 정보 수집 및 이용 동의"
         view.isOptional = false
@@ -163,9 +179,14 @@ final class PrivacyPolicyViewController: BaseViewController {
     }()
     
     private lazy var marketingPolicyBox: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "icon_check_box"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.marketingPolicySelected.toggle()
+            self.updateAllSelected()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -177,11 +198,13 @@ final class PrivacyPolicyViewController: BaseViewController {
         return view
     }()
     
-    // MARK: Properties
+    // MARK: - Properties
     
     private var viewModel: PrivacyPolicyViewModel
-    private var subscriptions: Set<AnyCancellable> = .init()
+    private var cancellables: Set<AnyCancellable> = .init()
 
+    // MARK: - Intitialization
+    
     init(viewModel: PrivacyPolicyViewModel) {
         self.viewModel = viewModel
         super.init()
@@ -235,21 +258,21 @@ final class PrivacyPolicyViewController: BaseViewController {
             marketingPolicyView.centerYAnchor.constraint(equalTo: marketingPolicyBox.centerYAnchor)
         ])
         
-        view.addSubview(infoPolicyBox)
-        view.addSubview(infoPolicyView)
+        view.addSubview(privacyPolicyBox)
+        view.addSubview(privacyPolicyView)
         NSLayoutConstraint.activate([
-            infoPolicyBox.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.PolicyView.leadingMargin),
-            infoPolicyBox.bottomAnchor.constraint(equalTo: marketingPolicyBox.topAnchor, constant: -Constants.PolicyView.verticalSpacing),
-            infoPolicyView.leadingAnchor.constraint(equalTo: infoPolicyBox.trailingAnchor, constant: Constants.PolicyView.horizontalSpacing),
-            infoPolicyView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.PolicyView.trailingMargin),
-            infoPolicyView.centerYAnchor.constraint(equalTo: infoPolicyBox.centerYAnchor)
+            privacyPolicyBox.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.PolicyView.leadingMargin),
+            privacyPolicyBox.bottomAnchor.constraint(equalTo: marketingPolicyBox.topAnchor, constant: -Constants.PolicyView.verticalSpacing),
+            privacyPolicyView.leadingAnchor.constraint(equalTo: privacyPolicyBox.trailingAnchor, constant: Constants.PolicyView.horizontalSpacing),
+            privacyPolicyView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.PolicyView.trailingMargin),
+            privacyPolicyView.centerYAnchor.constraint(equalTo: privacyPolicyBox.centerYAnchor)
         ])
         
         view.addSubview(servicePolicyBox)
         view.addSubview(servicePolicyView)
         NSLayoutConstraint.activate([
             servicePolicyBox.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.PolicyView.leadingMargin),
-            servicePolicyBox.bottomAnchor.constraint(equalTo: infoPolicyBox.topAnchor, constant: -Constants.PolicyView.verticalSpacing),
+            servicePolicyBox.bottomAnchor.constraint(equalTo: privacyPolicyBox.topAnchor, constant: -Constants.PolicyView.verticalSpacing),
             servicePolicyView.leadingAnchor.constraint(equalTo: servicePolicyBox.trailingAnchor, constant: Constants.PolicyView.horizontalSpacing),
             servicePolicyView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.PolicyView.trailingMargin),
             servicePolicyView.centerYAnchor.constraint(equalTo: servicePolicyBox.centerYAnchor)
@@ -265,6 +288,65 @@ final class PrivacyPolicyViewController: BaseViewController {
     }
     
     override func setupBindings() {
+        viewModel.$allSelected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isSelected in
+                guard let self else { return }
+                self.allCheckBox.image = isSelected ? UIImage(named: "icon_check_fill") : UIImage(named: "icon_check_box")
+            }
+            .store(in: &cancellables)
         
+        viewModel.$servicePolicySelected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isSelected in
+                guard let self else { return }
+                let image = isSelected ? UIImage(named: "icon_check_fill") : UIImage(named: "icon_check_box")
+                self.servicePolicyBox.setImage(image, for: .normal)
+              
+            }
+            .store(in: &cancellables)
+
+        viewModel.$privacyPolicySelected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isSelected in
+                guard let self else { return }
+                let image = isSelected ? UIImage(named: "icon_check_fill") : UIImage(named: "icon_check_box")
+                self.privacyPolicyBox.setImage(image, for: .normal)
+              
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$marketingPolicySelected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isSelected in
+                guard let self else { return }
+                let image = isSelected ? UIImage(named: "icon_check_fill") : UIImage(named: "icon_check_box")
+                self.marketingPolicyBox.setImage(image, for: .normal)
+              
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$isNextButtonEnabled
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isEnabled in
+                self?.nextButton.isEnabled = isEnabled
+                self?.nextButton.backgroundColor = isEnabled ? Constants.NextButton.backgroundColor : Constants.NextButton.disabledBackgroundColor
+            }
+            .store(in: &cancellables)
+
+    }
+    
+    @objc
+    private func allButtonTapped() {
+        viewModel.allSelected.toggle()
+        viewModel.servicePolicySelected = viewModel.allSelected
+        viewModel.privacyPolicySelected = viewModel.allSelected
+        viewModel.marketingPolicySelected = viewModel.allSelected
+    }
+    
+    private func updateAllSelected() {
+        if !( viewModel.servicePolicySelected && viewModel.privacyPolicySelected && viewModel.marketingPolicySelected ) {
+            viewModel.allSelected = false
+        }
     }
 }

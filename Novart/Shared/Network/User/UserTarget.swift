@@ -19,7 +19,7 @@ enum UserTarget: TargetType {
     var path: String {
         switch self {
         case .getUser:
-            return "users/me"
+            return "users/me/info"
         case .setNickname:
             return "users/me/nickname"
         }
