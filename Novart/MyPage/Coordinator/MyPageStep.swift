@@ -8,6 +8,7 @@
 import UIKit
 
 enum MyPageStep: Step {
+    case main
     case ProfileEdit
     
     var target: UIViewController.Type? { nil }

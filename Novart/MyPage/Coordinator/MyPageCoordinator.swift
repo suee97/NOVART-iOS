@@ -25,13 +25,20 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     
     override func navigate(to step: MyPageStep) {
         switch step {
+        case .main:
+            showMain()
         case .ProfileEdit:
             showProfileEdit()
         }
     }
     
+    private func showMain() {
+        navigator.pop(animated: true)
+    }
+    
     private func showProfileEdit() {
-        let viewController = MyPageProfileEditViewController()
+        let viewModel = MyPageProfileEditViewModel(coordinator: self)
+        let viewController = MyPageProfileEditViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }
 }
