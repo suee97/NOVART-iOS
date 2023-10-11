@@ -25,8 +25,9 @@ final class MyPageProfileEditViewController: BaseViewController {
             static let imageDiameter: CGFloat = 100
             static let imageSize = CGSize(width: 100, height: 100)
             static let imageTopMargin: CGFloat = 8
-            static let cameraOrigin = CGPoint(x: 74, y: 74)
-            static let cameraSize = CGSize(width: 24, height: 24)
+            static let cameraRightMargin: CGFloat = 2
+            static let cameraBottomMargin: CGFloat = 2
+            static let cameraDiameter: CGFloat = 24
         }
         
         enum BackgroundImage {
@@ -74,6 +75,8 @@ final class MyPageProfileEditViewController: BaseViewController {
     
     // MARK: - Properties
     private let viewModel: MyPageProfileEditViewModel
+    private let profilePicker = UIImagePickerController()
+    private let backgroundPicker = UIImagePickerController()
     
     init(viewModel: MyPageProfileEditViewModel) {
         self.viewModel = viewModel
@@ -89,6 +92,8 @@ final class MyPageProfileEditViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         nicknameField.delegate = self
+        profilePicker.delegate = self
+        backgroundPicker.delegate = self
     }
     
     deinit {
@@ -117,42 +122,43 @@ final class MyPageProfileEditViewController: BaseViewController {
     private let emailLabel = ProfileEditLabel(title: Constants.Email.title)
     private let linkLabel = ProfileEditLabel(title: Constants.Link.title)
     
-    private lazy var profileImageView: UIView = {
-        let view = UIView()
-        
-        let profileImageView = UIImageView(frame: CGRect(origin: CGPoint.zero, size: Constants.ProfileImage.imageSize))
-        profileImageView.image = UIImage(named: "default_user_profile_image")
-
-        let cameraImageView = UIImageView(frame: CGRect(origin: Constants.ProfileImage.cameraOrigin, size: Constants.ProfileImage.cameraSize))
-        cameraImageView.image = UIImage(named: "icon_camera")
-        
-        view.addSubview(profileImageView)
-        view.addSubview(cameraImageView)
-        
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapProfileImage))
-        view.addGestureRecognizer(gesture)
-        
-        return view
+    private let profileCameraView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "icon_camera")
+        return imageView
     }()
     
-    private lazy var backgroundImageView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = Constants.BackgroundImage.imageRadius
-        view.clipsToBounds = true
+    private lazy var profileImageView: UIImageView = {
+        let profileImageView = UIImageView(frame: CGRect(origin: CGPoint.zero, size: Constants.ProfileImage.imageSize))
+        profileImageView.image = UIImage(named: "default_user_profile_image")
+        profileImageView.layer.cornerRadius = Constants.ProfileImage.imageDiameter / 2
+        profileImageView.clipsToBounds = true
+        profileImageView.isUserInteractionEnabled = true
+        profileImageView.contentMode = .scaleAspectFill
         
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapProfileImage))
+        profileImageView.addGestureRecognizer(gesture)
+        
+        return profileImageView
+    }()
+    
+    private lazy var backgroundImageView: UIImageView = {
         let backgroundImageView = UIImageView(frame: CGRect(origin: CGPoint.zero, size: Constants.BackgroundImage.imageSize))
         backgroundImageView.image = UIImage(named: "default_user_background_image")
-
+        backgroundImageView.layer.cornerRadius = Constants.BackgroundImage.imageRadius
+        backgroundImageView.clipsToBounds = true
+        backgroundImageView.isUserInteractionEnabled = true
+        backgroundImageView.contentMode = .scaleAspectFill
+        
         let cameraImageView = UIImageView(frame: CGRect(origin: Constants.BackgroundImage.cameraOrigin, size: Constants.BackgroundImage.cameraSize))
         cameraImageView.image = UIImage(named: "icon_camera")
         
-        view.addSubview(backgroundImageView)
-        view.addSubview(cameraImageView)
+        backgroundImageView.addSubview(cameraImageView)
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapBackgroundImage))
         view.addGestureRecognizer(gesture)
         
-        return view
+        return backgroundImageView
     }()
     
     private let nicknameMaxCountLabel: UILabel = {
@@ -185,6 +191,7 @@ final class MyPageProfileEditViewController: BaseViewController {
         scrollView.addSubview(contentView)
         contentView.addSubview(profileImageLabel)
         contentView.addSubview(profileImageView)
+        contentView.addSubview(profileCameraView)
         contentView.addSubview(backgroundImageLabel)
         contentView.addSubview(backgroundImageView)
         contentView.addSubview(nicknameLabel)
@@ -213,6 +220,13 @@ final class MyPageProfileEditViewController: BaseViewController {
             m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
             m.top.equalTo(profileImageLabel.snp.bottom).offset(Constants.ProfileImage.imageTopMargin)
             m.width.height.equalTo(Constants.ProfileImage.imageDiameter)
+        })
+        
+        profileCameraView.snp.makeConstraints({ m in
+            m.width.equalTo(Constants.ProfileImage.cameraDiameter)
+            m.height.equalTo(Constants.ProfileImage.cameraDiameter)
+            m.right.equalTo(profileImageView.snp.right).inset(Constants.ProfileImage.cameraRightMargin)
+            m.bottom.equalTo(profileImageView.snp.bottom).inset(Constants.ProfileImage.cameraBottomMargin)
         })
         
         backgroundImageLabel.snp.makeConstraints({ m in
@@ -314,11 +328,22 @@ final class MyPageProfileEditViewController: BaseViewController {
     }
     
     @objc private func onTapProfileImage() {
-        print("profile image")
+        openLibrary(.profile)
     }
     
     @objc private func onTapBackgroundImage() {
-        print("background image")
+        openLibrary(.background)
+    }
+    
+    private func openLibrary(_ type: PickerType) {
+        switch type {
+        case .profile:
+            profilePicker.sourceType = .photoLibrary
+            present(profilePicker, animated: true)
+        case.background:
+            backgroundPicker.sourceType = .photoLibrary
+            present(backgroundPicker, animated: true)
+        }
     }
 }
 
@@ -340,6 +365,28 @@ extension MyPageProfileEditViewController: UITextFieldDelegate {
     }
 }
 
+
+// MARK: - ImagePicker Delegate
+extension MyPageProfileEditViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        
+        if picker == profilePicker {
+            profileImageView.image = image
+        }
+        
+        if picker == backgroundPicker {
+            backgroundImageView.image = image
+        }
+        
+        dismiss(animated: true)
+    }
+}
+
+fileprivate enum PickerType {
+    case profile
+    case background
+}
 
 fileprivate class ProfileEditLabel: UILabel {
     init(title: String) {
