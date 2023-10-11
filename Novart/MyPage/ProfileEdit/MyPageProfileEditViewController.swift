@@ -42,7 +42,7 @@ final class MyPageProfileEditViewController: BaseViewController {
         }
         
         enum Nickname {
-            static let title: String = "닉네임"
+            static let title: String = "닉네임*"
             static let titleTopMargin: CGFloat = 32
             static let placeHolder: String = "활동할 닉네임 입력"
             static let maxLength: Int = 15
@@ -155,13 +155,22 @@ final class MyPageProfileEditViewController: BaseViewController {
         return view
     }()
     
-    private lazy var nicknameCountLabel: UILabel = {
+    private let nicknameMaxCountLabel: UILabel = {
         let label = UILabel()
         label.font = Constants.Nickname.countFont
         label.textColor = .Common.grey03
-        
+        label.text = "/\(Constants.Nickname.maxLength)자"
+        return label
+    }()
+    
+    private lazy var nicknameCurCountLabel: UILabel = {
+        let label = UILabel()
         let string = nicknameField.text ?? ""
-        label.text = "\(string.count)/\(Constants.Nickname.maxLength)자"
+        let length = string.count
+        
+        label.font = Constants.Nickname.countFont
+        label.text = String(length)
+        label.textColor = length > 0 ? .Common.main : .Common.grey03
         return label
     }()
     
@@ -179,7 +188,8 @@ final class MyPageProfileEditViewController: BaseViewController {
         contentView.addSubview(backgroundImageLabel)
         contentView.addSubview(backgroundImageView)
         contentView.addSubview(nicknameLabel)
-        contentView.addSubview(nicknameCountLabel)
+        contentView.addSubview(nicknameMaxCountLabel)
+        contentView.addSubview(nicknameCurCountLabel)
         contentView.addSubview(nicknameField)
         contentView.addSubview(emailLabel)
         contentView.addSubview(emailField)
@@ -222,9 +232,14 @@ final class MyPageProfileEditViewController: BaseViewController {
             m.top.equalTo(profileImageView.snp.bottom).offset(Constants.Nickname.titleTopMargin)
         })
         
-        nicknameCountLabel.snp.makeConstraints({ m in
+        nicknameMaxCountLabel.snp.makeConstraints({ m in
             m.right.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
             m.centerY.equalTo(nicknameLabel)
+        })
+        
+        nicknameCurCountLabel.snp.makeConstraints({ m in
+            m.right.equalTo(nicknameMaxCountLabel.snp.left)
+            m.centerY.equalTo(nicknameMaxCountLabel)
         })
         
         nicknameField.snp.makeConstraints({ m in
@@ -316,7 +331,8 @@ extension MyPageProfileEditViewController: UITextFieldDelegate {
         if textField == nicknameField {
             let currentString = (textField.text ?? "") as NSString
             let length = currentString.replacingCharacters(in: range, with: string).count
-            nicknameCountLabel.text = "\(length)/\(Constants.Nickname.maxLength)자"
+            nicknameCurCountLabel.text = String(length)
+            nicknameCurCountLabel.textColor = length > 0 ? .Common.main : .Common.grey03
             return length <= Constants.Nickname.maxLength
         }
 
