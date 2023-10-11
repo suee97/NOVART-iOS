@@ -24,4 +24,22 @@ final class HomeCoordinator: BaseStackCoordinator<HomeStep> {
         viewController.tabBarItem = tabBarItem
         navigator.start(viewController)
     }
+    
+    override func navigate(to step: HomeStep) {
+        switch step {
+        case .productDetail:
+            break
+        default:
+            break
+        }
+    }
+    
+    @MainActor
+    func presentSetNicknameModal() {
+        if let vc = UIApplication.shared.currentViewController {
+            let viewModel = SetNicknameViewModel(coordinator: self)
+            let setNicknameVC = SetNicknameViewController(viewModel: viewModel)
+            vc.present(setNicknameVC, animated: true)
+        }
+    }
 }

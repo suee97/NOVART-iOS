@@ -20,8 +20,6 @@ final class LoginCoordinator: BaseStackCoordinator<LoginStep> {
             showMain()
         case .policy:
             showPrivacyPolicyViewController()
-        default:
-            break
         }
     }
     

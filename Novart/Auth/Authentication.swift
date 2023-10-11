@@ -13,7 +13,8 @@ final class Authentication {
     
     var signInProvider: SignInProvider?
     var providerAccessToken: String?
-    var user: NovartUser?
+    var user: PlainUser?
+    var isFirstLogin: Bool = false
 }
 
 
