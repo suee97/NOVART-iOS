@@ -108,6 +108,13 @@ class HomeViewController: BaseViewController {
         viewModel.fetchData()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        Task { @MainActor in
+            viewModel.showSetNicknameSceneIfNeeded()
+        }
+    }
+    
     override func setupNavigationBar() {
         let logoImage = UIImage(named: "nav_logo_plain")
         let logoImageView = UIImageView(image: logoImage)

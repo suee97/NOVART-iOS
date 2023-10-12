@@ -20,7 +20,7 @@ final class PolicyContentView: UIView {
         
         enum OptionalLabel {
             static let textColor: UIColor = UIColor.Common.grey03
-            static let essentialColor: UIColor = UIColor.Common.sub
+            static let essentialColor: UIColor = UIColor.Common.main
             static let font: UIFont = UIFont.systemFont(ofSize: 12, weight: .regular)
         }
     }

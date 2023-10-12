@@ -23,6 +23,13 @@ final class HomeViewModel {
     init(coordinator: HomeCoordinator) {
         self.coordinator = coordinator
     }
+    
+    @MainActor
+    func showSetNicknameSceneIfNeeded() {
+        if Authentication.shared.isFirstLogin {
+            coordinator?.presentSetNicknameModal()
+        }
+    }
 }
 
 extension HomeViewModel {

@@ -10,7 +10,6 @@ import UIKit
 enum LoginStep: Step {
     case main
     case policy
-    case nickname
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

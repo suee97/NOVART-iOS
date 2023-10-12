@@ -8,7 +8,8 @@
 import UIKit
 
 enum HomeStep: Step {
-    case dummy
+    case productDetail
+    case nickiname
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

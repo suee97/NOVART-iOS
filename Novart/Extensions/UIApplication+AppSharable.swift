@@ -30,6 +30,10 @@ extension UIApplication {
         windowScene?.windows.first(where: { $0.isKeyWindow })
     }
     
+    var currentViewController: UIViewController? {
+        firstKeyWindow?.rootViewController
+    }
+    
     var originStatusBarStyle: UIStatusBarStyle {
         windowScene?.statusBarManager?.statusBarStyle ?? .default
     }
