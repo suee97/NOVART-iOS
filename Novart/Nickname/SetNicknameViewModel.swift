@@ -10,7 +10,8 @@ import Combine
 
 final class SetNicknameViewModel {
     private weak var coordinator: HomeCoordinator?
-
+    private let userInteractor: UserInteractor = .init()
+    
     private var cancellables: Set<AnyCancellable> = .init()
     
     @Published var nickname: String = ""
@@ -46,12 +47,15 @@ final class SetNicknameViewModel {
 extension SetNicknameViewModel {
     
     func loadDefaultNickname() {
-        defaultNickname = "똑똑한 하마 1234"
+        defaultNickname = Authentication.shared.user?.nickname ?? ""
         nickname = defaultNickname
     }
     
     func checkNicknameValidation() {
-        isValidNickname.send(true)
+        Task {
+            let isValid = try await userInteractor.checkIsValidNickname(nickname: nickname)
+            isValidNickname.send(isValid)
+        }
     }
 }
 
