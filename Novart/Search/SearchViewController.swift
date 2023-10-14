@@ -33,10 +33,26 @@ class SearchViewController: BaseViewController {
             static let height: CGFloat = 38
         }
         
+        enum PageTab {
+            static let topMargin: CGFloat = 14
+            static let selectedFont: UIFont = .systemFont(ofSize: 16, weight: .bold)
+            static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
+            static let tintColor: UIColor = UIColor.Common.grey04
+            static let textColor: UIColor = UIColor.Common.grey02
+            static let buttonWidth: CGFloat = (screenWidth - horizontalInsets * 2) / 2
+            static let buttonHeight: CGFloat = 24
+            static let indicatorHeight: CGFloat = 2
+        }
+        
+        enum Divider {
+            static let height: CGFloat = 1
+            static let color: UIColor = UIColor.Common.grey01
+            static let topMargin: CGFloat = 9
+        }
+        
         enum Product {
             static let itemWidth: CGFloat = (screenWidth - horizontalInsets * 2 - itemSpacing) / 2
             static let itemHeight: CGFloat = itemWidth * 1.34
-            
         }
     }
     
@@ -78,12 +94,100 @@ class SearchViewController: BaseViewController {
         return collectionView
     }()
     
+    private lazy var productButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("작품", for: .normal)
+        button.setTitleColor(Constants.PageTab.textColor, for: .normal)
+        button.setTitleColor(Constants.PageTab.tintColor, for: .selected)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: Constants.PageTab.buttonWidth),
+            button.heightAnchor.constraint(equalToConstant: Constants.PageTab.buttonHeight)
+        ])
+        return button
+    }()
+    
+    private lazy var artistButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("작가", for: .normal)
+        button.titleLabel?.font = Constants.PageTab.font
+        button.setTitleColor(Constants.PageTab.textColor, for: .normal)
+        button.setTitleColor(Constants.PageTab.tintColor, for: .selected)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: Constants.PageTab.buttonWidth),
+            button.heightAnchor.constraint(equalToConstant: Constants.PageTab.buttonHeight)
+        ])
+        return button
+    }()
+    
+    private lazy var pageTabStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [productButton, artistButton])
+        stackView.axis = .horizontal
+        stackView.spacing = 0
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var navigationBarDividerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.Divider.color
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var pageIndicatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.PageTab.tintColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var pageViewController: UIPageViewController = {
+        let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+        pageViewController.delegate = self
+        pageViewController.dataSource = self
+        
+        for view in pageViewController.view.subviews {
+            if let scrollView = view as? UIScrollView {
+                scrollView.delegate = self
+            }
+        }
+        pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        return pageViewController
+    }()
+    
+    private lazy var fistVC: UIViewController = {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .red
+        return vc
+    }()
+    
+    private lazy var secondVC: UIViewController = {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .blue
+        return vc
+    }()
+    
     // MARK: - Properties
     
     private var viewModel: SearchViewModel
     private var dataSource: SearchDataSource
     
     private var subscriptions: Set<AnyCancellable> = .init()
+
+    private var transitionProgress: CGFloat = 0.0 {
+        didSet {
+            leadingConstraint?.constant = Constants.PageTab.buttonWidth * transitionProgress
+            view.layoutIfNeeded()
+        }
+    }
+    private var leadingConstraint: NSLayoutConstraint?
+    private var currentViewController: UIViewController? {
+        didSet {
+            updateSelectedPage()
+        }
+    }
 
     // MARK: - Initialization
 
@@ -101,7 +205,7 @@ class SearchViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.fetchData()
+//        viewModel.fetchData()
         view.backgroundColor = .white
     }
     
@@ -152,25 +256,76 @@ class SearchViewController: BaseViewController {
             categoryStackView.heightAnchor.constraint(equalTo: categoryScrollView.heightAnchor)
         ])
         
-        view.addSubview(collectionView)
+        view.addSubview(pageTabStackView)
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: categoryScrollView.bottomAnchor, constant: 12),
-            collectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            pageTabStackView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            pageTabStackView.topAnchor.constraint(equalTo: categoryScrollView.bottomAnchor, constant: Constants.PageTab.topMargin)
         ])
         
-        collectionView.setCollectionViewLayout(searchCollectionViewLayout, animated: false)
+        view.addSubview(navigationBarDividerView)
+        NSLayoutConstraint.activate([
+            navigationBarDividerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            navigationBarDividerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            navigationBarDividerView.topAnchor.constraint(equalTo: pageTabStackView.bottomAnchor, constant: Constants.Divider.topMargin),
+            navigationBarDividerView.heightAnchor.constraint(equalToConstant: Constants.Divider.height)
+        ])
+        
+        view.addSubview(pageViewController.view)
+        NSLayoutConstraint.activate([
+            pageViewController.view.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            pageViewController.view.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            pageViewController.view.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            pageViewController.view.topAnchor.constraint(equalTo: navigationBarDividerView.bottomAnchor)
+                                                            
+        ])
+        
+        pageViewController.setViewControllers([fistVC], direction: .forward, animated: true)
+        currentViewController = fistVC
+        
+        view.addSubview(pageIndicatorView)
+        leadingConstraint = pageIndicatorView.leadingAnchor.constraint(equalTo: pageTabStackView.leadingAnchor)
+        leadingConstraint?.isActive = true
+        NSLayoutConstraint.activate([
+            pageIndicatorView.bottomAnchor.constraint(equalTo: navigationBarDividerView.bottomAnchor),
+            pageIndicatorView.heightAnchor.constraint(equalToConstant: Constants.PageTab.indicatorHeight),
+            pageIndicatorView.widthAnchor.constraint(equalToConstant: Constants.PageTab.buttonWidth),
+        ])
+        
+//        view.addSubview(collectionView)
+//        NSLayoutConstraint.activate([
+//            collectionView.topAnchor.constraint(equalTo: categoryScrollView.bottomAnchor, constant: 12),
+//            collectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+//            collectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+//            collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+//        ])
+//
+//        collectionView.setCollectionViewLayout(searchCollectionViewLayout, animated: false)
 
     }
     
     override func setupBindings() {
-        viewModel.searchResultSubject
-            .receive(on: DispatchQueue.main)
-            .sink { items in
-                self.dataSource.apply(items)
-            }
-            .store(in: &subscriptions)
+//        viewModel.searchResultSubject
+//            .receive(on: DispatchQueue.main)
+//            .sink { items in
+//                self.dataSource.apply(items)
+//            }
+//            .store(in: &subscriptions)
+    }
+    
+    private func updateSelectedPage() {
+        if currentViewController == fistVC {
+            transitionProgress = 0.0
+            artistButton.isSelected = false
+            productButton.isSelected = true
+            productButton.titleLabel?.font = Constants.PageTab.selectedFont
+            artistButton.titleLabel?.font = Constants.PageTab.font
+        } else if currentViewController == secondVC {
+            transitionProgress = 1.0
+            artistButton.isSelected = true
+            productButton.isSelected = false
+            artistButton.titleLabel?.font = Constants.PageTab.selectedFont
+            productButton.titleLabel?.font = Constants.PageTab.font
+        }
     }
 }
 
@@ -209,5 +364,44 @@ private extension SearchViewController {
             return self?.verticalSectionLayout()
         }
         return layout
+    }
+}
+
+extension SearchViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        if viewController == secondVC {
+            return fistVC
+        }
+        return nil
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        if viewController == fistVC {
+            return secondVC
+        }
+        return nil
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        guard completed, let currentViewController = pageViewController.viewControllers?.first else { return }
+        self.currentViewController = currentViewController
+    }
+}
+
+extension SearchViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let pageWidth = scrollView.frame.width
+        let xOffset = scrollView.contentOffset.x
+        var progress = xOffset / pageWidth
+                
+        if currentViewController == fistVC {
+            if progress > 1.0 && progress <= 2.0 {
+                transitionProgress = progress - 1.0
+            }
+        } else if currentViewController == secondVC {
+            if progress >= 0.0 && progress < 1.0 {
+                transitionProgress = progress
+            }
+        }
     }
 }
