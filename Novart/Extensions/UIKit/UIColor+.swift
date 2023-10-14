@@ -53,5 +53,9 @@ extension UIColor {
         static var lightMain: UIColor {
             UIColor(named: "light_main") ?? .clear
         }
+        
+        static var red: UIColor {
+            UIColor(named: "red") ?? .clear
+        }
     }
 }

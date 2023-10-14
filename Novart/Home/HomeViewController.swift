@@ -85,6 +85,17 @@ class HomeViewController: BaseViewController {
         return button
     }()
     
+    private lazy var devInfoButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .green
+        button.setTitle("호출", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.viewModel.tempInfoCall()
+        }), for: .touchUpInside)
+        return button
+    }()
+    
     // MARK: - Properties
     
     private var viewModel: HomeViewModel
@@ -109,6 +120,13 @@ class HomeViewController: BaseViewController {
     }
     
     // MARK: - Setup
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        Task { @MainActor in
+            viewModel.showSetNicknameSceneIfNeeded()
+        }
+    }
     
     override func setupNavigationBar() {
         let logoImage = UIImage(named: "nav_logo_plain")
@@ -135,6 +153,14 @@ class HomeViewController: BaseViewController {
         NSLayoutConstraint.activate([
             filterButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.FilterButton.leadingMargin),
             filterButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.FilterButton.bottomMargin)
+        ])
+        
+        view.addSubview(devInfoButton)
+        NSLayoutConstraint.activate([
+            devInfoButton.widthAnchor.constraint(equalToConstant: 50),
+            devInfoButton.heightAnchor.constraint(equalToConstant: 50),
+            devInfoButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            devInfoButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100)
         ])
     }
     

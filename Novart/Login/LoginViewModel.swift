@@ -51,7 +51,7 @@ final class LoginViewModel {
                     print(error.localizedDescription)
                 }
             }
-            
+
         case .kakao:
             Task {
                 do {
@@ -67,8 +67,9 @@ final class LoginViewModel {
         }
     }
     
+    @MainActor
     func transitionToMainScene() {
-        print("home view controller")
+        coordinator?.navigate(to: .main)
     }
     
     @MainActor
