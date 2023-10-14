@@ -157,10 +157,10 @@ class SearchViewController: BaseViewController {
         return pageViewController
     }()
     
-    private lazy var fistVC: UIViewController = {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .red
-        return vc
+    private lazy var productSearchViewController: ProductSearchViewController = {
+        let viewModel = ProductSearchViewModel(coordinator: viewModel.coordinator)
+        let viewController = ProductSearchViewController(viewModel: viewModel)
+        return viewController
     }()
     
     private lazy var secondVC: UIViewController = {
@@ -172,7 +172,6 @@ class SearchViewController: BaseViewController {
     // MARK: - Properties
     
     private var viewModel: SearchViewModel
-    private var dataSource: SearchDataSource
     
     private var subscriptions: Set<AnyCancellable> = .init()
 
@@ -193,7 +192,6 @@ class SearchViewController: BaseViewController {
 
     init(viewModel: SearchViewModel) {
         self.viewModel = viewModel
-        self.dataSource = SearchDataSource(collectionView: collectionView)
         super.init()
     }
     
@@ -205,8 +203,6 @@ class SearchViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        viewModel.fetchData()
-        view.backgroundColor = .white
     }
     
     // MARK: - Setup
@@ -216,6 +212,7 @@ class SearchViewController: BaseViewController {
     }
     
     override func setupView() {
+        view.backgroundColor = .white
         
         let safeArea = view.safeAreaLayoutGuide
 
@@ -279,8 +276,8 @@ class SearchViewController: BaseViewController {
                                                             
         ])
         
-        pageViewController.setViewControllers([fistVC], direction: .forward, animated: true)
-        currentViewController = fistVC
+        pageViewController.setViewControllers([productSearchViewController], direction: .forward, animated: true)
+        currentViewController = productSearchViewController
         
         view.addSubview(pageIndicatorView)
         leadingConstraint = pageIndicatorView.leadingAnchor.constraint(equalTo: pageTabStackView.leadingAnchor)
@@ -290,30 +287,10 @@ class SearchViewController: BaseViewController {
             pageIndicatorView.heightAnchor.constraint(equalToConstant: Constants.PageTab.indicatorHeight),
             pageIndicatorView.widthAnchor.constraint(equalToConstant: Constants.PageTab.buttonWidth),
         ])
-        
-//        view.addSubview(collectionView)
-//        NSLayoutConstraint.activate([
-//            collectionView.topAnchor.constraint(equalTo: categoryScrollView.bottomAnchor, constant: 12),
-//            collectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-//            collectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-//            collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-//        ])
-//
-//        collectionView.setCollectionViewLayout(searchCollectionViewLayout, animated: false)
-
-    }
-    
-    override func setupBindings() {
-//        viewModel.searchResultSubject
-//            .receive(on: DispatchQueue.main)
-//            .sink { items in
-//                self.dataSource.apply(items)
-//            }
-//            .store(in: &subscriptions)
     }
     
     private func updateSelectedPage() {
-        if currentViewController == fistVC {
+        if currentViewController == productSearchViewController {
             transitionProgress = 0.0
             artistButton.isSelected = false
             productButton.isSelected = true
@@ -370,13 +347,13 @@ private extension SearchViewController {
 extension SearchViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         if viewController == secondVC {
-            return fistVC
+            return productSearchViewController
         }
         return nil
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if viewController == fistVC {
+        if viewController == productSearchViewController {
             return secondVC
         }
         return nil
@@ -394,7 +371,7 @@ extension SearchViewController: UIScrollViewDelegate {
         let xOffset = scrollView.contentOffset.x
         var progress = xOffset / pageWidth
                 
-        if currentViewController == fistVC {
+        if currentViewController == productSearchViewController {
             if progress > 1.0 && progress <= 2.0 {
                 transitionProgress = progress - 1.0
             }

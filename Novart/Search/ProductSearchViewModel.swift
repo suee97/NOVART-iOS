@@ -1,33 +1,25 @@
 //
-//  SearchViewModel.swift
+//  ProductSearchViewModel.swift
 //  Novart
 //
-//  Created by Jinwook Huh on 2023/09/21.
+//  Created by Jinwook Huh on 2023/10/15.
 //
 
 import Foundation
 import Combine
 
-final class SearchViewModel {
-    weak var coordinator: SearchCoordinator?
+final class ProductSearchViewModel {
+    private weak var coordinator: SearchCoordinator?
     var downloadInteractor: SearchDownloadInteractor = SearchDownloadInteractor()
-
-    var categoryItems: [CategoryType] = CategoryType.allCases
     
     var searchResultSubject: PassthroughSubject<[SearchProductModel], Never> = .init()
     
-    init(coordinator: SearchCoordinator) {
+    init(coordinator: SearchCoordinator?) {
         self.coordinator = coordinator
     }
 }
 
-extension SearchViewModel {
-    func didTapCategory(type: CategoryType) {
-        print("tapped: \(type.rawValue)")
-    }
-}
-
-extension SearchViewModel {
+extension ProductSearchViewModel {
     func fetchData() {
         Task {
             let items = try await downloadInteractor.fetchProductItems()
