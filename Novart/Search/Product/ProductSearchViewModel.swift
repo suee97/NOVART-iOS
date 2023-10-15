@@ -12,9 +12,12 @@ final class ProductSearchViewModel {
     private weak var coordinator: SearchCoordinator?
     var downloadInteractor: SearchDownloadInteractor = SearchDownloadInteractor()
     
+    @Published var products: [SearchProductModel]
+    
     var searchResultSubject: PassthroughSubject<[SearchProductModel], Never> = .init()
     
-    init(coordinator: SearchCoordinator?) {
+    init(data: [SearchProductModel], coordinator: SearchCoordinator?) {
+        self.products = data
         self.coordinator = coordinator
     }
 }

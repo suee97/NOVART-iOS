@@ -9,7 +9,7 @@ import UIKit
 
 final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
     override func start() {
-        let viewModel = SearchViewModel(coordinator: self)
+        let viewModel = SearchViewModel(data: nil, coordinator: self)
         let viewController = SearchViewController(viewModel: viewModel)
         
         let tabBarItem = UITabBarItem(
@@ -21,6 +21,20 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
 
         viewController.tabBarItem = tabBarItem
         navigator.start(viewController)
+    }
+    
+    override func navigate(to step: SearchStep) {
+        switch step {
+        case let .search(data):
+            showSearchResultScene(data: data)
+        default: break
+        }
+    }
+    
+    private func showSearchResultScene(data: SearchResultModel) {
+        let viewModel = SearchViewModel(data: data, coordinator: self)
+        let searchViewController = SearchViewController(viewModel: viewModel)
+        navigator.push(searchViewController, animated: true)
     }
 }
 

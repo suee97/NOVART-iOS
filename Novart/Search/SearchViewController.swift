@@ -178,14 +178,12 @@ class SearchViewController: BaseViewController {
     }()
     
     private lazy var productSearchViewController: ProductSearchViewController = {
-        let viewModel = ProductSearchViewModel(coordinator: viewModel.coordinator)
-        let viewController = ProductSearchViewController(viewModel: viewModel)
+        let viewController = ProductSearchViewController(viewModel: viewModel.productViewModel)
         return viewController
     }()
     
     private lazy var artistSearchViewController: ArtistSearchViewController = {
-        let viewModel = ArtistSearchViewModel(coordinator: viewModel.coordinator)
-        let viewController = ArtistSearchViewController(viewModel: viewModel)
+        let viewController = ArtistSearchViewController(viewModel: viewModel.artistViewModel)
         return viewController
     }()
     
@@ -327,7 +325,10 @@ class SearchViewController: BaseViewController {
 }
 
 extension SearchViewController: UISearchBarDelegate {
-    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchQuery = searchBar.text else { return }
+        viewModel.performSearch(query: searchQuery)
+    }
 }
 
 // MARK: - CollectionViewLayout
@@ -389,7 +390,7 @@ extension SearchViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let pageWidth = scrollView.frame.width
         let xOffset = scrollView.contentOffset.x
-        var progress = xOffset / pageWidth
+        let progress = xOffset / pageWidth
                 
         if currentViewController == productSearchViewController {
             if progress > 1.0 && progress <= 2.0 {

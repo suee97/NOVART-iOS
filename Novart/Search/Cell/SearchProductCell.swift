@@ -118,7 +118,7 @@ final class SearchProductCell: UICollectionViewCell {
 extension SearchProductCell {
     func update(with data: SearchProductModel) {
         productLabel.text = data.name
-        artistLabel.text = data.artistName
+        artistLabel.text = data.artistNickname
         productImageView.image = UIImage(named: "mock_table")
     }
 }

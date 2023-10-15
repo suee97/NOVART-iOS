@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct SearchArtistModel: Identifiable, Hashable {
-    let id: UUID = UUID()
+struct SearchArtistModel: Identifiable, Hashable, Decodable {
+    let id: Int64
     let nickname: String
     let backgroundImgUrl: String?
     let profileImgUrl: String?

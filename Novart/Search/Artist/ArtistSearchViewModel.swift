@@ -12,9 +12,12 @@ final class ArtistSearchViewModel {
     private weak var coordinator: SearchCoordinator?
     var downloadInteractor: SearchDownloadInteractor = SearchDownloadInteractor()
     
+    @Published var artists: [SearchArtistModel]
+    
     var searchResultSubject: PassthroughSubject<[SearchArtistModel], Never> = .init()
     
-    init(coordinator: SearchCoordinator?) {
+    init(data: [SearchArtistModel], coordinator: SearchCoordinator?) {
+        self.artists = data
         self.coordinator = coordinator
     }
 }

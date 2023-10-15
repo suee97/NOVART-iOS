@@ -8,7 +8,9 @@
 import UIKit
 
 enum SearchStep: Step {
-    case dummy
+    case search(SearchResultModel)
+    case product
+    case artist
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }
