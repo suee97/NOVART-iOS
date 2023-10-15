@@ -20,7 +20,6 @@ class OAuthAuthenticator: Authenticator {
     
     
     func didRequest(_ urlRequest: URLRequest, with response: HTTPURLResponse, failDueToAuthenticationError error: Error) -> Bool {
-        print(response.statusCode)
         return response.statusCode == 401
     }
     
@@ -66,7 +65,6 @@ class OAuthAuthenticator: Authenticator {
             }
             KeychainService.shared.saveAccessToken(token.accessToken)
             KeychainService.shared.saveRefreshToken(token.refreshToken)
-            
             let newCredential = OAuthCredential(accessToken: token.accessToken, expiration: Date(timeIntervalSinceNow: 60))
             completion(.success(newCredential))
         }

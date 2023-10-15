@@ -12,7 +12,9 @@ final class SearchProductCell: UICollectionViewCell {
     // MARK: - Constants
     
     private enum Constants {
-        
+
+        static let cornerRadius: CGFloat = 12
+
         enum BottomInfo {
             static let leadingMargin: CGFloat = 12
             static let trailingMargin: CGFloat = 12
@@ -103,7 +105,13 @@ final class SearchProductCell: UICollectionViewCell {
             infoStackView.centerYAnchor.constraint(equalTo: bottomInfoView.centerYAnchor)
         ])
         
-        self.clipsToBounds = true
+        
+        contentView.layer.cornerRadius = Constants.cornerRadius
+        contentView.clipsToBounds = true
+        
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.1
+        layer.shadowOffset = CGSize(width: 0, height: 2)
     }
 }
 

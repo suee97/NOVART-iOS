@@ -104,6 +104,16 @@ class SearchViewController: BaseViewController {
             button.widthAnchor.constraint(equalToConstant: Constants.PageTab.buttonWidth),
             button.heightAnchor.constraint(equalToConstant: Constants.PageTab.buttonHeight)
         ])
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            if self.currentViewController == self.artistSearchViewController {
+                self.pageViewController.setViewControllers([self.productSearchViewController], direction: .reverse, animated: true)  { completed in
+                    if completed {
+                        self.currentViewController = self.productSearchViewController
+                    }
+                }
+            }
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -118,6 +128,16 @@ class SearchViewController: BaseViewController {
             button.widthAnchor.constraint(equalToConstant: Constants.PageTab.buttonWidth),
             button.heightAnchor.constraint(equalToConstant: Constants.PageTab.buttonHeight)
         ])
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            if self.currentViewController == self.productSearchViewController {
+                self.pageViewController.setViewControllers([self.artistSearchViewController], direction: .forward, animated: true) { completed in
+                    if completed {
+                        self.currentViewController = self.artistSearchViewController
+                    }
+                }
+            }
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -163,10 +183,10 @@ class SearchViewController: BaseViewController {
         return viewController
     }()
     
-    private lazy var secondVC: UIViewController = {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .blue
-        return vc
+    private lazy var artistSearchViewController: ArtistSearchViewController = {
+        let viewModel = ArtistSearchViewModel(coordinator: viewModel.coordinator)
+        let viewController = ArtistSearchViewController(viewModel: viewModel)
+        return viewController
     }()
     
     // MARK: - Properties
@@ -296,7 +316,7 @@ class SearchViewController: BaseViewController {
             productButton.isSelected = true
             productButton.titleLabel?.font = Constants.PageTab.selectedFont
             artistButton.titleLabel?.font = Constants.PageTab.font
-        } else if currentViewController == secondVC {
+        } else if currentViewController == artistSearchViewController {
             transitionProgress = 1.0
             artistButton.isSelected = true
             productButton.isSelected = false
@@ -346,7 +366,7 @@ private extension SearchViewController {
 
 extension SearchViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        if viewController == secondVC {
+        if viewController == artistSearchViewController {
             return productSearchViewController
         }
         return nil
@@ -354,7 +374,7 @@ extension SearchViewController: UIPageViewControllerDelegate, UIPageViewControll
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         if viewController == productSearchViewController {
-            return secondVC
+            return artistSearchViewController
         }
         return nil
     }
@@ -375,7 +395,7 @@ extension SearchViewController: UIScrollViewDelegate {
             if progress > 1.0 && progress <= 2.0 {
                 transitionProgress = progress - 1.0
             }
-        } else if currentViewController == secondVC {
+        } else if currentViewController == artistSearchViewController {
             if progress >= 0.0 && progress < 1.0 {
                 transitionProgress = progress
             }

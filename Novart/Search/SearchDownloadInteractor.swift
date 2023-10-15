@@ -17,4 +17,14 @@ final class SearchDownloadInteractor {
             ]
         return items
     }
+    
+    func fetchArtistItems() async throws -> [SearchArtistModel] {
+        let items = [
+            SearchArtistModel(nickname: "작가 이름", backgroundImgUrl: nil, profileImgUrl: nil),
+            SearchArtistModel(nickname: "작가 이름", backgroundImgUrl: nil, profileImgUrl: nil),
+            SearchArtistModel(nickname: "작가 이름", backgroundImgUrl: nil, profileImgUrl: nil),
+            SearchArtistModel(nickname: "작가 이름", backgroundImgUrl: nil, profileImgUrl: nil)
+            ]
+        return items
+    }
 }
