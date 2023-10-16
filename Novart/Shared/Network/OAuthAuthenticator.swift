@@ -12,7 +12,7 @@ struct OAuthCredential: AuthenticationCredential {
     let accessToken: String?
     let expiration: Date
     
-    var requiresRefresh: Bool { Date(timeIntervalSinceNow: 60 * 5) > expiration }
+    var requiresRefresh: Bool { Date(timeIntervalSinceNow: 50) > expiration }
 }
 
 
@@ -20,7 +20,8 @@ class OAuthAuthenticator: Authenticator {
     
     
     func didRequest(_ urlRequest: URLRequest, with response: HTTPURLResponse, failDueToAuthenticationError error: Error) -> Bool {
-        return response.statusCode == 403
+        print(response.statusCode)
+        return response.statusCode == 401
     }
     
     func isRequest(_ urlRequest: URLRequest, authenticatedWith credential: OAuthCredential) -> Bool {
@@ -53,19 +54,20 @@ class OAuthAuthenticator: Authenticator {
                 if let error = error {
                     completion(.failure(error))
                 }
+                completion(.failure(APIError.init(message: "Unknown Error", code: .TokenRefreshFail)))
                 return
             }
 
             let decoder = JSONDecoder()
-            let decodedData = try? decoder.decode(NetworkResponse<TokenRefreshResponse>.self, from: data)
-            guard let token = decodedData?.data else {
+            let decodedData = try? decoder.decode(TokenRefreshResponse.self, from: data)
+            guard let token = decodedData else {
                 completion(.failure(APIError(message: "refresh token decoding fail", code: .TokenRefreshFail)))
                 return
             }
             KeychainService.shared.saveAccessToken(token.accessToken)
             KeychainService.shared.saveRefreshToken(token.refreshToken)
             
-            let newCredential = OAuthCredential(accessToken: token.accessToken, expiration: Date(timeIntervalSinceNow: 60 * 28))
+            let newCredential = OAuthCredential(accessToken: token.accessToken, expiration: Date(timeIntervalSinceNow: 60))
             completion(.success(newCredential))
         }
         

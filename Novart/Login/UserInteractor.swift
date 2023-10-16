@@ -13,4 +13,9 @@ final class UserInteractor {
         Authentication.shared.user = user
         return user
     }
+    
+    func checkIsValidNickname(nickname: String) async throws -> Bool {
+        let isValid = try await APIClient.checkValidNickname(nickname: nickname)
+        return isValid
+    }
 }
