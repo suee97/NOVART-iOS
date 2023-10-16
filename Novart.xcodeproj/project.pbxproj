@@ -115,6 +115,10 @@
 		0EF59AB12AAB0ABA00FD39E3 /* ReuseableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AB02AAB0ABA00FD39E3 /* ReuseableView.swift */; };
 		0EF59AB52AAB0DC300FD39E3 /* AutoResizableTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AB42AAB0DC300FD39E3 /* AutoResizableTableView.swift */; };
 		0EF59AB72AACC4A600FD39E3 /* FilterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AB62AACC4A600FD39E3 /* FilterType.swift */; };
+		5BB9F16A2AD90F5000C347F3 /* MyPageSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB9F1692AD90F5000C347F3 /* MyPageSettingViewController.swift */; };
+		5BB9F16C2ADCFF7E00C347F3 /* TextNavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB9F16B2ADCFF7E00C347F3 /* TextNavigationButton.swift */; };
+		5BB9F16E2ADD029500C347F3 /* ToggleSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB9F16D2ADD029500C347F3 /* ToggleSwitchView.swift */; };
+		5BB9F1702ADD177100C347F3 /* MyPageSettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB9F16F2ADD177100C347F3 /* MyPageSettingViewModel.swift */; };
 		5BDD4A112AC955A600937352 /* MyPageCategoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */; };
 		5BDD4A122AC955A600937352 /* MyPageHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */; };
 		5BDD4A132AC955A600937352 /* MyPageCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */; };
@@ -233,6 +237,10 @@
 		0EF59AB02AAB0ABA00FD39E3 /* ReuseableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseableView.swift; sourceTree = "<group>"; };
 		0EF59AB42AAB0DC300FD39E3 /* AutoResizableTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoResizableTableView.swift; sourceTree = "<group>"; };
 		0EF59AB62AACC4A600FD39E3 /* FilterType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterType.swift; sourceTree = "<group>"; };
+		5BB9F1692AD90F5000C347F3 /* MyPageSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageSettingViewController.swift; sourceTree = "<group>"; };
+		5BB9F16B2ADCFF7E00C347F3 /* TextNavigationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNavigationButton.swift; sourceTree = "<group>"; };
+		5BB9F16D2ADD029500C347F3 /* ToggleSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleSwitchView.swift; sourceTree = "<group>"; };
+		5BB9F16F2ADD177100C347F3 /* MyPageSettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageSettingViewModel.swift; sourceTree = "<group>"; };
 		5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageCategoryButton.swift; sourceTree = "<group>"; };
 		5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageHeaderView.swift; sourceTree = "<group>"; };
 		5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageCategory.swift; sourceTree = "<group>"; };
@@ -525,6 +533,7 @@
 		0EE0195A2A56F1BD00389A95 /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				5BB9F1682AD90F3500C347F3 /* MyPageSetting */,
 				5BDD4A152AC955C100937352 /* Cells */,
 				5BDD4A1A2AC955C100937352 /* Models */,
 				5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */,
@@ -701,6 +710,17 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		5BB9F1682AD90F3500C347F3 /* MyPageSetting */ = {
+			isa = PBXGroup;
+			children = (
+				5BB9F1692AD90F5000C347F3 /* MyPageSettingViewController.swift */,
+				5BB9F16B2ADCFF7E00C347F3 /* TextNavigationButton.swift */,
+				5BB9F16D2ADD029500C347F3 /* ToggleSwitchView.swift */,
+				5BB9F16F2ADD177100C347F3 /* MyPageSettingViewModel.swift */,
+			);
+			path = MyPageSetting;
+			sourceTree = "<group>";
+		};
 		5BDD4A152AC955C100937352 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -820,10 +840,12 @@
 				0EE0194B2A56EF6F00389A95 /* HomeStep.swift in Sources */,
 				0EE019412A56EEB200389A95 /* HomeViewController.swift in Sources */,
 				0EE019C82A6BCCC400389A95 /* AccessTokenResponse.swift in Sources */,
+				5BB9F16A2AD90F5000C347F3 /* MyPageSettingViewController.swift in Sources */,
 				0EE018F72A48177C00389A95 /* BaseWindowCoordinator.swift in Sources */,
 				5BDD4A212AC955C100937352 /* MyPageWorkCell.swift in Sources */,
 				0EE019C62A6BCCA000389A95 /* APIClient+SignIn.swift in Sources */,
 				0EE018FD2A48195400389A95 /* NavigationActionable.swift in Sources */,
+				5BB9F1702ADD177100C347F3 /* MyPageSettingViewModel.swift in Sources */,
 				5BDD4A202AC955C100937352 /* MyPageInterestCell.swift in Sources */,
 				0EE019352A514A5900389A95 /* LoginCoordinator.swift in Sources */,
 				0EE0193D2A56EA6000389A95 /* LoginStep.swift in Sources */,
@@ -843,6 +865,7 @@
 				0EE019452A56EEF300389A95 /* ChattingViewController.swift in Sources */,
 				0EA8F8352A90967300ADFBFB /* HomeFeedCell.swift in Sources */,
 				0EE019832A63C0EB00389A95 /* DiscoverViewModel.swift in Sources */,
+				5BB9F16E2ADD029500C347F3 /* ToggleSwitchView.swift in Sources */,
 				0EE019A02A6BC57E00389A95 /* APIConstants.swift in Sources */,
 				0EE0190F2A482D0E00389A95 /* AppStep.swift in Sources */,
 				0EE019622A56F31100389A95 /* MainTabBarViewController.swift in Sources */,
@@ -851,6 +874,7 @@
 				0EE019B12A6BC65500389A95 /* HTTPHeaderField.swift in Sources */,
 				0EF59AB52AAB0DC300FD39E3 /* AutoResizableTableView.swift in Sources */,
 				0EE018F52A48175600389A95 /* AppCoordinator.swift in Sources */,
+				5BB9F16C2ADCFF7E00C347F3 /* TextNavigationButton.swift in Sources */,
 				0EE019D52A6BF22B00389A95 /* PrivacyPolicyViewModel.swift in Sources */,
 				0E9BB0932AD6E2990002A76D /* SignUpInteractor.swift in Sources */,
 				0EF59AB12AAB0ABA00FD39E3 /* ReuseableView.swift in Sources */,
