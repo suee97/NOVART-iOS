@@ -1,5 +1,6 @@
 import UIKit
 import SnapKit
+import Combine
 
 final class MyPageSettingViewController: BaseViewController {
 
@@ -12,7 +13,7 @@ final class MyPageSettingViewController: BaseViewController {
         
         enum Navigation {
             static let title: String = "설정"
-            static let backButtonSize = CGSize(width: 24, height: 24)
+            static let buttonSize = CGSize(width: 24, height: 24)
         }
         
         enum Divider {
@@ -71,8 +72,15 @@ final class MyPageSettingViewController: BaseViewController {
     }
     
     
-    // MARK: - LifeCycle
+    // MARK: - Properties
+    private let viewModel = MyPageSettingViewModel()
     
+    
+    // MARK: - LifeCycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        scrollView.delegate = self
+    }
     
     // MARK: - UI
     private let scrollView: UIScrollView = {
@@ -86,13 +94,24 @@ final class MyPageSettingViewController: BaseViewController {
         return view
     }()
     
-    private lazy var backButton: UIButton = {
-        let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: Constants.Navigation.backButtonSize))
+    private lazy var backButtonItem: UIBarButtonItem = {
+        let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: Constants.Navigation.buttonSize))
         button.setBackgroundImage(UIImage(named: "icon_back"), for: .normal)
         button.addAction(UIAction(handler: { _ in
             print("back button")
         }), for: .touchUpInside)
-        return button
+        let item = UIBarButtonItem(customView: button)
+        return item
+    }()
+    
+    private lazy var cancelButtonItem: UIBarButtonItem = {
+        let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: Constants.Navigation.buttonSize))
+        button.setBackgroundImage(UIImage(named: "icon_cancel"), for: .normal)
+        button.addAction(UIAction(handler: { _ in
+            print("cancel button")
+        }), for: .touchUpInside)
+        let item = UIBarButtonItem(customView: button)
+        return item
     }()
     
     private let notificationSectionLabel = SectionTitleLabel(title: Constants.Notification.sectionTitle)
@@ -272,8 +291,9 @@ final class MyPageSettingViewController: BaseViewController {
     
     override func setupNavigationBar() {
         navigationItem.title = Constants.Navigation.title
-        let backItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backItem
+        navigationItem.setHidesBackButton(true, animated: true)
+        navigationItem.leftBarButtonItem = backButtonItem
+        navigationItem.rightBarButtonItem = nil
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.font: Constants.largeFont
         ]
@@ -294,6 +314,20 @@ final class MyPageSettingViewController: BaseViewController {
         after.snp.makeConstraints({ m in
             m.top.equalTo(view.snp.bottom).offset(bottomOffset)
         })
+    }
+}
+
+
+// MARK: - ScrollView Delegate
+extension MyPageSettingViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.bounds.minY > 0 {
+            navigationItem.leftBarButtonItem = nil
+            navigationItem.rightBarButtonItem = cancelButtonItem
+        } else {
+            navigationItem.leftBarButtonItem = backButtonItem
+            navigationItem.rightBarButtonItem = nil
+        }
     }
 }
 
