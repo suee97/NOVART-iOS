@@ -6,10 +6,11 @@ final class MyPageSettingViewController: BaseViewController {
 
     // MARK: - Constants
     private enum Constants {
-        static let horizontalMargin: CGFloat = 24
-        static let verticalMargin: CGFloat = 24
+        static let defaultHorizontalMargin: CGFloat = 24
+        static let defaultVerticalMargin: CGFloat = 24
         static let cellHeight: CGFloat = 40
-        static let largeFont = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        static let primaryFont = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        static let primaryColor = UIColor.Common.black
         
         enum Navigation {
             static let title: String = "설정"
@@ -89,10 +90,7 @@ final class MyPageSettingViewController: BaseViewController {
         return scrollView
     }()
     
-    private let contentView: UIView = {
-        let view = UIView()
-        return view
-    }()
+    private let contentView = UIView()
     
     private lazy var backButtonItem: UIBarButtonItem = {
         let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: Constants.Navigation.buttonSize))
@@ -136,26 +134,26 @@ final class MyPageSettingViewController: BaseViewController {
         print("inquireToggleView: \($0)")
     })
     
-    private let usagePolicyRowView = TextNavigationButton(title: Constants.UsageInfo.usagePolicyTitle, onTap: {
+    private let usagePolicyButton = TextNavigationButton(title: Constants.UsageInfo.usagePolicyTitle, onTap: {
         print("usagePolicyRowView !!")
     })
     
-    private let privacyPolicyRowView = TextNavigationButton(title: Constants.UsageInfo.privacyPolicyTitle, onTap: {
+    private let privacyPolicyButton = TextNavigationButton(title: Constants.UsageInfo.privacyPolicyTitle, onTap: {
         print("privacyPolicyRowView !!")
     })
     
-    private let noticePolicyRowView = TextNavigationButton(title: Constants.Etc.noticeTitle, onTap: {
+    private let noticePolicyButton = TextNavigationButton(title: Constants.Etc.noticeTitle, onTap: {
         print("noticePolicyRowView !!")
     })
     
     // 실제 데이터 받을 때 수정 필요
-    private let updateRowView: UIView = {
+    private let updateInfoView: UIView = {
         let view = ToggleSwitchView(title: Constants.Etc.updateTitle, desc: "최신버전: 23.23.0", isOn: false, onSwitch: { _ in })
         view.toggle.removeFromSuperview()
         
         let infoLabel = UILabel()
         infoLabel.text = "23.10.2(23102)"
-        infoLabel.font = Constants.largeFont
+        infoLabel.font = Constants.primaryFont
         
         view.addSubview(infoLabel)
         infoLabel.snp.makeConstraints({ m in
@@ -167,17 +165,23 @@ final class MyPageSettingViewController: BaseViewController {
     
     private let logoutButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.Common.black, for: .normal)
+        button.setTitleColor(Constants.primaryColor, for: .normal)
         button.setTitle(Constants.Account.logoutTitle, for: .normal)
-        button.titleLabel?.font = Constants.largeFont
+        button.titleLabel?.font = Constants.primaryFont
+        button.addAction(UIAction(handler: { _ in
+            print("logout button")
+        }), for: .touchUpInside)
         return button
     }()
     
     private let deleteButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.Common.black, for: .normal)
+        button.setTitleColor(Constants.primaryColor, for: .normal)
         button.setTitle(Constants.Account.deleteTitle, for: .normal)
-        button.titleLabel?.font = Constants.largeFont
+        button.titleLabel?.font = Constants.primaryFont
+        button.addAction(UIAction(handler: { _ in
+            print("delete button")
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -192,11 +196,11 @@ final class MyPageSettingViewController: BaseViewController {
         contentView.addSubview(serviceToggleView)
         contentView.addSubview(inquireToggleView)
         contentView.addSubview(usageSectionLabel)
-        contentView.addSubview(usagePolicyRowView)
-        contentView.addSubview(privacyPolicyRowView)
+        contentView.addSubview(usagePolicyButton)
+        contentView.addSubview(privacyPolicyButton)
         contentView.addSubview(etcSectionLabel)
-        contentView.addSubview(noticePolicyRowView)
-        contentView.addSubview(updateRowView)
+        contentView.addSubview(noticePolicyButton)
+        contentView.addSubview(updateInfoView)
         contentView.addSubview(logoutButton)
         contentView.addSubview(deleteButton)
         
@@ -209,80 +213,80 @@ final class MyPageSettingViewController: BaseViewController {
         })
         
         notificationSectionLabel.snp.makeConstraints({ m in
-            m.left.equalToSuperview().inset(Constants.horizontalMargin)
+            m.left.equalToSuperview().inset(Constants.defaultHorizontalMargin)
             m.top.equalToSuperview().inset(Constants.Notification.sectionTitleTopMargin)
         })
         
         activityToggleView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
             m.top.equalTo(notificationSectionLabel.snp.bottom).offset(Constants.Notification.activityTopMargin)
             m.height.equalTo(Constants.cellHeight)
         })
         
         registerToggleView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
-            m.top.equalTo(activityToggleView.snp.bottom).offset(Constants.verticalMargin)
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+            m.top.equalTo(activityToggleView.snp.bottom).offset(Constants.defaultVerticalMargin)
             m.height.equalTo(Constants.cellHeight)
         })
         
         serviceToggleView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
-            m.top.equalTo(registerToggleView.snp.bottom).offset(Constants.verticalMargin)
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+            m.top.equalTo(registerToggleView.snp.bottom).offset(Constants.defaultVerticalMargin)
             m.height.equalTo(Constants.cellHeight)
         })
         
-        insertDivider(before: serviceToggleView, topOffset: Constants.verticalMargin, after: inquireToggleView, bottomOffset: Constants.verticalMargin)
+        insertDivider(before: serviceToggleView, topOffset: Constants.defaultVerticalMargin, after: inquireToggleView, bottomOffset: Constants.defaultVerticalMargin)
         
         inquireToggleView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
             m.height.equalTo(Constants.cellHeight)
         })
         
-        insertDivider(before: inquireToggleView, topOffset: Constants.verticalMargin, after: usageSectionLabel, bottomOffset: Constants.verticalMargin)
+        insertDivider(before: inquireToggleView, topOffset: Constants.defaultVerticalMargin, after: usageSectionLabel, bottomOffset: Constants.defaultVerticalMargin)
         
         usageSectionLabel.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
         })
         
-        usagePolicyRowView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
+        usagePolicyButton.snp.makeConstraints({ m in
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
             m.top.equalTo(usageSectionLabel.snp.bottom).offset(Constants.UsageInfo.usagePolicyTopMargin)
             m.height.equalTo(Constants.cellHeight)
         })
         
-        privacyPolicyRowView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
-            m.top.equalTo(usagePolicyRowView.snp.bottom).offset(Constants.UsageInfo.privacyPolicyTopMargin)
+        privacyPolicyButton.snp.makeConstraints({ m in
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+            m.top.equalTo(usagePolicyButton.snp.bottom).offset(Constants.UsageInfo.privacyPolicyTopMargin)
             m.height.equalTo(Constants.cellHeight)
         })
         
-        insertDivider(before: privacyPolicyRowView, topOffset: Constants.UsageInfo.bottomDividerOffset, after: etcSectionLabel, bottomOffset: Constants.verticalMargin)
+        insertDivider(before: privacyPolicyButton, topOffset: Constants.UsageInfo.bottomDividerOffset, after: etcSectionLabel, bottomOffset: Constants.defaultVerticalMargin)
         
         etcSectionLabel.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
         })
         
-        noticePolicyRowView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
+        noticePolicyButton.snp.makeConstraints({ m in
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
             m.top.equalTo(etcSectionLabel.snp.bottom).offset(Constants.Etc.noticeTopMargin)
             m.height.equalTo(Constants.cellHeight)
         })
         
-        updateRowView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
-            m.top.equalTo(noticePolicyRowView.snp.bottom).offset(Constants.Etc.updateTopMargin)
+        updateInfoView.snp.makeConstraints({ m in
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+            m.top.equalTo(noticePolicyButton.snp.bottom).offset(Constants.Etc.updateTopMargin)
             m.height.equalTo(Constants.cellHeight)
         })
         
-        insertDivider(before: updateRowView, topOffset: Constants.verticalMargin, after: logoutButton, bottomOffset: Constants.Account.logoutTopMargin)
+        insertDivider(before: updateInfoView, topOffset: Constants.defaultVerticalMargin, after: logoutButton, bottomOffset: Constants.Account.logoutTopMargin)
         
         logoutButton.snp.makeConstraints({ m in
-            m.left.equalToSuperview().inset(Constants.horizontalMargin)
+            m.left.equalToSuperview().inset(Constants.defaultHorizontalMargin)
             m.height.equalTo(Constants.cellHeight)
         })
         
         deleteButton.snp.makeConstraints({ m in
-            m.left.equalToSuperview().inset(Constants.horizontalMargin)
+            m.left.equalToSuperview().inset(Constants.defaultHorizontalMargin)
             m.top.equalTo(logoutButton.snp.bottom).offset(Constants.Account.deleteTopMargin)
             m.height.equalTo(Constants.cellHeight)
             m.bottom.equalToSuperview().offset(-Constants.Account.deletBottomMargin)
@@ -295,7 +299,7 @@ final class MyPageSettingViewController: BaseViewController {
         navigationItem.leftBarButtonItem = backButtonItem
         navigationItem.rightBarButtonItem = nil
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.font: Constants.largeFont
+            NSAttributedString.Key.font: Constants.primaryFont
         ]
     }
     
@@ -306,7 +310,7 @@ final class MyPageSettingViewController: BaseViewController {
         contentView.addSubview(view)
         
         view.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.horizontalMargin)
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
             m.top.equalTo(before.snp.bottom).offset(topOffset)
             m.height.equalTo(Constants.Divider.thickness)
         })
@@ -333,7 +337,6 @@ extension MyPageSettingViewController: UIScrollViewDelegate {
 
 
 fileprivate final class SectionTitleLabel: UILabel {
-    
     private enum Constants {
         static let font = UIFont.systemFont(ofSize: 14, weight: .regular)
         static let color = UIColor(red: 97/255, green: 97/255, blue: 97/255, alpha: 1)

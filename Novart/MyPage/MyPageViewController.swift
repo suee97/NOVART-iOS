@@ -166,8 +166,6 @@ final class MyPageViewController: BaseViewController {
     
     @objc private func onTapSetting() {
         print("Setting Button Tapped")
-        let vc = MyPageSettingViewController()
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func onTapMeatballs() {
