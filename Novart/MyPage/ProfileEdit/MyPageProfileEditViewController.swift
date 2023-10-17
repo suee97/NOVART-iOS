@@ -16,7 +16,8 @@ final class MyPageProfileEditViewController: BaseViewController {
             static let cancelTitle: String = "취소"
             static let applyTitle: String = "저장"
             static let buttonSize = CGRect(origin: CGPoint.zero, size: CGSize(width: 28, height: 24))
-            static let font = UIFont(name: "Apple SD Gothic Neo Regular", size: 16)
+            static let buttonFont = UIFont.systemFont(ofSize: 16, weight: .medium)
+            static let titleFont = UIFont.systemFont(ofSize: 16, weight: .bold)
         }
         
         enum ProfileImage {
@@ -47,7 +48,7 @@ final class MyPageProfileEditViewController: BaseViewController {
             static let titleTopMargin: CGFloat = 32
             static let placeHolder: String = "활동할 닉네임 입력"
             static let maxLength: Int = 15
-            static let countFont = UIFont(name: "Apple SD Gothic Neo Regular", size: 12)
+            static let countFont = UIFont.systemFont(ofSize: 12, weight: .regular)
         }
         
         enum Category {
@@ -289,7 +290,7 @@ final class MyPageProfileEditViewController: BaseViewController {
     private lazy var cancelButton: UIButton = {
         let button = UIButton(frame: Constants.Navigation.buttonSize)
         button.setTitle(Constants.Navigation.cancelTitle, for: .normal)
-        button.titleLabel?.font = Constants.Navigation.font
+        button.titleLabel?.font = Constants.Navigation.buttonFont
         button.setTitleColor(.Common.grey03, for: .normal)
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
@@ -301,7 +302,7 @@ final class MyPageProfileEditViewController: BaseViewController {
     private lazy var applyButton: UIButton = {
         let button = UIButton(frame: Constants.Navigation.buttonSize)
         button.setTitle(Constants.Navigation.applyTitle, for: .normal)
-        button.titleLabel?.font = Constants.Navigation.font
+        button.titleLabel?.font = Constants.Navigation.buttonFont
         button.setTitleColor(.Common.grey02, for: .normal)
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
@@ -312,6 +313,9 @@ final class MyPageProfileEditViewController: BaseViewController {
     
     override func setupNavigationBar() {
         navigationItem.title = Constants.Navigation.centerTitle
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: Constants.Navigation.titleFont
+        ]
         let cancelItem = UIBarButtonItem(customView: cancelButton)
         let applyItem = UIBarButtonItem(customView: applyButton)
         self.navigationItem.leftBarButtonItem = cancelItem

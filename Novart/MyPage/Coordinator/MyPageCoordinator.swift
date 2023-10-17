@@ -25,9 +25,9 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     
     override func navigate(to step: MyPageStep) {
         switch step {
-        case .main:
+        case .MyPageMain:
             showMain()
-        case .ProfileEdit:
+        case .MyPageProfileEdit:
             showProfileEdit()
         }
     }

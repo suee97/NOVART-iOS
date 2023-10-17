@@ -3,7 +3,7 @@ import UIKit
 final class ProfileEditTextField: UITextField {
     enum Constants {
         static let leftMargin: CGFloat = 14
-        static let font = UIFont(name: "Apple SD Gothic Neo Regular", size: 16)
+        static let font = UIFont.systemFont(ofSize: 16, weight: .regular)
     }
     
     private let leftSpace = UIView(frame: CGRect(x: 0, y: 0, width: Constants.leftMargin, height: 0))

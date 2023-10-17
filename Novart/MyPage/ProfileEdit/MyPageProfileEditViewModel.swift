@@ -13,6 +13,6 @@ final class MyPageProfileEditViewModel {
     // MARK: - Navigation
     @MainActor
     func showMain() {
-        coordinator.navigate(to: .main)
+        coordinator.navigate(to: .MyPageMain)
     }
 }

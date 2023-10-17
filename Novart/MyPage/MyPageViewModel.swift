@@ -59,6 +59,6 @@ final class MyPageViewModel {
     // MARK: - Navigate
     @MainActor
     func showProfileEdit() {
-        coordinator?.navigate(to: .ProfileEdit)
+        coordinator?.navigate(to: .MyPageProfileEdit)
     }
 }
