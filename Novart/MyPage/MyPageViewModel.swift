@@ -2,6 +2,8 @@ import Combine
 import UIKit
 
 final class MyPageViewModel {
+    var coordinator: MyPageCoordinator?
+    
     @Published private (set) var selectedCategory: MyPageCategory
     @Published private (set) var scrollHeight: Double
     
@@ -10,8 +12,9 @@ final class MyPageViewModel {
     var works = [MyPageWork]()
     var exhibitions = [MyPageExhibition]()
     
-    init() {
+    init(coordinator: MyPageCoordinator) {
         print("MyPageViewModel init()")
+        self.coordinator = coordinator
         selectedCategory = .Interest
         scrollHeight = 0.0
     }
@@ -50,5 +53,12 @@ final class MyPageViewModel {
         for i in 0..<40 {
             exhibitions.append(MyPageExhibition(id: i, name: "공예", thumbnailImgUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc", artistName: "김예원"))
         }
+    }
+    
+    
+    // MARK: - Navigate
+    @MainActor
+    func showProfileEdit() {
+        coordinator?.navigate(to: .MyPageProfileEdit)
     }
 }

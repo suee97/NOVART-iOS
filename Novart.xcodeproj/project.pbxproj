@@ -128,6 +128,9 @@
 		5BDD4A252AC955C100937352 /* MyPageInterest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A1D2AC955C100937352 /* MyPageInterest.swift */; };
 		5BDD4A262AC955C100937352 /* MyPageWorks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A1E2AC955C100937352 /* MyPageWorks.swift */; };
 		5BDD4A292AC9561000937352 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5BDD4A282AC9561000937352 /* SnapKit */; };
+		5BDD4A382AD25AC000937352 /* MyPageProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */; };
+		5BDD4A442AD48C9500937352 /* MyPageProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */; };
+		5BDD4A4A2AD6BE1F00937352 /* MyPageProfileEditTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -245,6 +248,9 @@
 		5BDD4A1C2AC955C100937352 /* MyPageFollowings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageFollowings.swift; sourceTree = "<group>"; };
 		5BDD4A1D2AC955C100937352 /* MyPageInterest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageInterest.swift; sourceTree = "<group>"; };
 		5BDD4A1E2AC955C100937352 /* MyPageWorks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageWorks.swift; sourceTree = "<group>"; };
+		5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditViewController.swift; sourceTree = "<group>"; };
+		5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditViewModel.swift; sourceTree = "<group>"; };
+		5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -525,13 +531,14 @@
 		0EE0195A2A56F1BD00389A95 /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
-				5BDD4A152AC955C100937352 /* Cells */,
-				5BDD4A1A2AC955C100937352 /* Models */,
+				5BDD4A422AD48BF800937352 /* ProfileEdit */,
 				5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */,
+				0EE019462A56EEFE00389A95 /* MyPageViewController.swift */,
 				5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */,
 				5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */,
 				5BDD4A102AC955A600937352 /* MyPageViewModel.swift */,
-				0EE019462A56EEFE00389A95 /* MyPageViewController.swift */,
+				5BDD4A152AC955C100937352 /* Cells */,
+				5BDD4A1A2AC955C100937352 /* Models */,
 				0EE0195B2A56F1CB00389A95 /* Coordinator */,
 			);
 			path = MyPage;
@@ -723,6 +730,24 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		5BDD4A422AD48BF800937352 /* ProfileEdit */ = {
+			isa = PBXGroup;
+			children = (
+				5BDD4A4C2AD6BFF200937352 /* Models */,
+				5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */,
+				5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */,
+				5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */,
+			);
+			path = ProfileEdit;
+			sourceTree = "<group>";
+		};
+		5BDD4A4C2AD6BFF200937352 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -840,6 +865,7 @@
 				0EA8F83B2A90AA9100ADFBFB /* FeedImageDataSource.swift in Sources */,
 				0EE019CA2A6BCCF200389A95 /* SignUpRequestBody.swift in Sources */,
 				0EE019922A6BAFFA00389A95 /* ServiceError.swift in Sources */,
+				5BDD4A4A2AD6BE1F00937352 /* MyPageProfileEditTextField.swift in Sources */,
 				0EE019452A56EEF300389A95 /* ChattingViewController.swift in Sources */,
 				0EA8F8352A90967300ADFBFB /* HomeFeedCell.swift in Sources */,
 				0EE019832A63C0EB00389A95 /* DiscoverViewModel.swift in Sources */,
@@ -872,10 +898,12 @@
 				0EE019032A481DC600389A95 /* StackNavigator.swift in Sources */,
 				0EE019312A51495500389A95 /* LoginViewController.swift in Sources */,
 				0EE019652A57037B00389A95 /* HomeViewModel.swift in Sources */,
+				5BDD4A382AD25AC000937352 /* MyPageProfileEditViewController.swift in Sources */,
 				0EE0197C2A629DFF00389A95 /* CategoryButton.swift in Sources */,
 				0EE019A82A6BC5ED00389A95 /* HeadersAdapter.swift in Sources */,
 				0EE019A42A6BC5AB00389A95 /* APISerializer.swift in Sources */,
 				0EE019BF2A6BCBEA00389A95 /* TokenRefreshResponse.swift in Sources */,
+				5BDD4A442AD48C9500937352 /* MyPageProfileEditViewModel.swift in Sources */,
 				0E9ED8702A938AF6001E1C51 /* KeyValueStorable.swift in Sources */,
 				0EE019812A63BF8B00389A95 /* DiscoverDataSource.swift in Sources */,
 				5BDD4A242AC955C100937352 /* MyPageFollowings.swift in Sources */,
