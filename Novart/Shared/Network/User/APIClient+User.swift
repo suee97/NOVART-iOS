@@ -16,5 +16,9 @@ extension APIClient {
     static func setNickname(as nickname: String) async throws -> NetworkResponse<SetNameResponse> {
         try await APIClient.request(target: UserTarget.setNickname(nickname: nickname), type: NetworkResponse<SetNameResponse>.self)
     }
+    
+    static func checkValidNickname(nickname: String) async throws -> Bool {
+        try await APIClient.request(target: UserTarget.checkValidNickname(nickname: nickname), type: Bool.self)
+    }
 }
 

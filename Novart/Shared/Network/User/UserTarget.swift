@@ -11,6 +11,7 @@ import Foundation
 enum UserTarget: TargetType {
     case getUser
     case setNickname(nickname: String)
+    case checkValidNickname(nickname: String)
     
     var baseURL: String {
         API.baseURL
@@ -22,6 +23,8 @@ enum UserTarget: TargetType {
             return "users/me/info"
         case .setNickname:
             return "users/me/nickname"
+        case let .checkValidNickname(nickname):
+            return "users/check-duplicate-nickname/\(nickname)"
         }
     }
     
@@ -31,6 +34,8 @@ enum UserTarget: TargetType {
             return .get
         case .setNickname:
             return .patch
+        case .checkValidNickname:
+            return .get
         }
     }
     
@@ -40,6 +45,8 @@ enum UserTarget: TargetType {
             return .query(nil)
         case let .setNickname(nickname):
             return .body(["nickname": nickname])
+        case .checkValidNickname:
+            return .query(nil)
         }
     }
 }

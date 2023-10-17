@@ -27,7 +27,9 @@ final class HomeViewModel {
     @MainActor
     func showSetNicknameSceneIfNeeded() {
         if Authentication.shared.isFirstLogin {
-            coordinator?.presentSetNicknameModal()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                self?.coordinator?.presentSetNicknameModal()
+            }
         }
     }
 }
@@ -48,6 +50,19 @@ extension HomeViewModel {
                 feedData = items.map { FeedItemViewModel($0) }
             } catch {
                 print(error)
+            }
+        }
+    }
+    
+    func tempInfoCall() {
+        let userInteractor = UserInteractor()
+        Task {
+            do {
+                let user = try await userInteractor.getUserInfo()
+                print("성공")
+                print(user.nickname)
+            } catch {
+                print("이거 실패")
             }
         }
     }
