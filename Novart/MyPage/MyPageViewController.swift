@@ -247,6 +247,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     for: indexPath
                   ) as? MyPageHeaderView else {return UICollectionReusableView()}
         
+        header.viewModel = viewModel
         header.isHeaderSticky = isHeaderSticky
         header.profileLabel.text = "게스트"
         header.backgroundImageView.image = UIImage(named: "default_user_background_image")

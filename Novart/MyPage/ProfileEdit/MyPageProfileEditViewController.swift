@@ -29,6 +29,7 @@ final class MyPageProfileEditViewController: BaseViewController {
             static let cameraRightMargin: CGFloat = 2
             static let cameraBottomMargin: CGFloat = 2
             static let cameraDiameter: CGFloat = 24
+            static let cameraAlpha: CGFloat = 0.5
         }
         
         enum BackgroundImage {
@@ -41,6 +42,7 @@ final class MyPageProfileEditViewController: BaseViewController {
             static let imageRadius: CGFloat = 12
             static let cameraOrigin = CGPoint(x: 77, y: 38)
             static let cameraSize = CGSize(width: 24, height: 24)
+            static let cameraAlpha: CGFloat = 0.5
         }
         
         enum Nickname {
@@ -126,6 +128,7 @@ final class MyPageProfileEditViewController: BaseViewController {
     private let profileCameraView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "icon_camera")
+        imageView.alpha = Constants.ProfileImage.cameraAlpha
         return imageView
     }()
     
@@ -153,6 +156,7 @@ final class MyPageProfileEditViewController: BaseViewController {
         
         let cameraImageView = UIImageView(frame: CGRect(origin: Constants.BackgroundImage.cameraOrigin, size: Constants.BackgroundImage.cameraSize))
         cameraImageView.image = UIImage(named: "icon_camera")
+        cameraImageView.alpha = Constants.BackgroundImage.cameraAlpha
         
         backgroundImageView.addSubview(cameraImageView)
         
