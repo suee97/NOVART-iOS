@@ -9,7 +9,8 @@ import UIKit
 
 final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     override func start() {
-        let viewController = MyPageViewController()
+        let viewModel = MyPageViewModel(coordinator: self)
+        let viewController = MyPageViewController(viewModel: viewModel)
         
         let tabBarItem = UITabBarItem(
             title: nil,
@@ -20,6 +21,25 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
 
         viewController.tabBarItem = tabBarItem
         navigator.start(viewController)
+    }
+    
+    override func navigate(to step: MyPageStep) {
+        switch step {
+        case .MyPageMain:
+            showMain()
+        case .MyPageProfileEdit:
+            showProfileEdit()
+        }
+    }
+    
+    private func showMain() {
+        navigator.pop(animated: true)
+    }
+    
+    private func showProfileEdit() {
+        let viewModel = MyPageProfileEditViewModel(coordinator: self)
+        let viewController = MyPageProfileEditViewController(viewModel: viewModel)
+        navigator.push(viewController, animated: true)
     }
 }
 
