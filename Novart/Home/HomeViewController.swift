@@ -80,7 +80,7 @@ class HomeViewController: BaseViewController {
     }()
     
     private lazy var filterButton: FilterButton = {
-        let button = FilterButton(filterTypes: FilterType.allCases)
+        let button = FilterButton(filterTypes: CategoryType.allCases)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -118,6 +118,8 @@ class HomeViewController: BaseViewController {
         super.viewDidLoad()
         viewModel.fetchData()
     }
+    
+    // MARK: - Setup
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
