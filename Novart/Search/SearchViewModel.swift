@@ -15,11 +15,13 @@ final class SearchViewModel {
     var categoryItems: [CategoryType] = CategoryType.allCases
     var productViewModel: ProductSearchViewModel
     var artistViewModel: ArtistSearchViewModel
+    var searchResult: SearchResultModel?
     
     init(data: SearchResultModel?, coordinator: SearchCoordinator) {
         self.coordinator = coordinator
         self.productViewModel = ProductSearchViewModel(data: data?.products ?? [], coordinator: coordinator)
         self.artistViewModel = ArtistSearchViewModel(data: data?.artists ?? [], coordinator: coordinator)
+        self.searchResult = data
     }
     
     @MainActor
@@ -57,6 +59,6 @@ extension SearchViewModel {
         let productResult = try await productData
         let artistResult = try await artistData
         
-        return SearchResultModel(products: productResult.content, artists: artistResult.content)
+        return SearchResultModel(query: query, products: productResult.content, artists: artistResult.content)
     }
 }

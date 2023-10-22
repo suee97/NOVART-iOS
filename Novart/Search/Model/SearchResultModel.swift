@@ -8,6 +8,7 @@
 import Foundation
 
 struct SearchResultModel {
+    let query: String
     let products: [SearchProductModel]
     let artists: [SearchArtistModel]
 }

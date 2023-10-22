@@ -26,6 +26,9 @@ class SearchViewController: BaseViewController {
         enum SearchBar {
             static let placeholderText: String = "검색"
             static let horizontalMargin: CGFloat = 16
+            static let buttonFont: UIFont = .systemFont(ofSize: 16, weight: .regular)
+            static let buttonColor: UIColor = UIColor.Common.black
+            static let trailingMargin: CGFloat = 6
         }
         
         enum CategoryTab {
@@ -67,6 +70,30 @@ class SearchViewController: BaseViewController {
         return searchBar
     }()
 
+    private lazy var cancelSearchButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("취소", for: .normal)
+        button.setTitleColor(Constants.SearchBar.buttonColor, for: .normal)
+        button.titleLabel?.font = Constants.SearchBar.buttonFont
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.searchBar.text = ""
+            self.searchBar.endEditing(true)
+        }), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var searchBarStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [searchBar, cancelSearchButton])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = Constants.SearchBar.trailingMargin
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     private lazy var categoryStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -187,6 +214,12 @@ class SearchViewController: BaseViewController {
         return viewController
     }()
     
+    private lazy var recentSearchView: RecentSearchView = {
+        let view = RecentSearchView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     // MARK: - Properties
     
     private var viewModel: SearchViewModel
@@ -233,13 +266,16 @@ class SearchViewController: BaseViewController {
         view.backgroundColor = .white
         
         let safeArea = view.safeAreaLayoutGuide
-
-        view.addSubview(searchBar)
+        
+        cancelSearchButton.isHidden = true
+        view.addSubview(searchBarStackView)
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            searchBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: Constants.SearchBar.horizontalMargin),
-            searchBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -Constants.SearchBar.horizontalMargin)
+            searchBarStackView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            searchBarStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: Constants.SearchBar.horizontalMargin),
+            searchBarStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -Constants.SearchBar.horizontalMargin)
         ])
+        
+        searchBar.text = viewModel.searchResult?.query
         
         viewModel.categoryItems.forEach { type in
             let categoryButton = CategoryTabButton()
@@ -261,7 +297,7 @@ class SearchViewController: BaseViewController {
         NSLayoutConstraint.activate([
             categoryScrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             categoryScrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            categoryScrollView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            categoryScrollView.topAnchor.constraint(equalTo: searchBarStackView.bottomAnchor),
             categoryScrollView.heightAnchor.constraint(equalToConstant: Constants.CategoryTab.height),
             
             categoryStackView.leadingAnchor.constraint(equalTo: categoryScrollView.leadingAnchor),
@@ -305,6 +341,15 @@ class SearchViewController: BaseViewController {
             pageIndicatorView.heightAnchor.constraint(equalToConstant: Constants.PageTab.indicatorHeight),
             pageIndicatorView.widthAnchor.constraint(equalToConstant: Constants.PageTab.buttonWidth),
         ])
+        
+        view.addSubview(recentSearchView)
+        NSLayoutConstraint.activate([
+            recentSearchView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            recentSearchView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            recentSearchView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            recentSearchView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        recentSearchView.isHidden = true
     }
     
     private func updateSelectedPage() {
@@ -328,6 +373,16 @@ extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchQuery = searchBar.text else { return }
         viewModel.performSearch(query: searchQuery)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        recentSearchView.isHidden = false
+        cancelSearchButton.isHidden = false
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        recentSearchView.isHidden = true
+        cancelSearchButton.isHidden = true
     }
 }
 
