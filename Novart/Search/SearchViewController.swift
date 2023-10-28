@@ -254,6 +254,7 @@ class SearchViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.loadIntialData()
     }
     
     // MARK: - Setup

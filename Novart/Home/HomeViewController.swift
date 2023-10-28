@@ -146,7 +146,7 @@ class HomeViewController: BaseViewController {
             collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
         ])
         collectionView.setCollectionViewLayout(homeCollectionViewLayout, animated: false)
-        
+        collectionView.delegate = self
         collectionView.contentInset = UIEdgeInsets(top: verticalContentInset(), left: 0, bottom: verticalContentInset(), right: 0)
         
         view.addSubview(filterButton)
@@ -197,5 +197,14 @@ private extension HomeViewController {
             return self.feedSectionLayout
         }
         return layout
+    }
+}
+
+// MARK: - CollectionViewDelegate
+extension HomeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        DispatchQueue.main.async { [weak self] in
+//            self?.viewModel.presentProductDetailScene()
+//        }
     }
 }

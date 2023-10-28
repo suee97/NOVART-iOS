@@ -13,20 +13,23 @@ final class ProductSearchViewModel {
     var downloadInteractor: SearchDownloadInteractor = SearchDownloadInteractor()
     
     @Published var products: [SearchProductModel]
-    
-    var searchResultSubject: PassthroughSubject<[SearchProductModel], Never> = .init()
-    
+        
     init(data: [SearchProductModel], coordinator: SearchCoordinator?) {
         self.products = data
         self.coordinator = coordinator
     }
+    
+    @MainActor
+    func presentProductDetailScene(productId: Int64) {
+        coordinator?.navigate(to: .product(productId))
+    }
 }
 
 extension ProductSearchViewModel {
-    func fetchData() {
-        Task {
-            let items = try await downloadInteractor.fetchProductItems()
-            searchResultSubject.send(items)
-        }
-    }
+//    func fetchData() {
+//        Task {
+//            let items = try await downloadInteractor.fetchProductItems()
+//            searchResultSubject.send(items)
+//        }
+//    }
 }

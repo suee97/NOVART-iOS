@@ -53,7 +53,7 @@ final class ArtistSearchViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.fetchData()
+//        viewModel.fetchData()
     }
     
     override func setupView() {
@@ -70,7 +70,7 @@ final class ArtistSearchViewController: BaseViewController {
     }
     
     override func setupBindings() {
-        viewModel.searchResultSubject
+        viewModel.$artists
             .receive(on: DispatchQueue.main)
             .sink { items in
                 self.dataSource.apply(items)

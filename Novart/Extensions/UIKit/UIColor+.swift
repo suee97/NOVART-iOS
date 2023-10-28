@@ -57,5 +57,25 @@ extension UIColor {
         static var red: UIColor {
             UIColor(named: "red") ?? .clear
         }
+        
+        static var warmBlack: UIColor {
+            UIColor(named: "warm_black") ?? .clear
+        }
+        
+        static var warmGrey01: UIColor {
+            UIColor(named: "warm_grey01") ?? .clear
+        }
+        
+        static var warmGrey02: UIColor {
+            UIColor(named: "warm_grey02") ?? .clear
+        }
+        
+        static var warmGrey03: UIColor {
+            UIColor(named: "warm_grey03") ?? .clear
+        }
+        
+        static var warmGrey04: UIColor {
+            UIColor(named: "warm_grey04") ?? .clear
+        }
     }
 }

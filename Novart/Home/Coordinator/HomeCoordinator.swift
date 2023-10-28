@@ -27,8 +27,8 @@ final class HomeCoordinator: BaseStackCoordinator<HomeStep> {
     
     override func navigate(to step: HomeStep) {
         switch step {
-        case .productDetail:
-            break
+        case let .productDetail(id):
+            presentProductDetailVC(productId: id)
         default:
             break
         }
@@ -41,5 +41,12 @@ final class HomeCoordinator: BaseStackCoordinator<HomeStep> {
             let setNicknameVC = SetNicknameViewController(viewModel: viewModel)
             vc.present(setNicknameVC, animated: true)
         }
+    }
+    
+    private func presentProductDetailVC(productId: Int64) {
+//        let viewModel = ProductDetailViewModel(productId: productId)
+//        let viewController = ProductDetailViewController(viewModel: viewModel)
+//        viewController.modalPresentationStyle = .fullScreen
+//        navigator.rootViewController.present(viewController, animated: true)
     }
 }

@@ -65,7 +65,7 @@ extension StackNavigator: NavigationActionable {
     func start(_ viewController: UIViewController) {
         if self.presenter != nil {
             set(root: viewController)
-            present(viewController, animated: true)
+            present(rootViewController, animated: true)
         } else if rootViewController.viewControllers.isEmpty {
             set(root: viewController)
         } else {

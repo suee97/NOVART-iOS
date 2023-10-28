@@ -38,6 +38,26 @@ extension SearchViewModel {
 
 extension SearchViewModel {
     
+    func loadIntialData() {
+        if searchResult == nil {
+            Task { [weak self] in
+                guard let self else { return }
+                do {
+                    async let productData = self.downloadInteractor.searchProducts(query: "", pageNo: 0)
+                    async let artistData = self.downloadInteractor.searchArtists(query: "", pageNo: 0)
+                    
+                    let productResult = try await productData
+                    let artistResult = try await artistData
+                    
+                    productViewModel.products = productResult.content
+                    artistViewModel.artists = artistResult.content
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
     // 새 검색 후 새 화면 진입할 때
     func performSearch(query: String) {
         Task {
