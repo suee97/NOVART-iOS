@@ -13,9 +13,7 @@ final class ArtistSearchViewModel {
     var downloadInteractor: SearchDownloadInteractor = SearchDownloadInteractor()
     
     @Published var artists: [SearchArtistModel]
-    
-    var searchResultSubject: PassthroughSubject<[SearchArtistModel], Never> = .init()
-    
+        
     init(data: [SearchArtistModel], coordinator: SearchCoordinator?) {
         self.artists = data
         self.coordinator = coordinator
@@ -23,10 +21,10 @@ final class ArtistSearchViewModel {
 }
 
 extension ArtistSearchViewModel {
-    func fetchData() {
-        Task {
-            let items = try await downloadInteractor.fetchArtistItems()
-            searchResultSubject.send(items)
-        }
-    }
+//    func fetchData() {
+//        Task {
+//            let items = try await downloadInteractor.fetchArtistItems()
+//            searchResultSubject.send(items)
+//        }
+//    }
 }

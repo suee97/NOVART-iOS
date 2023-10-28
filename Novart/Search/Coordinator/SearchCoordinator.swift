@@ -27,6 +27,8 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
         switch step {
         case let .search(data):
             showSearchResultScene(data: data)
+        case let .product(id):
+            presentProductDetailVC(productId: id)
         default: break
         }
     }
@@ -35,6 +37,16 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
         let viewModel = SearchViewModel(data: data, coordinator: self)
         let searchViewController = SearchViewController(viewModel: viewModel)
         navigator.push(searchViewController, animated: true)
+    }
+    
+    private func presentProductDetailVC(productId: Int64) {
+        let root = BaseNavigationController()
+        let productDetailStackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
+        let productDetailCoordinator = ProductDetailCoordinator(navigator: productDetailStackNavigator)
+        productDetailCoordinator.productId = productId
+        add(coordinators: productDetailCoordinator)
+        
+        productDetailCoordinator.start()
     }
 }
 

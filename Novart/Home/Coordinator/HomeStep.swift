@@ -8,7 +8,7 @@
 import UIKit
 
 enum HomeStep: Step {
-    case productDetail
+    case productDetail(id: Int64)
     case nickiname
     
     var target: UIViewController.Type? { nil }

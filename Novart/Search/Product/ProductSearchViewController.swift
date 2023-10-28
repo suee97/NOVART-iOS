@@ -53,7 +53,7 @@ final class ProductSearchViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.fetchData()
+//        viewModel.fetchData()
     }
     
     override func setupView() {
@@ -66,11 +66,12 @@ final class ProductSearchViewController: BaseViewController {
         ])
         
         collectionView.setCollectionViewLayout(searchCollectionViewLayout, animated: false)
+        collectionView.delegate = self
         
     }
     
     override func setupBindings() {
-        viewModel.searchResultSubject
+        viewModel.$products
             .receive(on: DispatchQueue.main)
             .sink { items in
                 self.dataSource.apply(items)
@@ -110,5 +111,16 @@ private extension ProductSearchViewController {
             return self?.verticalSectionLayout()
         }
         return layout
+    }
+}
+
+extension ProductSearchViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+        let item = dataSource.snapshot().itemIdentifiers(inSection: section)[indexPath.row]
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.viewModel.presentProductDetailScene(productId: item.id)
+        }
     }
 }

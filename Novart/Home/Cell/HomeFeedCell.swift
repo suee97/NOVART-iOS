@@ -55,6 +55,9 @@ final class HomeFeedCell: UICollectionViewCell {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCellTap))
+        collectionView.addGestureRecognizer(tapGesture)
         return collectionView
     }()
     
@@ -186,6 +189,15 @@ final class HomeFeedCell: UICollectionViewCell {
         
         dataSource = FeedImageDataSource(collectionView: collectionView)
         dataSource?.apply(item.imageUrls)
+    }
+    
+    @objc
+    private func handleCellTap(_ sender: UITapGestureRecognizer) {
+        guard let outerCollectionView = self.superview as? UICollectionView else { return }
+        let locationInCollectionView = sender.location(in: outerCollectionView)
+        if let indexPath = outerCollectionView.indexPathForItem(at: locationInCollectionView) {
+            outerCollectionView.delegate?.collectionView?(outerCollectionView, didSelectItemAt: indexPath)
+        }
     }
     
     override func prepareForReuse() {
