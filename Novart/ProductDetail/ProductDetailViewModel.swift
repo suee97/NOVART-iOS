@@ -25,7 +25,6 @@ final class ProductDetailViewModel {
     
     @MainActor
     func showCommentViewController() {
-        print(coordinator != nil)
         coordinator?.navigate(to: .comment)
     }
 }

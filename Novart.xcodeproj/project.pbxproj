@@ -61,6 +61,8 @@
 		0EAF1F3B2ADBFF4F00E9A10C /* ProductSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAF1F3A2ADBFF4F00E9A10C /* ProductSearchResponse.swift */; };
 		0EAF1F3D2ADC010500E9A10C /* ArtistSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAF1F3C2ADC010500E9A10C /* ArtistSearchResponse.swift */; };
 		0EAF1F3F2ADC0EFF00E9A10C /* RecentSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAF1F3E2ADC0EFF00E9A10C /* RecentSearchView.swift */; };
+		0EB765BB2AED01E2006B600A /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB765BA2AED01E2006B600A /* CommentModel.swift */; };
+		0EB765BD2AED02F4006B600A /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB765BC2AED02F4006B600A /* CommentCell.swift */; };
 		0EE018E12A48156C00389A95 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE018E02A48156C00389A95 /* AppDelegate.swift */; };
 		0EE018E32A48156C00389A95 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE018E22A48156C00389A95 /* SceneDelegate.swift */; };
 		0EE018EA2A48156D00389A95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EE018E92A48156D00389A95 /* Assets.xcassets */; };
@@ -229,6 +231,8 @@
 		0EAF1F3A2ADBFF4F00E9A10C /* ProductSearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSearchResponse.swift; sourceTree = "<group>"; };
 		0EAF1F3C2ADC010500E9A10C /* ArtistSearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistSearchResponse.swift; sourceTree = "<group>"; };
 		0EAF1F3E2ADC0EFF00E9A10C /* RecentSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchView.swift; sourceTree = "<group>"; };
+		0EB765BA2AED01E2006B600A /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
+		0EB765BC2AED02F4006B600A /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		0EE018DD2A48156C00389A95 /* Novart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Novart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE018E02A48156C00389A95 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0EE018E22A48156C00389A95 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -437,6 +441,8 @@
 				0E1E21272AECDDF900F15009 /* ProductDetailStep.swift */,
 				0E1E212C2AECE43300F15009 /* CommentViewController.swift */,
 				0E1E212E2AECE43C00F15009 /* CommentViewModel.swift */,
+				0EB765BC2AED02F4006B600A /* CommentCell.swift */,
+				0EB765BA2AED01E2006B600A /* CommentModel.swift */,
 			);
 			path = ProductDetail;
 			sourceTree = "<group>";
@@ -1141,6 +1147,7 @@
 				0E3ECC6D2AE4F87E00790CB9 /* ExhibitionCell.swift in Sources */,
 				0EE0197C2A629DFF00389A95 /* CategoryButton.swift in Sources */,
 				0EE019A82A6BC5ED00389A95 /* HeadersAdapter.swift in Sources */,
+				0EB765BB2AED01E2006B600A /* CommentModel.swift in Sources */,
 				0E1E212F2AECE43C00F15009 /* CommentViewModel.swift in Sources */,
 				0EE019A42A6BC5AB00389A95 /* APISerializer.swift in Sources */,
 				0E3ECC6F2AE50D0700790CB9 /* RecommendationSectionHeaderView.swift in Sources */,
@@ -1201,6 +1208,7 @@
 				0EE019472A56EEFE00389A95 /* MyPageViewController.swift in Sources */,
 				0EAF1F2E2ADBC0E200E9A10C /* ArtistSearchDataSource.swift in Sources */,
 				0EAF1F342ADBDE4600E9A10C /* SearchResultModel.swift in Sources */,
+				0EB765BD2AED02F4006B600A /* CommentCell.swift in Sources */,
 				0EE019272A51449300389A95 /* PlainUser.swift in Sources */,
 				0EE255922AC01456008CE0D1 /* SearchDownloadInteractor.swift in Sources */,
 				0EE0193B2A5157DF00389A95 /* UIColor+Hex.swift in Sources */,

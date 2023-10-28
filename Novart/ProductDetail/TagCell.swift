@@ -45,11 +45,8 @@ final class TagCell: UICollectionViewCell {
         backgroundColor = Constants.backgroundColor
         contentView.addSubview(titleLabel)
         NSLayoutConstraint.activate([
-//            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
-//            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin),
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
-            //            self.heightAnchor.constraint(equalToConstant: Constants.height)
         ])
     }
 }
