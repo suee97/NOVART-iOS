@@ -63,6 +63,9 @@
 		0EAF1F3F2ADC0EFF00E9A10C /* RecentSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAF1F3E2ADC0EFF00E9A10C /* RecentSearchView.swift */; };
 		0EB765BB2AED01E2006B600A /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB765BA2AED01E2006B600A /* CommentModel.swift */; };
 		0EB765BD2AED02F4006B600A /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB765BC2AED02F4006B600A /* CommentCell.swift */; };
+		0EB765C02AED2970006B600A /* CommentTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB765BF2AED2970006B600A /* CommentTarget.swift */; };
+		0EB765C22AED297A006B600A /* APIClient+Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB765C12AED297A006B600A /* APIClient+Comment.swift */; };
+		0EB765C42AED3083006B600A /* CommentInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB765C32AED3083006B600A /* CommentInteractor.swift */; };
 		0EE018E12A48156C00389A95 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE018E02A48156C00389A95 /* AppDelegate.swift */; };
 		0EE018E32A48156C00389A95 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE018E22A48156C00389A95 /* SceneDelegate.swift */; };
 		0EE018EA2A48156D00389A95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EE018E92A48156D00389A95 /* Assets.xcassets */; };
@@ -233,6 +236,9 @@
 		0EAF1F3E2ADC0EFF00E9A10C /* RecentSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchView.swift; sourceTree = "<group>"; };
 		0EB765BA2AED01E2006B600A /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		0EB765BC2AED02F4006B600A /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
+		0EB765BF2AED2970006B600A /* CommentTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTarget.swift; sourceTree = "<group>"; };
+		0EB765C12AED297A006B600A /* APIClient+Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIClient+Comment.swift"; sourceTree = "<group>"; };
+		0EB765C32AED3083006B600A /* CommentInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInteractor.swift; sourceTree = "<group>"; };
 		0EE018DD2A48156C00389A95 /* Novart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Novart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE018E02A48156C00389A95 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0EE018E22A48156C00389A95 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -443,6 +449,7 @@
 				0E1E212E2AECE43C00F15009 /* CommentViewModel.swift */,
 				0EB765BC2AED02F4006B600A /* CommentCell.swift */,
 				0EB765BA2AED01E2006B600A /* CommentModel.swift */,
+				0EB765C32AED3083006B600A /* CommentInteractor.swift */,
 			);
 			path = ProductDetail;
 			sourceTree = "<group>";
@@ -501,6 +508,15 @@
 				0EAF1F382ADBFD3C00E9A10C /* SearchTarget.swift */,
 			);
 			path = Search;
+			sourceTree = "<group>";
+		};
+		0EB765BE2AED2961006B600A /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+				0EB765BF2AED2970006B600A /* CommentTarget.swift */,
+				0EB765C12AED297A006B600A /* APIClient+Comment.swift */,
+			);
+			path = Comment;
 			sourceTree = "<group>";
 		};
 		0EE018D42A48156C00389A95 = {
@@ -855,6 +871,7 @@
 				0EE019A32A6BC5AB00389A95 /* APISerializer.swift */,
 				0EE019A12A6BC59B00389A95 /* APIEventMonitor.swift */,
 				0EE019BE2A6BCBEA00389A95 /* TokenRefreshResponse.swift */,
+				0EB765BE2AED2961006B600A /* Comment */,
 				0E1E211A2AE531AF00F15009 /* Product */,
 				0EAF1F352ADBFD2000E9A10C /* Search */,
 				0EA8F82C2A6D0DA900ADFBFB /* Home */,
@@ -1078,6 +1095,7 @@
 				0EE019412A56EEB200389A95 /* HomeViewController.swift in Sources */,
 				0EE019C82A6BCCC400389A95 /* AccessTokenResponse.swift in Sources */,
 				0EE018F72A48177C00389A95 /* BaseWindowCoordinator.swift in Sources */,
+				0EB765C42AED3083006B600A /* CommentInteractor.swift in Sources */,
 				5BDD4A212AC955C100937352 /* MyPageWorkCell.swift in Sources */,
 				0EE019C62A6BCCA000389A95 /* APIClient+SignIn.swift in Sources */,
 				0EE018FD2A48195400389A95 /* NavigationActionable.swift in Sources */,
@@ -1116,6 +1134,7 @@
 				0EAF1F3B2ADBFF4F00E9A10C /* ProductSearchResponse.swift in Sources */,
 				0EF59AB12AAB0ABA00FD39E3 /* ReuseableView.swift in Sources */,
 				0EE0195D2A56F1DE00389A95 /* MyPageStep.swift in Sources */,
+				0EB765C22AED297A006B600A /* APIClient+Comment.swift in Sources */,
 				0EE019752A61A5AF00389A95 /* NoHighlightButton.swift in Sources */,
 				0EE019492A56EF2A00389A95 /* HomeCoordinator.swift in Sources */,
 				0EE019012A481C4300389A95 /* Dismissible.swift in Sources */,
@@ -1207,6 +1226,7 @@
 				0EE0192E2A5146EF00389A95 /* UIColor+.swift in Sources */,
 				0EE019472A56EEFE00389A95 /* MyPageViewController.swift in Sources */,
 				0EAF1F2E2ADBC0E200E9A10C /* ArtistSearchDataSource.swift in Sources */,
+				0EB765C02AED2970006B600A /* CommentTarget.swift in Sources */,
 				0EAF1F342ADBDE4600E9A10C /* SearchResultModel.swift in Sources */,
 				0EB765BD2AED02F4006B600A /* CommentCell.swift in Sources */,
 				0EE019272A51449300389A95 /* PlainUser.swift in Sources */,
