@@ -20,13 +20,6 @@ final class CommentViewModel {
         self.productId = productId
     }
     
-    
-//    let comments = [
-//        CommentModel(id: 0, userId: 0, userProfileimgUrl: nil, userNickname: "방태림", content: "멋져요!😆", createdAt: "2일 전"),
-//        CommentModel(id: 0, userId: 0, userProfileimgUrl: nil, userNickname: "방태림", content: "멋져요!😆", createdAt: "2일 전"),
-//        CommentModel(id: 0, userId: 0, userProfileimgUrl: nil, userNickname: "방태림", content: "멋져요!😆", createdAt: "2일 전")
-//    ]
-    
 }
 
 extension CommentViewModel {
@@ -35,6 +28,18 @@ extension CommentViewModel {
             do {
                 guard let self else { return }
                 self.comments = try await commentInteractor.fetchComments(productId: self.productId)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func writeComment(content: String) {
+        Task { [weak self] in
+            do {
+                guard let self else { return }
+                let comment = try await commentInteractor.writeComment(productId: productId, content: content)
+                self.comments.append(comment)
             } catch {
                 print(error.localizedDescription)
             }

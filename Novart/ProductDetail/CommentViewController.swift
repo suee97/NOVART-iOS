@@ -103,6 +103,16 @@ final class CommentViewController: BaseViewController {
         button.setImage(UIImage(named: "icon_send_grey"), for: .disabled)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self,
+            let text = self.inputTextField.text,
+            !text.isEmpty
+            else { return }
+            
+            self.viewModel.writeComment(content: text)
+            self.inputTextField.text = nil
+            self.view.endEditing(true)
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -201,7 +211,7 @@ final class CommentViewController: BaseViewController {
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
+        tableView.addGestureRecognizer(tapGesture)
     }
     
     override func setupBindings() {

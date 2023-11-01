@@ -119,7 +119,6 @@ final class ProductDetailViewController: BaseViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "mock_artist")
         return imageView
     }()
     
@@ -224,7 +223,6 @@ final class ProductDetailViewController: BaseViewController {
         ])
         imageView.layer.cornerRadius = Constants.ArtistInfo.imageSize / 2
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "mock_artist")
         return imageView
     }()
     
@@ -280,7 +278,7 @@ final class ProductDetailViewController: BaseViewController {
     
     private func createFloatingButtons() -> UIStackView {
         let likeButton = UIButton()
-        likeButton.backgroundColor = UIColor.Common.white
+        likeButton.backgroundColor = UIColor.Common.white.withAlphaComponent(0.72)
         likeButton.setImage(UIImage(named: "icon_heart_fill"), for: .normal)
         likeButton.translatesAutoresizingMaskIntoConstraints = false
         likeButton.layer.cornerRadius = Constants.FloatingButton.buttonSize / 2
@@ -295,7 +293,7 @@ final class ProductDetailViewController: BaseViewController {
         ])
         
         let commentButton = UIButton()
-        commentButton.backgroundColor = UIColor.Common.white
+        commentButton.backgroundColor = UIColor.Common.white.withAlphaComponent(0.72)
         commentButton.setImage(UIImage(named: "icon_comment"), for: .normal)
         commentButton.translatesAutoresizingMaskIntoConstraints = false
         commentButton.layer.cornerRadius = Constants.FloatingButton.buttonSize / 2
@@ -313,7 +311,7 @@ final class ProductDetailViewController: BaseViewController {
         }), for: .touchUpInside)
         
         let shareButton = UIButton()
-        shareButton.backgroundColor = UIColor.Common.white
+        shareButton.backgroundColor = UIColor.Common.white.withAlphaComponent(0.72)
         shareButton.setImage(UIImage(named: "icon_share"), for: .normal)
         shareButton.translatesAutoresizingMaskIntoConstraints = false
         shareButton.layer.cornerRadius = Constants.FloatingButton.buttonSize / 2
@@ -527,6 +525,13 @@ final class ProductDetailViewController: BaseViewController {
         
         barTitleLabel.text = data.name
         barArtistLabel.text = data.artist.artistNickname
+        
+        if let artistImageUrl = data.artist.profileImageUrl {
+            let url = URL(string: artistImageUrl)
+            barArtistImageView.kf.setImage(with: url)
+            artistImageView.kf.setImage(with: url)
+        }
+        
         productDescriptionLabel.text = data.description
         artistNameLabel.text = data.artist.artistNickname
         productInfoView.viewModel = data
@@ -554,17 +559,6 @@ final class ProductDetailViewController: BaseViewController {
                                                                                 .artistExhibition: artistExhibitions,
                                                                                 .similarProduct: similarProducts]
         recommendationDataSource.apply(recommendationDic)
-//        print(productInfoView.frame)
-//        setFloatingButton()
-    }
-    
-    private func setFloatingButton() {
-        let topMargin = productInfoView.frame.minY
-        contentView.addSubview(floatingButtonStackView)
-        NSLayoutConstraint.activate([
-            floatingButtonStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: topMargin),
-            floatingButtonStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin)
-        ])
     }
 }
 

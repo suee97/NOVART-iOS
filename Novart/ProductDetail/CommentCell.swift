@@ -89,7 +89,7 @@ final class CommentCell: UITableViewCell {
     
     private func setupView() {
         backgroundColor = Constants.backgroundColor
-        
+        selectionStyle = .none
         contentView.addSubview(profileImageView)
         contentView.addSubview(nameLabel)
         contentView.addSubview(dateLabel)

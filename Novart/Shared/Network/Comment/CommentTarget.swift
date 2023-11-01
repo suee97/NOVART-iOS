@@ -9,7 +9,8 @@ import Foundation
 import Alamofire
 
 enum CommentTarget: TargetType {
-    case getComments(id: Int64)
+    case getComments(productId: Int64)
+    case writeComment(productId: Int64, content: String)
     
     var baseURL: String {
         API.baseURL
@@ -19,6 +20,8 @@ enum CommentTarget: TargetType {
         switch self {
         case let .getComments(id):
             return "arts/\(id)/comments"
+        case let .writeComment(id, _):
+            return "arts/\(id)/comments"
         }
     }
     
@@ -26,6 +29,8 @@ enum CommentTarget: TargetType {
         switch self {
         case .getComments:
             return .get
+        case .writeComment:
+            return .post
         }
     }
     
@@ -33,6 +38,8 @@ enum CommentTarget: TargetType {
         switch self {
         case .getComments:
             return .query(nil)
+        case let .writeComment(_, content):
+            return .body(["content": content])
         }
     }
 }
