@@ -18,9 +18,9 @@ final class MainCoordinator: BaseWindowCoordinator<MainStep> {
         let searchStackNavigator = StackNavigator(rootViewController: searchNavigationController)
         let searchCoordinator = SearchCoordinator(navigator: searchStackNavigator)
         
-        let discoverNavigationController = BaseNavigationController()
-        let discoverNavigator = StackNavigator(rootViewController: discoverNavigationController)
-        let discoverCoordinator = DiscoverCoordinator(navigator: discoverNavigator)
+        let exhibitionNavigationController = BaseNavigationController()
+        let exhibitionNavigator = StackNavigator(rootViewController: exhibitionNavigationController)
+        let exhibitionCoordinator = ExhibitionCoordinator(navigator: exhibitionNavigator)
 
         let myPageNavigationController = BaseNavigationController()
         let myPageStackNavigator = StackNavigator(rootViewController: myPageNavigationController)
