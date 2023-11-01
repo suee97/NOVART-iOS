@@ -11,7 +11,7 @@ typealias RecommendationDataSourceType = UICollectionViewDiffableDataSource<Reco
 private typealias RecommendationDataSourceeSnapshot = NSDiffableDataSourceSnapshot<RecommendationDataSource.Section, PlainItem>
 
 private typealias ProductCellRegistration = UICollectionView.CellRegistration<SearchProductCell, SearchProductModel>
-private typealias ExhibitionCellRegistration = UICollectionView.CellRegistration<ExhibitionCell, ExhibitionModel>
+private typealias ExhibitionCellRegistration = UICollectionView.CellRegistration<ExhibitionCellTmp, ExhibitionModel>
 
 final class RecommendationDataSource: RecommendationDataSourceType {
 

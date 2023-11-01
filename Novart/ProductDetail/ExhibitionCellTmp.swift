@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ExhibitionCell: UICollectionViewCell {
+final class ExhibitionCellTmp: UICollectionViewCell {
     
     // MARK: - Constants
     
@@ -90,7 +90,7 @@ final class ExhibitionCell: UICollectionViewCell {
     }
 }
 
-extension ExhibitionCell {
+extension ExhibitionCellTmp {
     func update(with data: ExhibitionModel) {
         titleLabel.text = data.name
         dateLabel.text = data.date

@@ -42,20 +42,12 @@ extension UIColor {
             UIColor(named: "black") ?? .clear
         }
         
-        static var warmBlack: UIColor {
-            UIColor(named: "warmBlack") ?? .clear
-        }
-        
         static var white: UIColor {
             UIColor(named: "white") ?? .clear
         }
         
         static var darkGrey: UIColor {
             UIColor(named: "darkGrey") ?? .clear
-        }
-        
-        static var warmGrey04: UIColor {
-            UIColor(named: "warmGrey04") ?? .clear
         }
         
         static var lightMain: UIColor {
