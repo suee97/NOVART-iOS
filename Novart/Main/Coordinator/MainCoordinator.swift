@@ -26,7 +26,7 @@ final class MainCoordinator: BaseWindowCoordinator<MainStep> {
         let myPageStackNavigator = StackNavigator(rootViewController: myPageNavigationController)
         let myPageCoordinator = MyPageCoordinator(navigator: myPageStackNavigator)
         
-        add(coordinators: homeCoordinator, searchCoordinator, discoverCoordinator, myPageCoordinator)
+        add(coordinators: homeCoordinator, searchCoordinator, exhibitionCoordinator, myPageCoordinator)
         
         childCoordinators.forEach { $0.start() }
         
@@ -34,7 +34,7 @@ final class MainCoordinator: BaseWindowCoordinator<MainStep> {
         mainTabBarViewController.viewControllers = [
             homeNavigationController,
             searchNavigationController,
-            discoverNavigationController,
+            exhibitionNavigationController,
             myPageNavigationController
         ]
         
