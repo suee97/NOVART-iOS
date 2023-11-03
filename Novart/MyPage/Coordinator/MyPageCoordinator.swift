@@ -29,6 +29,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
             showMain()
         case .MyPageProfileEdit:
             showProfileEdit()
+        case .MyPageSetting:
+            showSetting()
         }
     }
     
@@ -39,6 +41,12 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     private func showProfileEdit() {
         let viewModel = MyPageProfileEditViewModel(coordinator: self)
         let viewController = MyPageProfileEditViewController(viewModel: viewModel)
+        navigator.push(viewController, animated: true)
+    }
+    
+    private func showSetting() {
+        let viewModel = MyPageSettingViewModel(coordinator: self)
+        let viewController = MyPageSettingViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }
 }
