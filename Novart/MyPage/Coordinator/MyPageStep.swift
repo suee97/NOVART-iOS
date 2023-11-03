@@ -8,7 +8,8 @@
 import UIKit
 
 enum MyPageStep: Step {
-    case dummy
+    case MyPageMain
+    case MyPageProfileEdit
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

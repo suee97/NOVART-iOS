@@ -13,7 +13,7 @@ final class MyPageHeaderView: UICollectionReusableView {
         enum Sticky {
             static let backgroundHeight: CGFloat = 201
             static let profileImageDiameter: CGFloat = 32
-            static let profileFont = UIFont(name: "Apple SD Gothic Neo Bold", size: 18)
+            static let profileFont = UIFont.systemFont(ofSize: 18, weight: .bold)
             static let profileLabelLeftMargin: CGFloat = 8
             static let profileImageMargin = (top: 103, left: 24)
             static let categoryBottomMargin: CGFloat = -6
@@ -23,7 +23,7 @@ final class MyPageHeaderView: UICollectionReusableView {
             static let backgroundRat: CGFloat = 22/39
             static let profileFrameDiameter: CGFloat = 108
             static let profileImageDiameter: CGFloat = 100
-            static let profileFont = UIFont(name: "Apple SD Gothic Neo Bold", size: 28)
+            static let profileFont = UIFont.systemFont(ofSize: 24, weight: .bold)
             static let profileLabelTopMargin: CGFloat = 8
             static let categoryTopMargin: CGFloat = 18
         }
@@ -31,6 +31,7 @@ final class MyPageHeaderView: UICollectionReusableView {
     
     
     // MARK: - Properties
+    var viewModel: MyPageViewModel?
     var isGradient = false
     var onTapCategoryButton: ((_ category: MyPageCategory) -> ()) = {category in}
     var isHeaderSticky = false {
@@ -59,10 +60,12 @@ final class MyPageHeaderView: UICollectionReusableView {
         return view
     }()
     
-    private let profileImageFrame: UIView = {
+    private lazy var profileImageFrame: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = Constants.NonSticky.profileFrameDiameter / 2
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapProfileImage))
+        view.addGestureRecognizer(gesture)
         return view
     }()
     
@@ -71,10 +74,13 @@ final class MyPageHeaderView: UICollectionReusableView {
         return imageView
     }()
     
-    let profileLabel: UILabel = {
+    lazy var profileLabel: UILabel = {
         let label = UILabel()
         label.text = "게스트"
         label.font = Constants.NonSticky.profileFont
+        label.isUserInteractionEnabled = true
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapProfileLabel))
+        label.addGestureRecognizer(gesture)
         return label
     }()
     
@@ -289,5 +295,13 @@ final class MyPageHeaderView: UICollectionReusableView {
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
         gradientLayer.locations = [0.5, 1.0]
         backgroundImageView.layer.addSublayer(gradientLayer)
+    }
+    
+    @objc func onTapProfileImage() {
+        viewModel?.showProfileEdit()
+    }
+    
+    @objc func onTapProfileLabel() {
+        viewModel?.showProfileEdit()
     }
 }

@@ -41,11 +41,11 @@ final class FilterMenuView: UIView {
     
     // MARK: - Properties
     let anchorPosition: CGPoint
-    let filterTypes: [FilterType]
+    let filterTypes: [CategoryType]
     
     // MARK: - Initialization
 
-    init(filterTypes: [FilterType], anchorPosition: CGPoint) {
+    init(filterTypes: [CategoryType], anchorPosition: CGPoint) {
         self.anchorPosition = anchorPosition
         self.filterTypes = filterTypes
         super.init(frame: .zero)

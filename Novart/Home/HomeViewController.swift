@@ -80,7 +80,7 @@ class HomeViewController: BaseViewController {
     }()
     
     private lazy var filterButton: FilterButton = {
-        let button = FilterButton(filterTypes: FilterType.allCases)
+        let button = FilterButton(filterTypes: CategoryType.allCases)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -119,6 +119,8 @@ class HomeViewController: BaseViewController {
         viewModel.fetchData()
     }
     
+    // MARK: - Setup
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         Task { @MainActor in
@@ -144,7 +146,7 @@ class HomeViewController: BaseViewController {
             collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
         ])
         collectionView.setCollectionViewLayout(homeCollectionViewLayout, animated: false)
-        
+        collectionView.delegate = self
         collectionView.contentInset = UIEdgeInsets(top: verticalContentInset(), left: 0, bottom: verticalContentInset(), right: 0)
         
         view.addSubview(filterButton)
@@ -195,5 +197,14 @@ private extension HomeViewController {
             return self.feedSectionLayout
         }
         return layout
+    }
+}
+
+// MARK: - CollectionViewDelegate
+extension HomeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        DispatchQueue.main.async { [weak self] in
+//            self?.viewModel.presentProductDetailScene()
+//        }
     }
 }

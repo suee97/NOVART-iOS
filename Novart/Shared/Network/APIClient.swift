@@ -77,6 +77,7 @@ class APIClient {
             return data
             
         case .failure(let error):
+            print(error)
             throw APIError(message: error.localizedDescription, code: .UNKNOWN)
         }
         

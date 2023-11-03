@@ -32,6 +32,11 @@ final class HomeViewModel {
             }
         }
     }
+    
+    @MainActor
+    func presentProductDetailScene(productId: Int64) {
+        coordinator?.navigate(to: .productDetail(id: productId))
+    }
 }
 
 extension HomeViewModel {

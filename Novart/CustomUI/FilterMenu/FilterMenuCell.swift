@@ -49,7 +49,7 @@ class FilterMenuCell: UITableViewCell {
         ])
     }
     
-    func update(with type: FilterType) {
+    func update(with type: CategoryType) {
         filterLabel.text = type.rawValue
     }
 }
