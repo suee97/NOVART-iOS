@@ -10,7 +10,7 @@ final class ExhibitionButtonsView: UIView {
         static let spacing: CGFloat = 8
         
         enum Common {
-            static let font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            static let font = UIFont.systemFont(ofSize: 14, weight: .regular)
             static let textColor = UIColor.Common.warmGrey04
             static let cornerRadius: CGFloat = 18
         }
