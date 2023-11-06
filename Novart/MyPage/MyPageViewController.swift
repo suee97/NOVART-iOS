@@ -96,9 +96,13 @@ final class MyPageViewController: BaseViewController {
         return button
     }()
     
-    private let settingButton: UIButton = {
+    private lazy var settingButton: UIButton = {
         let button = UIButton(frame: Constants.navIconSize)
         button.setBackgroundImage(UIImage(named: "icon_setting"), for: .normal)
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.showProfileEdit()
+        }), for: .touchUpInside)
         return button
     }()
     
