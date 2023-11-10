@@ -8,12 +8,13 @@
 import Foundation
 
 struct TagItem: Identifiable, Hashable {
-    var id = UUID()
+    var id: UUID
     
     var tag: String?
     var isSelected: Bool = false
     
-    init(tag: String? = nil, isSelected: Bool = false) {
+    init(id: UUID = UUID(), tag: String? = nil, isSelected: Bool = false) {
+        self.id = id
         self.tag = tag
         self.isSelected = isSelected
     }

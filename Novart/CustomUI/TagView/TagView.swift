@@ -43,6 +43,7 @@ final class TagView: UIView {
     private var viewModel: TagViewModel = TagViewModel()
     
     weak var delegate: TagViewDelegate?
+    var isSelectable: Bool = true
     
     func contentHeight() -> CGFloat {
         collectionView.contentSize.height
@@ -78,7 +79,7 @@ extension TagView {
             }
             let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
             let cellMaxwidth = collectionView.frame.width
-            cell.update(with: item, cellMaxWidth: cellMaxwidth)
+            cell.update(with: item, cellMaxWidth: cellMaxwidth, isSelectable: isSelectable)
             return cell
         }
         
@@ -95,7 +96,6 @@ extension TagView {
         snaphot.appendSections([.zero])
         snaphot.appendItems(viewModel.tagIDs())
         dataSource.apply(snaphot, animatingDifferences: false)
-        print(collectionView.contentSize.height)
         reloadCollectionLayout()
     }
     
@@ -108,10 +108,17 @@ extension TagView {
 
 extension TagView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let item = viewModel.items()[indexPath.row]
+        let updatedItem = TagItem(id: item.id, tag: item.tag, isSelected: true)
+        
+        viewModel.update(updatedItem)
         delegate?.tagView(self, didSelectItemAt: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        let item = viewModel.items()[indexPath.row]
+        let updatedItem = TagItem(id: item.id, tag: item.tag, isSelected: false)
+        
         delegate?.tagView(self, didSelectItemAt: indexPath)
     }
 }

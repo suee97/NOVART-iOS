@@ -11,11 +11,12 @@ final class TagCell: UICollectionViewCell {
     
     enum Constants {
         static let color: UIColor = UIColor.Common.grey00
-        static let selectedColor: UIColor = UIColor.Common.grey04
-        static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
+        static let selectedColor: UIColor = UIColor.Common.main
+        static let font: UIFont = .systemFont(ofSize: 16, weight: .regular)
+        static let selectedFont: UIFont = .systemFont(ofSize: 16, weight: .semibold)
         static let textColor: UIColor = UIColor.Common.grey04
         static let selectedTextColor: UIColor = UIColor.Common.white
-        static let height: CGFloat = 32
+        static let height: CGFloat = 36
         static let inset: CGFloat = 12
     }
     
@@ -36,6 +37,18 @@ final class TagCell: UICollectionViewCell {
         }
     }
     
+    override var isSelected: Bool {
+        didSet {
+            if isSelectable {
+                contentView.backgroundColor = isSelected ? Constants.selectedColor : Constants.color
+                titleLabel.textColor = isSelected ? Constants.selectedTextColor : Constants.textColor
+                titleLabel.font = isSelected ? Constants.selectedFont : Constants.font
+            }
+        }
+    }
+    
+    private var isSelectable: Bool = false
+    
     private var labelWidthConstraint: NSLayoutConstraint?
     
     override init(frame: CGRect) {
@@ -51,7 +64,6 @@ final class TagCell: UICollectionViewCell {
         contentView.backgroundColor = Constants.color
         contentView.layer.cornerRadius = Constants.height / 2
         contentView.clipsToBounds = true
-        
         contentView.addSubview(titleLabel)
         
         labelWidthConstraint = titleLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 0)
@@ -68,7 +80,8 @@ final class TagCell: UICollectionViewCell {
 }
 
 extension TagCell {
-    func update(with item: TagItem, cellMaxWidth: CGFloat) {
+    func update(with item: TagItem, cellMaxWidth: CGFloat, isSelectable: Bool) {
+        self.isSelectable = isSelectable
         self.cellMaxWidth = cellMaxWidth
         titleLabel.text = item.tag
         

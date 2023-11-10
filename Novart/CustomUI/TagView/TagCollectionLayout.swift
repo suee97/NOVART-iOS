@@ -9,7 +9,7 @@ import UIKit
 
 final class TagCollectionLayout: UICollectionViewCompositionalLayout {
     private enum Constants {
-        static let itemHeight: CGFloat = 32
+        static let itemHeight: CGFloat = 36
         static let itemSpacing: CGFloat = 4
         static let groupSpacing: CGFloat = 4
     }
