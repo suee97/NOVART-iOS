@@ -1,5 +1,5 @@
 //
-//  TagCell.swift
+//  CategoryTagCell.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/10/08.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TagCell: UICollectionViewCell {
+final class CategoryTagCell: UICollectionViewCell {
     
     enum Constants {
         static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
@@ -54,7 +54,7 @@ final class TagCell: UICollectionViewCell {
     }
 }
 
-extension TagCell {
+extension CategoryTagCell {
     func update(with title: String) {
         titleLabel.text = title
     }

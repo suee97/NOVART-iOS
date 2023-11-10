@@ -99,6 +99,11 @@ final class MyPageProfileEditViewController: BaseViewController {
         backgroundPicker.delegate = self
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setupData()
+    }
+    
     deinit {
         print("MyPageProfileEditViewController deinit()")
     }
@@ -189,6 +194,14 @@ final class MyPageProfileEditViewController: BaseViewController {
     private let emailField = ProfileEditTextField(placeholder: Constants.Email.placeHolder)
     private let linkField = ProfileEditTextField(placeholder: Constants.Link.placeHolder)
 
+    private lazy var tagView: TagView = {
+        let tagView = TagView()
+        tagView.delegate = self
+        tagView.translatesAutoresizingMaskIntoConstraints = false
+        return tagView
+    }()
+    
+    
     override func setupView() {
         view.backgroundColor = .Common.white
         
@@ -207,6 +220,7 @@ final class MyPageProfileEditViewController: BaseViewController {
         contentView.addSubview(emailField)
         contentView.addSubview(linkLabel)
         contentView.addSubview(linkField)
+        contentView.addSubview(tagView)
         
         scrollView.snp.makeConstraints({ m in
             m.edges.equalTo(view.safeAreaLayoutGuide)
@@ -267,9 +281,15 @@ final class MyPageProfileEditViewController: BaseViewController {
             m.height.equalTo(Constants.CommonLayout.fieldHeight)
         })
         
+        tagView.snp.makeConstraints { m in
+            m.top.equalTo(nicknameField.snp.bottom).offset(Constants.Email.titleTopMargin)
+            m.leading.trailing.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
+            m.height.equalTo(1000).priority(999)
+        }
+        
         emailLabel.snp.makeConstraints({ m in
             m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
-            m.top.equalTo(nicknameField.snp.bottom).offset(Constants.Email.titleTopMargin) // 임시
+            m.top.equalTo(tagView.snp.bottom).offset(Constants.Email.titleTopMargin) // 임시
         })
         
         emailField.snp.makeConstraints({ m in
@@ -289,6 +309,12 @@ final class MyPageProfileEditViewController: BaseViewController {
             m.height.equalTo(Constants.CommonLayout.fieldHeight)
             m.bottom.equalTo(contentView)
         })
+    }
+    
+    private func setupData() {
+        // 임시
+        let tags: [String] = ["재품 디자이너", "시각 디자이너", "UX 디자이너", "패션 디자이너", "3D 아티스트", "크리에이터", "일러스트레이터"]
+        tagView.applyItems(tags.map { TagItem(tag: $0) })
     }
     
     private lazy var cancelButton: UIButton = {
@@ -370,6 +396,22 @@ extension MyPageProfileEditViewController: UITextFieldDelegate {
         }
 
         return true
+    }
+}
+
+// MARK: - TagView
+extension MyPageProfileEditViewController:TagViewDelegate {
+    
+    func tagView(_ tagView: TagView, didSelectItemAt indexPath: IndexPath) {
+    }
+    
+    func tagView(_ tagView: TagView, didDeselectItemAt indexPath: IndexPath) {
+    }
+    
+    func invalidateLayout(_ contentHeight: CGFloat) {
+        tagView.snp.updateConstraints { m in
+            m.height.equalTo(contentHeight).priority(999)
+        }
     }
 }
 
