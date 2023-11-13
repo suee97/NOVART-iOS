@@ -13,6 +13,6 @@ final class MyPageSettingViewModel {
     // MARK: - Navigation
     @MainActor
     func showMain() {
-        coordinator.navigate(to: .MyPageSetting)
+        coordinator.navigate(to: .MyPageMain)
     }
 }
