@@ -166,7 +166,7 @@ final class MyPageProfileEditViewController: BaseViewController {
         backgroundImageView.addSubview(cameraImageView)
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapBackgroundImage))
-        view.addGestureRecognizer(gesture)
+        backgroundImageView.addGestureRecognizer(gesture)
         
         return backgroundImageView
     }()
