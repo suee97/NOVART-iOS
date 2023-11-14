@@ -14,9 +14,8 @@ final class MyPageProfileEditViewController: BaseViewController {
         
         enum Navigation {
             static let centerTitle: String = "프로필 편집"
-            static let cancelTitle: String = "취소"
             static let applyTitle: String = "저장"
-            static let buttonSize = CGRect(origin: CGPoint.zero, size: CGSize(width: 28, height: 24))
+            static let buttonSize = CGRect(origin: CGPoint.zero, size: CGSize(width: 24, height: 24))
             static let buttonFont = UIFont.systemFont(ofSize: 16, weight: .medium)
             static let titleFont = UIFont.systemFont(ofSize: 16, weight: .bold)
         }
@@ -556,9 +555,7 @@ final class MyPageProfileEditViewController: BaseViewController {
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton(frame: Constants.Navigation.buttonSize)
-        button.setTitle(Constants.Navigation.cancelTitle, for: .normal)
-        button.titleLabel?.font = Constants.Navigation.buttonFont
-        button.setTitleColor(.Common.grey03, for: .normal)
+        button.setImage(UIImage(named: "icon_cancel"), for: .normal)
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             self.onTapCancel()
