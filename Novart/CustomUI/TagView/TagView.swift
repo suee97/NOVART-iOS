@@ -80,6 +80,9 @@ extension TagView {
             let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
             let cellMaxwidth = collectionView.frame.width
             cell.update(with: item, cellMaxWidth: cellMaxwidth, isSelectable: isSelectable)
+            if item.isSelected {
+                collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
+            }
             return cell
         }
         
@@ -119,6 +122,7 @@ extension TagView: UICollectionViewDelegate {
         let item = viewModel.items()[indexPath.row]
         let updatedItem = TagItem(id: item.id, tag: item.tag, isSelected: false)
         
-        delegate?.tagView(self, didSelectItemAt: indexPath)
+        viewModel.update(updatedItem)
+        delegate?.tagView(self, didDeselectItemAt: indexPath)
     }
 }
