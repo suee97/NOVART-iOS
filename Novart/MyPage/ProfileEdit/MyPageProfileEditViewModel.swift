@@ -65,9 +65,38 @@ final class MyPageProfileEditViewModel {
             tagFieldString += tagFieldString.isEmpty ? tagString : ", \(tagString)" // 추천태그 추가
         } else {
             // 추천태그 제거
-            tagFieldString = tagFieldString.replacingOccurrences(of: ", \(tagString)", with: "")
-            tagFieldString = tagFieldString.replacingOccurrences(of: "\(tagString), ", with: "")
-            tagFieldString = tagFieldString.replacingOccurrences(of: "\(tagString)", with: "")
+            if let range = tagFieldString.range(of: tagString) {
+                var lb = range.lowerBound
+                var ub = range.upperBound
+                
+                // 추천태그가 중간, 마지막 위치일 때 좌측 ","를 만나는 범위까지 문자열 삭제
+                if lb != tagFieldString.startIndex {
+                    while true {
+                        if lb == tagFieldString.startIndex {
+                            break
+                        }
+                        if tagFieldString[lb] != "," {
+                            lb = tagFieldString.index(lb, offsetBy: -1)
+                        } else {
+                            break
+                        }
+                    }
+                    tagFieldString.replaceSubrange(lb..<range.upperBound, with: "")
+                } else {
+                    // 추천태그가 첫번째 위치일 때 우측 "," & 공백을 제외한 문제열을 만날 때까지 삭제
+                    while true {
+                        if ub == tagFieldString.endIndex {
+                            break
+                        }
+                        if tagFieldString[ub] == "," || tagFieldString[ub] == " " {
+                            ub = tagFieldString.index(ub, offsetBy: +1)
+                        } else {
+                            break
+                        }
+                    }
+                    tagFieldString.replaceSubrange(tagFieldString.startIndex..<ub, with: "")
+                }
+            }
         }
         updateRecommendTagItemSelectCount() // 추천태그 선택 변경으로 인한 count update
     }
