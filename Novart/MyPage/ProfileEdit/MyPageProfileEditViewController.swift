@@ -1,5 +1,6 @@
 import UIKit
 import SnapKit
+import Combine
 
 final class MyPageProfileEditViewController: BaseViewController {
 
@@ -46,20 +47,88 @@ final class MyPageProfileEditViewController: BaseViewController {
         }
         
         enum Nickname {
-            static let title: String = "닉네임*"
-            static let titleTopMargin: CGFloat = 32
-            static let placeHolder: String = "활동할 닉네임 입력"
-            static let maxLength: Int = 15
-            static let countFont = UIFont.systemFont(ofSize: 12, weight: .regular)
+            enum Label {
+                static let title: String = "닉네임*"
+                static let topMargin: CGFloat = 32
+            }
+            
+            enum Field {
+                static let placeHolder: String = "활동할 닉네임 입력"
+                static let maxCount: Int = 15
+                static let width: CGFloat = 264
+            }
+            
+            enum Count {
+                static let textColor = UIColor(red: 255/255, green: 62/255, blue: 49/255, alpha: 1)
+                static let font = UIFont.systemFont(ofSize: 12, weight: .regular)
+                static let topMargin: CGFloat = 4
+            }
+            
+            enum DupCheck {
+                static let title: String = "중복확인"
+                static let font = UIFont.systemFont(ofSize: 14, weight: .medium)
+                static let radius: CGFloat = 12
+                static let activeBackgroundColor = UIColor.Common.main
+                static let activeForegroundColor = UIColor.Common.white
+                static let inActiveBackgroundColor = UIColor.Common.grey00
+                static let inActiveForegroundColor = UIColor.Common.grey01
+                
+                static let leftMargin: CGFloat = 4
+                static let width: CGFloat = 74
+            }
         }
         
         enum Category {
-            static let title: String = "카테고리"
-            static let titleTopMargin: CGFloat = 32
+            enum Label {
+                static let title: String = "카테고리"
+                static let topMargin: CGFloat = 32
+            }
+            
+            enum Count {
+                static let font = UIFont.systemFont(ofSize: 12, weight: .regular)
+                static let defaultColor = UIColor.Common.grey03
+                static let activeColor = UIColor.Common.main
+                static let maxCount: Int = 2
+            }
+            
+            enum TagView {
+                static let topMargin: CGFloat = 8
+                static let height: CGFloat = 116
+            }
         }
         
         enum Tag {
-            static let title: String = "태그"
+            enum Label {
+                static let title: String = "태그"
+                static let topMargin: CGFloat = 32
+            }
+            
+            enum Field {
+                static let placeHolder: String = "모던, 부드러운, 예쁜"
+            }
+            
+            enum Count {
+                static let maxCount: Int = 3
+                static let font = UIFont.systemFont(ofSize: 12, weight: .regular)
+                static let defaultColor = UIColor.Common.grey03
+                static let activeColor = UIColor.Common.main
+            }
+            
+            enum Recommend {
+                static let title: String = "추천태그"
+                static let font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+                static let color = UIColor.Common.grey04
+                static let topMargin: CGFloat = 8
+                static let width: CGFloat = 73
+                static let height: CGFloat = 24
+                static let upImage = UIImage(named: "icon_chevron_up_v2")
+                static let downImage = UIImage(named: "icon_chevron_down_v2")
+            }
+            
+            enum TagView {
+                static let topMargin: CGFloat = 8
+                static let heigth: CGFloat = 236
+            }
         }
         
         enum Email {
@@ -69,17 +138,25 @@ final class MyPageProfileEditViewController: BaseViewController {
         }
         
         enum Link {
-            static let title: String = "링크"
-            static let titleTopMargin: CGFloat = 32
-            static let placeHolder: String = "소통할 카카오톡 오픈채팅방 입력"
+            enum Label {
+                static let title: String = "링크"
+                static let topMargin: CGFloat = 32
+            }
+            
+            enum Field {
+                static let placeHolder: String = "소통할 카카오톡 오픈채팅방 입력"
+                static let bottomMargin: CGFloat = 22
+            }
         }
     }
     
     
     // MARK: - Properties
     private let viewModel: MyPageProfileEditViewModel
+    private var cancellables = Set<AnyCancellable>()
     private let profilePicker = UIImagePickerController()
     private let backgroundPicker = UIImagePickerController()
+    private var recommendExpanded: Bool = false
     
     init(viewModel: MyPageProfileEditViewModel) {
         self.viewModel = viewModel
@@ -94,18 +171,32 @@ final class MyPageProfileEditViewController: BaseViewController {
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        nicknameField.delegate = self
-        profilePicker.delegate = self
-        backgroundPicker.delegate = self
+        setUpDelegate()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        setupData()
+        setupCategoryTagData()
     }
     
     deinit {
         print("MyPageProfileEditViewController deinit()")
+    }
+    
+    override func setupBindings() {
+        viewModel.$categoryTagItemSelectCount.sink(receiveValue: { value in
+            self.categoryCurCountLabel.text = String(value)
+            self.categoryCurCountLabel.textColor = value == 0 ? Constants.Category.Count.defaultColor : Constants.Category.Count.activeColor
+        }).store(in: &cancellables)
+        
+        viewModel.$tagFieldString.sink(receiveValue: { value in
+            self.tagField.text = value
+        }).store(in: &cancellables)
+        
+        viewModel.$recommendTagItemSelectCount.sink(receiveValue: { value in
+            self.tagCurCountLabel.text = String(value)
+            self.tagCurCountLabel.textColor = value == 0 ? Constants.Tag.Count.defaultColor : Constants.Tag.Count.activeColor
+        }).store(in: &cancellables)
     }
     
     
@@ -124,11 +215,20 @@ final class MyPageProfileEditViewController: BaseViewController {
     
     private let profileImageLabel = ProfileEditLabel(title: Constants.ProfileImage.title)
     private let backgroundImageLabel = ProfileEditLabel(title: Constants.BackgroundImage.title)
-    private let nicknameLabel = ProfileEditLabel(title: Constants.Nickname.title)
-    private let categoryLabel = ProfileEditLabel(title: Constants.Category.title)
-    private let tagLabel = ProfileEditLabel(title: Constants.Tag.title)
+    private let nicknameLabel = ProfileEditLabel(title: Constants.Nickname.Label.title)
+    private let categoryLabel = ProfileEditLabel(title: Constants.Category.Label.title)
+    private let tagLabel = ProfileEditLabel(title: Constants.Tag.Label.title)
     private let emailLabel = ProfileEditLabel(title: Constants.Email.title)
-    private let linkLabel = ProfileEditLabel(title: Constants.Link.title)
+    private let linkLabel = ProfileEditLabel(title: Constants.Link.Label.title)
+    
+    private let nicknameField = ProfileEditTextField(placeholder: Constants.Nickname.Field.placeHolder)
+    private lazy var tagField: ProfileEditTextField = {
+        let textField = ProfileEditTextField(placeholder: Constants.Tag.Field.placeHolder)
+        textField.addTarget(self, action: #selector(tagFieldDidChanged(_:)), for: .editingChanged)
+        return textField
+    }()
+    private let emailField = ProfileEditTextField(placeholder: Constants.Email.placeHolder)
+    private let linkField = ProfileEditTextField(placeholder: Constants.Link.Field.placeHolder)
     
     private let profileCameraView: UIImageView = {
         let imageView = UIImageView()
@@ -173,9 +273,9 @@ final class MyPageProfileEditViewController: BaseViewController {
     
     private let nicknameMaxCountLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Nickname.countFont
+        label.font = Constants.Nickname.Count.font
         label.textColor = .Common.grey03
-        label.text = "/\(Constants.Nickname.maxLength)자"
+        label.text = "/\(Constants.Nickname.Field.maxCount)자"
         return label
     }()
     
@@ -184,23 +284,84 @@ final class MyPageProfileEditViewController: BaseViewController {
         let string = nicknameField.text ?? ""
         let length = string.count
         
-        label.font = Constants.Nickname.countFont
+        label.font = Constants.Nickname.Count.font
         label.text = String(length)
-        label.textColor = length > 0 ? .Common.main : .Common.grey03
+        label.textColor = length > 0 ? Constants.Nickname.Count.textColor : .Common.grey03
         return label
     }()
     
-    private let nicknameField = ProfileEditTextField(placeholder: Constants.Nickname.placeHolder)
-    private let emailField = ProfileEditTextField(placeholder: Constants.Email.placeHolder)
-    private let linkField = ProfileEditTextField(placeholder: Constants.Link.placeHolder)
+    private lazy var nicknameDupCheckButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(Constants.Nickname.DupCheck.title, for: .normal)
+        button.backgroundColor = Constants.Nickname.DupCheck.inActiveBackgroundColor
+        button.setTitleColor(Constants.Nickname.DupCheck.inActiveForegroundColor, for: .normal)
+        button.layer.cornerRadius = Constants.Nickname.DupCheck.radius
+        button.titleLabel?.font = Constants.Nickname.DupCheck.font
+        return button
+    }()
 
-    private lazy var tagView: TagView = {
-        let tagView = TagView()
-        tagView.delegate = self
-        tagView.translatesAutoresizingMaskIntoConstraints = false
-        return tagView
+    private lazy var categoryTagView = TagView()
+    
+    private let categoryMaxCountLabel: UILabel = {
+        let label = UILabel()
+        label.font = Constants.Category.Count.font
+        label.textColor = Constants.Category.Count.defaultColor
+        label.text = "/\(Constants.Category.Count.maxCount)"
+        return label
     }()
     
+    private let categoryCurCountLabel: UILabel = {
+        let label = UILabel()
+        label.font = Constants.Category.Count.font
+        label.textColor = Constants.Category.Count.defaultColor
+        return label
+    }()
+    
+    private let tagMaxCountLabel: UILabel = {
+        let label = UILabel()
+        label.font = Constants.Tag.Count.font
+        label.textColor = Constants.Tag.Count.defaultColor
+        label.text = "/\(Constants.Tag.Count.maxCount)"
+        return label
+    }()
+    
+    private let tagCurCountLabel: UILabel = {
+        let label = UILabel()
+        label.font = Constants.Tag.Count.font
+        label.textColor = Constants.Tag.Count.defaultColor
+        return label
+    }()
+    
+    private let recommendButtonImageView: UIImageView = {
+        let imageView = UIImageView(image: Constants.Tag.Recommend.upImage)
+        return imageView
+    }()
+    
+    private lazy var recommendButton: UIView = {
+        let view = UIView()
+        let label = UILabel()
+        
+        label.text = Constants.Tag.Recommend.title
+        label.textColor = Constants.Tag.Recommend.color
+        label.font = Constants.Tag.Recommend.font
+        
+        view.addSubview(label)
+        view.addSubview(recommendButtonImageView)
+        label.snp.makeConstraints({ m in
+            m.left.top.bottom.equalToSuperview()
+        })
+        recommendButtonImageView.snp.makeConstraints({ m in
+            m.left.equalTo(label.snp.right)
+            m.top.bottom.right.equalToSuperview()
+        })
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapTagRecommendButton))
+        view.addGestureRecognizer(gesture)
+        
+        return view
+    }()
+    
+    private lazy var recommendTagView = TagView()
     
     override func setupView() {
         view.backgroundColor = .Common.white
@@ -216,11 +377,21 @@ final class MyPageProfileEditViewController: BaseViewController {
         contentView.addSubview(nicknameMaxCountLabel)
         contentView.addSubview(nicknameCurCountLabel)
         contentView.addSubview(nicknameField)
+        contentView.addSubview(nicknameDupCheckButton)
+        contentView.addSubview(categoryLabel)
+        contentView.addSubview(categoryMaxCountLabel)
+        contentView.addSubview(categoryCurCountLabel)
+        contentView.addSubview(categoryTagView)
+        contentView.addSubview(tagLabel)
+        contentView.addSubview(tagMaxCountLabel)
+        contentView.addSubview(tagCurCountLabel)
+        contentView.addSubview(tagField)
+        contentView.addSubview(recommendButton)
+        contentView.addSubview(recommendTagView)
         contentView.addSubview(emailLabel)
         contentView.addSubview(emailField)
         contentView.addSubview(linkLabel)
         contentView.addSubview(linkField)
-        contentView.addSubview(tagView)
         
         scrollView.snp.makeConstraints({ m in
             m.edges.equalTo(view.safeAreaLayoutGuide)
@@ -262,34 +433,90 @@ final class MyPageProfileEditViewController: BaseViewController {
         
         nicknameLabel.snp.makeConstraints({ m in
             m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
-            m.top.equalTo(profileImageView.snp.bottom).offset(Constants.Nickname.titleTopMargin)
-        })
-        
-        nicknameMaxCountLabel.snp.makeConstraints({ m in
-            m.right.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
-            m.centerY.equalTo(nicknameLabel)
-        })
-        
-        nicknameCurCountLabel.snp.makeConstraints({ m in
-            m.right.equalTo(nicknameMaxCountLabel.snp.left)
-            m.centerY.equalTo(nicknameMaxCountLabel)
+            m.top.equalTo(profileImageView.snp.bottom).offset(Constants.Nickname.Label.topMargin)
         })
         
         nicknameField.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
+            m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
             m.top.equalTo(nicknameLabel.snp.bottom).offset(Constants.CommonLayout.fieldTopMargin)
+            m.height.equalTo(Constants.CommonLayout.fieldHeight)
+            m.width.equalTo(Constants.Nickname.Field.width)
+        })
+        
+        nicknameMaxCountLabel.snp.makeConstraints({ m in
+            m.right.equalTo(nicknameField.snp.right)
+            m.top.equalTo(nicknameField.snp.bottom).offset(Constants.Nickname.Count.topMargin)
+        })
+        
+        nicknameCurCountLabel.snp.makeConstraints({ m in
+            m.centerY.equalTo(nicknameMaxCountLabel)
+            m.right.equalTo(nicknameMaxCountLabel.snp.left)
+        })
+        
+        nicknameDupCheckButton.snp.makeConstraints({ m in
+            m.left.equalTo(nicknameField.snp.right).offset(Constants.Nickname.DupCheck.leftMargin)
+            m.width.equalTo(Constants.Nickname.DupCheck.width)
+            m.height.centerY.equalTo(nicknameField)
+        })
+        
+        categoryLabel.snp.makeConstraints({ m in
+            m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
+            m.top.equalTo(nicknameMaxCountLabel.snp.bottom).offset(Constants.Category.Label.topMargin)
+        })
+        
+        categoryMaxCountLabel.snp.makeConstraints({ m in
+            m.right.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
+            m.centerY.equalTo(categoryLabel)
+        })
+        
+        categoryCurCountLabel.snp.makeConstraints({ m in
+            m.right.equalTo(categoryMaxCountLabel.snp.left)
+            m.centerY.equalTo(categoryLabel)
+        })
+        
+        categoryTagView.snp.makeConstraints { m in
+            m.top.equalTo(categoryLabel.snp.bottom).offset(Constants.Category.TagView.topMargin)
+            m.left.right.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
+            m.height.equalTo(Constants.Category.TagView.height)
+        }
+        
+        tagLabel.snp.makeConstraints({ m in
+            m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
+            m.top.equalTo(categoryTagView.snp.bottom).offset(Constants.Tag.Label.topMargin)
+        })
+        
+        tagMaxCountLabel.snp.makeConstraints({ m in
+            m.right.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
+            m.centerY.equalTo(tagLabel)
+        })
+        
+        tagCurCountLabel.snp.makeConstraints({ m in
+            m.right.equalTo(tagMaxCountLabel.snp.left)
+            m.centerY.equalTo(tagLabel)
+        })
+        
+        tagField.snp.makeConstraints({ m in
+            m.left.right.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
+            m.top.equalTo(tagLabel.snp.bottom).offset(Constants.CommonLayout.fieldTopMargin)
             m.height.equalTo(Constants.CommonLayout.fieldHeight)
         })
         
-        tagView.snp.makeConstraints { m in
-            m.top.equalTo(nicknameField.snp.bottom).offset(Constants.Email.titleTopMargin)
-            m.leading.trailing.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
-            m.height.equalTo(1000).priority(999)
-        }
+        recommendButton.snp.makeConstraints({ m in
+            m.top.equalTo(tagField.snp.bottom).offset(Constants.Tag.Recommend.topMargin)
+            m.right.equalTo(tagField)
+            m.width.equalTo(Constants.Tag.Recommend.width)
+            m.height.equalTo(Constants.Tag.Recommend.height)
+        })
+        
+        recommendTagView.snp.makeConstraints({ m in
+            m.top.equalTo(recommendButton.snp.bottom).offset(Constants.Tag.TagView.topMargin)
+            m.left.right.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
+            m.height.equalTo(0)
+        })
         
         emailLabel.snp.makeConstraints({ m in
             m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
-            m.top.equalTo(tagView.snp.bottom).offset(Constants.Email.titleTopMargin) // 임시
+            m.top.equalTo(recommendTagView.snp.bottom).offset(Constants.Email.titleTopMargin) // 임시
         })
         
         emailField.snp.makeConstraints({ m in
@@ -300,21 +527,31 @@ final class MyPageProfileEditViewController: BaseViewController {
         
         linkLabel.snp.makeConstraints({ m in
             m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
-            m.top.equalTo(emailField.snp.bottom).offset(Constants.Link.titleTopMargin)
+            m.top.equalTo(emailField.snp.bottom).offset(Constants.Link.Label.topMargin)
         })
         
         linkField.snp.makeConstraints({ m in
             m.left.right.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
             m.top.equalTo(linkLabel.snp.bottom).offset(Constants.CommonLayout.fieldTopMargin)
             m.height.equalTo(Constants.CommonLayout.fieldHeight)
-            m.bottom.equalTo(contentView)
+            m.bottom.equalTo(contentView).offset(-Constants.Link.Field.bottomMargin)
         })
     }
     
-    private func setupData() {
-        // 임시
-        let tags: [String] = ["재품 디자이너", "시각 디자이너", "UX 디자이너", "패션 디자이너", "3D 아티스트", "크리에이터", "일러스트레이터"]
-        tagView.applyItems(tags.map { TagItem(tag: $0) })
+    
+    // MARK: - Functions
+    private func setUpDelegate() {
+        nicknameField.delegate = self
+        tagField.delegate = self
+        profilePicker.delegate = self
+        backgroundPicker.delegate = self
+        categoryTagView.delegate = self
+        recommendTagView.delegate = self
+    }
+    
+    private func setupCategoryTagData() {
+        categoryTagView.applyItems(viewModel.categoryTagItems)
+        recommendTagView.applyItems(viewModel.recommendTagItems)
     }
     
     private lazy var cancelButton: UIButton = {
@@ -357,7 +594,7 @@ final class MyPageProfileEditViewController: BaseViewController {
     }
     
     private func onTapApply() {
-        // 변경사항 적용 필요
+        // 변경사항 적용
         viewModel.showMain()
     }
     
@@ -367,6 +604,24 @@ final class MyPageProfileEditViewController: BaseViewController {
     
     @objc private func onTapBackgroundImage() {
         openLibrary(.background)
+    }
+    
+    @objc private func onTapTagRecommendButton() {
+        if recommendExpanded {
+            recommendButtonImageView.image = Constants.Tag.Recommend.upImage
+            recommendTagView.snp.updateConstraints({ m in
+                m.height.equalTo(0)
+            })
+            recommendTagView.updateConstraints()
+            recommendExpanded = false
+        } else {
+            recommendButtonImageView.image = Constants.Tag.Recommend.downImage
+            recommendTagView.snp.updateConstraints({ m in
+                m.height.equalTo(Constants.Tag.TagView.heigth)
+            })
+            recommendTagView.updateConstraints()
+            recommendExpanded = true
+        }
     }
     
     private func openLibrary(_ type: PickerType) {
@@ -382,37 +637,81 @@ final class MyPageProfileEditViewController: BaseViewController {
 }
 
 
-// MARK: - TextField Delegate
+// MARK: - TextField
 extension MyPageProfileEditViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        // 버그
+        // 글자수 계산 버그
         if textField == nicknameField {
             let currentString = (textField.text ?? "") as NSString
             let length = currentString.replacingCharacters(in: range, with: string).count
             nicknameCurCountLabel.text = String(length)
-            nicknameCurCountLabel.textColor = length > 0 ? .Common.main : .Common.grey03
-            return length <= Constants.Nickname.maxLength
+
+            if length > 0 {
+                nicknameCurCountLabel.textColor = Constants.Nickname.Count.textColor
+                nicknameDupCheckButton.setTitleColor(Constants.Nickname.DupCheck.activeForegroundColor, for: .normal)
+                nicknameDupCheckButton.backgroundColor = Constants.Nickname.DupCheck.activeBackgroundColor
+            } else {
+                nicknameCurCountLabel.textColor = .Common.grey03
+                nicknameDupCheckButton.setTitleColor(Constants.Nickname.DupCheck.inActiveForegroundColor, for: .normal)
+                nicknameDupCheckButton.backgroundColor = Constants.Nickname.DupCheck.inActiveBackgroundColor
+            }
+            
+            return length <= Constants.Nickname.Field.maxCount
+        }
+        
+        if textField == tagField && viewModel.recommendTagItemSelectCount == Constants.Tag.Count.maxCount {
+            if string == "," {
+                return false
+            }
         }
 
         return true
     }
+    
+    @objc private func tagFieldDidChanged(_ textField: UITextField) {
+        viewModel.tagFieldString = textField.text ?? ""
+        viewModel.tagFieldChangedFromUser()
+        recommendTagView.applyItems(viewModel.recommendTagItems)
+    }
 }
 
+
 // MARK: - TagView
-extension MyPageProfileEditViewController:TagViewDelegate {
-    
+extension MyPageProfileEditViewController: TagViewDelegate {
     func tagView(_ tagView: TagView, didSelectItemAt indexPath: IndexPath) {
+        if tagView == categoryTagView {
+            if viewModel.categoryTagItemSelectCount < Constants.Category.Count.maxCount {
+                viewModel.updateCategoryTagSelection(indexPath: indexPath, isSelected: true)
+            } else {
+                tagView.applyItems(viewModel.categoryTagItems)
+            }
+            return
+        }
+        
+        if tagView == recommendTagView {
+            if viewModel.recommendTagItemSelectCount < Constants.Tag.Count.maxCount {
+                viewModel.updateRecommendTagSelection(indexPath: indexPath, isSelected: true)
+            } else {
+                tagView.applyItems(viewModel.recommendTagItems)
+            }
+            return
+        }
     }
     
     func tagView(_ tagView: TagView, didDeselectItemAt indexPath: IndexPath) {
-    }
-    
-    func invalidateLayout(_ contentHeight: CGFloat) {
-        tagView.snp.updateConstraints { m in
-            m.height.equalTo(contentHeight).priority(999)
+        if tagView == categoryTagView {
+            viewModel.updateCategoryTagSelection(indexPath: indexPath, isSelected: false)
+            return
+        }
+        
+        if tagView == recommendTagView {
+            viewModel.updateRecommendTagSelection(indexPath: indexPath, isSelected: false)
+            return
         }
     }
+    
+    func invalidateLayout(_ contentHeight: CGFloat) {}
 }
 
 

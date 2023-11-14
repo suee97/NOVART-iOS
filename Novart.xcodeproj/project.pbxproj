@@ -995,19 +995,11 @@
 		5BDD4A422AD48BF800937352 /* ProfileEdit */ = {
 			isa = PBXGroup;
 			children = (
-				5BDD4A4C2AD6BFF200937352 /* Models */,
 				5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */,
 				5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */,
 				5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */,
 			);
 			path = ProfileEdit;
-			sourceTree = "<group>";
-		};
-		5BDD4A4C2AD6BFF200937352 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
