@@ -28,15 +28,8 @@ final class HomeDownloadInteractor {
 //        return response.data
 //    }
     
-    func fetchFeedItems() async throws -> [FeedItem]? {
-        let items: [FeedItem] = [
-            FeedItem(name: "feed 1", artist: "artist 1"),
-            FeedItem(name: "feed 2", artist: "artist 1"),
-            FeedItem(name: "feed 3", artist: "artist 1"),
-            FeedItem(name: "feed 4", artist: "artist 1"),
-            FeedItem(name: "feed 5", artist: "artist 1"),
-            FeedItem(name: "feed 6", artist: "artist 1")
-        ]
-        return items
+    func fetchFeedItems() async throws -> [FeedItem] {
+        let feedData = try await APIClient.fetchFeed()
+        return feedData.content
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class FeedImageCell: UICollectionViewCell {
     
@@ -39,6 +40,7 @@ final class FeedImageCell: UICollectionViewCell {
     }
     
     func update(with item: String) {
-        imageView.image = UIImage(named: item)
+        let url = URL(string: item)
+        imageView.kf.setImage(with: url)
     }
 }

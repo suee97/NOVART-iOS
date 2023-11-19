@@ -21,10 +21,11 @@ final class FeedItemViewModel: Identifiable, Hashable {
     var id = UUID()
     let name: String
     let artist: String
-    let imageUrls: [String] = ["mock_chair", "mock_catalog_poster"]
+    let imageUrls: [String]
     
     init(_ item: FeedItem) {
         self.name = item.name
-        self.artist = item.artist
+        self.artist = item.artistNickname
+        self.imageUrls = item.thumbnailImage.map { $0.url }
     }
 }

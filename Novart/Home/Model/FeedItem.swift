@@ -7,7 +7,15 @@
 
 import Foundation
 
-struct FeedItem: Hashable {
+struct FeedItem: Decodable {
+    let id: Int64
     let name: String
-    let artist: String
+    let artistNickname: String
+    let category: CategoryType
+    let thumbnailImage: [ThumbnailImage]
+    let likes: Bool
+}
+
+struct ThumbnailImage: Decodable {
+    let url: String
 }

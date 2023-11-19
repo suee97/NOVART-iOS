@@ -51,7 +51,7 @@ extension HomeViewModel {
     func fetchFeedItems() {
         Task {
             do {
-                let items = try await downloadInteractor.fetchFeedItems() ?? []
+                let items = try await downloadInteractor.fetchFeedItems()
                 feedData = items.map { FeedItemViewModel($0) }
             } catch {
                 print(error)
