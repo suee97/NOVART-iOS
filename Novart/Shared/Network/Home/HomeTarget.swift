@@ -9,10 +9,7 @@ import Alamofire
 import Foundation
 
 enum HomeTarget: TargetType {
-    case fetchCatalog
-    case fetchPopular
-    case fetchRecent
-    case fetchArtist
+    case fetchFeed
     
     var baseURL: String {
         API.baseURL
@@ -20,27 +17,21 @@ enum HomeTarget: TargetType {
     
     var path: String {
         switch self {
-        case .fetchCatalog:
-            return "home/news"
-        case .fetchPopular:
-            return "home/product/favorite-summary"
-        case .fetchRecent:
-            return "home/product/recent-summary"
-        case .fetchArtist:
-            return "home/artists/summary"
+        case .fetchFeed:
+            return "arts"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .fetchCatalog, .fetchPopular, .fetchRecent, .fetchArtist:
+        case .fetchFeed:
             return .get
         }
     }
     
     var parameters: RequestParams {
         switch self {
-        case .fetchCatalog, .fetchPopular, .fetchRecent, .fetchArtist:
+        case .fetchFeed:
             return .query(nil)
         }
     }

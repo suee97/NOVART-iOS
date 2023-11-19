@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CategoryType: String, CaseIterable {
+enum CategoryType: String, CaseIterable, Decodable {
     case all = "전체"
     case product = "제품"
     case craft = "공예"
