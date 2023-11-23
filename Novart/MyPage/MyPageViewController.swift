@@ -101,7 +101,7 @@ final class MyPageViewController: BaseViewController {
         button.setBackgroundImage(UIImage(named: "icon_setting"), for: .normal)
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self = self else { return }
-            self.viewModel.showProfileEdit()
+            self.viewModel.showSetting()
         }), for: .touchUpInside)
         return button
     }()
@@ -114,8 +114,8 @@ final class MyPageViewController: BaseViewController {
         let settingItem = UIBarButtonItem(customView: settingButton)
         let meatballsItem = UIBarButtonItem(customView: meatballsButton)
 
-        self.navigationItem.rightBarButtonItems = [settingItem, spacer, notificationItem]
-        self.navigationItem.leftBarButtonItem = meatballsItem
+        self.navigationItem.rightBarButtonItems = [meatballsItem, spacer, notificationItem]
+        self.navigationItem.leftBarButtonItem = settingItem
     }
     
     override func setupView() {

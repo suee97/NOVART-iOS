@@ -83,14 +83,7 @@ extension TagCell {
     func update(with item: TagItem, cellMaxWidth: CGFloat, isSelectable: Bool) {
         self.isSelectable = isSelectable
         self.cellMaxWidth = cellMaxWidth
+        self.isSelected = item.isSelected
         titleLabel.text = item.tag
-        
-        if item.isSelected {
-            contentView.backgroundColor = Constants.selectedColor
-            titleLabel.textColor = Constants.selectedTextColor
-        } else {
-            contentView.backgroundColor = Constants.color
-            titleLabel.textColor = Constants.textColor
-        }
     }
 }
