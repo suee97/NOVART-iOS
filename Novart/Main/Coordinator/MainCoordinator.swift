@@ -18,15 +18,15 @@ final class MainCoordinator: BaseWindowCoordinator<MainStep> {
         let searchStackNavigator = StackNavigator(rootViewController: searchNavigationController)
         let searchCoordinator = SearchCoordinator(navigator: searchStackNavigator)
         
-        let discoverNavigationController = BaseNavigationController()
-        let discoverNavigator = StackNavigator(rootViewController: discoverNavigationController)
-        let discoverCoordinator = DiscoverCoordinator(navigator: discoverNavigator)
+        let exhibitionNavigationController = BaseNavigationController()
+        let exhibitionNavigator = StackNavigator(rootViewController: exhibitionNavigationController)
+        let exhibitionCoordinator = ExhibitionCoordinator(navigator: exhibitionNavigator)
 
         let myPageNavigationController = BaseNavigationController()
         let myPageStackNavigator = StackNavigator(rootViewController: myPageNavigationController)
         let myPageCoordinator = MyPageCoordinator(navigator: myPageStackNavigator)
         
-        add(coordinators: homeCoordinator, searchCoordinator, discoverCoordinator, myPageCoordinator)
+        add(coordinators: homeCoordinator, searchCoordinator, exhibitionCoordinator, myPageCoordinator)
         
         childCoordinators.forEach { $0.start() }
         
@@ -34,7 +34,7 @@ final class MainCoordinator: BaseWindowCoordinator<MainStep> {
         mainTabBarViewController.viewControllers = [
             homeNavigationController,
             searchNavigationController,
-            discoverNavigationController,
+            exhibitionNavigationController,
             myPageNavigationController
         ]
         
