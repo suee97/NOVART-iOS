@@ -92,24 +92,23 @@ final class ProductInfoView: UIView {
         return label
     }()
     
-    private let tagCollectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .vertical
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        collectionView.backgroundColor = .clear
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        return collectionView
+    private lazy var tagView: TagView = {
+        let tagView = TagView()
+        tagView.delegate = self
+        tagView.translatesAutoresizingMaskIntoConstraints = false
+        return tagView
     }()
     
     var viewModel: ProductDetailModel? {
         didSet {
             if let viewModel {
                 setNeedsLayout()
-                tagCollectionView.reloadData()
                 setupData(viewModel: viewModel)
             }
         }
     }
+    
+    private var tagViewHeightConstraint: NSLayoutConstraint?
     
     init() {
         super.init(frame: .zero)
@@ -144,22 +143,21 @@ final class ProductInfoView: UIView {
             tagLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         ])
         
-        addSubview(tagCollectionView)
-        NSLayoutConstraint.activate([
-            tagCollectionView.topAnchor.constraint(equalTo: tagLabel.bottomAnchor, constant: Constants.Tag.spacing),
-            tagCollectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            tagCollectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            tagCollectionView.heightAnchor.constraint(equalToConstant: 80)
-        ])
+        addSubview(tagView)
+        tagViewHeightConstraint = tagView.heightAnchor.constraint(equalToConstant: 1000)
+        tagViewHeightConstraint?.priority = UILayoutPriority(999)
+        tagViewHeightConstraint?.isActive = true
         
-        tagCollectionView.dataSource = self
-        tagCollectionView.delegate = self
-        tagCollectionView.register(TagCell.self, forCellWithReuseIdentifier: TagCell.reuseIdentifier)
+        NSLayoutConstraint.activate([
+            tagView.topAnchor.constraint(equalTo: tagLabel.bottomAnchor, constant: Constants.Tag.spacing),
+            tagView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            tagView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        ])
         
         addSubview(dateTitleLabel)
         addSubview(dateLabel)
         NSLayoutConstraint.activate([
-            dateTitleLabel.topAnchor.constraint(equalTo: tagCollectionView.bottomAnchor, constant: Constants.Date.topMargin),
+            dateTitleLabel.topAnchor.constraint(equalTo: tagView.bottomAnchor, constant: Constants.Date.topMargin),
             dateTitleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             dateLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             dateLabel.topAnchor.constraint(equalTo: dateTitleLabel.bottomAnchor, constant: Constants.Date.spacing),
@@ -171,43 +169,14 @@ final class ProductInfoView: UIView {
         titleLabel.text = viewModel.name
         priceLabel.text = "\(viewModel.price)원"
         dateLabel.text = viewModel.createdAt
+        let tagItems = viewModel.artTagList.map { TagItem(tag: $0) }
+        tagView.applyItems(tagItems)
     }
 }
 
-extension ProductInfoView: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard let viewModel else { return .zero }
-        let tag = viewModel.artTagList[indexPath.row]
-        let size = tag.size(withAttributes: [NSAttributedString.Key.font: TagCell.Constants.font])
-        print("\(tag): \(size)")
-        return CGSize(width: size.width + 2 * TagCell.Constants.horizontalMargin, height: TagCell.Constants.height)
+extension ProductInfoView: TagViewDelegate {
+    func invalidateLayout(_ contentHeight: CGFloat) {
+        tagViewHeightConstraint?.constant = contentHeight
+        layoutIfNeeded()
     }
-}
-
-extension ProductInfoView: UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 4
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 4
-    }
-}
-
-extension ProductInfoView: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let viewModel else { return 0 }
-        return viewModel.artTagList.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCell.reuseIdentifier, for: indexPath) as? TagCell, let viewModel else {
-            return UICollectionViewCell()
-        }
-        let tag = viewModel.artTagList[indexPath.row]
-        cell.update(with: tag)
-        return cell
-    }
-
 }
