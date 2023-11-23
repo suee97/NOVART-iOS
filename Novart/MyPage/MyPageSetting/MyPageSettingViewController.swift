@@ -105,7 +105,7 @@ final class MyPageSettingViewController: BaseViewController {
         let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: Constants.Navigation.buttonSize))
         button.setBackgroundImage(UIImage(named: "icon_back"), for: .normal)
         button.addAction(UIAction(handler: { _ in
-            print("back button")
+            self.viewModel.showMain()
         }), for: .touchUpInside)
         let item = UIBarButtonItem(customView: button)
         return item
@@ -115,7 +115,7 @@ final class MyPageSettingViewController: BaseViewController {
         let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: Constants.Navigation.buttonSize))
         button.setBackgroundImage(UIImage(named: "icon_cancel"), for: .normal)
         button.addAction(UIAction(handler: { _ in
-            print("cancel button")
+            self.viewModel.showMain()
         }), for: .touchUpInside)
         let item = UIBarButtonItem(customView: button)
         return item
