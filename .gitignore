@@ -10,7 +10,7 @@
 *.pbxuser
 *.xcworkspace
 xcuserdata
-Novart/Shared
+Novart/Shared/
 
 # Build products
 build/
