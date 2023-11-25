@@ -23,5 +23,6 @@ struct ProductDetailModel: Decodable {
 struct ProductDetailArtist: Decodable {
     let userId: Int64
     let artistNickname: String
+    let profileImageUrl: String?
     let following: Bool
 }
