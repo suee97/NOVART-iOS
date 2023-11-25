@@ -618,7 +618,6 @@
 			children = (
 				0E9BB0882AD149720002A76D /* ProductCoverCell.swift */,
 				0E9BB0902AD2D4C50002A76D /* CategoryTagCell.swift */,
-				0E3ECC6C2AE4F87E00790CB9 /* ExhibitionCellTmp.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -997,6 +996,7 @@
 			isa = PBXGroup;
 			children = (
 				5BB933E42AF3A472000185D1 /* ExhibitionCell.swift */,
+				0E3ECC6C2AE4F87E00790CB9 /* ExhibitionCellTmp.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
