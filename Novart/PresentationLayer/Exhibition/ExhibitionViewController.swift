@@ -44,7 +44,7 @@ final class ExhibitionViewController: BaseViewController {
         self.viewModel = viewModel
         super.init()
         setupCollectionView()
-        viewModel.getExhibitions()
+        viewModel.fetchExhibitions()
     }
     
     required init? (coder: NSCoder) {
@@ -58,6 +58,7 @@ final class ExhibitionViewController: BaseViewController {
         }).store(in: &cancellables)
         
         viewModel.$cellIndex.sink(receiveValue: { value in
+            guard let value = value else { return }
             self.pageControl.currentPage = value
             
             // 배경 색상 변경

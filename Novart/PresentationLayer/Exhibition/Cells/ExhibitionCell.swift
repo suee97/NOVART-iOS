@@ -52,7 +52,7 @@ final class ExhibitionCell: UICollectionViewCell {
         didSet {
             guard let exhibition = exhibition else { return }
             exhibitionImageView.image = exhibition.imageView.image
-            descLabel.text = exhibition.desc
+            descLabel.text = exhibition.description
         }
     }
     
