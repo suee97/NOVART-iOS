@@ -16,6 +16,8 @@ final class SearchViewModel {
     var productViewModel: ProductSearchViewModel
     var artistViewModel: ArtistSearchViewModel
     var searchResult: SearchResultModel?
+    var productCategory: CategoryType = .all
+    var artistCategory: CategoryType = .all
     
     init(data: SearchResultModel?, coordinator: SearchCoordinator) {
         self.coordinator = coordinator
@@ -43,8 +45,8 @@ extension SearchViewModel {
             Task { [weak self] in
                 guard let self else { return }
                 do {
-                    async let productData = self.downloadInteractor.searchProducts(query: "", pageNo: 0)
-                    async let artistData = self.downloadInteractor.searchArtists(query: "", pageNo: 0)
+                    async let productData = self.downloadInteractor.searchProducts(query: "", pageNo: 0, category: .all)
+                    async let artistData = self.downloadInteractor.searchArtists(query: "", pageNo: 0, category: .all)
                     
                     let productResult = try await productData
                     let artistResult = try await artistData
@@ -62,7 +64,7 @@ extension SearchViewModel {
     func performSearch(query: String) {
         Task {
             do {
-                let result = try await searchWithQuery(query: query)
+                let result = try await searchWithQuery(query: query, productCategory: productCategory, artistCategory: artistCategory)
                 DispatchQueue.main.async { [weak self] in
                     self?.presentNewSearchResultScene(with: result)
                 }
@@ -72,9 +74,9 @@ extension SearchViewModel {
         }
     }
     
-    private func searchWithQuery(query: String) async throws -> SearchResultModel {
-        async let productData = downloadInteractor.searchProducts(query: query, pageNo: 0)
-        async let artistData = downloadInteractor.searchArtists(query: query, pageNo: 0)
+    private func searchWithQuery(query: String, productCategory: CategoryType, artistCategory: CategoryType) async throws -> SearchResultModel {
+        async let productData = downloadInteractor.searchProducts(query: query, pageNo: 0, category: productCategory)
+        async let artistData = downloadInteractor.searchArtists(query: query, pageNo: 0, category: artistCategory)
         
         let productResult = try await productData
         let artistResult = try await artistData
