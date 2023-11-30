@@ -30,6 +30,7 @@ final class ExhibitionViewModel {
     
     @MainActor
     private func processExhibitions() {
+        processedExhibitions.removeAll()
         for e in exhibitions {
             guard let url = URL(string: e.posterImageUrl) else { return }
             

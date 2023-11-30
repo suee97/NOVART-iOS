@@ -84,6 +84,7 @@ final class ExhibitionViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
+        viewModel.fetchExhibitions()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
