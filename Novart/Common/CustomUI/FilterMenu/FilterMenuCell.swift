@@ -13,7 +13,7 @@ class FilterMenuCell: UITableViewCell {
     
     private enum Constants {
         static let leadingMargin: CGFloat = 16
-        static let font: UIFont = .systemFont(ofSize: 18, weight: .regular)
+        static let font: UIFont = .systemFont(ofSize: 16, weight: .regular)
         static let color: UIColor = UIColor.Common.grey04
         static let selectedFont: UIFont = .systemFont(ofSize: 16, weight: .bold)
         static let selectedColor: UIColor = UIColor.Common.main
@@ -38,6 +38,13 @@ class FilterMenuCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override var isSelected: Bool {
+        didSet {
+            filterLabel.textColor = isSelected ? Constants.selectedColor : Constants.color
+            filterLabel.font = isSelected ? Constants.selectedFont : Constants.font
+        }
+    }
+    
     private func setupView() {
         backgroundColor = .clear
         selectionStyle = .none
@@ -51,5 +58,7 @@ class FilterMenuCell: UITableViewCell {
     
     func update(with type: CategoryType) {
         filterLabel.text = type.rawValue
+
+        
     }
 }

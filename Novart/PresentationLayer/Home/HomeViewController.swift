@@ -81,6 +81,7 @@ class HomeViewController: BaseViewController {
     
     private lazy var filterButton: FilterButton = {
         let button = FilterButton(filterTypes: CategoryType.allCases)
+        button.delegate = self
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -116,7 +117,7 @@ class HomeViewController: BaseViewController {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.fetchData()
+        viewModel.loadInitialData()
     }
     
     // MARK: - Setup
@@ -203,8 +204,13 @@ private extension HomeViewController {
 // MARK: - CollectionViewDelegate
 extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        DispatchQueue.main.async { [weak self] in
-//            self?.viewModel.presentProductDetailScene()
-//        }
+    }
+}
+
+// MARK: - FilterButton
+extension HomeViewController: FilterMenuViewDelegate {
+    func didTapRowAt(menuView: FilterMenuView, category: CategoryType) {
+        viewModel.selectedCategory = category
+        viewModel.fetchFeedItems(category: category, lastId: nil)
     }
 }
