@@ -78,6 +78,21 @@ final class ExhibitionViewController: BaseViewController {
         }).store(in: &cancellables)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.isNavigationBarHidden = false
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        viewModel.cellIndex = viewModel.cellIndex
+    }
+    
     
     // MARK: - UI
     private lazy var collectionView: UICollectionView = {
@@ -124,16 +139,6 @@ final class ExhibitionViewController: BaseViewController {
             m.top.equalTo(pageControl.snp.bottom).offset(Constants.ButtonsView.topMargin)
             m.height.equalTo(Constants.ButtonsView.height)
         })
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.isNavigationBarHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.isNavigationBarHidden = false
     }
 }
 
