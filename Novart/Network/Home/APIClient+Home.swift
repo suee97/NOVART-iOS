@@ -9,7 +9,7 @@ import Alamofire
 import Foundation
 
 extension APIClient {
-    static func fetchFeed() async throws -> FeedResponse {
-        try await APIClient.request(target: HomeTarget.fetchFeed, type: FeedResponse.self)
+    static func fetchFeed(category: CategoryType, lastId: Int64?) async throws -> FeedResponse {
+        try await APIClient.request(target: HomeTarget.fetchFeed(category: category.rawValue, lastId: lastId), type: FeedResponse.self)
     }
 }

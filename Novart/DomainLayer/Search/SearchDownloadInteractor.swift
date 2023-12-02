@@ -17,7 +17,7 @@ final class SearchDownloadInteractor {
 //            ]
 //        return items
 //    }
-//    
+//
 //    func fetchArtistItems() async throws -> [SearchArtistModel] {
 //        let items = [
 //            SearchArtistModel(id: 1, nickname: "작가이름", backgroundImgUrl: nil, profileImgUrl: nil),
@@ -28,13 +28,13 @@ final class SearchDownloadInteractor {
 //        return items
 //    }
     
-    func searchProducts(query: String, pageNo: Int32) async throws -> ProductSearchResponse {
-        let response = try await APIClient.searchProduct(query: query, pageNo: pageNo)
+    func searchProducts(query: String, pageNo: Int32, category: CategoryType) async throws -> ProductSearchResponse {
+        let response = try await APIClient.searchProduct(query: query, pageNo: pageNo, category: category.rawValue)
         return response
     }
     
-    func searchArtists(query: String, pageNo: Int32) async throws -> ArtistSearchResponse {
-        let response = try await APIClient.searchArtist(query: query, pageNo: pageNo)
+    func searchArtists(query: String, pageNo: Int32, category: CategoryType) async throws -> ArtistSearchResponse {
+        let response = try await APIClient.searchArtist(query: query, pageNo: pageNo, category: category.rawValue)
         return response
     }
 }

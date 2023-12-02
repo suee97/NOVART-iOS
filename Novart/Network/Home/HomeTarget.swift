@@ -9,7 +9,7 @@ import Alamofire
 import Foundation
 
 enum HomeTarget: TargetType {
-    case fetchFeed
+    case fetchFeed(category: String, lastId: Int64?)
     
     var baseURL: String {
         API.baseURL
@@ -31,8 +31,12 @@ enum HomeTarget: TargetType {
     
     var parameters: RequestParams {
         switch self {
-        case .fetchFeed:
-            return .query(nil)
+        case let .fetchFeed(category, lastId):
+            if let lastId {
+                return .query(["category": category, "lastId": "\(lastId)"])
+            } else {
+                return .query(["category": category])
+            }
         }
     }
 }

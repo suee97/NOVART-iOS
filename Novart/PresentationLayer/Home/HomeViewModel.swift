@@ -13,6 +13,7 @@ final class HomeViewModel {
     var downloadInteractor: HomeDownloadInteractor = HomeDownloadInteractor()
     
     var feedDataSubject: PassthroughSubject<[FeedItemViewModel], Never> = .init()
+    var selectedCategory: CategoryType = .all
     
     private var feedData: [FeedItemViewModel] = [] {
         didSet {
@@ -44,15 +45,26 @@ extension HomeViewModel {
         return id
     }
     
-    func fetchData() {
-        fetchFeedItems()
+    func loadInitialData() {
+        fetchFeedItems(category: .all, lastId: nil)
     }
 
-    func fetchFeedItems() {
+    func fetchFeedItems(category: CategoryType, lastId: Int64?) {
         Task {
             do {
-                let items = try await downloadInteractor.fetchFeedItems()
+                let items = try await downloadInteractor.fetchFeedItems(category: category, lastId: lastId)
                 feedData = items.map { FeedItemViewModel($0) }
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func loadMoreItems() {
+        Task {
+            do {
+                let items = try await downloadInteractor.fetchFeedItems(category: selectedCategory, lastId: feedData.last?.id)
+                feedData.append(contentsOf: items.map { FeedItemViewModel($0) })
             } catch {
                 print(error)
             }
