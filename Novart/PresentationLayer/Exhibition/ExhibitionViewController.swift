@@ -209,5 +209,10 @@ extension ExhibitionViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         viewModel.cellIndex = viewModel.cellIndex
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let exhibition = viewModel.processedExhibitions[indexPath.row]
+        viewModel.showExhibitionDetail(exhibitionId: exhibition.id)
+    }
 }
 

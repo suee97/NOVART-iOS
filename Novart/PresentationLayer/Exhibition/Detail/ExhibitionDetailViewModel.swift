@@ -13,8 +13,11 @@ final class ExhibitionDetailViewModel {
     private weak var coordinator: ExhibitionDetailCoordinator?
     var detailInfoItemSubject: PassthroughSubject<[ExhibitionDetailViewController.Section: [ExhibitionDetailItem]], Never> = .init()
     
-    init(coordinator: ExhibitionDetailCoordinator?) {
+    let exhibitionId: Int64
+    
+    init(coordinator: ExhibitionDetailCoordinator?, exhibitionId: Int64) {
         self.coordinator = coordinator
+        self.exhibitionId = exhibitionId
     }
     
     @MainActor

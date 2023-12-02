@@ -13,7 +13,7 @@ final class ExhibitionDetailCoordinator: BaseStackCoordinator<ExhibitionDetailSt
     var exhibitionId: Int64
     
     override func start() {
-        let viewModel = ExhibitionDetailViewModel(coordinator: self)
+        let viewModel = ExhibitionDetailViewModel(coordinator: self, exhibitionId: exhibitionId)
         let viewController = ExhibitionDetailViewController(viewModel: viewModel)
         navigator.start(viewController)
     }

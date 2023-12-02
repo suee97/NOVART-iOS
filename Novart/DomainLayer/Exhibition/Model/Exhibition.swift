@@ -1,7 +1,7 @@
 import UIKit
 
 struct Exhibition: Decodable {
-    let id: Int
+    let id: Int64
     let posterImageUrl: String
     let description: String
     let likesCount: Int
@@ -10,7 +10,7 @@ struct Exhibition: Decodable {
 }
 
 struct ProcessedExhibition: Hashable {
-    let id: Int
+    let id: Int64
     let imageView: UIImageView
     let description: String
     let likesCount: Int
