@@ -78,9 +78,10 @@ final class ExhibitionButtonsView: UIView {
     
     private func setUpBindings() {
         viewModel.$cellIndex.sink(receiveValue: { value in
+            guard let value = value else { return }
             
             // LikeView
-            self.likeCountLabel.text = self.convertCountToString(count: self.viewModel.processedExhibitions[value].likeCount)
+            self.likeCountLabel.text = self.convertCountToString(count: self.viewModel.processedExhibitions[value].likesCount)
             self.likeView.snp.removeConstraints()
             let likeViewWidth = self.likeCountLabel.bounds.width + 52
             self.likeView.snp.makeConstraints({ m in
@@ -88,7 +89,7 @@ final class ExhibitionButtonsView: UIView {
             })
             
             // LikeHeart
-            self.likeHeartImageView.image = self.viewModel.processedExhibitions[value].isLike ? UIImage(named: "icon_exhibition_heart") : UIImage(named: "icon_exhibition_heart_fill")
+            self.likeHeartImageView.image = self.viewModel.processedExhibitions[value].liked ? UIImage(named: "icon_exhibition_heart") : UIImage(named: "icon_exhibition_heart_fill")
             
             // CommentView
             self.commentCountLabel.text = self.convertCountToString(count: self.viewModel.processedExhibitions[value].commentCount)

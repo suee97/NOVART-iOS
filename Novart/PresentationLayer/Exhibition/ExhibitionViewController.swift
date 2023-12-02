@@ -7,15 +7,18 @@ final class ExhibitionViewController: BaseViewController {
     // MARK: - Constants
     private enum Constants {
         
+        static let screenWidth: CGFloat = UIScreen.main.bounds.width
+        static let leftMargin: CGFloat = 24
+        static let rightMargin: CGFloat = 24
         static let animateDuration: CGFloat = 0.2
         
         enum CollectionView {
-            static let itemWidth: CGFloat = 342
-            static let itemHeight: CGFloat = 616
+            static let itemWidth: CGFloat = Constants.screenWidth - (Constants.leftMargin + Constants.rightMargin)
+            static let itemHeight: CGFloat = Constants.CollectionView.itemWidth * (616/342)
             static let groupSpacing: CGFloat = 16
             
             static let topMargin: CGFloat = 8
-            static let height: CGFloat = 616 + 4 // Cell 그림자 고려
+            static let height: CGFloat = Constants.CollectionView.itemHeight
         }
         
         enum PageControl {
@@ -23,7 +26,7 @@ final class ExhibitionViewController: BaseViewController {
             static let indicatorColor = UIColor.Common.warmBlack.withAlphaComponent(0.2)
             static let transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
             
-            static let topMargin: CGFloat = 12 - 4 // Cell 그림자 고려
+            static let topMargin: CGFloat = 12
             static let height: CGFloat = 4
         }
         
@@ -44,7 +47,7 @@ final class ExhibitionViewController: BaseViewController {
         self.viewModel = viewModel
         super.init()
         setupCollectionView()
-        viewModel.getExhibitions()
+        viewModel.fetchExhibitions()
     }
     
     required init? (coder: NSCoder) {
@@ -58,6 +61,7 @@ final class ExhibitionViewController: BaseViewController {
         }).store(in: &cancellables)
         
         viewModel.$cellIndex.sink(receiveValue: { value in
+            guard let value = value else { return }
             self.pageControl.currentPage = value
             
             // 배경 색상 변경
@@ -69,12 +73,28 @@ final class ExhibitionViewController: BaseViewController {
             if let visibleCells = self.collectionView.visibleCells as? [ExhibitionCell],
                let currentCell = self.collectionView.cellForItem(at: [0, value]) as? ExhibitionCell {
                 visibleCells.forEach({
-                    $0.container.layer.opacity = 0.3
+                    $0.container.layer.opacity = 0.8
                 })
                 currentCell.container.layer.opacity = 1.0
             }
             
         }).store(in: &cancellables)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
+        viewModel.fetchExhibitions()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.isNavigationBarHidden = false
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        viewModel.cellIndex = viewModel.cellIndex
     }
     
     
@@ -83,6 +103,7 @@ final class ExhibitionViewController: BaseViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createCollectionViewLayout())
         collectionView.bounces = false
         collectionView.backgroundColor = .clear
+        collectionView.clipsToBounds = false
         return collectionView
     }()
     
@@ -123,16 +144,6 @@ final class ExhibitionViewController: BaseViewController {
             m.top.equalTo(pageControl.snp.bottom).offset(Constants.ButtonsView.topMargin)
             m.height.equalTo(Constants.ButtonsView.height)
         })
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.isNavigationBarHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.isNavigationBarHidden = false
     }
 }
 

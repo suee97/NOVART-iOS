@@ -5,6 +5,8 @@ final class ExhibitionCell: UICollectionViewCell {
     
     // MARK: - Constants
     private enum Constants {
+        static let screenWidth: CGFloat = UIScreen.main.bounds.width
+        
         static let opacity: Float = 0.8
         static let radius: CGFloat = 12
         
@@ -15,14 +17,16 @@ final class ExhibitionCell: UICollectionViewCell {
         
         enum ExhibitionImageView {
             static let radius: CGFloat = 12
-            static let height: CGFloat = 472
+            static let height: CGFloat = (Constants.screenWidth - 48) * (472 / 342)
         }
         
         enum DescLabel {
             static let font = UIFont.systemFont(ofSize: 14, weight: .regular)
             static let textColor = UIColor.Common.warmBlack
-            static let margins = (left: 14, right: 14, top: 11, bottom: 10.5)
-            static let height = 66
+            static let leftMargin: CGFloat = 14
+            static let rightMargin: CGFloat = 14
+            static let topMargin: CGFloat = 11
+            static let height: CGFloat = 66
             static let numberOfLines = 3
         }
         
@@ -52,7 +56,7 @@ final class ExhibitionCell: UICollectionViewCell {
         didSet {
             guard let exhibition = exhibition else { return }
             exhibitionImageView.image = exhibition.imageView.image
-            descLabel.text = exhibition.desc
+            descLabel.text = exhibition.description
         }
     }
     
@@ -94,7 +98,6 @@ final class ExhibitionCell: UICollectionViewCell {
     
     private func setUpView() {
         backgroundColor = .clear
-        container.layer.opacity = 0.12
         
         contentView.addSubview(container)
         container.addSubview(exhibitionImageView)
@@ -111,9 +114,9 @@ final class ExhibitionCell: UICollectionViewCell {
         })
 
         descLabel.snp.makeConstraints({ m in
-            m.left.equalToSuperview().inset(Constants.DescLabel.margins.left)
-            m.right.equalToSuperview().inset(Constants.DescLabel.margins.right)
-            m.top.equalTo(exhibitionImageView.snp.bottom).offset(Constants.DescLabel.margins.top)
+            m.left.equalToSuperview().inset(Constants.DescLabel.leftMargin)
+            m.right.equalToSuperview().inset(Constants.DescLabel.rightMargin)
+            m.top.equalTo(exhibitionImageView.snp.bottom).offset(Constants.DescLabel.topMargin)
             m.height.equalTo(Constants.DescLabel.height)
         })
 

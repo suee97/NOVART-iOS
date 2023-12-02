@@ -1,22 +1,20 @@
 import UIKit
 
-// 전시 모델 (from 서버, 임시)
-struct Exhibition: Hashable {
+struct Exhibition: Decodable {
     let id: Int
-    let imageUrl: String
-    let desc: String
-    let likeCount: Int
+    let posterImageUrl: String
+    let description: String
+    let likesCount: Int
     let commentCount: Int
-    let isLike: Bool
+    let liked: Bool
 }
 
-// 처리 후 전시 모델 (임시)
 struct ProcessedExhibition: Hashable {
     let id: Int
     let imageView: UIImageView
-    let desc: String
-    let likeCount: Int
+    let description: String
+    let likesCount: Int
     let commentCount: Int
-    let isLike: Bool
+    let liked: Bool
     let backgroundColor: UIColor
 }
