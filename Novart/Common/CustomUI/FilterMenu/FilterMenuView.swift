@@ -42,6 +42,7 @@ final class FilterMenuView: UIView {
     // MARK: - Properties
     let anchorPosition: CGPoint
     let filterTypes: [CategoryType]
+    weak var delegate: FilterMenuViewDelegate?
     
     // MARK: - Initialization
 
@@ -82,12 +83,29 @@ final class FilterMenuView: UIView {
         layer.shadowOffset = Constants.Shadow.offset
         layer.shadowRadius = Constants.Shadow.radius
         layer.shadowOpacity = Constants.Shadow.opacity
+        
+        tableView.reloadData()
+        tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
     }
 }
 
 extension FilterMenuView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         Constants.itemHeight
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? FilterMenuCell {
+            cell.isSelected = false
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? FilterMenuCell {
+            cell.isSelected = true
+        }
+        let selectedCategory = filterTypes[indexPath.row]
+        delegate?.didTapRowAt(menuView: self, category: selectedCategory)
     }
 }
 

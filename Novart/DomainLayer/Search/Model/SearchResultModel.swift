@@ -11,4 +11,5 @@ struct SearchResultModel {
     let query: String
     let products: [SearchProductModel]
     let artists: [SearchArtistModel]
+    let category: CategoryType
 }

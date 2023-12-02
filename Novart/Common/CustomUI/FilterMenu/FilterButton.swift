@@ -35,6 +35,7 @@ final class FilterButton: UIView {
     
     // MARK: - Properties
     var filterTypes: [CategoryType]
+    weak var delegate: FilterMenuViewDelegate?
     
     // MARK: - Initialization
     
@@ -84,6 +85,7 @@ final class FilterButton: UIView {
         let anchorPosition = CGPoint(x: xPos, y: yPos)
         
         let menuView = FilterMenuView(filterTypes: filterTypes, anchorPosition: anchorPosition)
+        menuView.delegate = delegate
         menuView.frame = CGRect(x: 0, y: 0, width: window.frame.width, height: window.frame.height)
         window.addSubview(menuView)
     }

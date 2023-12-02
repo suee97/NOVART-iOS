@@ -9,8 +9,8 @@ import Foundation
 import Alamofire
 
 enum SearchTarget: TargetType {
-    case searchProduct(query: String, pageNo: Int32)
-    case searchArtist(query: String, pageNo: Int32)
+    case searchProduct(query: String, pageNo: Int32, category: String)
+    case searchArtist(query: String, pageNo: Int32, category: String)
     
     var baseURL: String {
         API.baseURL
@@ -34,10 +34,10 @@ enum SearchTarget: TargetType {
     
     var parameters: RequestParams {
         switch self {
-        case let .searchProduct(query, pageNo):
-            return .query(["query": query, "pageNo": "\(pageNo)"])
-        case let .searchArtist(query, pageNo):
-            return .query(["query": query, "pageNo": "\(pageNo)"])
+        case let .searchProduct(query, pageNo, category):
+            return .query(["query": query, "pageNo": "\(pageNo)", "category": "\(category)"])
+        case let .searchArtist(query, pageNo, category):
+            return .query(["query": query, "pageNo": "\(pageNo)", "category": "\(category)"])
         }
     }
 }

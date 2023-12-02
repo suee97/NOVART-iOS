@@ -287,6 +287,11 @@ class SearchViewController: BaseViewController {
             
             categoryButton.action = { [weak self] isSelected in
                 guard let self else { return }
+                for button in self.categoryStackView.arrangedSubviews {
+                    if let button = button as? CategoryTabButton, button.text != type.rawValue {
+                        button.isSelected = false
+                    }
+                }
                 if isSelected {
                     self.viewModel.didTapCategory(type: type)
                 }
