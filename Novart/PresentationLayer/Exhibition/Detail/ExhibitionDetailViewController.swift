@@ -51,6 +51,7 @@ final class ExhibitionDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.loadData()
+        viewModel.test()
     }
     
     override func setupNavigationBar() {

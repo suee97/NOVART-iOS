@@ -40,6 +40,7 @@
 		0E760E872B1B111F0051CB6C /* ExhibitionDetailInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E760E7B2B1B111E0051CB6C /* ExhibitionDetailInfoCell.swift */; };
 		0E760E882B1B111F0051CB6C /* ExhibitionDetailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E760E7C2B1B111E0051CB6C /* ExhibitionDetailItem.swift */; };
 		0E760E892B1B111F0051CB6C /* ExhibitionArtItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E760E7D2B1B111E0051CB6C /* ExhibitionArtItem.swift */; };
+		0E760E8B2B1B35900051CB6C /* ExhibitionDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E760E8A2B1B35900051CB6C /* ExhibitionDetailModel.swift */; };
 		0E9BB0812AD12DC50002A76D /* ProductDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BB0802AD12DC50002A76D /* ProductDetailViewController.swift */; };
 		0E9BB0832AD12E680002A76D /* ProductDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BB0822AD12E680002A76D /* ProductDetailViewModel.swift */; };
 		0E9BB0852AD148760002A76D /* ProductCoverImageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BB0842AD148760002A76D /* ProductCoverImageDataSource.swift */; };
@@ -242,6 +243,7 @@
 		0E760E7B2B1B111E0051CB6C /* ExhibitionDetailInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitionDetailInfoCell.swift; sourceTree = "<group>"; };
 		0E760E7C2B1B111E0051CB6C /* ExhibitionDetailItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitionDetailItem.swift; sourceTree = "<group>"; };
 		0E760E7D2B1B111E0051CB6C /* ExhibitionArtItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitionArtItem.swift; sourceTree = "<group>"; };
+		0E760E8A2B1B35900051CB6C /* ExhibitionDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionDetailModel.swift; sourceTree = "<group>"; };
 		0E9BB0802AD12DC50002A76D /* ProductDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailViewController.swift; sourceTree = "<group>"; };
 		0E9BB0822AD12E680002A76D /* ProductDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailViewModel.swift; sourceTree = "<group>"; };
 		0E9BB0842AD148760002A76D /* ProductCoverImageDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCoverImageDataSource.swift; sourceTree = "<group>"; };
@@ -474,18 +476,22 @@
 		0E760E712B1B10F30051CB6C /* Detail */ = {
 			isa = PBXGroup;
 			children = (
-				0E760E722B1B111E0051CB6C /* ExhibitionArtCell.swift */,
-				0E760E7D2B1B111E0051CB6C /* ExhibitionArtItem.swift */,
-				0E760E7B2B1B111E0051CB6C /* ExhibitionDetailInfoCell.swift */,
-				0E760E752B1B111E0051CB6C /* ExhibitionDetailInfoModel.swift */,
-				0E760E7C2B1B111E0051CB6C /* ExhibitionDetailItem.swift */,
+				0E760E8C2B1B49270051CB6C /* Cells */,
 				0E760E732B1B111E0051CB6C /* ExhibitionDetailViewController.swift */,
 				0E760E782B1B111E0051CB6C /* ExhibitionDetailViewModel.swift */,
-				0E760E772B1B111E0051CB6C /* ExhibitionEndCell.swift */,
-				0E760E792B1B111E0051CB6C /* ExhibitionEndItem.swift */,
-				0E760E7A2B1B111E0051CB6C /* ParticipantCell.swift */,
 			);
 			path = Detail;
+			sourceTree = "<group>";
+		};
+		0E760E8C2B1B49270051CB6C /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				0E760E722B1B111E0051CB6C /* ExhibitionArtCell.swift */,
+				0E760E7B2B1B111E0051CB6C /* ExhibitionDetailInfoCell.swift */,
+				0E760E772B1B111E0051CB6C /* ExhibitionEndCell.swift */,
+				0E760E7A2B1B111E0051CB6C /* ParticipantCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		0E9BB07F2AD12DB00002A76D /* Comment */ = {
@@ -689,6 +695,11 @@
 			isa = PBXGroup;
 			children = (
 				5BB933E82AF3A472000185D1 /* Exhibition.swift */,
+				0E760E8A2B1B35900051CB6C /* ExhibitionDetailModel.swift */,
+				0E760E7C2B1B111E0051CB6C /* ExhibitionDetailItem.swift */,
+				0E760E752B1B111E0051CB6C /* ExhibitionDetailInfoModel.swift */,
+				0E760E7D2B1B111E0051CB6C /* ExhibitionArtItem.swift */,
+				0E760E792B1B111E0051CB6C /* ExhibitionEndItem.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1249,6 +1260,7 @@
 				5BB933F42AF3A8BA000185D1 /* UIColor+HSB.swift in Sources */,
 				5BB933EC2AF3A876000185D1 /* ExhibitionCell.swift in Sources */,
 				0E760E802B1B111F0051CB6C /* ExhibitionDetailCoordinator.swift in Sources */,
+				0E760E8B2B1B35900051CB6C /* ExhibitionDetailModel.swift in Sources */,
 				0E760E822B1B111F0051CB6C /* ExhibitionDetailStep.swift in Sources */,
 				5BB933ED2AF3A876000185D1 /* ExhibitionCoordinator.swift in Sources */,
 				5BB933EE2AF3A876000185D1 /* ExhibitionStep.swift in Sources */,

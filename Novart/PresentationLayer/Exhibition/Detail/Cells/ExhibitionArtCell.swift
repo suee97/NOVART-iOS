@@ -271,17 +271,21 @@ final class ExhibitionArtCell: UICollectionViewCell {
     }
 
     private func setupData(viewModel: ExhibitionArtItem) {
-        pageController.totalCount = viewModel.titleImageUrls.count
+        pageController.totalCount = viewModel.thumbnailImageUrls.count
         titleLabel.text = viewModel.title
-        artistLabel.text = viewModel.artistName
+        artistLabel.text = viewModel.artistInfo.artistNickname
         descriptionLabel.text = viewModel.description
-        artistNameLabel.text = viewModel.artistName
+        artistNameLabel.text = viewModel.artistInfo.artistNickname
+        if let profileImageUrl = viewModel.artistInfo.profileImageUrl {
+            let artistImageUrl = URL(string: profileImageUrl)
+            artistImageView.kf.setImage(with: artistImageUrl)
+        }
         coverCollectionView.reloadData()
         setupDetailImageViews(with: viewModel.detailImages)
         
     }
     
-    private func setupDetailImageViews(with images: [ExhibitionDetailImage]) {
+    private func setupDetailImageViews(with images: [ExhibitionDetailImageInfoModel]) {
         var stackViewHeight: CGFloat = 0
         for image in images {
             let imageView = UIImageView()
@@ -289,7 +293,7 @@ final class ExhibitionArtCell: UICollectionViewCell {
             imageView.contentMode = .scaleToFill
             
             let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: Constants.CoverImage.imageSize)
-            let aspectRatio = image.height / image.width
+            let aspectRatio = CGFloat(image.height) / CGFloat(image.width)
             let heightConstraint = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: aspectRatio)
 
             NSLayoutConstraint.activate([
@@ -359,12 +363,12 @@ extension ExhibitionArtCell: UICollectionViewDelegate {
 extension ExhibitionArtCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel?.titleImageUrls.count ?? 0
+        return viewModel?.thumbnailImageUrls.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let viewModel, let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCoverCell.reuseIdentifier, for: indexPath) as? ProductCoverCell else { return UICollectionViewCell() }
-        let imageUrl = viewModel.titleImageUrls[indexPath.row]
+        let imageUrl = viewModel.thumbnailImageUrls[indexPath.row]
         cell.update(with: imageUrl)
         return cell
     }
