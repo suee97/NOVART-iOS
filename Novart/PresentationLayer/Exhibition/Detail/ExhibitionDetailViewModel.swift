@@ -26,6 +26,11 @@ final class ExhibitionDetailViewModel {
     func closeCoordinator() {
         coordinator?.close()
     }
+    
+    @MainActor
+    func showCommentViewController() {
+        coordinator?.navigate(to: .comment(exhibitionId: exhibitionId))
+    }
 }
 
 extension ExhibitionDetailViewModel {

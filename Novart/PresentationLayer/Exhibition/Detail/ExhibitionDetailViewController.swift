@@ -59,6 +59,9 @@ final class ExhibitionDetailViewController: BaseViewController {
         
         let commentButton = UIButton()
         commentButton.setBackgroundImage(UIImage(named: "icon_nav_comment"), for: .normal)
+        commentButton.addAction(UIAction(handler: { [weak self] _ in
+            self?.viewModel.showCommentViewController()
+        }), for: .touchUpInside)
         let commentItem = UIBarButtonItem(customView: commentButton)
         navigationItem.rightBarButtonItem = commentItem
         

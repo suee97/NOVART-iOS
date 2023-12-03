@@ -34,7 +34,12 @@ extension CommentViewModel {
         Task { [weak self] in
             do {
                 guard let self else { return }
-                self.comments = try await commentInteractor.fetchProductComments(productId: self.contentId)
+                switch contentType {
+                case .exhibition:
+                    self.comments = try await commentInteractor.fetchExhibitionComments(exhibitionId: self.contentId)
+                case .product:
+                    self.comments = try await commentInteractor.fetchProductComments(productId: self.contentId)
+                }
             } catch {
                 print(error.localizedDescription)
             }
@@ -45,8 +50,15 @@ extension CommentViewModel {
         Task { [weak self] in
             do {
                 guard let self else { return }
-                let comment = try await commentInteractor.writeProductComment(productId: contentId, content: content)
-                self.comments.append(comment)
+                
+                switch contentType {
+                case .exhibition:
+                    let comment = try await commentInteractor.writeExhibitionComment(exhibitionId: self.contentId, content: content)
+                    self.comments.append(comment)
+                case .product:
+                    let comment = try await commentInteractor.writeProductComment(productId: contentId, content: content)
+                    self.comments.append(comment)
+                }
             } catch {
                 print(error.localizedDescription)
             }

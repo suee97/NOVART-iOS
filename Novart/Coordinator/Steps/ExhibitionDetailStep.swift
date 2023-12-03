@@ -8,7 +8,7 @@
 import UIKit
 
 enum ExhibitionDetailStep: Step {
-    case comment
+    case comment(exhibitionId: Int64)
     case artist
     case exhibition
     
