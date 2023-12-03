@@ -9,11 +9,20 @@ import Foundation
 import Alamofire
 
 extension APIClient {
-    static func getComments(productId: Int64) async throws -> [CommentModel] {
-        try await APIClient.request(target: CommentTarget.getComments(productId: productId), type: [CommentModel].self)
+    static func getProductComments(productId: Int64) async throws -> [CommentModel] {
+        try await APIClient.request(target: CommentTarget.getProductComments(productId: productId), type: [CommentModel].self)
     }
     
-    static func writeComment(productId: Int64, content: String) async throws -> CommentModel {
-        try await APIClient.request(target: CommentTarget.writeComment(productId: productId, content: content), type: CommentModel.self)
+    static func writeProductComment(productId: Int64, content: String) async throws -> CommentModel {
+        try await APIClient.request(target: CommentTarget.writeProductComment(productId: productId, content: content), type: CommentModel.self)
     }
+    
+    static func getExhibitionComments(exhibitionId: Int64) async throws -> [CommentModel] {
+        try await APIClient.request(target: CommentTarget.getExhibitionComments(exhibitionId: exhibitionId), type: [CommentModel].self)
+    }
+    
+    static func writeExhibitionComment(exhibitionId: Int64, content: String) async throws -> CommentModel {
+        try await APIClient.request(target: CommentTarget.writeExhibitionComment(exhibitionId: exhibitionId, content: content), type: CommentModel.self)
+    }
+    
 }

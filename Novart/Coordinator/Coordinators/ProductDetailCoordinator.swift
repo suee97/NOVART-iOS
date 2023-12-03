@@ -20,15 +20,15 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep> {
     
     override func navigate(to step: ProductDetailStep) {
         switch step {
-        case let .comment(productId):
-            showCommentViewController(productId: productId)
+        case let .comment(contentId):
+            showCommentViewController(contentId: contentId)
         default:
             break
         }
     }
     
-    private func showCommentViewController(productId: Int64) {
-        let viewModel = CommentViewModel(productId: productId)
+    private func showCommentViewController(contentId: Int64) {
+        let viewModel = CommentViewModel(contentId: contentId, contentType: .product)
         let viewController = CommentViewController(viewModel: viewModel)
         
         if let sheet = viewController.sheetPresentationController {

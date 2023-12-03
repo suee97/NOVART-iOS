@@ -36,8 +36,8 @@ extension ExhibitionDetailViewModel {
                 let exhibitionData = try await exhibitionInteractor.fetchExhibitionDetail(exhibitionId: exhibitionId)
                 let artItems = exhibitionData.arts.map { ExhibitionArtItem(item: $0) }
                 let infoItem = ExhibitionDetailInfoModel(model: exhibitionData)
+                let endItem = ExhibitionEndItem(likeCount: exhibitionData.likesCount, commentCount: exhibitionData.commentCount)
                 
-                let endItem = ExhibitionEndItem(likeCount: 9999, commentCount: 9999)
                 detailInfoItemSubject.send([.info: [infoItem], .art: artItems, .end: [endItem]])
             } catch {
                 print(error.localizedDescription)
@@ -46,14 +46,4 @@ extension ExhibitionDetailViewModel {
         }
     }
     
-    func test() {
-        Task {
-            do {
-                try await exhibitionInteractor.fetchExhibitionDetail(exhibitionId: exhibitionId)
-            } catch {
-                print("heheheh")
-                print(error.localizedDescription)
-            }
-        }
-    }
 }
