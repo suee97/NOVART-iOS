@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ExhibitionDetailInfoCell: UICollectionViewCell {
     
@@ -252,12 +253,15 @@ extension ExhibitionDetailInfoCell {
     }
     
     func setData(viewModel: ExhibitionDetailInfoModel) {
-        posterImageView.image = UIImage(named: "mock_exhibition_poster")
+        if let posterImageUrl = viewModel.posterImageUrl {
+            let url = URL(string: posterImageUrl)
+            posterImageView.kf.setImage(with: url)
+        }
         titleLabel.text = viewModel.title
         subtitleLabel.text = viewModel.subtitle
-        countLabel.text = "\(viewModel.count)"
-        categoryLabel.text = "제품, 그래픽, 회화"
-        durationLabel.text = "\(viewModel.duration)분"
+        countLabel.text = viewModel.count
+        categoryLabel.text = viewModel.category ?? "없음"
+        durationLabel.text = viewModel.duration
         descriptionLabel.text = viewModel.description
         collectionView.reloadData()
     }

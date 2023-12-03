@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ParticipantCell: UICollectionViewCell {
     
@@ -41,6 +42,7 @@ final class ParticipantCell: UICollectionViewCell {
         let label = UILabel()
         label.font = Constants.Title.nameFont
         label.textColor = Constants.Title.textColor
+        label.textAlignment = .center
         label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -51,6 +53,7 @@ final class ParticipantCell: UICollectionViewCell {
         let label = UILabel()
         label.font = Constants.Title.roleFont
         label.textColor = Constants.Title.textColor
+        label.textAlignment = .center
         label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -87,9 +90,12 @@ final class ParticipantCell: UICollectionViewCell {
 }
 
 extension ParticipantCell {
-    func update(with data: ParticipantModel) {
-        imageView.image = UIImage(named: "mock_artist")
+    func update(with data: ExhibitionParticipantModel) {
+        if let profileImageUrl = data.profileImgUrl {
+            let url = URL(string: profileImageUrl)
+            imageView.kf.setImage(with: url)
+        }
         nameLabel.text = data.nickname
-        roleLabel.text = data.role
+        roleLabel.text = data.job
     }
 }

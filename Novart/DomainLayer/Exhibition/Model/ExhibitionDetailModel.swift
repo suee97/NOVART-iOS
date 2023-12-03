@@ -13,11 +13,14 @@ struct ExhibitionDetailModel: Decodable, Hashable {
     let englishName: String
     let posterImageUrl: String
     let arts: [ExhibitionDetailArtItem]
+    let artists: [ExhibitionParticipantModel]
     let likesCount: Int
     let commentCount: Int
     let liked: Bool
     let estimatedDuration: String
     let artCount: String
+    let description: String
+    let category: String?
     
     static func == (lhs: ExhibitionDetailModel, rhs: ExhibitionDetailModel) -> Bool {
         lhs.id == rhs.id
@@ -47,4 +50,11 @@ struct ExhibitionArtistFollowInfoModel: Decodable {
     let artistNickname: String
     let profileImageUrl: String?
     let following: Bool
+}
+
+struct ExhibitionParticipantModel: Decodable {
+    let id: Int64
+    let profileImgUrl: String?
+    let nickname: String
+    let job: String
 }

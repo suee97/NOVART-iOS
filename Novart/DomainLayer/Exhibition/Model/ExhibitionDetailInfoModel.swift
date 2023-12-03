@@ -12,12 +12,12 @@ class ExhibitionDetailInfoModel: ExhibitionDetailItem {
     let title: String
     let subtitle: String
     let description: String
-    let category: [CategoryType]
-    let count: Int
-    let duration: Int
-    let participants: [ParticipantModel]
+    let category: String?
+    let count: String
+    let duration: String
+    let participants: [ExhibitionParticipantModel]
     
-    init(posterImageUrl: String?, title: String, subtitle: String, description: String, category: [CategoryType], count: Int, duration: Int, participants: [ParticipantModel]) {
+    init(posterImageUrl: String?, title: String, subtitle: String, description: String, category: String, count: String, duration: String, participants: [ExhibitionParticipantModel]) {
         self.posterImageUrl = posterImageUrl
         self.title = title
         self.subtitle = subtitle
@@ -27,11 +27,15 @@ class ExhibitionDetailInfoModel: ExhibitionDetailItem {
         self.duration = duration
         self.participants = participants
     }
-}
-
-struct ParticipantModel: Identifiable {
-    let id: UUID = UUID()
-    let nickname: String
-    let role: String
-    let profileImageUrl: String?
+    
+    init(model: ExhibitionDetailModel) {
+        self.posterImageUrl = model.posterImageUrl
+        self.title = model.name
+        self.subtitle = model.englishName
+        self.description = model.description
+        self.category = model.category
+        self.count = model.artCount
+        self.duration = model.estimatedDuration
+        self.participants = model.artists
+    }
 }
