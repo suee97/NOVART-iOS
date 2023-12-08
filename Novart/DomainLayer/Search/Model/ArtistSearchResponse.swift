@@ -10,7 +10,7 @@ import Foundation
 struct ArtistSearchResponse: Decodable {
     let size: Int
     let number: Int
-    let content: [SearchArtistModel]
+    let content: [ArtistModel]
     let sort: SearchSortData
     let numberOfElements: Int
     let pageable: SearchPageData

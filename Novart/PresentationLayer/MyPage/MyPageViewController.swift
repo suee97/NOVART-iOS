@@ -39,8 +39,8 @@ final class MyPageViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private var cellSize = Constants.CellSize.InterestCellSize
     private var cellCount = 0
-    private var cellId = MyPageInterestCell.reuseIdentifier
-    private var cellType: UICollectionViewCell.Type = MyPageInterestCell.self
+    private var cellId = ProductCell.reuseIdentifier
+    private var cellType: UICollectionViewCell.Type = ProductCell.self
     private var isHeaderSticky = false
     
     init(viewModel: MyPageViewModel) {
@@ -146,8 +146,8 @@ final class MyPageViewController: BaseViewController {
             case .Interest:
                 self.cellSize = Constants.CellSize.InterestCellSize
                 self.cellCount = self.viewModel.interests.count
-                self.cellId = MyPageInterestCell.reuseIdentifier
-                self.cellType = MyPageInterestCell.self
+                self.cellId = ProductCell.reuseIdentifier
+                self.cellType = ProductCell.self
             case .Following:
                 self.cellSize = Constants.CellSize.FollowingCellSize
                 self.cellCount = self.viewModel.followings.count
@@ -216,10 +216,11 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         collectionView.register(cellType, forCellWithReuseIdentifier: cellId)
         switch viewModel.selectedCategory {
         case .Interest:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageInterestCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? ProductCell else {
                 return UICollectionViewCell()
             }
-            cell.interest = viewModel.interests[indexPath.row]
+            let item = viewModel.interests[indexPath.row]
+            cell.update(with: item)
             return cell
         case .Following:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageFollowingCell else {

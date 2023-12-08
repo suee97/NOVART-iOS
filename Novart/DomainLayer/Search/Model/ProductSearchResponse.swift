@@ -10,7 +10,7 @@ import Foundation
 struct ProductSearchResponse: Decodable {
     let size: Int
     let number: Int
-    let content: [SearchProductModel]
+    let content: [ProductModel]
     let sort: SearchSortData
     let numberOfElements: Int
     let pageable: SearchPageData

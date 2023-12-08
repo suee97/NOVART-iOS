@@ -7,7 +7,7 @@ final class MyPageViewModel {
     @Published private (set) var selectedCategory: MyPageCategory
     @Published private (set) var scrollHeight: Double
     
-    var interests = [MyPageInterest]()
+    var interests = [ProductModel]()
     var followings = [MyPageFollowing]()
     var works = [MyPageWork]()
     var exhibitions = [MyPageExhibition]()
@@ -41,8 +41,12 @@ final class MyPageViewModel {
         print("MyPageViewModel getAllItems()")
         // 서버에서 가져오기 (이미지 불러오기 x)
         // 아래는 임시 데이터
+//        for i in 0..<10 {
+//            interests.append(MyPageInterest(id: i, name: "탁자", thumbnailImgUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc", artistName: "오승언"))
+//        }
+        
         for i in 0..<10 {
-            interests.append(MyPageInterest(id: i, name: "탁자", thumbnailImgUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc", artistName: "오승언"))
+            interests.append(ProductModel(id: Int64(i), name: "탁자", artistNickname: "진욱", thumbnailImageUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc"))
         }
         for i in 0..<0 {
             followings.append(MyPageFollowing(id: i, name: "의자", thumbnailImgUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc", artistName: "오승언"))

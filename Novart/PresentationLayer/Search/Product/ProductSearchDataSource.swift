@@ -7,10 +7,10 @@
 
 import UIKit
 
-typealias ProductSearchDataSourceType = UICollectionViewDiffableDataSource<ProductSearchDataSource.Section, SearchProductModel>
+typealias ProductSearchDataSourceType = UICollectionViewDiffableDataSource<ProductSearchDataSource.Section, ProductModel>
 
-private typealias ProductSearchDataSourceSnapshot = NSDiffableDataSourceSnapshot<ProductSearchDataSource.Section, SearchProductModel>
-private typealias ProductSearchProductCellRegistration = UICollectionView.CellRegistration<SearchProductCell, SearchProductModel>
+private typealias ProductSearchDataSourceSnapshot = NSDiffableDataSourceSnapshot<ProductSearchDataSource.Section, ProductModel>
+private typealias ProductSearchProductCellRegistration = UICollectionView.CellRegistration<ProductCell, ProductModel>
 
 final class ProductSearchDataSource: ProductSearchDataSourceType {
 
@@ -30,7 +30,7 @@ final class ProductSearchDataSource: ProductSearchDataSourceType {
         }
     }
     
-    func apply(_ items: [SearchProductModel]) {
+    func apply(_ items: [ProductModel]) {
         var snapshot = snapshot()
         
         snapshot.deleteSections([.product])

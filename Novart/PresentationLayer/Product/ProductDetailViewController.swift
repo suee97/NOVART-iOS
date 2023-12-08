@@ -536,23 +536,23 @@ final class ProductDetailViewController: BaseViewController {
         artistNameLabel.text = data.artist.artistNickname
         productInfoView.viewModel = data
         let artistProducts = [
-            SearchProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            SearchProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            SearchProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            SearchProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil)
+            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil)
             ]
         
-        let artistExhibitions = [
-            ExhibitionModel(name: "전시 주제 이름", date: "2023.08.01~2023.09.01"),
-            ExhibitionModel(name: "전시 주제 이름", date: "2023.08.01~2023.09.01"),
-            ExhibitionModel(name: "전시 주제 이름", date: "2023.08.01~2023.09.01")
-        ]
+        var artistExhibitions = [ExhibitionModel]()
+        for i in 0..<4 {
+            artistExhibitions.append(ExhibitionModel(id: Int64(i), posterImageUrl: "https://t3.ftcdn.net/jpg/02/30/40/74/240_F_230407433_uF2iM6tUs1Sge24999FWdo241t8FMBi7.jpg", description: "description", likesCount: 1, commentCount: 1, liked: true))
+
+        }
         
         let similarProducts = [
-            SearchProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            SearchProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            SearchProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            SearchProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil)
+            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil)
             ]
         
         let recommendationDic: [RecommendationDataSource.Section: [PlainItem]] = [.artistProduct: artistProducts,
