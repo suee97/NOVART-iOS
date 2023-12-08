@@ -7,10 +7,10 @@
 
 import UIKit
 
-typealias ArtistSearchDataSourceType = UICollectionViewDiffableDataSource<ArtistSearchDataSource.Section, SearchArtistModel>
+typealias ArtistSearchDataSourceType = UICollectionViewDiffableDataSource<ArtistSearchDataSource.Section, ArtistModel>
 
-private typealias ArtistSearchDataSourceSnapshot = NSDiffableDataSourceSnapshot<ArtistSearchDataSource.Section, SearchArtistModel>
-private typealias ArtistSearchProductCellRegistration = UICollectionView.CellRegistration<SearchArtistCell, SearchArtistModel>
+private typealias ArtistSearchDataSourceSnapshot = NSDiffableDataSourceSnapshot<ArtistSearchDataSource.Section, ArtistModel>
+private typealias ArtistSearchProductCellRegistration = UICollectionView.CellRegistration<SearchArtistCell, ArtistModel>
 
 final class ArtistSearchDataSource: ArtistSearchDataSourceType {
 
@@ -30,7 +30,7 @@ final class ArtistSearchDataSource: ArtistSearchDataSourceType {
         }
     }
     
-    func apply(_ items: [SearchArtistModel]) {
+    func apply(_ items: [ArtistModel]) {
         var snapshot = snapshot()
         
         snapshot.deleteSections([.artist])
