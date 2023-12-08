@@ -177,6 +177,10 @@
 		5BB9F16C2ADCFF7E00C347F3 /* TextNavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB9F16B2ADCFF7E00C347F3 /* TextNavigationButton.swift */; };
 		5BB9F16E2ADD029500C347F3 /* ToggleSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB9F16D2ADD029500C347F3 /* ToggleSwitchView.swift */; };
 		5BB9F1702ADD177100C347F3 /* MyPageSettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB9F16F2ADD177100C347F3 /* MyPageSettingViewModel.swift */; };
+		5BC2244D2B188E410032D3CE /* MyPageNotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC2244C2B188E410032D3CE /* MyPageNotificationViewController.swift */; };
+		5BC2244F2B188E870032D3CE /* MyPageNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC2244E2B188E870032D3CE /* MyPageNotificationViewModel.swift */; };
+		5BC224522B19C1690032D3CE /* MyPageNotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC224512B19C1690032D3CE /* MyPageNotificationCell.swift */; };
+		5BC224572B1F0DCB0032D3CE /* MyPageNotificationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC224562B1F0DCB0032D3CE /* MyPageNotificationModel.swift */; };
 		5BDD4A112AC955A600937352 /* MyPageCategoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */; };
 		5BDD4A122AC955A600937352 /* MyPageHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */; };
 		5BDD4A132AC955A600937352 /* MyPageCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */; };
@@ -360,6 +364,10 @@
 		5BB9F16B2ADCFF7E00C347F3 /* TextNavigationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNavigationButton.swift; sourceTree = "<group>"; };
 		5BB9F16D2ADD029500C347F3 /* ToggleSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleSwitchView.swift; sourceTree = "<group>"; };
 		5BB9F16F2ADD177100C347F3 /* MyPageSettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageSettingViewModel.swift; sourceTree = "<group>"; };
+		5BC2244C2B188E410032D3CE /* MyPageNotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageNotificationViewController.swift; sourceTree = "<group>"; };
+		5BC2244E2B188E870032D3CE /* MyPageNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageNotificationViewModel.swift; sourceTree = "<group>"; };
+		5BC224512B19C1690032D3CE /* MyPageNotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageNotificationCell.swift; sourceTree = "<group>"; };
+		5BC224562B1F0DCB0032D3CE /* MyPageNotificationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageNotificationModel.swift; sourceTree = "<group>"; };
 		5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageCategoryButton.swift; sourceTree = "<group>"; };
 		5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageHeaderView.swift; sourceTree = "<group>"; };
 		5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageCategory.swift; sourceTree = "<group>"; };
@@ -873,8 +881,9 @@
 		0EE0195A2A56F1BD00389A95 /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				5BC2244B2B188DC80032D3CE /* MyPageNotification */,
 				5BB9F1682AD90F3500C347F3 /* MyPageSetting */,
-				5BDD4A422AD48BF800937352 /* ProfileEdit */,
+				5BDD4A422AD48BF800937352 /* MyPageProfileEdit */,
 				0EE019462A56EEFE00389A95 /* MyPageViewController.swift */,
 				5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */,
 				5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */,
@@ -1079,6 +1088,24 @@
 			path = MyPageSetting;
 			sourceTree = "<group>";
 		};
+		5BC2244B2B188DC80032D3CE /* MyPageNotification */ = {
+			isa = PBXGroup;
+			children = (
+				5BC224502B19C14D0032D3CE /* Cell */,
+				5BC2244C2B188E410032D3CE /* MyPageNotificationViewController.swift */,
+				5BC2244E2B188E870032D3CE /* MyPageNotificationViewModel.swift */,
+			);
+			path = MyPageNotification;
+			sourceTree = "<group>";
+		};
+		5BC224502B19C14D0032D3CE /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				5BC224512B19C1690032D3CE /* MyPageNotificationCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		5BDD4A152AC955C100937352 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -1097,18 +1124,19 @@
 				5BDD4A1C2AC955C100937352 /* MyPageFollowings.swift */,
 				5BDD4A1D2AC955C100937352 /* MyPageInterest.swift */,
 				5BDD4A1E2AC955C100937352 /* MyPageWorks.swift */,
+				5BC224562B1F0DCB0032D3CE /* MyPageNotificationModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
 		};
-		5BDD4A422AD48BF800937352 /* ProfileEdit */ = {
+		5BDD4A422AD48BF800937352 /* MyPageProfileEdit */ = {
 			isa = PBXGroup;
 			children = (
 				5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */,
 				5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */,
 				5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */,
 			);
-			path = ProfileEdit;
+			path = MyPageProfileEdit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1215,6 +1243,7 @@
 				0EE019112A482DE600389A95 /* MainCoordinator.swift in Sources */,
 				0EAF1F302ADBC6C600E9A10C /* SearchArtistCell.swift in Sources */,
 				0EAF1F2C2ADBC00400E9A10C /* SearchArtistModel.swift in Sources */,
+				5BC224522B19C1690032D3CE /* MyPageNotificationCell.swift in Sources */,
 				5BDD4A142AC955A600937352 /* MyPageViewModel.swift in Sources */,
 				0EE019092A48274B00389A95 /* BaseNavigationController.swift in Sources */,
 				0E9BB08F2AD2D45A0002A76D /* ProductInfoViewModel.swift in Sources */,
@@ -1272,6 +1301,7 @@
 				0EE616272B08E74900DC51E1 /* FeedResponse.swift in Sources */,
 				0EE019492A56EF2A00389A95 /* HomeCoordinator.swift in Sources */,
 				0EE019012A481C4300389A95 /* Dismissible.swift in Sources */,
+				5BC2244F2B188E870032D3CE /* MyPageNotificationViewModel.swift in Sources */,
 				0E9BB0852AD148760002A76D /* ProductCoverImageDataSource.swift in Sources */,
 				0E1E211E2AE531D500F15009 /* ProductTarget.swift in Sources */,
 				0E3ECC692AE4F64D00790CB9 /* PlainItem.swift in Sources */,
@@ -1311,6 +1341,7 @@
 				0EE019BF2A6BCBEA00389A95 /* TokenRefreshResponse.swift in Sources */,
 				5BDD4A442AD48C9500937352 /* MyPageProfileEditViewModel.swift in Sources */,
 				0E9ED8702A938AF6001E1C51 /* KeyValueStorable.swift in Sources */,
+				5BC224572B1F0DCB0032D3CE /* MyPageNotificationModel.swift in Sources */,
 				0E3ECC712AE5135800790CB9 /* AutoResizeableCollectionView.swift in Sources */,
 				0E9BB08D2AD281930002A76D /* ProductInfoView.swift in Sources */,
 				5BDD4A242AC955C100937352 /* MyPageFollowings.swift in Sources */,
@@ -1360,6 +1391,7 @@
 				0EE0192E2A5146EF00389A95 /* UIColor+.swift in Sources */,
 				0EE019472A56EEFE00389A95 /* MyPageViewController.swift in Sources */,
 				0EAF1F2E2ADBC0E200E9A10C /* ArtistSearchDataSource.swift in Sources */,
+				5BC2244D2B188E410032D3CE /* MyPageNotificationViewController.swift in Sources */,
 				0EAF1F342ADBDE4600E9A10C /* SearchResultModel.swift in Sources */,
 				0EE019272A51449300389A95 /* PlainUser.swift in Sources */,
 				0EE255922AC01456008CE0D1 /* SearchDownloadInteractor.swift in Sources */,

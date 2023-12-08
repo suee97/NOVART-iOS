@@ -66,4 +66,9 @@ final class MyPageViewModel {
     func showSetting() {
         coordinator?.navigate(to: .MyPageSetting)
     }
+    
+    @MainActor
+    func showNotification() {
+        coordinator?.navigate(to: .MyPageNotification)
+    }
 }

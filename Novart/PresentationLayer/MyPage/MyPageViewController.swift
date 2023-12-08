@@ -90,9 +90,13 @@ final class MyPageViewController: BaseViewController {
         return button
     }()
     
-    private let notificationButton: UIButton = {
+    private lazy var notificationButton: UIButton = {
         let button = UIButton(frame: Constants.navIconSize)
         button.setBackgroundImage(UIImage(named: "icon_notification2"), for: .normal) // 기존 icon_notification이 존재해서 숫자 2를 붙임. 기존 아이콘 사용 안하는거면 수정이 필요합니다
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.showNotification()
+        }), for: .touchUpInside)
         return button
     }()
     
