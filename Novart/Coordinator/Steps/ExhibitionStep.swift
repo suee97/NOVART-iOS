@@ -1,7 +1,7 @@
 import UIKit
 
 enum ExhibitionStep: Step {
-    case dummy
+    case exhibitionDetail(id: Int64)
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

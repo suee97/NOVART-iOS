@@ -135,7 +135,7 @@ final class ProductDetailViewController: BaseViewController {
         button.setImage(UIImage(named: "icon_close_round"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addAction(UIAction(handler: { [weak self] _ in
-            self?.dismiss(animated: true)
+            self?.viewModel.closeCoordinator()
         }), for: .touchUpInside)
         return button
     }()

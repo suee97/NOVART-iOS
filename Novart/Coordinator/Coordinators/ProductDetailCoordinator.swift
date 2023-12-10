@@ -28,7 +28,7 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep> {
     }
     
     private func showCommentViewController(productId: Int64) {
-        let viewModel = CommentViewModel(productId: productId)
+        let viewModel = CommentViewModel(contentId: productId, contentType: .product)
         let viewController = CommentViewController(viewModel: viewModel)
         
         if let sheet = viewController.sheetPresentationController {

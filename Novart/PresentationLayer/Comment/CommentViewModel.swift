@@ -10,14 +10,21 @@ import Combine
 
 final class CommentViewModel {
 
+    enum ContentType {
+        case product
+        case exhibition
+    }
+    
     private let commentInteractor: CommentInteractor = .init()
     
-    let productId: Int64
+    let contentId: Int64
+    let contentType: ContentType
     
     @Published var comments: [CommentModel] = []
     
-    init(productId: Int64) {
-        self.productId = productId
+    init(contentId: Int64, contentType: ContentType) {
+        self.contentId = contentId
+        self.contentType = contentType
     }
     
 }
@@ -27,7 +34,12 @@ extension CommentViewModel {
         Task { [weak self] in
             do {
                 guard let self else { return }
-                self.comments = try await commentInteractor.fetchComments(productId: self.productId)
+                switch contentType {
+                case .exhibition:
+                    self.comments = try await commentInteractor.fetchExhibitionComments(exhibitionId: self.contentId)
+                case .product:
+                    self.comments = try await commentInteractor.fetchProductComments(productId: self.contentId)
+                }
             } catch {
                 print(error.localizedDescription)
             }
@@ -38,8 +50,15 @@ extension CommentViewModel {
         Task { [weak self] in
             do {
                 guard let self else { return }
-                let comment = try await commentInteractor.writeComment(productId: productId, content: content)
-                self.comments.append(comment)
+                
+                switch contentType {
+                case .exhibition:
+                    let comment = try await commentInteractor.writeExhibitionComment(exhibitionId: self.contentId, content: content)
+                    self.comments.append(comment)
+                case .product:
+                    let comment = try await commentInteractor.writeProductComment(productId: contentId, content: content)
+                    self.comments.append(comment)
+                }
             } catch {
                 print(error.localizedDescription)
             }
