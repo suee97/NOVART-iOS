@@ -47,4 +47,9 @@ final class ExhibitionViewModel {
             })
         }
     }
+    
+    @MainActor
+    func showExhibitionDetail(exhibitionId: Int64) {
+        coordinator.navigate(to: .exhibitionDetail(id: exhibitionId))
+    }
 }

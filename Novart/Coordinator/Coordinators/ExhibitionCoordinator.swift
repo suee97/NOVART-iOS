@@ -16,4 +16,21 @@ final class ExhibitionCoordinator: BaseStackCoordinator<ExhibitionStep> {
         viewController.tabBarItem = tabBarItem
         navigator.start(viewController)
     }
+    
+    override func navigate(to step: ExhibitionStep) {
+        switch step {
+        case let .exhibitionDetail(id):
+            showExhibitionDetailScene(exhibitionId: id)
+        }
+    }
+    
+    private func showExhibitionDetailScene(exhibitionId: Int64) {
+        let root = BaseNavigationController()
+        let stackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
+        let exhibitionDetailCoordinator = ExhibitionDetailCoordinator(navigator: stackNavigator)
+        exhibitionDetailCoordinator.exhibitionId = exhibitionId
+        add(coordinators: exhibitionDetailCoordinator)
+        
+        exhibitionDetailCoordinator.start()
+    }
 }

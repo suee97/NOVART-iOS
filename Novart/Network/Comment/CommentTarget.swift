@@ -9,8 +9,10 @@ import Foundation
 import Alamofire
 
 enum CommentTarget: TargetType {
-    case getComments(productId: Int64)
-    case writeComment(productId: Int64, content: String)
+    case getProductComments(productId: Int64)
+    case writeProductComment(productId: Int64, content: String)
+    case getExhibitionComments(exhibitionId: Int64)
+    case writeExhibitionComment(exhibitionId: Int64, content: String)
     
     var baseURL: String {
         API.baseURL
@@ -18,27 +20,33 @@ enum CommentTarget: TargetType {
     
     var path: String {
         switch self {
-        case let .getComments(id):
+        case let .getProductComments(id):
             return "arts/\(id)/comments"
-        case let .writeComment(id, _):
+        case let .writeProductComment(id, _):
             return "arts/\(id)/comments"
+        case let .getExhibitionComments(id):
+            return "exhibitions/\(id)/comments"
+        case let .writeExhibitionComment(id, _):
+            return "exhibitions/\(id)/comments"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .getComments:
+        case .getProductComments, .getExhibitionComments:
             return .get
-        case .writeComment:
+        case .writeProductComment, .writeExhibitionComment:
             return .post
         }
     }
     
     var parameters: RequestParams {
         switch self {
-        case .getComments:
+        case .getProductComments, .getExhibitionComments:
             return .query(nil)
-        case let .writeComment(_, content):
+        case let .writeProductComment(_, content):
+            return .body(["content": content])
+        case let .writeExhibitionComment(_, content):
             return .body(["content": content])
         }
     }

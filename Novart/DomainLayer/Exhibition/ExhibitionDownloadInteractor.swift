@@ -5,4 +5,8 @@ final class ExhibitionInteractor {
         let exhibitions = try await APIClient.fetchExhibitions()
         return exhibitions
     }
+    
+    func fetchExhibitionDetail(exhibitionId: Int64) async throws -> ExhibitionDetailModel {
+        try await APIClient.fetchExhibitionDetail(exhibitionId: exhibitionId)
+    }
 }
