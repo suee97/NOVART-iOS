@@ -1,5 +1,5 @@
 //
-//  SearchProductModel.swift
+//  ProductModel.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/09/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SearchProductModel: PlainItem, Decodable {
+class ProductModel: PlainItem, Decodable {
     let id: Int64
     let name: String
     let artistNickname: String

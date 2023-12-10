@@ -97,7 +97,7 @@ final class SearchArtistCell: UICollectionViewCell {
 }
 
 extension SearchArtistCell {
-    func update(with data: SearchArtistModel) {
+    func update(with data: ArtistModel) {
         artistLabel.text = data.nickname
         backgroundImageView.image = UIImage(named: "mock_table")
     }

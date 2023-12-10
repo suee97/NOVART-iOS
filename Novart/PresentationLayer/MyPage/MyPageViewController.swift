@@ -39,8 +39,8 @@ final class MyPageViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private var cellSize = Constants.CellSize.InterestCellSize
     private var cellCount = 0
-    private var cellId = MyPageInterestCell.reuseIdentifier
-    private var cellType: UICollectionViewCell.Type = MyPageInterestCell.self
+    private var cellId = ProductCell.reuseIdentifier
+    private var cellType: UICollectionViewCell.Type = ProductCell.self
     private var isHeaderSticky = false
     
     init(viewModel: MyPageViewModel) {
@@ -90,9 +90,13 @@ final class MyPageViewController: BaseViewController {
         return button
     }()
     
-    private let notificationButton: UIButton = {
+    private lazy var notificationButton: UIButton = {
         let button = UIButton(frame: Constants.navIconSize)
         button.setBackgroundImage(UIImage(named: "icon_notification2"), for: .normal) // 기존 icon_notification이 존재해서 숫자 2를 붙임. 기존 아이콘 사용 안하는거면 수정이 필요합니다
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.showNotification()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -142,8 +146,8 @@ final class MyPageViewController: BaseViewController {
             case .Interest:
                 self.cellSize = Constants.CellSize.InterestCellSize
                 self.cellCount = self.viewModel.interests.count
-                self.cellId = MyPageInterestCell.reuseIdentifier
-                self.cellType = MyPageInterestCell.self
+                self.cellId = ProductCell.reuseIdentifier
+                self.cellType = ProductCell.self
             case .Following:
                 self.cellSize = Constants.CellSize.FollowingCellSize
                 self.cellCount = self.viewModel.followings.count
@@ -212,10 +216,11 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         collectionView.register(cellType, forCellWithReuseIdentifier: cellId)
         switch viewModel.selectedCategory {
         case .Interest:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageInterestCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? ProductCell else {
                 return UICollectionViewCell()
             }
-            cell.interest = viewModel.interests[indexPath.row]
+            let item = viewModel.interests[indexPath.row]
+            cell.update(with: item)
             return cell
         case .Following:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageFollowingCell else {
