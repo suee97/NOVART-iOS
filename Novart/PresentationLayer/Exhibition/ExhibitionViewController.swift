@@ -212,7 +212,7 @@ extension ExhibitionViewController: UICollectionViewDelegate, UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let exhibition = viewModel.processedExhibitions[indexPath.row]
-        viewModel.showExhibitionDetail(exhibitionId: exhibition.id)
+        viewModel.showExhibitionDetail(exhibitionId: Int64(exhibition.id))
     }
 }
 
