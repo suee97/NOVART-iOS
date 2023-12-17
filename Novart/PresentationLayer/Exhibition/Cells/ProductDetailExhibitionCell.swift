@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import Kingfisher
 
-final class ExhibitionCellTmp: UICollectionViewCell {
+final class ProductDetailExhibitionCell: UICollectionViewCell {
     
     // MARK: - Constants
     
@@ -90,10 +91,14 @@ final class ExhibitionCellTmp: UICollectionViewCell {
     }
 }
 
-extension ExhibitionCellTmp {
+extension ProductDetailExhibitionCell {
     func update(with data: ExhibitionModel) {
-        titleLabel.text = data.name
-        dateLabel.text = data.date
-        posterImageView.image = UIImage(named: "mock_catalog_poster")
+        titleLabel.text = "전시 이름"
+        dateLabel.text = "2023.08.01~2023.09.01"
+        
+        if let posterUrl = data.posterImageUrl,
+           let url = URL(string: posterUrl) {
+            posterImageView.kf.setImage(with: url)
+        }
     }
 }

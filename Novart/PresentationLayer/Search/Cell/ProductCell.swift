@@ -1,13 +1,14 @@
 //
-//  SearchProductCell.swift
+//  ProductCell.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/09/24.
 //
 
 import UIKit
+import Kingfisher
 
-final class SearchProductCell: UICollectionViewCell {
+final class ProductCell: UICollectionViewCell {
     
     // MARK: - Constants
     
@@ -33,6 +34,7 @@ final class SearchProductCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -115,10 +117,14 @@ final class SearchProductCell: UICollectionViewCell {
     }
 }
 
-extension SearchProductCell {
-    func update(with data: SearchProductModel) {
+extension ProductCell {
+    func update(with data: ProductModel) {
         productLabel.text = data.name
         artistLabel.text = data.artistNickname
-        productImageView.image = UIImage(named: "mock_table")
+        
+        if let thumbnailUrl = data.thumbnailImageUrl,
+           let url = URL(string: thumbnailUrl) {
+            productImageView.kf.setImage(with: url)
+        }
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 struct SearchResultModel {
     let query: String
-    let products: [SearchProductModel]
-    let artists: [SearchArtistModel]
+    let products: [ProductModel]
+    let artists: [ArtistModel]
     let category: CategoryType
 }

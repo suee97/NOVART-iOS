@@ -27,6 +27,11 @@ final class ProductDetailViewModel {
     func showCommentViewController() {
         coordinator?.navigate(to: .comment(productId: productId))
     }
+    
+    @MainActor
+    func closeCoordinator() {
+        coordinator?.close()
+    }
 }
 
 extension ProductDetailViewModel {

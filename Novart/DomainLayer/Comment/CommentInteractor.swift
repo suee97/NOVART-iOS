@@ -8,11 +8,19 @@
 import Foundation
 
 class CommentInteractor {
-    func fetchComments(productId: Int64) async throws -> [CommentModel] {
-        try await APIClient.getComments(productId: productId)
+    func fetchProductComments(productId: Int64) async throws -> [CommentModel] {
+        try await APIClient.getProductComments(productId: productId)
     }
     
-    func writeComment(productId: Int64, content: String) async throws -> CommentModel {
-        try await APIClient.writeComment(productId: productId, content: content)
+    func writeProductComment(productId: Int64, content: String) async throws -> CommentModel {
+        try await APIClient.writeProductComment(productId: productId, content: content)
+    }
+    
+    func fetchExhibitionComments(exhibitionId: Int64) async throws -> [CommentModel] {
+        try await APIClient.getExhibitionComments(exhibitionId: exhibitionId)
+    }
+    
+    func writeExhibitionComment(exhibitionId: Int64, content: String) async throws -> CommentModel {
+        try await APIClient.writeExhibitionComment(exhibitionId: exhibitionId, content: content)
     }
 }

@@ -10,8 +10,8 @@ import UIKit
 typealias RecommendationDataSourceType = UICollectionViewDiffableDataSource<RecommendationDataSource.Section, PlainItem>
 private typealias RecommendationDataSourceeSnapshot = NSDiffableDataSourceSnapshot<RecommendationDataSource.Section, PlainItem>
 
-private typealias ProductCellRegistration = UICollectionView.CellRegistration<SearchProductCell, SearchProductModel>
-private typealias ExhibitionCellRegistration = UICollectionView.CellRegistration<ExhibitionCellTmp, ExhibitionModel>
+private typealias ProductCellRegistration = UICollectionView.CellRegistration<ProductCell, ProductModel>
+private typealias ExhibitionCellRegistration = UICollectionView.CellRegistration<ProductDetailExhibitionCell, ExhibitionModel>
 
 final class RecommendationDataSource: RecommendationDataSourceType {
 
@@ -35,7 +35,7 @@ final class RecommendationDataSource: RecommendationDataSourceType {
         super.init(collectionView: collectionView) { collectionView, indexPath, item in
             
             switch item {
-            case let productItem as SearchProductModel:
+            case let productItem as ProductModel:
                 return collectionView.dequeueConfiguredReusableCell(using: productCellRegistration, for: indexPath, item: productItem)
             case let exhibitionItem as ExhibitionModel:
                 return collectionView.dequeueConfiguredReusableCell(using: exhibitionCellRegistration, for: indexPath, item: exhibitionItem)
