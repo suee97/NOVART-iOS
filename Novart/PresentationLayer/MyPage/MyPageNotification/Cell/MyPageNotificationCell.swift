@@ -106,8 +106,41 @@ final class MyPageNotificationCell: UICollectionViewCell {
     
     // MARK: - Functions
     func update(notification: MyPageNotificationModel) {
-        profileImageView.kf.setImage(with: URL(string: notification.imageUrl))
-        notificationLabel.text = notification.body
-        timeLabel.text = notification.time
+        guard let imgUrl = notification.imgUrl, let url = URL(string: imgUrl) else { return }
+        profileImageView.kf.setImage(with: url)
+        notificationLabel.text = notification.message
+        timeLabel.text = getTimeText(from: notification.createdAt)
+    }
+    
+    private func getTimeText(from createdAt: String) -> String {
+        let current = Date()
+        let dateFormmatter = DateFormatter()
+        
+        dateFormmatter.locale = Locale(identifier: "ko_KR")
+        dateFormmatter.timeZone = TimeZone(abbreviation: "KST")
+        dateFormmatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        let currentDateString = dateFormmatter.string(from: current)
+        guard let currentInterval = dateFormmatter.date(from: currentDateString)?.timeIntervalSince1970 else { return "" }
+        
+        let createdDateString = createdAt.replacingOccurrences(of: "T", with: " ")
+        let startIndex = createdDateString.startIndex
+        let endIndex = createdAt.index(createdDateString.endIndex, offsetBy: -6)
+        
+        guard let createdInterval = dateFormmatter.date(from: String(createdDateString[startIndex...endIndex]))?.timeIntervalSince1970 else { return "" }
+        
+        let diff = Int(currentInterval - createdInterval)
+
+        if diff < 3600 {
+            return "\(diff/60)분 전"
+        } else if diff < 86400 {
+            return "\(diff/3600)시간 전"
+        } else if diff < 604800 {
+            return "\(diff/86400)일 전"
+        } else if diff < 31449600 {
+            return "\(diff/604800)주 전"
+        } else {
+            return "\(diff/31449600)년 전"
+        }
     }
 }

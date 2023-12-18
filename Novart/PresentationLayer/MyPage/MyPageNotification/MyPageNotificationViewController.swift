@@ -83,6 +83,7 @@ final class MyPageNotificationViewController: BaseViewController {
         collectionView.register(MyPageNotificationCell.self, forCellWithReuseIdentifier: MyPageNotificationCell.reuseIdentifier)
         collectionView.bounces = false
         collectionView.delaysContentTouches = false
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.contentInset = UIEdgeInsets(top: Constants.CollectionView.topInset, left: 0, bottom: 0, right: 0)
         return collectionView
     }()
@@ -132,7 +133,7 @@ extension MyPageNotificationViewController: UICollectionViewDelegate, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let textForGetSize: String = viewModel.notifications[indexPath.row].body
+        let textForGetSize: String = viewModel.notifications[indexPath.row].message ?? ""
         let labelHeight = getLabelHeight(text: textForGetSize, font: UIFont.systemFont(ofSize: 16, weight: .medium), width: Constants.CollectionView.notificationLabelWidth)
         return CGSize(width: collectionView.frame.width, height: Constants.CollectionView.defaultCellHeight + labelHeight)
     }
