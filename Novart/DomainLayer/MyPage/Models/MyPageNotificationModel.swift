@@ -1,10 +1,9 @@
 import UIKit
 
-// 임시
 struct MyPageNotificationModel {
     let id: Int
     let type: String
-    let status: String
+    var status: String
     let imgUrl: String?
     let senderId: Int
     let artId: Int

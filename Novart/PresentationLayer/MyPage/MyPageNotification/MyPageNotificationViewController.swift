@@ -17,15 +17,8 @@ final class MyPageNotificationViewController: BaseViewController {
         }
         
         enum CollectionView {
-            static let leftMargin: CGFloat = 8
-            static let rightMargin: CGFloat = 8
-            static let topInset: CGFloat = 16
-            
             static let cellWidth: CGFloat = Constants.screenWidth - 16
-            static let cellSpacing: CGFloat = 24
-            static let defaultCellHeight: CGFloat = 58 // notificationLabel을 고려하지 않은 Cell 높이
-            
-            static let notificationLabelWidth: CGFloat = Constants.screenWidth - 108
+            static let cellSpacing: CGFloat = 0
         }
     }
     
@@ -78,13 +71,14 @@ final class MyPageNotificationViewController: BaseViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = Constants.CollectionView.cellSpacing
+        layout.estimatedItemSize = CGSize(width: Constants.screenWidth, height: 100)
+        layout.itemSize = UICollectionViewFlowLayout.automaticSize
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(MyPageNotificationCell.self, forCellWithReuseIdentifier: MyPageNotificationCell.reuseIdentifier)
         collectionView.bounces = false
         collectionView.delaysContentTouches = false
         collectionView.showsVerticalScrollIndicator = false
-        collectionView.contentInset = UIEdgeInsets(top: Constants.CollectionView.topInset, left: 0, bottom: 0, right: 0)
         return collectionView
     }()
     
@@ -95,9 +89,7 @@ final class MyPageNotificationViewController: BaseViewController {
         
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints({ m in
-            m.left.equalToSuperview().inset(Constants.CollectionView.leftMargin)
-            m.right.equalToSuperview().inset(Constants.CollectionView.rightMargin)
-            m.top.bottom.equalToSuperview()
+            m.edges.equalToSuperview()
         })
     }
     
@@ -106,16 +98,6 @@ final class MyPageNotificationViewController: BaseViewController {
     private func setUpDelegate() {
         collectionView.delegate = self
         collectionView.dataSource = self
-    }
-    
-    private func getLabelHeight(text: String, font: UIFont, width: CGFloat) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
-        label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byWordWrapping
-        label.font = font
-        label.text = text
-        label.sizeToFit()
-        return label.frame.height
     }
 }
 
@@ -132,10 +114,21 @@ extension MyPageNotificationViewController: UICollectionViewDelegate, UICollecti
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let textForGetSize: String = viewModel.notifications[indexPath.row].message ?? ""
-        let labelHeight = getLabelHeight(text: textForGetSize, font: UIFont.systemFont(ofSize: 16, weight: .medium), width: Constants.CollectionView.notificationLabelWidth)
-        return CGSize(width: collectionView.frame.width, height: Constants.CollectionView.defaultCellHeight + labelHeight)
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+        // 셀의 뷰 업데이트
+        guard let cell = collectionView.cellForItem(at: indexPath) as? MyPageNotificationCell else { return }
+        cell.didHighlight(notification: viewModel.notifications[indexPath.row])
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+        // 셀의 뷰 업데이트
+        guard let cell = collectionView.cellForItem(at: indexPath) as? MyPageNotificationCell else { return }
+        cell.didUnHighlight(notification: viewModel.notifications[indexPath.row])
+        
+        // 뷰모델 데이터 변경
+        viewModel.notifications[indexPath.row].status = "READ"
+        
+        // todo - 데이터 보내기
     }
 }
 

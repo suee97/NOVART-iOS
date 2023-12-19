@@ -7,40 +7,43 @@ final class MyPageNotificationCell: UICollectionViewCell {
     private enum Constants {
         
         enum ContentView {
+            static let unreadColor: UIColor = .Common.grey00
+            static let readColor: UIColor = .Common.white
+        }
+        
+        enum SelectionView {
+            static let leftMargin: CGFloat = 8
+            static let rightMargin: CGFloat = 8
+            static let topMargin: CGFloat = 4
+            static let bottomMargin: CGFloat = 4
+            static let selectedColor: UIColor = .Common.grey00
+            static let unSelectedColor: UIColor = .Common.white
             static let radius: CGFloat = 12
-            static let hightlightedColor: UIColor = .Common.grey00
-            static let unHightlightedColor: UIColor = .Common.white
         }
         
         enum ProfileImageView {
-            static let topMargin: CGFloat = 16
-            static let leftMargin: CGFloat = 16
-            static let diameter: CGFloat = 48
-            static let radius: CGFloat = 24
+            static let topMargin: CGFloat = 20
+            static let leftMargin: CGFloat = 24
+            static let diameter: CGFloat = 40
+            static let radius: CGFloat = 20
         }
         
         enum NotificationLabel {
-            static let topMargin: CGFloat = 16
+            static let topMargin: CGFloat = 20
             static let leftMargin: CGFloat = 12
-            static let rightMargin: CGFloat = 16
+            static let rightMargin: CGFloat = 24
             static let color: UIColor = .Common.black
             static let font = UIFont.systemFont(ofSize: 16, weight: .medium)
         }
         
         enum TimeLabel {
-            static let topMargin: CGFloat = 8
+            static let topMargin: CGFloat = 4
+            static let bottomMargin: CGFloat = 20
             static let color: UIColor = .Common.grey02
             static let font = UIFont.systemFont(ofSize: 14, weight: .regular)
         }
     }
     
-    
-    // MARK: - Properties
-    override var isHighlighted: Bool {
-        didSet {
-            contentView.backgroundColor = isHighlighted ? Constants.ContentView.hightlightedColor : Constants.ContentView.unHightlightedColor
-        }
-    }
     
     // MARK: - LifeCycle
     override init(frame: CGRect) {
@@ -54,6 +57,17 @@ final class MyPageNotificationCell: UICollectionViewCell {
     
     
     // MARK: - UI
+    let anchorView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private let selectionView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = Constants.SelectionView.radius
+        return view
+    }()
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -79,11 +93,23 @@ final class MyPageNotificationCell: UICollectionViewCell {
     }()
     
     private func setUpView() {
-        contentView.layer.cornerRadius = Constants.ContentView.radius
-        
+        contentView.addSubview(selectionView)
         contentView.addSubview(profileImageView)
         contentView.addSubview(notificationLabel)
         contentView.addSubview(timeLabel)
+        contentView.addSubview(anchorView)
+        
+        anchorView.snp.makeConstraints({ m in
+            m.left.right.equalToSuperview()
+            m.width.equalTo(UIScreen.main.bounds.width)
+        })
+        
+        selectionView.snp.makeConstraints({ m in
+            m.left.equalToSuperview().inset(Constants.SelectionView.leftMargin)
+            m.right.equalToSuperview().inset(Constants.SelectionView.rightMargin)
+            m.top.equalToSuperview().inset(Constants.SelectionView.topMargin)
+            m.bottom.equalToSuperview().inset(Constants.SelectionView.bottomMargin)
+        })
         
         profileImageView.snp.makeConstraints({ m in
             m.left.equalToSuperview().inset(Constants.ProfileImageView.leftMargin)
@@ -100,6 +126,7 @@ final class MyPageNotificationCell: UICollectionViewCell {
         timeLabel.snp.makeConstraints({ m in
             m.left.equalTo(notificationLabel.snp.left)
             m.top.equalTo(notificationLabel.snp.bottom).offset(Constants.TimeLabel.topMargin)
+            m.bottom.equalToSuperview().inset(Constants.TimeLabel.bottomMargin)
         })
     }
     
@@ -110,6 +137,25 @@ final class MyPageNotificationCell: UICollectionViewCell {
         profileImageView.kf.setImage(with: url)
         notificationLabel.text = notification.message
         timeLabel.text = getTimeText(from: notification.createdAt)
+        
+        if notification.status == "READ" {
+            contentView.backgroundColor = Constants.ContentView.readColor
+            selectionView.backgroundColor = Constants.SelectionView.unSelectedColor
+        } else {
+            contentView.backgroundColor = Constants.ContentView.unreadColor
+            selectionView.backgroundColor = Constants.SelectionView.selectedColor
+        }
+    }
+    
+    func didHighlight(notification: MyPageNotificationModel) {
+        selectionView.backgroundColor = Constants.SelectionView.selectedColor
+    }
+    
+    func didUnHighlight(notification: MyPageNotificationModel) {
+        if notification.status == "UNREAD" {
+            contentView.backgroundColor = Constants.ContentView.readColor
+        }
+        selectionView.backgroundColor = Constants.SelectionView.unSelectedColor
     }
     
     private func getTimeText(from createdAt: String) -> String {
