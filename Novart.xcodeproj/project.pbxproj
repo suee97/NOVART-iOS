@@ -197,17 +197,16 @@
 		5BDD4A122AC955A600937352 /* MyPageHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */; };
 		5BDD4A132AC955A600937352 /* MyPageCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */; };
 		5BDD4A142AC955A600937352 /* MyPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A102AC955A600937352 /* MyPageViewModel.swift */; };
-		5BDD4A1F2AC955C100937352 /* MyPageFollowingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A162AC955C100937352 /* MyPageFollowingCell.swift */; };
 		5BDD4A212AC955C100937352 /* MyPageWorkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A182AC955C100937352 /* MyPageWorkCell.swift */; };
 		5BDD4A222AC955C100937352 /* MyPageExhibitionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A192AC955C100937352 /* MyPageExhibitionCell.swift */; };
 		5BDD4A232AC955C100937352 /* MyPageExhibitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A1B2AC955C100937352 /* MyPageExhibitions.swift */; };
-		5BDD4A242AC955C100937352 /* MyPageFollowings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A1C2AC955C100937352 /* MyPageFollowings.swift */; };
 		5BDD4A252AC955C100937352 /* MyPageInterest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A1D2AC955C100937352 /* MyPageInterest.swift */; };
 		5BDD4A262AC955C100937352 /* MyPageWorks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A1E2AC955C100937352 /* MyPageWorks.swift */; };
 		5BDD4A292AC9561000937352 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5BDD4A282AC9561000937352 /* SnapKit */; };
 		5BDD4A382AD25AC000937352 /* MyPageProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */; };
 		5BDD4A442AD48C9500937352 /* MyPageProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */; };
 		5BDD4A4A2AD6BE1F00937352 /* MyPageProfileEditTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */; };
+		5BFC07D12B32B5CD0063EF89 /* MyPageDownloadInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07D02B32B5CD0063EF89 /* MyPageDownloadInteractor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -395,16 +394,15 @@
 		5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageHeaderView.swift; sourceTree = "<group>"; };
 		5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageCategory.swift; sourceTree = "<group>"; };
 		5BDD4A102AC955A600937352 /* MyPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewModel.swift; sourceTree = "<group>"; };
-		5BDD4A162AC955C100937352 /* MyPageFollowingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageFollowingCell.swift; sourceTree = "<group>"; };
 		5BDD4A182AC955C100937352 /* MyPageWorkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageWorkCell.swift; sourceTree = "<group>"; };
 		5BDD4A192AC955C100937352 /* MyPageExhibitionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageExhibitionCell.swift; sourceTree = "<group>"; };
 		5BDD4A1B2AC955C100937352 /* MyPageExhibitions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageExhibitions.swift; sourceTree = "<group>"; };
-		5BDD4A1C2AC955C100937352 /* MyPageFollowings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageFollowings.swift; sourceTree = "<group>"; };
 		5BDD4A1D2AC955C100937352 /* MyPageInterest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageInterest.swift; sourceTree = "<group>"; };
 		5BDD4A1E2AC955C100937352 /* MyPageWorks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageWorks.swift; sourceTree = "<group>"; };
 		5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditViewController.swift; sourceTree = "<group>"; };
 		5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditViewModel.swift; sourceTree = "<group>"; };
 		5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditTextField.swift; sourceTree = "<group>"; };
+		5BFC07D02B32B5CD0063EF89 /* MyPageDownloadInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageDownloadInteractor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -443,9 +441,9 @@
 				0ECDFC1B2B12035100F63921 /* Comment */,
 				0E3ECC682AE4F64D00790CB9 /* PlainItem.swift */,
 				0ED9F04B2B11FD0800EDCD3C /* Product */,
-				0ED9F04A2B11FC2E00EDCD3C /* MyPage */,
 				0ED9F0482B11FBEA00EDCD3C /* Exhibition */,
 				0ED9F0472B11F8BC00EDCD3C /* Search */,
+				0ED9F04A2B11FC2E00EDCD3C /* MyPage */,
 				0ED9F0462B11F88600EDCD3C /* Home */,
 				0E1E21232AE5652800F15009 /* Login */,
 			);
@@ -711,8 +709,9 @@
 		0ED9F04A2B11FC2E00EDCD3C /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
-				5BDD4A1A2AC955C100937352 /* Models */,
+				5BFC07D02B32B5CD0063EF89 /* MyPageDownloadInteractor.swift */,
 				5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */,
+				5BDD4A1A2AC955C100937352 /* Models */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -1159,7 +1158,6 @@
 		5BDD4A152AC955C100937352 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				5BDD4A162AC955C100937352 /* MyPageFollowingCell.swift */,
 				5BDD4A182AC955C100937352 /* MyPageWorkCell.swift */,
 				5BDD4A192AC955C100937352 /* MyPageExhibitionCell.swift */,
 			);
@@ -1170,7 +1168,6 @@
 			isa = PBXGroup;
 			children = (
 				5BDD4A1B2AC955C100937352 /* MyPageExhibitions.swift */,
-				5BDD4A1C2AC955C100937352 /* MyPageFollowings.swift */,
 				5BDD4A1D2AC955C100937352 /* MyPageInterest.swift */,
 				5BDD4A1E2AC955C100937352 /* MyPageWorks.swift */,
 				5BC224562B1F0DCB0032D3CE /* MyPageNotificationModel.swift */,
@@ -1378,7 +1375,6 @@
 				0ED335672AF9302000DCC40A /* TagView.swift in Sources */,
 				0ED3356D2AF93A1A00DCC40A /* TagCollectionLayout.swift in Sources */,
 				0EE019152A482F0C00389A95 /* AppWindow.swift in Sources */,
-				5BDD4A1F2AC955C100937352 /* MyPageFollowingCell.swift in Sources */,
 				0EE019032A481DC600389A95 /* StackNavigator.swift in Sources */,
 				0EE255882ABC6662008CE0D1 /* CategoryTabButton.swift in Sources */,
 				0EE019312A51495500389A95 /* LoginViewController.swift in Sources */,
@@ -1390,6 +1386,7 @@
 				0EAF1F3F2ADC0EFF00E9A10C /* RecentSearchView.swift in Sources */,
 				0EE0197C2A629DFF00389A95 /* CategoryButton.swift in Sources */,
 				0EE019A82A6BC5ED00389A95 /* HeadersAdapter.swift in Sources */,
+				5BFC07D12B32B5CD0063EF89 /* MyPageDownloadInteractor.swift in Sources */,
 				0E1E212F2AECE43C00F15009 /* CommentViewModel.swift in Sources */,
 				0ECDFC192B1202EB00F63921 /* APIClient+Comment.swift in Sources */,
 				0EE019A42A6BC5AB00389A95 /* APISerializer.swift in Sources */,
@@ -1401,7 +1398,6 @@
 				5BC224572B1F0DCB0032D3CE /* MyPageNotificationModel.swift in Sources */,
 				0E3ECC712AE5135800790CB9 /* AutoResizeableCollectionView.swift in Sources */,
 				0E9BB08D2AD281930002A76D /* ProductInfoView.swift in Sources */,
-				5BDD4A242AC955C100937352 /* MyPageFollowings.swift in Sources */,
 				0E760E7E2B1B111E0051CB6C /* ExhibitionArtCell.swift in Sources */,
 				0E9BB0812AD12DC50002A76D /* ProductDetailViewController.swift in Sources */,
 				0EAF1F242ADAFDDD00E9A10C /* ProductSearchViewController.swift in Sources */,

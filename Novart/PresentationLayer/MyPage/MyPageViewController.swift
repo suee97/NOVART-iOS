@@ -26,10 +26,12 @@ final class MyPageViewController: BaseViewController {
         }
         
         enum CellSize {
-            static let InterestCellSize = CGSize(width: 165, height: 221)
-            static let FollowingCellSize = CGSize(width: 165, height: 110)
-            static let WorkCellSize = CGSize(width: 165, height: 205)
-            static let ExhibitionCellSize = CGSize(width: 165, height: 276)
+            static let cellWidth: CGFloat = (Constants.screenWidth - 60) / 2
+            
+            static let InterestCellSize = CGSize(width: Constants.CellSize.cellWidth, height: Constants.CellSize.cellWidth * (221/165))
+            static let FollowingCellSize = CGSize(width: Constants.CellSize.cellWidth, height: Constants.CellSize.cellWidth * (110/165))
+            static let WorkCellSize = CGSize(width: Constants.CellSize.cellWidth, height: Constants.CellSize.cellWidth * (205/165))
+            static let ExhibitionCellSize = CGSize(width: Constants.screenWidth - 48, height: (Constants.screenWidth - 48) * (525/342))
         }
     }
     
@@ -151,8 +153,8 @@ final class MyPageViewController: BaseViewController {
             case .Following:
                 self.cellSize = Constants.CellSize.FollowingCellSize
                 self.cellCount = self.viewModel.followings.count
-                self.cellId = MyPageFollowingCell.reuseIdentifier
-                self.cellType = MyPageFollowingCell.self
+                self.cellId = SearchArtistCell.reuseIdentifier
+                self.cellType = SearchArtistCell.self
             case .Work:
                 self.cellSize = Constants.CellSize.WorkCellSize
                 self.cellCount = self.viewModel.works.count
@@ -223,19 +225,25 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
             cell.update(with: item)
             return cell
         case .Following:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageFollowingCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? SearchArtistCell else {
                 return UICollectionViewCell()
             }
+            let item = viewModel.followings[indexPath.row]
+            cell.update(with: item)
             return cell
         case .Work:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageWorkCell else {
                 return UICollectionViewCell()
             }
+            let item = viewModel.works[indexPath.row]
+            cell.update(with: item)
             return cell
         case .Exhibition:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageExhibitionCell else {
                 return UICollectionViewCell()
             }
+            let item = viewModel.exhibitions[indexPath.row]
+            cell.update(with: item)
             return cell
         }
     }
