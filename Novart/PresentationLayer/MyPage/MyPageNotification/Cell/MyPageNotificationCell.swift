@@ -171,7 +171,8 @@ final class MyPageNotificationCell: UICollectionViewCell {
         
         let createdDateString = createdAt.replacingOccurrences(of: "T", with: " ")
         let startIndex = createdDateString.startIndex
-        let endIndex = createdAt.index(createdDateString.endIndex, offsetBy: -6)
+        guard let dotIndex = createdAt.firstIndex(of: ".") else { return "" }
+        let endIndex = createdAt.index(before: dotIndex)
         
         guard let createdInterval = dateFormmatter.date(from: String(createdDateString[startIndex...endIndex]))?.timeIntervalSince1970 else { return "" }
         
