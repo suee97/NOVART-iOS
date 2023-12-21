@@ -208,6 +208,9 @@
 		5BDD4A382AD25AC000937352 /* MyPageProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */; };
 		5BDD4A442AD48C9500937352 /* MyPageProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */; };
 		5BDD4A4A2AD6BE1F00937352 /* MyPageProfileEditTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */; };
+		5BFC07CB2B317B450063EF89 /* NotificationTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07CA2B317B450063EF89 /* NotificationTarget.swift */; };
+		5BFC07CD2B317BFD0063EF89 /* APIClient+Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07CC2B317BFD0063EF89 /* APIClient+Notification.swift */; };
+		5BFC07CF2B317CA10063EF89 /* NotificationDownloadInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07CE2B317CA10063EF89 /* NotificationDownloadInteractor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -405,6 +408,9 @@
 		5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditViewController.swift; sourceTree = "<group>"; };
 		5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditViewModel.swift; sourceTree = "<group>"; };
 		5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditTextField.swift; sourceTree = "<group>"; };
+		5BFC07CA2B317B450063EF89 /* NotificationTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTarget.swift; sourceTree = "<group>"; };
+		5BFC07CC2B317BFD0063EF89 /* APIClient+Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIClient+Notification.swift"; sourceTree = "<group>"; };
+		5BFC07CE2B317CA10063EF89 /* NotificationDownloadInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDownloadInteractor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -711,6 +717,7 @@
 		0ED9F04A2B11FC2E00EDCD3C /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				5BFC07CE2B317CA10063EF89 /* NotificationDownloadInteractor.swift */,
 				5BDD4A1A2AC955C100937352 /* Models */,
 				5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */,
 			);
@@ -1012,6 +1019,7 @@
 				0EAF1F352ADBFD2000E9A10C /* Search */,
 				0EA8F82C2A6D0DA900ADFBFB /* Home */,
 				5B97D4B92B1312B1009CEA05 /* Exhibition */,
+				5BFC07C82B317B210063EF89 /* MyPage */,
 				0EE019CB2A6BCD1D00389A95 /* User */,
 				0EE019C22A6BCC7900389A95 /* SignIn */,
 				0EE019AB2A6BC62100389A95 /* Base */,
@@ -1188,6 +1196,15 @@
 			path = MyPageProfileEdit;
 			sourceTree = "<group>";
 		};
+		5BFC07C82B317B210063EF89 /* MyPage */ = {
+			isa = PBXGroup;
+			children = (
+				5BFC07CA2B317B450063EF89 /* NotificationTarget.swift */,
+				5BFC07CC2B317BFD0063EF89 /* APIClient+Notification.swift */,
+			);
+			path = MyPage;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1285,6 +1302,7 @@
 				0E760E8B2B1B35900051CB6C /* ExhibitionDetailModel.swift in Sources */,
 				0E760E822B1B111F0051CB6C /* ExhibitionDetailStep.swift in Sources */,
 				5BB933ED2AF3A876000185D1 /* ExhibitionCoordinator.swift in Sources */,
+				5BFC07CD2B317BFD0063EF89 /* APIClient+Notification.swift in Sources */,
 				5BB933EE2AF3A876000185D1 /* ExhibitionStep.swift in Sources */,
 				5BB933EF2AF3A876000185D1 /* ExhibitionModel.swift in Sources */,
 				0ECDFC152B12022D00F63921 /* CommentModel.swift in Sources */,
@@ -1329,6 +1347,7 @@
 				5BDD4A122AC955A600937352 /* MyPageHeaderView.swift in Sources */,
 				0EA8F81C2A6CFBAA00ADFBFB /* SetNicknameViewController.swift in Sources */,
 				5BDD4A262AC955C100937352 /* MyPageWorks.swift in Sources */,
+				5BFC07CB2B317B450063EF89 /* NotificationTarget.swift in Sources */,
 				0EA8F83B2A90AA9100ADFBFB /* FeedImageDataSource.swift in Sources */,
 				0EE019CA2A6BCCF200389A95 /* SignUpRequestBody.swift in Sources */,
 				0EE019922A6BAFFA00389A95 /* ServiceError.swift in Sources */,
@@ -1379,6 +1398,7 @@
 				0ED3356D2AF93A1A00DCC40A /* TagCollectionLayout.swift in Sources */,
 				0EE019152A482F0C00389A95 /* AppWindow.swift in Sources */,
 				5BDD4A1F2AC955C100937352 /* MyPageFollowingCell.swift in Sources */,
+				5BFC07CF2B317CA10063EF89 /* NotificationDownloadInteractor.swift in Sources */,
 				0EE019032A481DC600389A95 /* StackNavigator.swift in Sources */,
 				0EE255882ABC6662008CE0D1 /* CategoryTabButton.swift in Sources */,
 				0EE019312A51495500389A95 /* LoginViewController.swift in Sources */,

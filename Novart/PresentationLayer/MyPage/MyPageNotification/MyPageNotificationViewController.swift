@@ -40,10 +40,16 @@ final class MyPageNotificationViewController: BaseViewController {
     
     override func setupBindings() {
         viewModel.$notifications.sink(receiveValue: { value in
+            print("📣 notification 개수: \(value.count)")
             self.collectionView.reloadData()
         }).store(in: &cancellables)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.initNotifications()
+        viewModel.fetchNotifications(notificationId: 0)
+    }
     
     // MARK: - UI
     private lazy var backButtonItem: UIBarButtonItem = {
@@ -83,7 +89,6 @@ final class MyPageNotificationViewController: BaseViewController {
     }()
     
     override func setupView() {
-        viewModel.fetchNotifications()
         setUpDelegate()
         view.backgroundColor = Constants.backgroundColor
         
@@ -126,9 +131,26 @@ extension MyPageNotificationViewController: UICollectionViewDelegate, UICollecti
         cell.didUnHighlight(notification: viewModel.notifications[indexPath.row])
         
         // 뷰모델 데이터 변경
-        viewModel.notifications[indexPath.row].status = "READ"
+        viewModel.notifications[indexPath.row].status = .Read
         
-        // todo - 데이터 보내기
+        // todo - 알림 읽었다는 데이터 보내기 + 화면 이동
     }
 }
 
+
+// MARK: - UIScrollViewDelegate
+extension MyPageNotificationViewController {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if viewModel.notifications.isEmpty { return }
+        
+        guard let visibleCells = collectionView.visibleCells as? [MyPageNotificationCell] else { return }
+        let ids = visibleCells.map{ $0.notificationId }
+        
+        if let lastId = viewModel.notifications.last?.id {
+            let isFetched = viewModel.isFetched[lastId] ?? false
+            if !isFetched && ids.contains(lastId) {
+                viewModel.fetchNotifications(notificationId: lastId)
+            }
+        }
+    }
+}

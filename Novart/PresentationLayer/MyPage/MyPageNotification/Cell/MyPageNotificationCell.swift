@@ -56,6 +56,10 @@ final class MyPageNotificationCell: UICollectionViewCell {
     }
     
     
+    // MARK: - Properties
+    var notificationId: Int64?
+    
+    
     // MARK: - UI
     let anchorView: UIView = {
         let view = UIView()
@@ -137,8 +141,9 @@ final class MyPageNotificationCell: UICollectionViewCell {
         profileImageView.kf.setImage(with: url)
         notificationLabel.text = notification.message
         timeLabel.text = getTimeText(from: notification.createdAt)
+        notificationId = notification.id
         
-        if notification.status == "READ" {
+        if notification.status == .Read {
             contentView.backgroundColor = Constants.ContentView.readColor
             selectionView.backgroundColor = Constants.SelectionView.unSelectedColor
         } else {
@@ -152,7 +157,7 @@ final class MyPageNotificationCell: UICollectionViewCell {
     }
     
     func didUnHighlight(notification: MyPageNotificationModel) {
-        if notification.status == "UNREAD" {
+        if notification.status == .UnRead {
             contentView.backgroundColor = Constants.ContentView.readColor
         }
         selectionView.backgroundColor = Constants.SelectionView.unSelectedColor

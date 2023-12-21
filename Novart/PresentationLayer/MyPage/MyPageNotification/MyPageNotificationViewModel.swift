@@ -3,25 +3,36 @@ import Combine
 
 final class MyPageNotificationViewModel {
     private weak var coordinator: MyPageCoordinator?
+    private var downloadInteractor = NotificationDownloadInteractor()
     @Published var notifications = [MyPageNotificationModel]()
+    
+    // ifFetched[notificationId] = notificationId를 통해 데이터를 불러온 적이 있는지를 나타내는 배열
+    var isFetched: [Int64: Bool] = [:]
     
     init(coordinator: MyPageCoordinator) {
         self.coordinator = coordinator
     }
     
-    func fetchNotifications() {
+    @MainActor
+    func fetchNotifications(notificationId: Int64) {
+        isFetched[notificationId] = true
         
-        // 임시
-        var notificationTmp = [MyPageNotificationModel]()
-        
-        for i in 0...10 {
-            notificationTmp.append(MyPageNotificationModel(id: i, type: "FOLLOW", status: "UNREAD", imgUrl: "https://t3.ftcdn.net/jpg/02/30/40/74/240_F_230407433_uF2iM6tUs1Sge24999FWdo241t8FMBi7.jpg", senderId: 0, artId: 0, message: "양용수님이 작가님의 ‘몰입북’ 작품에 댓글을 달았어요 ✏", createdAt: "2023-12-18T05:24:07.241Z"))
-            notificationTmp.append(MyPageNotificationModel(id: i, type: "FOLLOW", status: "READ", imgUrl: "https://t3.ftcdn.net/jpg/02/30/40/74/240_F_230407433_uF2iM6tUs1Sge24999FWdo241t8FMBi7.jpg", senderId: 0, artId: 0, message: "Bang Tae Rim님이 작가님의 ‘FILLING CABINET’ 작품을 관심에 추가했어요 👍", createdAt: "2023-12-18T16:19:07.241Z"))
-            notificationTmp.append(MyPageNotificationModel(id: i, type: "FOLLOW", status: "READ", imgUrl: "https://t3.ftcdn.net/jpg/02/30/40/74/240_F_230407433_uF2iM6tUs1Sge24999FWdo241t8FMBi7.jpg", senderId: 0, artId: 0, message: "Bang Tae Rim님이 작가님을 팔로우해요 👋", createdAt: "2023-06-18T15:24:07.241Z"))
-            notificationTmp.append(MyPageNotificationModel(id: i, type: "FOLLOW", status: "UNREAD", imgUrl: "https://t3.ftcdn.net/jpg/02/30/40/74/240_F_230407433_uF2iM6tUs1Sge24999FWdo241t8FMBi7.jpg", senderId: 0, artId: 0, message: "PLAIN에 오신 것을 환영해요 🎉", createdAt: "2021-06-18T15:24:07.241Z"))
+        Task {
+            do {
+                let items = try await downloadInteractor.fetchNotifications(notificationId: notificationId)
+                let notificationTemp = items.map {
+                    MyPageNotificationModel(id: $0.id, type: MyPageNotificationType(rawValue: $0.type ?? "") ?? MyPageNotificationType.None, status: MyPageNotificationStatus(rawValue: $0.status) ?? MyPageNotificationStatus.UnRead, imgUrl: $0.imgUrl, senderId: $0.senderId, artId: $0.artId, message: $0.message, createdAt: $0.createdAt)
+                }
+                notifications.append(contentsOf: notificationTemp)
+            } catch {
+                print(error.localizedDescription)
+            }
         }
-        
-        notifications = notificationTmp
+    }
+    
+    func initNotifications() {
+        notifications.removeAll()
+        isFetched.removeAll()
     }
     
     @MainActor
