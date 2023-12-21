@@ -130,10 +130,11 @@ extension MyPageNotificationViewController: UICollectionViewDelegate, UICollecti
         guard let cell = collectionView.cellForItem(at: indexPath) as? MyPageNotificationCell else { return }
         cell.didUnHighlight(notification: viewModel.notifications[indexPath.row])
         
-        // 뷰모델 데이터 변경
-        viewModel.notifications[indexPath.row].status = .Read
-        
-        // todo - 알림 읽었다는 데이터 보내기 + 화면 이동
+        if viewModel.notifications[indexPath.row].status == .UnRead {
+            viewModel.notifications[indexPath.row].status = .Read // 뷰모델 데이터 변경
+            viewModel.putNotificationReadStatus(notificationId: viewModel.notifications[indexPath.row].id) // 알림 읽었다는 요청 보내기
+            // todo: 화면이동
+        }
     }
 }
 

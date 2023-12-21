@@ -13,6 +13,19 @@ final class MyPageNotificationViewModel {
         self.coordinator = coordinator
     }
     
+    func initNotifications() {
+        notifications.removeAll()
+        isFetched.removeAll()
+    }
+    
+    @MainActor
+    func showMain() {
+        coordinator?.navigate(to: .MyPageMain)
+    }
+}
+
+extension MyPageNotificationViewModel {
+    
     @MainActor
     func fetchNotifications(notificationId: Int64) {
         isFetched[notificationId] = true
@@ -30,13 +43,13 @@ final class MyPageNotificationViewModel {
         }
     }
     
-    func initNotifications() {
-        notifications.removeAll()
-        isFetched.removeAll()
-    }
-    
-    @MainActor
-    func showMain() {
-        coordinator?.navigate(to: .MyPageMain)
+    func putNotificationReadStatus(notificationId: Int64) {
+        Task {
+            do {
+                try await downloadInteractor.putNotificationReadStatus(notificationId: notificationId)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
