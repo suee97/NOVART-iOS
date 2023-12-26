@@ -18,14 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        Messaging.messaging().delegate = self
-        UNUserNotificationCenter.current().delegate = self
-        
         // Override point for customization after application launch.
+        FirebaseApp.configure()
         configureGoogleSignIn()
         configureKakaoSignIn()
-        FirebaseApp.configure()
         registerNotification()
+        
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
         
         return true
     }
