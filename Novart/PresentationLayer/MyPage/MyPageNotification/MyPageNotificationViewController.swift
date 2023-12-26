@@ -129,12 +129,22 @@ extension MyPageNotificationViewController: UICollectionViewDelegate, UICollecti
         // 셀의 뷰 업데이트
         guard let cell = collectionView.cellForItem(at: indexPath) as? MyPageNotificationCell else { return }
         cell.didUnHighlight(notification: viewModel.notifications[indexPath.row])
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // 셀의 뷰 업데이트
+        guard let cell = collectionView.cellForItem(at: indexPath) as? MyPageNotificationCell else { return }
+        cell.didSelect(notification: viewModel.notifications[indexPath.row])
         
         if viewModel.notifications[indexPath.row].status == .UnRead {
-            viewModel.notifications[indexPath.row].status = .Read // 뷰모델 데이터 변경
-            viewModel.putNotificationReadStatus(notificationId: viewModel.notifications[indexPath.row].id) // 알림 읽었다는 요청 보내기
-            // todo: 화면이동
+            // 뷰모델 데이터 변경
+            viewModel.notifications[indexPath.row].status = .Read
+            
+            // 알림 확인 API 요청
+            viewModel.putNotificationReadStatus(notificationId: viewModel.notifications[indexPath.row].id)
         }
+        
+        // todo: 화면 이동
     }
 }
 

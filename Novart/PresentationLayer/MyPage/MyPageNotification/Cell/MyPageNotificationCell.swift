@@ -157,10 +157,18 @@ final class MyPageNotificationCell: UICollectionViewCell {
     }
     
     func didUnHighlight(notification: MyPageNotificationModel) {
+        if notification.status == .Read {
+            contentView.backgroundColor = Constants.ContentView.readColor
+            selectionView.backgroundColor = Constants.SelectionView.unSelectedColor
+        } else {
+            contentView.backgroundColor = Constants.ContentView.unreadColor
+        }
+    }
+    
+    func didSelect(notification: MyPageNotificationModel) {
         if notification.status == .UnRead {
             contentView.backgroundColor = Constants.ContentView.readColor
         }
-        selectionView.backgroundColor = Constants.SelectionView.unSelectedColor
     }
     
     private func getTimeText(from createdAt: String) -> String {
