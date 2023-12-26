@@ -8,17 +8,25 @@
 import UIKit
 import GoogleSignIn
 import KakaoSDKCommon
+import Firebase
+import FirebaseMessaging
 
 @main
-class AppDelegate: UIResponder {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        
         // Override point for customization after application launch.
         configureGoogleSignIn()
         configureKakaoSignIn()
-        registerForPushNotifications()
+        FirebaseApp.configure()
+        registerNotification()
+        
         return true
     }
 
@@ -52,34 +60,29 @@ private extension AppDelegate {
 
 
 // MARK: - Push Notification
-extension AppDelegate: UIApplicationDelegate {
-    func registerForPushNotifications() {
-        UNUserNotificationCenter.current()
-            .requestAuthorization(
-                options: [.alert, .sound, .badge]) { [weak self] granted, _ in
-                    print("🔔🔔🔔 Push Notification Permission granted: \(granted)")
-                    guard granted else { return }
-                    
-                    self?.getNotificationSettings()
-                }
-    }
-    
-    func getNotificationSettings() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            guard settings.authorizationStatus == .authorized else { return }
-            DispatchQueue.main.async {
-                UIApplication.shared.registerForRemoteNotifications()
-            }
+extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
+    func registerNotification() {
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, _ in
+            print("🔔🔔🔔 Push Notification granted: \(granted)")
         }
+        UIApplication.shared.registerForRemoteNotifications()
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
-        let token = tokenParts.joined()
-        print("🔔🔔🔔 Device Token: \(token)")
+        Messaging.messaging().apnsToken = deviceToken
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound, .badge])
     }
     
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("🔔🔔🔔 Failed to register: \(error)")
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        
+        // Firebase Token
+        print("🔔🔔🔔 FCM Token: \(fcmToken)")
+        
+        // todo: 서버에 보내기
+        
     }
 }
