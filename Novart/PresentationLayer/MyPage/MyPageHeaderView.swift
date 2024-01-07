@@ -9,6 +9,7 @@ final class MyPageHeaderView: UICollectionReusableView {
         static let categoryBarSize = (width: 1, height: 16)
         static let categoryViewSize = (width: 342, height: 44)
         static let categoryRadius: CGFloat = 12
+        static let profileLabelTextColor = UIColor.Common.black
         
         enum Sticky {
             static let backgroundHeight: CGFloat = 201
@@ -76,6 +77,7 @@ final class MyPageHeaderView: UICollectionReusableView {
     
     lazy var profileLabel: UILabel = {
         let label = UILabel()
+        label.textColor = Constants.profileLabelTextColor
         label.text = "게스트"
         label.font = Constants.NonSticky.profileFont
         label.isUserInteractionEnabled = true

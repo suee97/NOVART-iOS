@@ -206,7 +206,6 @@
 		5BDD4A382AD25AC000937352 /* MyPageProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */; };
 		5BDD4A442AD48C9500937352 /* MyPageProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */; };
 		5BDD4A4A2AD6BE1F00937352 /* MyPageProfileEditTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */; };
-		5BFC07D12B32B5CD0063EF89 /* MyPageDownloadInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07D02B32B5CD0063EF89 /* MyPageDownloadInteractor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -402,7 +401,6 @@
 		5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditViewController.swift; sourceTree = "<group>"; };
 		5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditViewModel.swift; sourceTree = "<group>"; };
 		5BDD4A492AD6BE1F00937352 /* MyPageProfileEditTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditTextField.swift; sourceTree = "<group>"; };
-		5BFC07D02B32B5CD0063EF89 /* MyPageDownloadInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageDownloadInteractor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -709,7 +707,6 @@
 		0ED9F04A2B11FC2E00EDCD3C /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
-				5BFC07D02B32B5CD0063EF89 /* MyPageDownloadInteractor.swift */,
 				5BDD4A0F2AC955A600937352 /* MyPageCategory.swift */,
 				5BDD4A1A2AC955C100937352 /* Models */,
 			);
@@ -1386,7 +1383,6 @@
 				0EAF1F3F2ADC0EFF00E9A10C /* RecentSearchView.swift in Sources */,
 				0EE0197C2A629DFF00389A95 /* CategoryButton.swift in Sources */,
 				0EE019A82A6BC5ED00389A95 /* HeadersAdapter.swift in Sources */,
-				5BFC07D12B32B5CD0063EF89 /* MyPageDownloadInteractor.swift in Sources */,
 				0E1E212F2AECE43C00F15009 /* CommentViewModel.swift in Sources */,
 				0ECDFC192B1202EB00F63921 /* APIClient+Comment.swift in Sources */,
 				0EE019A42A6BC5AB00389A95 /* APISerializer.swift in Sources */,
