@@ -1,7 +1,7 @@
 import UIKit
 import SnapKit
 
-class PlainButton: UIButton {
+final class PlainButton: UIButton {
     
     private enum Constants {
         static let buttonRadius: CGFloat = 12

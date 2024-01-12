@@ -1,7 +1,39 @@
 import Foundation
 
 final class MyPageDownloadInteractor {
-    func fetchUserInfo() async throws -> PlainUser {
+    func fetchMyPageInterests(userId: Int64) async throws -> [ProductModel] {
+        try await APIClient.fetchMyPageInterests(userId: userId)
+    }
+    
+    func fetchMyPageFollowings(userId: Int64) async throws -> [ArtistModel] {
+        try await APIClient.fetchMyPageFollowings(userId: userId)
+    }
+    
+    func fetchMyPageWorks(userId: Int64) async throws -> [MyPageWork] {
+        try await APIClient.fetchMyPageWorks(userId: userId)
+    }
+    
+    func fetchMyPageExhibitions(userId: Int64) async throws -> [MyPageExhibition] {
+        try await APIClient.fetchMyPageExhibitions(userId: userId)
+    }
+    
+    func fetchMyPageUserInfo(userId: Int64) async throws -> MyPageUserInfo {
+        try await APIClient.fetchMyPageUserInfo(userId: userId)
+    }
+    
+    func checkDuplicateNickname(nickname: String) async throws -> Bool {
+        try await APIClient.checkDuplicateNickname(nickname: nickname)
+    }
+    
+    func requestPresignedUrl(filename: String, category: String) async throws -> PresignedUrlModel {
+        try await APIClient.requestPresignedUrl(filename: filename, category: category)
+    }
+    
+    func profileEdit(profileEditRequestBodyModel: ProfileEditRequestBodyModel) async throws -> ProfileEditRequestBodyModel {
+        try await APIClient.profileEdit(profileEditRequestBodyModel: profileEditRequestBodyModel)
+    }
+    
+    func getUser() async throws -> PlainUser {
         try await APIClient.getUser()
     }
 }

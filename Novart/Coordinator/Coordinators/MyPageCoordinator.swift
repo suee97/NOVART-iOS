@@ -41,7 +41,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     }
     
     private func showProfileEdit() {
-        let viewModel = MyPageProfileEditViewModel(coordinator: self)
+        guard let user = Authentication.shared.user else { return }
+        let viewModel = MyPageProfileEditViewModel(coordinator: self, user: user)
         let viewController = MyPageProfileEditViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }

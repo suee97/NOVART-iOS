@@ -1,86 +1,109 @@
 import UIKit
 import SnapKit
 import Combine
+import Kingfisher
+import Lottie
 
 final class MyPageProfileEditViewController: BaseViewController {
 
     // MARK: - Constants
     private enum Constants {
+        static let screenWidth = UIScreen.main.bounds.size.width
+        static let screenHeight = UIScreen.main.bounds.size.height
+        static func getRelativeWidth(from width: CGFloat) -> CGFloat {
+            Constants.screenWidth * (width/390)
+        }
+        static func getRelativeHeight(from height: CGFloat) -> CGFloat {
+            Constants.screenHeight * (height/844)
+        }
+        
         enum CommonLayout {
-            static let horizontalMargin: CGFloat = 24
-            static let fieldTopMargin: CGFloat = 8
-            static let fieldHeight: CGFloat = 49
+            static let horizontalMargin: CGFloat = getRelativeWidth(from: 24)
+            static let fieldTopMargin: CGFloat = getRelativeHeight(from: 8)
+            static let fieldHeight: CGFloat = getRelativeHeight(from: 49)
         }
         
         enum Navigation {
-            static let centerTitle: String = "프로필 편집"
-            static let applyTitle: String = "저장"
             static let buttonSize = CGRect(origin: CGPoint.zero, size: CGSize(width: 24, height: 24))
             static let buttonFont = UIFont.systemFont(ofSize: 16, weight: .medium)
             static let titleFont = UIFont.systemFont(ofSize: 16, weight: .bold)
+            static let centerTitle: String = "프로필 편집"
+            static let applyTitle: String = "완료"
+            static let applyActiveColor = UIColor.Common.main
+            static let applyInActiveColor = UIColor.Common.grey02
+            static let loadingViewSize = CGRect(origin: CGPoint.zero, size: CGSize(width: 24, height: 24))
         }
         
         enum ProfileImage {
             static let title: String = "프로필 사진"
-            static let titleTopMargin: CGFloat = 16
-            static let imageDiameter: CGFloat = 100
-            static let imageSize = CGSize(width: 100, height: 100)
-            static let imageTopMargin: CGFloat = 8
-            static let cameraRightMargin: CGFloat = 2
-            static let cameraBottomMargin: CGFloat = 2
-            static let cameraDiameter: CGFloat = 24
+            static let titleTopMargin: CGFloat = getRelativeHeight(from: 16)
+            static let imageDiameter: CGFloat = getRelativeWidth(from: 100)
+            static let imageSize = CGSize(width: getRelativeWidth(from: 100), height: getRelativeWidth(from: 100))
+            static let imageTopMargin: CGFloat = getRelativeHeight(from: 8)
+            static let cameraRightMargin: CGFloat = getRelativeWidth(from: 2)
+            static let cameraBottomMargin: CGFloat = getRelativeHeight(from: 2)
+            static let cameraDiameter: CGFloat = getRelativeWidth(from: 24)
             static let cameraAlpha: CGFloat = 0.5
         }
         
         enum BackgroundImage {
             static let title: String = "배경 사진"
-            static let titleLeftMargin: CGFloat = 78
-            static let titleTopMargin: CGFloat = 16
-            static let imageSize = CGSize(width: 178, height: 100)
-            static let imageLeftMargin: CGFloat = 52
-            static let imageTopMargin: CGFloat = 8
+            static let titleLeftMargin: CGFloat = getRelativeWidth(from: 78)
+            static let titleTopMargin: CGFloat = getRelativeHeight(from: 16)
+            static let imageSize = CGSize(width: getRelativeWidth(from: 178), height: getRelativeHeight(from: 100))
+            static let imageLeftMargin: CGFloat = getRelativeWidth(from: 52)
+            static let imageTopMargin: CGFloat = getRelativeHeight(from: 8)
             static let imageRadius: CGFloat = 12
-            static let cameraOrigin = CGPoint(x: 77, y: 38)
-            static let cameraSize = CGSize(width: 24, height: 24)
+            static let cameraOrigin = CGPoint(x: getRelativeWidth(from: 77), y: getRelativeHeight(from: 38))
+            static let cameraSize = CGSize(width: getRelativeWidth(from: 24), height: getRelativeWidth(from: 24))
             static let cameraAlpha: CGFloat = 0.5
         }
         
         enum Nickname {
             enum Label {
                 static let title: String = "닉네임*"
-                static let topMargin: CGFloat = 32
+                static let topMargin: CGFloat = getRelativeHeight(from: 32)
             }
             
             enum Field {
                 static let placeHolder: String = "활동할 닉네임 입력"
                 static let maxCount: Int = 15
-                static let width: CGFloat = 264
+                static let width: CGFloat = getRelativeWidth(from: 264)
             }
             
             enum Count {
-                static let textColor = UIColor(red: 255/255, green: 62/255, blue: 49/255, alpha: 1)
+                static let textColor = UIColor.Common.main
                 static let font = UIFont.systemFont(ofSize: 12, weight: .regular)
-                static let topMargin: CGFloat = 4
+                static let topMargin: CGFloat = getRelativeHeight(from: 4)
             }
             
-            enum DupCheck {
+            enum DupCheckResultLabel {
+                static let possibleTextColor = UIColor.Common.grey04
+                static let possibleText = "사용 가능한 닉네임입니다."
+                static let impossibleTextColor = UIColor(red: 255/255, green: 62/255, blue: 49/255, alpha: 1)
+                static let impossibleText = "이미 존재하는 닉네임입니다."
+                
+                static let font = UIFont.systemFont(ofSize: 12, weight: .regular)
+                static let topMargin: CGFloat = getRelativeHeight(from: 4)
+                static let leftMargin: CGFloat = getRelativeWidth(from: 36)
+            }
+            
+            enum DupCheckButton {
                 static let title: String = "중복확인"
                 static let font = UIFont.systemFont(ofSize: 14, weight: .medium)
-                static let radius: CGFloat = 12
                 static let activeBackgroundColor = UIColor.Common.main
                 static let activeForegroundColor = UIColor.Common.white
                 static let inActiveBackgroundColor = UIColor.Common.grey00
                 static let inActiveForegroundColor = UIColor.Common.grey01
                 
-                static let leftMargin: CGFloat = 4
-                static let width: CGFloat = 74
+                static let leftMargin: CGFloat = getRelativeWidth(from: 4)
             }
         }
         
         enum Category {
             enum Label {
                 static let title: String = "카테고리"
-                static let topMargin: CGFloat = 32
+                static let topMargin: CGFloat = getRelativeHeight(from: 32)
             }
             
             enum Count {
@@ -91,7 +114,7 @@ final class MyPageProfileEditViewController: BaseViewController {
             }
             
             enum TagView {
-                static let topMargin: CGFloat = 8
+                static let topMargin: CGFloat = getRelativeHeight(from: 8)
                 static let height: CGFloat = 116
             }
         }
@@ -99,7 +122,7 @@ final class MyPageProfileEditViewController: BaseViewController {
         enum Tag {
             enum Label {
                 static let title: String = "태그"
-                static let topMargin: CGFloat = 32
+                static let topMargin: CGFloat = getRelativeHeight(from: 32)
             }
             
             enum Field {
@@ -117,34 +140,34 @@ final class MyPageProfileEditViewController: BaseViewController {
                 static let title: String = "추천태그"
                 static let font = UIFont.systemFont(ofSize: 14, weight: .semibold)
                 static let color = UIColor.Common.grey04
-                static let topMargin: CGFloat = 8
-                static let width: CGFloat = 73
-                static let height: CGFloat = 24
+                static let topMargin: CGFloat = getRelativeHeight(from: 8)
+                static let width: CGFloat = getRelativeWidth(from: 73)
+                static let height: CGFloat = getRelativeHeight(from: 24)
                 static let upImage = UIImage(named: "icon_chevron_up_v2")
                 static let downImage = UIImage(named: "icon_chevron_down_v2")
             }
             
             enum TagView {
-                static let topMargin: CGFloat = 8
+                static let topMargin: CGFloat = getRelativeHeight(from: 8)
                 static let heigth: CGFloat = 236
             }
         }
         
         enum Email {
             static let title: String = "이메일"
-            static let titleTopMargin: CGFloat = 32
+            static let titleTopMargin: CGFloat = getRelativeHeight(from: 32)
             static let placeHolder: String = "소통할 이메일 입력"
         }
         
         enum Link {
             enum Label {
                 static let title: String = "링크"
-                static let topMargin: CGFloat = 32
+                static let topMargin: CGFloat = getRelativeHeight(from: 32)
             }
             
             enum Field {
                 static let placeHolder: String = "소통할 카카오톡 오픈채팅방 입력"
-                static let bottomMargin: CGFloat = 22
+                static let bottomMargin: CGFloat = getRelativeHeight(from: 22)
             }
         }
     }
@@ -155,7 +178,32 @@ final class MyPageProfileEditViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private let profilePicker = UIImagePickerController()
     private let backgroundPicker = UIImagePickerController()
+    
+    private var isKeyboardShowing = false
     private var recommendExpanded: Bool = false
+    private var nicknameDupChecked: Bool = true {
+        didSet {
+            if nicknameDupChecked {
+                applyButton.setTitleColor(Constants.Navigation.applyActiveColor, for: .normal)
+                applyButton.isEnabled = true
+            } else {
+                applyButton.setTitleColor(Constants.Navigation.applyInActiveColor, for: .normal)
+                applyButton.isEnabled = false
+            }
+        }
+    }
+    
+    private lazy var userData = ProfileEditUserDataModel(
+        nickname: viewModel.user.nickname, 
+        profileFileName: nil,
+        profileImage: nil,
+        profileImageUrl: viewModel.user.profileImageUrl,
+        backgroundFileName: nil,
+        backgroundImage: nil,
+        backgroundImageUrl: viewModel.user.backgroundImageUrl,
+        email: viewModel.user.email,
+        link: viewModel.user.openChatUrl
+    )
     
     init(viewModel: MyPageProfileEditViewModel) {
         self.viewModel = viewModel
@@ -173,13 +221,18 @@ final class MyPageProfileEditViewController: BaseViewController {
         setUpDelegate()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        setupCategoryTagData()
+    override func viewWillAppear(_ animated: Bool) {
+        setUpKeyboardObserver()
+        setupNavigationBar()
     }
     
-    deinit {
-        print("MyPageProfileEditViewController deinit()")
+    override func viewWillDisappear(_ animated: Bool) {
+        removeKeyboardObserver()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setupTagViewData()
     }
     
     override func setupBindings() {
@@ -196,19 +249,65 @@ final class MyPageProfileEditViewController: BaseViewController {
             self.tagCurCountLabel.text = String(value)
             self.tagCurCountLabel.textColor = value == 0 ? Constants.Tag.Count.defaultColor : Constants.Tag.Count.activeColor
         }).store(in: &cancellables)
+        
+        viewModel.$isLoading.sink(receiveValue: { value in
+            DispatchQueue.main.async {
+                if value {
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.loadingView)
+                    self.loadingView.play()
+                } else {
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.applyButton)
+                    self.loadingView.pause()
+                }
+            }
+        }).store(in: &cancellables)
     }
     
     
     // MARK: - UI
-    private let scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.bounces = false
+        scrollView.showsVerticalScrollIndicator = false
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        gesture.cancelsTouchesInView = false
+        scrollView.addGestureRecognizer(gesture)
         return scrollView
     }()
     
     private let contentView: UIView = {
         let view = UIView()
         view.isUserInteractionEnabled = true
+        return view
+    }()
+    
+    private lazy var cancelButton: UIButton = {
+        let button = UIButton(frame: Constants.Navigation.buttonSize)
+        button.setImage(UIImage(named: "icon_cancel"), for: .normal)
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.onTapCancel()
+        }), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var applyButton: UIButton = {
+        let button = UIButton(frame: Constants.Navigation.buttonSize)
+        button.setTitle(Constants.Navigation.applyTitle, for: .normal)
+        button.titleLabel?.font = Constants.Navigation.buttonFont
+        button.setTitleColor(Constants.Navigation.applyActiveColor, for: .normal)
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.onTapApply()
+        }), for: .touchUpInside)
+        return button
+    }()
+    
+    private let loadingView: LottieAnimationView = {
+        let view = LottieAnimationView(name: "loading_json")
+        view.frame = Constants.Navigation.loadingViewSize
+        view.loopMode = .loop
+        view.pause()
         return view
     }()
     
@@ -220,14 +319,32 @@ final class MyPageProfileEditViewController: BaseViewController {
     private let emailLabel = ProfileEditLabel(title: Constants.Email.title)
     private let linkLabel = ProfileEditLabel(title: Constants.Link.Label.title)
     
-    private let nicknameField = ProfileEditTextField(placeholder: Constants.Nickname.Field.placeHolder)
-    private lazy var tagField: ProfileEditTextField = {
-        let textField = ProfileEditTextField(placeholder: Constants.Tag.Field.placeHolder)
-        textField.addTarget(self, action: #selector(tagFieldDidChanged(_:)), for: .editingChanged)
+    private lazy var nicknameField: ProfileEditTextField = {
+        let textField = ProfileEditTextField(placeholder: Constants.Nickname.Field.placeHolder)
+        textField.text = viewModel.user.nickname
+        textField.addTarget(self, action: #selector(textFieldDidchanged(_:)), for: .editingChanged)
         return textField
     }()
-    private let emailField = ProfileEditTextField(placeholder: Constants.Email.placeHolder)
-    private let linkField = ProfileEditTextField(placeholder: Constants.Link.Field.placeHolder)
+    
+    private lazy var tagField: ProfileEditTextField = {
+        let textField = ProfileEditTextField(placeholder: Constants.Tag.Field.placeHolder)
+        textField.addTarget(self, action: #selector(textFieldDidchanged(_:)), for: .editingChanged)
+        return textField
+    }()
+    
+    private lazy var emailField: ProfileEditTextField = {
+        let textField = ProfileEditTextField(placeholder: Constants.Email.placeHolder)
+        textField.text = viewModel.user.email
+        textField.addTarget(self, action: #selector(textFieldDidchanged(_:)), for: .editingChanged)
+        return textField
+    }()
+    
+    private lazy var linkField: ProfileEditTextField = {
+        let textField = ProfileEditTextField(placeholder: Constants.Link.Field.placeHolder)
+        textField.text = viewModel.user.openChatUrl
+        textField.addTarget(self, action: #selector(textFieldDidchanged(_:)), for: .editingChanged)
+        return textField
+    }()
     
     private let profileCameraView: UIImageView = {
         let imageView = UIImageView()
@@ -238,7 +355,6 @@ final class MyPageProfileEditViewController: BaseViewController {
     
     private lazy var profileImageView: UIImageView = {
         let profileImageView = UIImageView(frame: CGRect(origin: CGPoint.zero, size: Constants.ProfileImage.imageSize))
-        profileImageView.image = UIImage(named: "default_user_profile_image")
         profileImageView.layer.cornerRadius = Constants.ProfileImage.imageDiameter / 2
         profileImageView.clipsToBounds = true
         profileImageView.isUserInteractionEnabled = true
@@ -247,12 +363,17 @@ final class MyPageProfileEditViewController: BaseViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapProfileImage))
         profileImageView.addGestureRecognizer(gesture)
         
+        guard let urlString = viewModel.user.profileImageUrl, let url = URL(string: urlString) else {
+            profileImageView.image = UIImage(named: "default_user_profile_image")
+            return profileImageView
+        }
+        
+        profileImageView.kf.setImage(with: url)
         return profileImageView
     }()
     
     private lazy var backgroundImageView: UIImageView = {
         let backgroundImageView = UIImageView(frame: CGRect(origin: CGPoint.zero, size: Constants.BackgroundImage.imageSize))
-        backgroundImageView.image = UIImage(named: "default_user_background_image")
         backgroundImageView.layer.cornerRadius = Constants.BackgroundImage.imageRadius
         backgroundImageView.clipsToBounds = true
         backgroundImageView.isUserInteractionEnabled = true
@@ -266,6 +387,13 @@ final class MyPageProfileEditViewController: BaseViewController {
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapBackgroundImage))
         backgroundImageView.addGestureRecognizer(gesture)
+        
+        guard let urlString = viewModel.user.backgroundImageUrl, let url = URL(string: urlString) else {
+            backgroundImageView.image = UIImage(named: "default_user_background_image")
+            return backgroundImageView
+        }
+        
+        backgroundImageView.kf.setImage(with: url)
         
         return backgroundImageView
     }()
@@ -285,20 +413,30 @@ final class MyPageProfileEditViewController: BaseViewController {
         
         label.font = Constants.Nickname.Count.font
         label.text = String(length)
-        label.textColor = length > 0 ? Constants.Nickname.Count.textColor : .Common.grey03
+        label.textColor = Constants.Nickname.Count.textColor
         return label
     }()
     
-    private lazy var nicknameDupCheckButton: UIButton = {
-        let button = UIButton()
-        button.setTitle(Constants.Nickname.DupCheck.title, for: .normal)
-        button.backgroundColor = Constants.Nickname.DupCheck.inActiveBackgroundColor
-        button.setTitleColor(Constants.Nickname.DupCheck.inActiveForegroundColor, for: .normal)
-        button.layer.cornerRadius = Constants.Nickname.DupCheck.radius
-        button.titleLabel?.font = Constants.Nickname.DupCheck.font
+    private let nicknameDupCheckResultLabel: UILabel = {
+        let label = UILabel()
+        label.font = Constants.Nickname.DupCheckResultLabel.font
+        return label
+    }()
+    
+    private lazy var nicknameDupCheckButton: PlainButton = {
+        let button = PlainButton()
+        button.setTitle(Constants.Nickname.DupCheckButton.title, for: .normal)
+        button.titleLabel?.font = Constants.Nickname.DupCheckButton.font
+        button.backgroundColor = Constants.Nickname.DupCheckButton.inActiveBackgroundColor
+        button.setTitleColor(Constants.Nickname.DupCheckButton.inActiveForegroundColor, for: .normal)
+        button.isEnabled = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.onTapNicknameDupCheckButton()
+        }), for: .touchUpInside)
         return button
     }()
-
+    
     private lazy var categoryTagView = TagView()
     
     private let categoryMaxCountLabel: UILabel = {
@@ -332,7 +470,7 @@ final class MyPageProfileEditViewController: BaseViewController {
     }()
     
     private let recommendButtonImageView: UIImageView = {
-        let imageView = UIImageView(image: Constants.Tag.Recommend.upImage)
+        let imageView = UIImageView(image: Constants.Tag.Recommend.downImage)
         return imageView
     }()
     
@@ -376,6 +514,7 @@ final class MyPageProfileEditViewController: BaseViewController {
         contentView.addSubview(nicknameMaxCountLabel)
         contentView.addSubview(nicknameCurCountLabel)
         contentView.addSubview(nicknameField)
+        contentView.addSubview(nicknameDupCheckResultLabel)
         contentView.addSubview(nicknameDupCheckButton)
         contentView.addSubview(categoryLabel)
         contentView.addSubview(categoryMaxCountLabel)
@@ -452,9 +591,14 @@ final class MyPageProfileEditViewController: BaseViewController {
             m.right.equalTo(nicknameMaxCountLabel.snp.left)
         })
         
+        nicknameDupCheckResultLabel.snp.makeConstraints({ m in
+            m.left.equalToSuperview().inset(Constants.Nickname.DupCheckResultLabel.leftMargin)
+            m.top.equalTo(nicknameField.snp.bottom).offset(Constants.Nickname.DupCheckResultLabel.topMargin)
+        })
+        
         nicknameDupCheckButton.snp.makeConstraints({ m in
-            m.left.equalTo(nicknameField.snp.right).offset(Constants.Nickname.DupCheck.leftMargin)
-            m.width.equalTo(Constants.Nickname.DupCheck.width)
+            m.left.equalTo(nicknameField.snp.right).offset(Constants.Nickname.DupCheckButton.leftMargin)
+            m.right.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
             m.height.centerY.equalTo(nicknameField)
         })
         
@@ -515,7 +659,7 @@ final class MyPageProfileEditViewController: BaseViewController {
         
         emailLabel.snp.makeConstraints({ m in
             m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
-            m.top.equalTo(recommendTagView.snp.bottom).offset(Constants.Email.titleTopMargin) // 임시
+            m.top.equalTo(recommendTagView.snp.bottom).offset(Constants.Email.titleTopMargin)
         })
         
         emailField.snp.makeConstraints({ m in
@@ -542,38 +686,18 @@ final class MyPageProfileEditViewController: BaseViewController {
     private func setUpDelegate() {
         nicknameField.delegate = self
         tagField.delegate = self
+        emailField.delegate = self
+        linkField.delegate = self
         profilePicker.delegate = self
         backgroundPicker.delegate = self
         categoryTagView.delegate = self
         recommendTagView.delegate = self
     }
     
-    private func setupCategoryTagData() {
+    private func setupTagViewData() {
         categoryTagView.applyItems(viewModel.categoryTagItems)
         recommendTagView.applyItems(viewModel.recommendTagItems)
     }
-    
-    private lazy var cancelButton: UIButton = {
-        let button = UIButton(frame: Constants.Navigation.buttonSize)
-        button.setImage(UIImage(named: "icon_cancel"), for: .normal)
-        button.addAction(UIAction(handler: { [weak self] _ in
-            guard let self else { return }
-            self.onTapCancel()
-        }), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var applyButton: UIButton = {
-        let button = UIButton(frame: Constants.Navigation.buttonSize)
-        button.setTitle(Constants.Navigation.applyTitle, for: .normal)
-        button.titleLabel?.font = Constants.Navigation.buttonFont
-        button.setTitleColor(.Common.grey02, for: .normal)
-        button.addAction(UIAction(handler: { [weak self] _ in
-            guard let self else { return }
-            self.onTapApply()
-        }), for: .touchUpInside)
-        return button
-    }()
     
     override func setupNavigationBar() {
         navigationItem.title = Constants.Navigation.centerTitle
@@ -591,8 +715,7 @@ final class MyPageProfileEditViewController: BaseViewController {
     }
     
     private func onTapApply() {
-        // 변경사항 적용
-        viewModel.showMain()
+        viewModel.applyChanges(userData: userData)
     }
     
     @objc private func onTapProfileImage() {
@@ -603,16 +726,31 @@ final class MyPageProfileEditViewController: BaseViewController {
         openLibrary(.background)
     }
     
+    private func onTapNicknameDupCheckButton() {
+        guard let nickname = nicknameField.text else { return }
+        Task {
+            let response = try await self.viewModel.checkDuplicateNickname(nickname: nickname)
+            nicknameDupChecked = !response
+            if response {
+                self.nicknameDupCheckResultLabel.text = Constants.Nickname.DupCheckResultLabel.impossibleText
+                self.nicknameDupCheckResultLabel.textColor = Constants.Nickname.DupCheckResultLabel.impossibleTextColor
+            } else {
+                self.nicknameDupCheckResultLabel.text = Constants.Nickname.DupCheckResultLabel.possibleText
+                self.nicknameDupCheckResultLabel.textColor = Constants.Nickname.DupCheckResultLabel.possibleTextColor
+            }
+        }
+    }
+    
     @objc private func onTapTagRecommendButton() {
         if recommendExpanded {
-            recommendButtonImageView.image = Constants.Tag.Recommend.upImage
+            recommendButtonImageView.image = Constants.Tag.Recommend.downImage
             recommendTagView.snp.updateConstraints({ m in
                 m.height.equalTo(0)
             })
             recommendTagView.updateConstraints()
             recommendExpanded = false
         } else {
-            recommendButtonImageView.image = Constants.Tag.Recommend.downImage
+            recommendButtonImageView.image = Constants.Tag.Recommend.upImage
             recommendTagView.snp.updateConstraints({ m in
                 m.height.equalTo(Constants.Tag.TagView.heigth)
             })
@@ -638,23 +776,22 @@ final class MyPageProfileEditViewController: BaseViewController {
 extension MyPageProfileEditViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        // 글자수 계산 버그
         if textField == nicknameField {
+            
             let currentString = (textField.text ?? "") as NSString
             let length = currentString.replacingCharacters(in: range, with: string).count
             nicknameCurCountLabel.text = String(length)
-
-            if length > 0 {
-                nicknameCurCountLabel.textColor = Constants.Nickname.Count.textColor
-                nicknameDupCheckButton.setTitleColor(Constants.Nickname.DupCheck.activeForegroundColor, for: .normal)
-                nicknameDupCheckButton.backgroundColor = Constants.Nickname.DupCheck.activeBackgroundColor
-            } else {
-                nicknameCurCountLabel.textColor = .Common.grey03
-                nicknameDupCheckButton.setTitleColor(Constants.Nickname.DupCheck.inActiveForegroundColor, for: .normal)
-                nicknameDupCheckButton.backgroundColor = Constants.Nickname.DupCheck.inActiveBackgroundColor
+            
+            let inValidString = CharacterSet(charactersIn: "!@#$%^&*()_+{}[]|\"<>,.~`/:;?-=\\¥'£•¢")
+            
+            if textField.textInputMode?.primaryLanguage == "emoji" || textField.textInputMode?.primaryLanguage == nil {
+                return false
+            }
+            if let _ = string.rangeOfCharacter(from: inValidString) {
+                return false
             }
             
-            return length <= Constants.Nickname.Field.maxCount
+            return length <= Constants.Nickname.Field.maxCount - 1
         }
         
         if textField == tagField && viewModel.recommendTagItemSelectCount == Constants.Tag.Count.maxCount {
@@ -666,10 +803,83 @@ extension MyPageProfileEditViewController: UITextFieldDelegate {
         return true
     }
     
-    @objc private func tagFieldDidChanged(_ textField: UITextField) {
-        viewModel.tagFieldString = textField.text ?? ""
-        viewModel.tagFieldChangedFromUser()
-        recommendTagView.applyItems(viewModel.recommendTagItems)
+    @objc private func textFieldDidchanged(_ textField: UITextField) {
+        switch textField {
+        case nicknameField:
+            nicknameDupCheckResultLabel.text = ""
+            nicknameDupChecked = false
+            guard let text = nicknameField.text else { return }
+            userData.nickname = text
+            if text.count == 0 || text == viewModel.user.nickname || text.trimmingCharacters(in: [" "]) == "" {
+                nicknameDupCheckButton.setTitleColor(Constants.Nickname.DupCheckButton.inActiveForegroundColor, for: .normal)
+                nicknameDupCheckButton.backgroundColor = Constants.Nickname.DupCheckButton.inActiveBackgroundColor
+                nicknameDupCheckButton.isEnabled = false
+            } else {
+                nicknameDupCheckButton.setTitleColor(Constants.Nickname.DupCheckButton.activeForegroundColor, for: .normal)
+                nicknameDupCheckButton.backgroundColor = Constants.Nickname.DupCheckButton.activeBackgroundColor
+                nicknameDupCheckButton.isEnabled = true
+            }
+        case tagField:
+            viewModel.tagFieldString = textField.text ?? ""
+            viewModel.tagFieldChangedFromUser()
+            recommendTagView.applyItems(viewModel.recommendTagItems)
+        case emailField:
+            guard let text = emailField.text else { return }
+            userData.email = text
+        case linkField:
+            guard let text = linkField.text else { return }
+            userData.link = text
+        default:
+            break
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        hideKeyboard()
+        return true
+    }
+}
+
+
+// MARK: - Keyboard
+extension MyPageProfileEditViewController {
+    private func setUpKeyboardObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func removeKeyboardObserver() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        if isKeyboardShowing || nicknameField.isFirstResponder { return }
+        
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let tabBarHeight = self.tabBarController?.tabBar.frame.height {
+            UIView.animate(withDuration: 0.3) {
+                let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height - tabBarHeight, right: 0)
+                self.scrollView.contentInset = contentInset
+                self.scrollView.scrollIndicatorInsets = contentInset
+                
+                let currentOffset = self.scrollView.contentOffset
+                let newOffset = CGPoint(x: currentOffset.x, y: currentOffset.y + keyboardSize.height - tabBarHeight)
+                self.scrollView.setContentOffset(newOffset, animated: true)
+            }
+            isKeyboardShowing = true
+        }
+    }
+    
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        UIView.animate(withDuration: 0.3) {
+            self.scrollView.contentInset = .zero
+            self.scrollView.scrollIndicatorInsets = .zero
+            self.isKeyboardShowing = false
+        }
+    }
+    
+    @objc private func hideKeyboard() {
+        view.endEditing(true)
     }
 }
 
@@ -716,13 +926,22 @@ extension MyPageProfileEditViewController: TagViewDelegate {
 extension MyPageProfileEditViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        guard let url = info[UIImagePickerController.InfoKey.imageURL] as? URL else { return }
         
         if picker == profilePicker {
+            if let fileName = url.absoluteString.split(separator: "/").last {
+                userData.profileFileName = String(fileName)
+            }
             profileImageView.image = image
+            userData.profileImage = image
         }
         
         if picker == backgroundPicker {
+            if let fileName = url.absoluteString.split(separator: "/").last {
+                userData.backgroundFileName = String(fileName)
+            }
             backgroundImageView.image = image
+            userData.backgroundImage = image
         }
         
         dismiss(animated: true)
@@ -747,6 +966,6 @@ fileprivate class ProfileEditLabel: UILabel {
     
     private func setUpView() {
         self.textColor = .Common.grey03
-        self.font = UIFont(name: "Apple SD Gothic Neo SemiBold", size: 16)
+        self.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
     }
 }
