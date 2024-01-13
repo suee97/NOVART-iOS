@@ -120,7 +120,7 @@ final class ProductCell: UICollectionViewCell {
 extension ProductCell {
     func update(with data: ProductModel) {
         productLabel.text = data.name
-        artistLabel.text = data.artistNickname
+        artistLabel.text = data.nickname
         
         if let thumbnailUrl = data.thumbnailImageUrl,
            let url = URL(string: thumbnailUrl) {

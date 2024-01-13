@@ -220,14 +220,14 @@ final class MyPageProfileEditViewController: BaseViewController {
     private let emailLabel = ProfileEditLabel(title: Constants.Email.title)
     private let linkLabel = ProfileEditLabel(title: Constants.Link.Label.title)
     
-    private let nicknameField = ProfileEditTextField(placeholder: Constants.Nickname.Field.placeHolder)
-    private lazy var tagField: ProfileEditTextField = {
-        let textField = ProfileEditTextField(placeholder: Constants.Tag.Field.placeHolder)
+    private let nicknameField = CustomEditTextField(placeholder: Constants.Nickname.Field.placeHolder)
+    private lazy var tagField: CustomEditTextField = {
+        let textField = CustomEditTextField(placeholder: Constants.Tag.Field.placeHolder)
         textField.addTarget(self, action: #selector(tagFieldDidChanged(_:)), for: .editingChanged)
         return textField
     }()
-    private let emailField = ProfileEditTextField(placeholder: Constants.Email.placeHolder)
-    private let linkField = ProfileEditTextField(placeholder: Constants.Link.Field.placeHolder)
+    private let emailField = CustomEditTextField(placeholder: Constants.Email.placeHolder)
+    private let linkField = CustomEditTextField(placeholder: Constants.Link.Field.placeHolder)
     
     private let profileCameraView: UIImageView = {
         let imageView = UIImageView()
@@ -708,7 +708,8 @@ extension MyPageProfileEditViewController: TagViewDelegate {
         }
     }
     
-    func invalidateLayout(_ contentHeight: CGFloat) {}
+    func invalidateLayout(_ tagView: TagView, contentHeight: CGFloat) {
+    }
 }
 
 

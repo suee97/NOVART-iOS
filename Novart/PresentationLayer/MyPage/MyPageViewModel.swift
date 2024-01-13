@@ -46,7 +46,7 @@ final class MyPageViewModel {
 //        }
         
         for i in 0..<10 {
-            interests.append(ProductModel(id: Int64(i), name: "탁자", artistNickname: "진욱", thumbnailImageUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc"))
+            interests.append(ProductModel(id: Int64(i), name: "탁자", nickname: "진욱", thumbnailImageUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc"))
         }
         for i in 0..<0 {
             followings.append(MyPageFollowing(id: i, name: "의자", thumbnailImgUrl: "https://fastly.picsum.photos/id/190/200/300.jpg?hmac=KMqZBOcb2v614PnLYdaZ_nsWFhVgoZrNcnRAiytDbVc", artistName: "오승언"))
@@ -74,5 +74,10 @@ final class MyPageViewModel {
     @MainActor
     func showNotification() {
         coordinator?.navigate(to: .MyPageNotification)
+    }
+    
+    @MainActor
+    func showProductUploadScene() {
+        coordinator?.navigate(to: .productUpload)
     }
 }

@@ -91,7 +91,7 @@ final class ParticipantCell: UICollectionViewCell {
 
 extension ParticipantCell {
     func update(with data: ExhibitionParticipantModel) {
-        if let profileImageUrl = data.profileImgUrl {
+        if let profileImageUrl = data.profileImageUrl {
             let url = URL(string: profileImageUrl)
             imageView.kf.setImage(with: url)
         }

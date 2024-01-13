@@ -43,5 +43,9 @@ final class ProductCoverCell: UICollectionViewCell {
         let url = URL(string: item)
         imageView.kf.setImage(with: url)
     }
+    
+    func update(image: UIImage) {
+        imageView.image = image
+    }
 }
 

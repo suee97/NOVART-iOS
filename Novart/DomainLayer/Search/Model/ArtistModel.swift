@@ -11,5 +11,5 @@ struct ArtistModel: Identifiable, Hashable, Decodable {
     let id: Int64
     let nickname: String
     let backgroundImgUrl: String?
-    let profileImgUrl: String?
+    let profileImageUrl: String?
 }

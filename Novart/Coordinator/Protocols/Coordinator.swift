@@ -50,6 +50,11 @@ extension Coordinator {
         parentCoordinator?.remove(coordinators: self)
     }
     
+    func closeAsPop() {
+        navigator.pop(animated: true)
+        end()
+    }
+    
     func close() {
         if let dismissible = navigator as? Dismissible {
             dismissible.dismiss(animated: true)

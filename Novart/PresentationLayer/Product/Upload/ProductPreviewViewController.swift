@@ -1,14 +1,14 @@
 //
-//  ProductDetailViewController.swift
+//  ProductPreviewViewController.swift
 //  Novart
 //
-//  Created by Jinwook Huh on 2023/10/07.
+//  Created by Jinwook Huh on 2023/12/31.
 //
 
 import UIKit
 import Combine
 
-final class ProductDetailViewController: BaseViewController {
+final class ProductPreviewViewController: BaseViewController {
     
     // MARK: - Constant
     
@@ -20,6 +20,12 @@ final class ProductDetailViewController: BaseViewController {
         enum TitleLabel {
             static let font: UIFont = .systemFont(ofSize: 20, weight: .semibold)
             static let textColor: UIColor = UIColor.Common.warmBlack
+        }
+        
+        enum UploadButton {
+            static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
+            static let textColor: UIColor = UIColor.Common.main
+            static let disabledColor: UIColor = UIColor.Common.grey02
         }
         
         enum ArtistView {
@@ -37,7 +43,7 @@ final class ProductDetailViewController: BaseViewController {
         }
         
         enum Description {
-            static let topMargin: CGFloat = 20
+            static let topMargin: CGFloat = 32
             static let spacing: CGFloat = 8
             static let titleFont: UIFont = .systemFont(ofSize: 16, weight: .semibold)
             static let font: UIFont = .systemFont(ofSize: 14, weight: .regular)
@@ -45,7 +51,7 @@ final class ProductDetailViewController: BaseViewController {
         }
         
         enum DetailImage {
-            static let topMargin: CGFloat = 40
+            static let topMargin: CGFloat = 32
             static let spacing: CGFloat = 16
         }
         
@@ -106,39 +112,22 @@ final class ProductDetailViewController: BaseViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
-    
-    private lazy var barTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = Constants.TitleLabel.font
-        label.textColor = Constants.TitleLabel.textColor
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var barArtistImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private lazy var barArtistLabel: UILabel = {
-        let label = UILabel()
-        label.font = Constants.ArtistView.font
-        label.textColor = Constants.ArtistView.textColor
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var closeButton: UIButton = {
+
+    private lazy var uploadButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "icon_close_round"), for: .normal)
+        button.titleLabel?.font = Constants.UploadButton.font
+        button.setTitle("등록", for: .normal)
+        button.setTitleColor(Constants.UploadButton.textColor, for: .normal)
+        button.setTitleColor(Constants.UploadButton.disabledColor, for: .disabled)
         button.translatesAutoresizingMaskIntoConstraints = false
+        
         button.addAction(UIAction(handler: { [weak self] _ in
-            self?.viewModel.closeCoordinator()
+            self?.viewModel.startUploadScene()
         }), for: .touchUpInside)
+        
         return button
     }()
+    
     
     private lazy var coverCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
@@ -154,15 +143,6 @@ final class ProductDetailViewController: BaseViewController {
         pageController.size = 4
         pageController.translatesAutoresizingMaskIntoConstraints = false
         return pageController
-    }()
-    
-    private lazy var productDescriptionTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = Constants.Description.titleFont
-        label.textColor = Constants.Description.textColor
-        label.text = "작품 설명"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
     }()
     
     private lazy var productDescriptionLabel: UILabel = {
@@ -273,74 +253,16 @@ final class ProductDetailViewController: BaseViewController {
         return collectionView
     }()
     
-    private lazy var floatingButtonStackView = createFloatingButtons()
-    private lazy var fixedButtonStackView = createFloatingButtons()
-    
-    private func createFloatingButtons() -> UIStackView {
-        let likeButton = UIButton()
-        likeButton.backgroundColor = UIColor.Common.white.withAlphaComponent(0.72)
-        likeButton.setImage(UIImage(named: "icon_heart_fill"), for: .normal)
-        likeButton.translatesAutoresizingMaskIntoConstraints = false
-        likeButton.layer.cornerRadius = Constants.FloatingButton.buttonSize / 2
-        
-        likeButton.layer.shadowColor = UIColor.black.cgColor
-        likeButton.layer.shadowOpacity = 0.1
-        likeButton.layer.shadowOffset = CGSize(width: 0, height: 2)
-        
-        NSLayoutConstraint.activate([
-            likeButton.widthAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize),
-            likeButton.heightAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize)
-        ])
-        
-        let commentButton = UIButton()
-        commentButton.backgroundColor = UIColor.Common.white.withAlphaComponent(0.72)
-        commentButton.setImage(UIImage(named: "icon_comment"), for: .normal)
-        commentButton.translatesAutoresizingMaskIntoConstraints = false
-        commentButton.layer.cornerRadius = Constants.FloatingButton.buttonSize / 2
-        
-        commentButton.layer.shadowColor = UIColor.black.cgColor
-        commentButton.layer.shadowOpacity = 0.1
-        commentButton.layer.shadowOffset = CGSize(width: 0, height: 2)
-        
-        NSLayoutConstraint.activate([
-            commentButton.widthAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize),
-            commentButton.heightAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize)
-        ])
-        commentButton.addAction(UIAction(handler: { [weak self] _ in
-            self?.viewModel.showCommentViewController()
-        }), for: .touchUpInside)
-        
-        let shareButton = UIButton()
-        shareButton.backgroundColor = UIColor.Common.white.withAlphaComponent(0.72)
-        shareButton.setImage(UIImage(named: "icon_share"), for: .normal)
-        shareButton.translatesAutoresizingMaskIntoConstraints = false
-        shareButton.layer.cornerRadius = Constants.FloatingButton.buttonSize / 2
-        
-        shareButton.layer.shadowColor = UIColor.black.cgColor
-        shareButton.layer.shadowOpacity = 0.1
-        shareButton.layer.shadowOffset = CGSize(width: 0, height: 2)
-        
-        NSLayoutConstraint.activate([
-            shareButton.widthAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize),
-            shareButton.heightAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize)
-        ])
-        
-        let stackView = UIStackView(arrangedSubviews: [likeButton, commentButton, shareButton])
-        stackView.axis = .vertical
-        stackView.spacing = Constants.FloatingButton.spacing
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }
     
     // MARK: - Properties
     
-    private var viewModel: ProductDetailViewModel
-    private lazy var productCoverDataSource: ProductCoverImageDataSource = ProductCoverImageDataSource(collectionView: coverCollectionView)
+    private var viewModel: ProductPreviewViewModel
+    private lazy var productPreviewCoverDataSource: ProductPreviewImageDataSource = ProductPreviewImageDataSource(collectionView: coverCollectionView)
     private lazy var recommendationDataSource: RecommendationDataSource = RecommendationDataSource(collectionView: recommendationCollectionView)
     private var floatingButtonStackViewTopContraint: NSLayoutConstraint?
     private var cancellables: Set<AnyCancellable> = .init()
     
-    init(viewModel: ProductDetailViewModel) {
+    init(viewModel: ProductPreviewViewModel) {
         self.viewModel = viewModel
         super.init()
     }
@@ -353,15 +275,37 @@ final class ProductDetailViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.loadData()
+        setupData(data: viewModel.productPreviewData)
+        setupDetailImageViews(with: viewModel.productPreviewData.detailImages)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setupInfoView(data: viewModel.productPreviewData)
+    }
+    
     override func setupNavigationBar() {
-        navigationController?.navigationBar.isHidden = true
+        
+        let closeButton = UIButton()
+        closeButton.setBackgroundImage(UIImage(named: "icon_nav_chevron_left"), for: .normal)
+        closeButton.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.navigationController?.popViewController(animated: true)
+        }), for: .touchUpInside)
+        let closeItem = UIBarButtonItem(customView: closeButton)
+        navigationItem.leftBarButtonItem = closeItem
+        
+        let nextItem = UIBarButtonItem(customView: uploadButton)
+        navigationItem.rightBarButtonItem = nextItem
+        
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        
+        title = "작품 등록"
+        uploadButton.isEnabled = true
     }
     
     override func setupView() {
@@ -380,36 +324,10 @@ final class ProductDetailViewController: BaseViewController {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
-        scrollView.delegate = self
-        
-        contentView.addSubview(barTitleLabel)
-        NSLayoutConstraint.activate([
-            barTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
-            barTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topMargin)
-        ])
-        
-        contentView.addSubview(barArtistImageView)
-        contentView.addSubview(barArtistLabel)
-        NSLayoutConstraint.activate([
-            barArtistImageView.leadingAnchor.constraint(equalTo: barTitleLabel.leadingAnchor),
-            barArtistImageView.topAnchor.constraint(equalTo: barTitleLabel.bottomAnchor, constant: Constants.ArtistView.topMargin),
-            barArtistImageView.widthAnchor.constraint(equalToConstant: Constants.ArtistView.imageSize),
-            barArtistImageView.heightAnchor.constraint(equalToConstant: Constants.ArtistView.imageSize),
-            barArtistLabel.leadingAnchor.constraint(equalTo: barArtistImageView.trailingAnchor, constant: Constants.ArtistView.spacing),
-            barArtistLabel.centerYAnchor.constraint(equalTo: barArtistImageView.centerYAnchor)
-        ])
-        barArtistImageView.layer.cornerRadius = Constants.ArtistView.imageSize / 2
-        barArtistImageView.clipsToBounds = true
-        
-        contentView.addSubview(closeButton)
-        NSLayoutConstraint.activate([
-            closeButton.centerYAnchor.constraint(equalTo: barTitleLabel.centerYAnchor),
-            closeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin)
-        ])
         
         contentView.addSubview(coverCollectionView)
         NSLayoutConstraint.activate([
-            coverCollectionView.topAnchor.constraint(equalTo: barArtistLabel.bottomAnchor, constant: Constants.CoverImage.topMargin),
+            coverCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topMargin),
             coverCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             coverCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             coverCollectionView.heightAnchor.constraint(equalTo: contentView.widthAnchor)
@@ -423,12 +341,9 @@ final class ProductDetailViewController: BaseViewController {
             pageController.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
         
-        contentView.addSubview(productDescriptionTitleLabel)
         contentView.addSubview(productDescriptionLabel)
         NSLayoutConstraint.activate([
-            productDescriptionTitleLabel.topAnchor.constraint(equalTo: pageController.bottomAnchor, constant: Constants.Description.topMargin),
-            productDescriptionTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
-            productDescriptionLabel.topAnchor.constraint(equalTo: productDescriptionTitleLabel.bottomAnchor, constant: Constants.Description.spacing),
+            productDescriptionLabel.topAnchor.constraint(equalTo: pageController.bottomAnchor, constant: Constants.Description.topMargin),
             productDescriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
             productDescriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin)
         ])
@@ -466,80 +381,47 @@ final class ProductDetailViewController: BaseViewController {
         ])
         
         recommendationCollectionView.setCollectionViewLayout(recommendationLayout, animated: false)
-        
-        view.addSubview(floatingButtonStackView)
-        NSLayoutConstraint.activate([
-            floatingButtonStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.FloatingButton.bottomMargin),
-            floatingButtonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalMargin)
-        ])
-        
-        contentView.addSubview(fixedButtonStackView)
-        NSLayoutConstraint.activate([
-            fixedButtonStackView.topAnchor.constraint(equalTo: productInfoView.topAnchor),
-            fixedButtonStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin)
-        ])
-        fixedButtonStackView.isHidden = true
+
     }
     
     override func setupBindings() {
-        viewModel.productDetailSubject
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] data in
-                guard let self else { return }
-                self.setupData(data: data)
-            }
-            .store(in: &cancellables)
-        
-        viewModel.productImages
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] images in
-                guard let self else { return }
-                self.setupDetailImageViews(with: images)
-            }
-            .store(in: &cancellables)
     }
     
-    private func setupDetailImageViews(with images: [UIImage?]) {
+    private func setupDetailImageViews(with images: [UIImage]) {
         for image in images {
-            if let image {
-                let imageView = UIImageView()
-                imageView.contentMode = .scaleToFill
-                imageView.image = image
-                
-                detailImageStackView.addArrangedSubview(imageView)
-                
-                let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: Constants.CoverImage.imageSize)
-                let aspectRatio = image.size.height / image.size.width
-                let heightConstraint = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: aspectRatio)
-                
-                NSLayoutConstraint.activate([widthConstraint, heightConstraint])
-            }
+            let imageView = UIImageView()
+            imageView.contentMode = .scaleToFill
+            imageView.image = image
+            
+            detailImageStackView.addArrangedSubview(imageView)
+            
+            let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: Constants.CoverImage.imageSize)
+            let aspectRatio = image.size.height / image.size.width
+            let heightConstraint = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: aspectRatio)
+            
+            NSLayoutConstraint.activate([widthConstraint, heightConstraint])
         }
     }
     
-    private func setupData(data: ProductDetailModel) {
-        let thumbnailUrls = data.thumbNailImageUrls
-        pageController.totalCount = thumbnailUrls.count
-        productCoverDataSource = ProductCoverImageDataSource(collectionView: coverCollectionView)
-        productCoverDataSource.apply(thumbnailUrls)
-        
-        barTitleLabel.text = data.name
-        barArtistLabel.text = data.artist.artistNickname
+    private func setupData(data: ProductPreviewModel) {
+        let coverImages = data.coverImages
+        pageController.totalCount = coverImages.count
+        productPreviewCoverDataSource = ProductPreviewImageDataSource(collectionView: coverCollectionView)
+        productPreviewCoverDataSource.apply(coverImages)
         
         if let artistImageUrl = data.artist.profileImageUrl {
             let url = URL(string: artistImageUrl)
-            barArtistImageView.kf.setImage(with: url)
             artistImageView.kf.setImage(with: url)
         }
         
         productDescriptionLabel.text = data.description
-        artistNameLabel.text = data.artist.artistNickname
-        productInfoView.viewModel = data
+        artistNameLabel.text = data.artist.nickname
+        
         let artistProducts = [
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil)
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil)
             ]
         
         var artistExhibitions = [ExhibitionModel]()
@@ -549,10 +431,10 @@ final class ProductDetailViewController: BaseViewController {
         }
         
         let similarProducts = [
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil)
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil)
             ]
         
         let recommendationDic: [RecommendationDataSource.Section: [PlainItem]] = [.artistProduct: artistProducts,
@@ -560,10 +442,15 @@ final class ProductDetailViewController: BaseViewController {
                                                                                 .similarProduct: similarProducts]
         recommendationDataSource.apply(recommendationDic)
     }
+    
+    private func setupInfoView(data: ProductPreviewModel) {
+        let productDetailModel = ProductDetailModel(previewData: data)
+        productInfoView.viewModel = productDetailModel
+    }
 }
 
 // MARK: - CollectionViewLayout
-private extension ProductDetailViewController {
+private extension ProductPreviewViewController {
     var coverSectionLayout: NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(Constants.CoverImage.imageSize), heightDimension: .absolute(Constants.CoverImage.imageSize))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -647,27 +534,5 @@ private extension ProductDetailViewController {
         }
         
         return layout
-    }
-}
-
-// MARK: - ScrollViewDelegate
-extension ProductDetailViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let scrollViewContentBottomOffset = scrollView.contentOffset.y + UIScreen.main.bounds.height
-        let floatingButtonStackViewBottomOffset = fixedButtonStackView.frame.maxY + Constants.FloatingButton.bottomMargin
-        let shouldFollow = scrollViewContentBottomOffset < floatingButtonStackViewBottomOffset
-
-        if shouldFollow {
-            if floatingButtonStackView.isHidden {
-                floatingButtonStackView.isHidden = false
-                fixedButtonStackView.isHidden = true
-            }
-        } else {
-            if fixedButtonStackView.isHidden {
-                fixedButtonStackView.isHidden = false
-                floatingButtonStackView.isHidden = true
-            }
-        }
-        
     }
 }
