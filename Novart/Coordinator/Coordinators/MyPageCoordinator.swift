@@ -33,6 +33,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
             showSetting()
         case .MyPageNotification:
             showNotification()
+        case .productUpload:
+            showProductUploadScene()
         }
     }
     
@@ -56,6 +58,14 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         let viewModel = MyPageNotificationViewModel(coordinator: self)
         let viewController = MyPageNotificationViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
+    }
+    
+    private func showProductUploadScene() {
+        let root = BaseNavigationController()
+        let productUploadStackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
+        let productUploadCoordinator = ProductUploadCoordinator(navigator: productUploadStackNavigator)
+        add(coordinators: productUploadCoordinator)
+        productUploadCoordinator.start()
     }
 }
 

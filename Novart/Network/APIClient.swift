@@ -69,7 +69,7 @@ class APIClient {
         let response = await APIClient.shared.session
             .request(target, interceptor: interceptor)
             .validate(statusCode: 200..<300)
-            .serializingDecodable(D.self, emptyResponseCodes: [200])
+            .serializingDecodable(D.self)
             .response
         
         switch response.result {
@@ -81,5 +81,33 @@ class APIClient {
             throw APIError(message: error.localizedDescription, code: .UNKNOWN)
         }
         
+    }
+    
+    @discardableResult
+    static func uploadJpegData(uploadUrl: String, data: Data) async throws -> Data? {
+                
+        return try await withCheckedThrowingContinuation({ continuation in
+            guard let url = URL(string: uploadUrl) else {
+                continuation.resume(throwing: APIError.init(message: "invalidURL!", code: .invalidUrl))
+                return
+            }
+            var request: URLRequest = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+            
+            request.httpBody = data
+
+            AF.request(request).response { response in
+                // Handle response
+                switch response.result {
+                case .success(let data):
+                    continuation.resume(returning: data)
+                    return
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+            
+        })
     }
 }

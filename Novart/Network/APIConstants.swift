@@ -8,5 +8,5 @@
 import Foundation
 
 enum API {
-    static let baseURL = "http://3.39.100.248:8081/api/"
+    static let baseURL = "http://3.39.100.248:8080/api/"
 }

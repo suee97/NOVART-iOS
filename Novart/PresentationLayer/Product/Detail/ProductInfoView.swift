@@ -175,8 +175,9 @@ final class ProductInfoView: UIView {
 }
 
 extension ProductInfoView: TagViewDelegate {
-    func invalidateLayout(_ contentHeight: CGFloat) {
+    func invalidateLayout(_ tagView: TagView, contentHeight: CGFloat) {
         tagViewHeightConstraint?.constant = contentHeight
         layoutIfNeeded()
     }
+
 }

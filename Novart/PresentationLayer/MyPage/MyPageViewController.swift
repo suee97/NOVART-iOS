@@ -31,6 +31,12 @@ final class MyPageViewController: BaseViewController {
             static let WorkCellSize = CGSize(width: 165, height: 205)
             static let ExhibitionCellSize = CGSize(width: 165, height: 276)
         }
+        
+        enum UploadButton {
+            static let size: CGFloat = 50
+            static let backgrounColor: UIColor = UIColor.Common.main
+            static let bottomMargin: CGFloat = 12
+        }
     }
     
     
@@ -110,6 +116,24 @@ final class MyPageViewController: BaseViewController {
         return button
     }()
     
+    private lazy var uploadProductButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.Common.main
+        button.setImage(UIImage(named: "icon_upload_plus"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: Constants.UploadButton.size),
+            button.heightAnchor.constraint(equalToConstant: Constants.UploadButton.size)
+        ])
+        button.layer.cornerRadius = Constants.UploadButton.size / 2
+        button.clipsToBounds = true
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.viewModel.showProductUploadScene()
+        }), for: .touchUpInside)
+        return button
+    }()
+    
     override func setupNavigationBar() {
         let spacer = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         spacer.width = Constants.Layout.navigationBarSpacerWidth
@@ -126,6 +150,8 @@ final class MyPageViewController: BaseViewController {
         viewModel.getUserInfo()
         viewModel.getAllItems()
         
+        let safeArea = view.safeAreaLayoutGuide
+        
         view.backgroundColor = .white
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -136,6 +162,12 @@ final class MyPageViewController: BaseViewController {
         collectionView.snp.makeConstraints({ m in
             m.left.right.top.bottom.equalTo(view)
         })
+        
+        view.addSubview(uploadProductButton)
+        uploadProductButton.snp.makeConstraints { m in
+            m.bottom.equalTo(safeArea).inset(Constants.UploadButton.bottomMargin)
+            m.centerX.equalToSuperview()
+        }
     }
     
     

@@ -16,7 +16,7 @@ struct ExhibitionDetailModel: Decodable, Hashable {
     let artists: [ExhibitionParticipantModel]
     let likesCount: Int
     let commentCount: Int
-    let liked: Bool
+    let likes: Bool
     let estimatedDuration: String
     let artCount: String
     let description: String
@@ -54,7 +54,7 @@ struct ExhibitionArtistFollowInfoModel: Decodable {
 
 struct ExhibitionParticipantModel: Decodable {
     let id: Int64
-    let profileImgUrl: String?
+    let profileImageUrl: String?
     let nickname: String
     let job: String
 }
