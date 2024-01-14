@@ -42,7 +42,7 @@ final class ExhibitionViewModel {
                     let hsbColor = UIColor(hue: hueValue / 360, saturation: 0.08, brightness: 0.95, alpha: 1.0)
                     
                     // 처리 후 데이터
-                    self.processedExhibitions.append(ProcessedExhibition(id: Int(e.id), imageView: imageView, description: e.description, likesCount: e.likesCount, commentCount: e.commentCount, liked: e.liked, backgroundColor: hsbColor))
+                    self.processedExhibitions.append(ProcessedExhibition(id: Int(e.id), imageView: imageView, description: e.description, likesCount: e.likesCount, commentCount: e.commentCount, likes: e.likes, backgroundColor: hsbColor))
                 }
             })
         }

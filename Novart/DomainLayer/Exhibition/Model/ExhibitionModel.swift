@@ -6,15 +6,15 @@ class ExhibitionModel: PlainItem, Decodable {
     let description: String
     let likesCount: Int
     let commentCount: Int
-    let liked: Bool
+    let likes: Bool
     
-    init(id: Int64, posterImageUrl: String?, description: String, likesCount: Int, commentCount: Int, liked: Bool) {
+    init(id: Int64, posterImageUrl: String?, description: String, likesCount: Int, commentCount: Int, likes: Bool) {
         self.id = id
         self.posterImageUrl = posterImageUrl
         self.description = description
         self.likesCount = likesCount
         self.commentCount = commentCount
-        self.liked = liked
+        self.likes = likes
         super.init()
     }
 }
@@ -25,6 +25,6 @@ struct ProcessedExhibition: Hashable {
     let description: String
     let likesCount: Int
     let commentCount: Int
-    let liked: Bool
+    let likes: Bool
     let backgroundColor: UIColor
 }
