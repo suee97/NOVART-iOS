@@ -50,8 +50,10 @@ final class ProductUploadViewModel {
     }
     
     @MainActor
-    func showImageEditScene() {
-        coordinator?.navigate(to: .imageEdit)
+    func showImageEditScene(identifier: String) {
+        guard step == .cover else { return }
+        guard let image = selectedCoverImages.first(where: { $0.identifier == identifier }) else { return }
+        coordinator?.navigate(to: .imageEdit(image: image))
     }
     
     func showMediaPicker() {
@@ -102,5 +104,14 @@ final class ProductUploadViewModel {
             selectedDetailImages.removeAll { $0.identifier == identifier }
             selectedDetailIdentifiers.removeAll { $0 == identifier }
         }
+    }
+}
+
+extension ProductUploadViewModel {
+    func didFinishImageCrop(image: UIImage, identifier: String) {
+        guard let idx = selectedCoverImages.firstIndex(where: { $0.identifier == identifier }) else { return }
+        selectedCoverImages.remove(at: idx)
+        let croppedItem = UploadMediaItem(image: image, identifier: identifier, width: image.size.width, height: image.size.height)
+        selectedCoverImages.insert(croppedItem, at: idx)
     }
 }

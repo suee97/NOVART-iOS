@@ -10,7 +10,7 @@ import UIKit
 enum ProductUploadStep: Step {
     case detailImage(coverImages: [UploadMediaItem])
     case detailInfo(coverImages: [UploadMediaItem], detailImage: [UploadMediaItem])
-    case imageEdit
+    case imageEdit(image: UploadMediaItem)
     case preview(data: ProductPreviewModel)
     case upload(data: ProductPreviewModel)
     
