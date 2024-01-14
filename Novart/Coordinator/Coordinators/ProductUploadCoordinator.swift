@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import CropViewController
 
-final class ProductUploadCoordinator: BaseStackCoordinator<ProductUploadStep>, MediaPickerPresentableCoordinator {
+final class ProductUploadCoordinator: BaseStackCoordinator<ProductUploadStep>, MediaPickerPresentableCoordinator, ImageEditorPresentableCoordinator {
     
     var mediaPickerPresentable: (any MediaPickerPresentable)? { productUploadViewController }
+  
+    var imageEditManager: ImageEditManager = .init()
     
     private weak var productUploadViewController: ProductUploadViewController?
     
@@ -27,8 +30,8 @@ final class ProductUploadCoordinator: BaseStackCoordinator<ProductUploadStep>, M
             showDetailImageUpload(coverImages: coverImages)
         case let .detailInfo(coverImages, detailImage):
             showDetailInfoUpload(coverImages: coverImages, detailImage: detailImage)
-        case .imageEdit:
-            showImageEditScene()
+        case let .imageEdit(image):
+            showImageEditScene(image: image)
         case let .preview(data):
             showPreview(data: data)
         case let .upload(data):
@@ -65,11 +68,10 @@ final class ProductUploadCoordinator: BaseStackCoordinator<ProductUploadStep>, M
         navigator.push(viewController, animated: true)
     }
     
-    private func showImageEditScene() {
-        let viewModel = ImageEditViewModel(coordinator: self)
-        let viewController = ImageEditViewController(viewModel: viewModel)
-        let navigationController = UINavigationController(rootViewController: viewController)
-        navigationController.modalPresentationStyle = .fullScreen
-        navigator.rootViewController.present(navigationController, animated: true)
+    private func showImageEditScene(image: UploadMediaItem) {
+        showImageEditor(using: image.image, presenter: navigator.rootViewController) { [weak self] croppedImage in
+            guard let self else { return }
+            self.productUploadViewController?.didFinishImageCrop(image: croppedImage, identifier: image.identifier)
+        }
     }
 }

@@ -133,7 +133,7 @@ final class ImageEditViewController: BaseViewController {
         closeButton.setBackgroundImage(UIImage(named: "icon_close"), for: .normal)
         closeButton.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
-            self.navigationController?.popViewController(animated: true)
+            dismiss(animated: true)
         }), for: .touchUpInside)
         let closeItem = UIBarButtonItem(customView: closeButton)
         navigationItem.leftBarButtonItem = closeItem
@@ -184,6 +184,6 @@ final class ImageEditViewController: BaseViewController {
     }
     
     private func setupData() {
-        imageView.image = UIImage(named: "mock_bed")
+        imageView.image = viewModel.image
     }
 }

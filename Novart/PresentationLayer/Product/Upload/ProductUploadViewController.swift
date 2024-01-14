@@ -383,7 +383,14 @@ extension ProductUploadViewController: UploadCellActionDelegate {
     }
     
     func didTapCropButton(identifier: String) {
-        viewModel.showImageEditScene()
+        viewModel.showImageEditScene(identifier: identifier)
     }
+}
+
+extension ProductUploadViewController {
+    func didFinishImageCrop(image: UIImage, identifier: String) {
+        viewModel.didFinishImageCrop(image: image, identifier: identifier)
+    }
+    
 }
 
