@@ -10,6 +10,10 @@ import Combine
 
 final class ExhibitionDetailViewController: BaseViewController {
     
+    private enum Constants {
+        static let shortcutViewCornerRadius: CGFloat = 12
+    }
+    
     // MARK: - DataSource
     
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, ExhibitionDetailItem>
@@ -27,6 +31,13 @@ final class ExhibitionDetailViewController: BaseViewController {
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
+    }()
+    
+    private lazy var shortcutView: ExhibitionShortcutView = {
+        let view = ExhibitionShortcutView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.roundCorners(cornerRadius: Constants.shortcutViewCornerRadius, maskCorners: [.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+        return view
     }()
     
     // MARK: - Properties
@@ -86,6 +97,13 @@ final class ExhibitionDetailViewController: BaseViewController {
             collectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        view.addSubview(shortcutView)
+        NSLayoutConstraint.activate([
+            shortcutView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            shortcutView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            shortcutView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
         ])
     }
     
