@@ -57,8 +57,6 @@
 		0E6C659E2B417F96005E269E /* ProductPreviewImageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C659D2B417F96005E269E /* ProductPreviewImageDataSource.swift */; };
 		0E6C65A02B42AFBC005E269E /* ProductUploadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C659F2B42AFBC005E269E /* ProductUploadingViewController.swift */; };
 		0E6C65A22B42B392005E269E /* ProductUploadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65A12B42B392005E269E /* ProductUploadingViewModel.swift */; };
-		0E6C65A42B42E1B4005E269E /* ImageEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65A32B42E1B4005E269E /* ImageEditViewController.swift */; };
-		0E6C65A62B42E1D6005E269E /* ImageEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65A52B42E1D6005E269E /* ImageEditViewModel.swift */; };
 		0E6C65A92B4A70D2005E269E /* MediaTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65A82B4A70D2005E269E /* MediaTarget.swift */; };
 		0E6C65AB2B4A71F0005E269E /* APIClient+Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65AA2B4A71F0005E269E /* APIClient+Media.swift */; };
 		0E6C65AF2B4A742D005E269E /* PresignedUrlModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65AE2B4A742D005E269E /* PresignedUrlModel.swift */; };
@@ -308,8 +306,6 @@
 		0E6C659D2B417F96005E269E /* ProductPreviewImageDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductPreviewImageDataSource.swift; sourceTree = "<group>"; };
 		0E6C659F2B42AFBC005E269E /* ProductUploadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductUploadingViewController.swift; sourceTree = "<group>"; };
 		0E6C65A12B42B392005E269E /* ProductUploadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductUploadingViewModel.swift; sourceTree = "<group>"; };
-		0E6C65A32B42E1B4005E269E /* ImageEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditViewController.swift; sourceTree = "<group>"; };
-		0E6C65A52B42E1D6005E269E /* ImageEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditViewModel.swift; sourceTree = "<group>"; };
 		0E6C65A82B4A70D2005E269E /* MediaTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaTarget.swift; sourceTree = "<group>"; };
 		0E6C65AA2B4A71F0005E269E /* APIClient+Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIClient+Media.swift"; sourceTree = "<group>"; };
 		0E6C65AE2B4A742D005E269E /* PresignedUrlModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresignedUrlModel.swift; sourceTree = "<group>"; };
@@ -725,15 +721,6 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		0E9892952B5275A2003F6DF9 /* ImageEdit */ = {
-			isa = PBXGroup;
-			children = (
-				0E6C65A32B42E1B4005E269E /* ImageEditViewController.swift */,
-				0E6C65A52B42E1D6005E269E /* ImageEditViewModel.swift */,
-			);
-			path = ImageEdit;
-			sourceTree = "<group>";
-		};
 		0E98929C2B52869D003F6DF9 /* ImageEdit */ = {
 			isa = PBXGroup;
 			children = (
@@ -986,7 +973,6 @@
 		0ED9F04D2B11FD3E00EDCD3C /* Product */ = {
 			isa = PBXGroup;
 			children = (
-				0E9892952B5275A2003F6DF9 /* ImageEdit */,
 				0E41737C2B25A2CC0017AAD9 /* Upload */,
 				0E41737D2B25A2D80017AAD9 /* Detail */,
 			);
@@ -1734,8 +1720,6 @@
 				0EAF1F3D2ADC010500E9A10C /* ArtistSearchResponse.swift in Sources */,
 				0E760E7F2B1B111F0051CB6C /* ExhibitionDetailViewController.swift in Sources */,
 				0EE255902AC013A1008CE0D1 /* ProductModel.swift in Sources */,
-				0E6C65A62B42E1D6005E269E /* ImageEditViewModel.swift in Sources */,
-				0E6C65A42B42E1B4005E269E /* ImageEditViewController.swift in Sources */,
 				0EE019572A56F16A00389A95 /* SearchStep.swift in Sources */,
 				5BDD4A222AC955C100937352 /* MyPageExhibitionCell.swift in Sources */,
 				0E9ED86C2A938AC4001E1C51 /* KeychainKey.swift in Sources */,
