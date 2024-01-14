@@ -45,6 +45,7 @@ final class ExhibitionDetailViewController: BaseViewController {
     private var viewModel: ExhibitionDetailViewModel
     private lazy var dataSource: DataSource = createDataSource()
     private var cancellables: Set<AnyCancellable> = .init()
+    private weak var detailInfoCell: ExhibitionDetailInfoCell?
     
     // MARK: - Init
     
@@ -98,6 +99,7 @@ final class ExhibitionDetailViewController: BaseViewController {
             collectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        collectionView.delegate = self
         
         view.addSubview(shortcutView)
         NSLayoutConstraint.activate([
@@ -105,6 +107,7 @@ final class ExhibitionDetailViewController: BaseViewController {
             shortcutView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             shortcutView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
         ])
+        shortcutView.isHidden = true
     }
     
     override func setupBindings() {
@@ -122,7 +125,8 @@ final class ExhibitionDetailViewController: BaseViewController {
 // MARK: - CollectionView
 private extension ExhibitionDetailViewController {
     private func createDataSource() -> DataSource {
-        let infoCellRegistration = UICollectionView.CellRegistration<ExhibitionDetailInfoCell, ExhibitionDetailInfoModel> { cell, _, item in
+        let infoCellRegistration = UICollectionView.CellRegistration<ExhibitionDetailInfoCell, ExhibitionDetailInfoModel> { [weak self] cell, _, item in
+            self?.detailInfoCell = cell
             cell.update(with: item)
         }
         
@@ -223,3 +227,38 @@ private extension ExhibitionDetailViewController {
     }
 }
 
+// MARK: - ScrollViewDelegate
+extension ExhibitionDetailViewController: UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let detailInfoCell else { return }
+        let scrollViewContentBottomOffset = scrollView.contentOffset.y + UIScreen.main.bounds.height
+        collectionView.convert(detailInfoCell.frame, to: self.view)
+        let shortcutViewBottomOffset = collectionView.convert(detailInfoCell.frame, to: self.view).maxY
+        let fixedShortcutViewBottomOffset = shortcutView.frame.maxY
+
+        let shouldShowFixedView = shortcutViewBottomOffset < fixedShortcutViewBottomOffset
+        
+        if shouldShowFixedView {
+            if shortcutView.isHidden {
+                shortcutView.isHidden = false
+            }
+        } else {
+            if !shortcutView.isHidden {
+                shortcutView.isHidden = true
+            }
+        }
+
+//        if shouldFollow {
+//            if floatingButtonStackView.isHidden {
+//                floatingButtonStackView.isHidden = false
+//                fixedButtonStackView.isHidden = true
+//            }
+//        } else {
+//            if fixedButtonStackView.isHidden {
+//                fixedButtonStackView.isHidden = false
+//                floatingButtonStackView.isHidden = true
+//            }
+//        }
+        
+    }
+}
