@@ -10,7 +10,7 @@ import UIKit
 final class ExhibitionShortcutView: UIView {
     
     private enum Constants {
-        static let topMargin: CGFloat = 8
+        static let topMargin: CGFloat = 12
         static let bottomMargin: CGFloat = 10
         static let horizontalInset: CGFloat = 24
         static let spacing: CGFloat = 16
