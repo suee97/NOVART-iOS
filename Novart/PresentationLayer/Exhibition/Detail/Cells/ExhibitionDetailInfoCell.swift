@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 import Kingfisher
 
 final class ExhibitionDetailInfoCell: UICollectionViewCell {
@@ -166,6 +167,7 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
     private lazy var shortcutView: ExhibitionShortcutView = {
         let view = ExhibitionShortcutView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.delegate = self
         return view
     }()
     
@@ -178,6 +180,16 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
             }
         }
     }
+    
+    var shortcutViewXOffset: CGFloat {
+        get {
+            return shortcutView.contentXOffset
+        } set {
+            shortcutView.contentXOffset = newValue
+        }
+    }
+    
+    var exhibitionShortcutViewXOffsetSubject: PassthroughSubject<CGFloat, Never> = .init()
     
     // MARK: - Initialization
 
@@ -320,5 +332,11 @@ extension ExhibitionDetailInfoCell {
             return self.sectionLayout
         }
         return layout
+    }
+}
+
+extension ExhibitionDetailInfoCell: ExhibitionShortcutViewDelegate {
+    func exhibitionShortcutViewDidScroll(scrollView: UIScrollView) {
+        exhibitionShortcutViewXOffsetSubject.send(scrollView.contentOffset.x)
     }
 }

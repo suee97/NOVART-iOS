@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol ExhibitionShortcutViewDelegate: AnyObject {
+    func exhibitionShortcutViewDidScroll(scrollView: UIScrollView)
+}
+
 final class ExhibitionShortcutView: UIView {
     
     private enum Constants {
@@ -24,6 +28,7 @@ final class ExhibitionShortcutView: UIView {
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.contentInset = UIEdgeInsets(top: 0, left: Constants.horizontalInset, bottom: 0, right: Constants.horizontalInset)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.delegate = self
         return scrollView
     }()
     
@@ -36,6 +41,16 @@ final class ExhibitionShortcutView: UIView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
+    
+    weak var delegate: ExhibitionShortcutViewDelegate?
+    var contentXOffset: CGFloat {
+        get {
+            return scrollView.contentOffset.x
+        } set {
+            let newOffset = CGPoint(x: newValue, y: scrollView.contentOffset.y)
+            scrollView.contentOffset = newOffset
+        }
+    }
     
     init() {
         super.init(frame: .zero)
@@ -70,5 +85,11 @@ final class ExhibitionShortcutView: UIView {
             }
             stackView.addArrangedSubview(view)
         }
+    }
+}
+
+extension ExhibitionShortcutView: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        delegate?.exhibitionShortcutViewDidScroll(scrollView: scrollView)
     }
 }

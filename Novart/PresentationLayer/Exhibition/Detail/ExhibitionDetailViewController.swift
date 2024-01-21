@@ -37,6 +37,7 @@ final class ExhibitionDetailViewController: BaseViewController {
         let view = ExhibitionShortcutView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.roundCorners(cornerRadius: Constants.shortcutViewCornerRadius, maskCorners: [.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+        view.delegate = self
         return view
     }()
     
@@ -126,7 +127,14 @@ final class ExhibitionDetailViewController: BaseViewController {
 private extension ExhibitionDetailViewController {
     private func createDataSource() -> DataSource {
         let infoCellRegistration = UICollectionView.CellRegistration<ExhibitionDetailInfoCell, ExhibitionDetailInfoModel> { [weak self] cell, _, item in
-            self?.detailInfoCell = cell
+            guard let self else { return }
+            self.detailInfoCell = cell
+            self.detailInfoCell?.exhibitionShortcutViewXOffsetSubject
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] xOffset in
+                    self?.shortcutView.contentXOffset = xOffset
+                })
+                .store(in: &self.cancellables)
             cell.update(with: item)
         }
         
@@ -247,18 +255,12 @@ extension ExhibitionDetailViewController: UICollectionViewDelegate {
                 shortcutView.isHidden = true
             }
         }
+    }
+}
 
-//        if shouldFollow {
-//            if floatingButtonStackView.isHidden {
-//                floatingButtonStackView.isHidden = false
-//                fixedButtonStackView.isHidden = true
-//            }
-//        } else {
-//            if fixedButtonStackView.isHidden {
-//                fixedButtonStackView.isHidden = false
-//                floatingButtonStackView.isHidden = true
-//            }
-//        }
-        
+extension ExhibitionDetailViewController: ExhibitionShortcutViewDelegate {
+    func exhibitionShortcutViewDidScroll(scrollView: UIScrollView) {
+        let contentXOffset = scrollView.contentOffset.x
+        detailInfoCell?.shortcutViewXOffset = contentXOffset
     }
 }
