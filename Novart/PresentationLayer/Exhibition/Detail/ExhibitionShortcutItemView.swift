@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ExhibitionShortcutItemView: UIView {
     
@@ -48,7 +49,10 @@ final class ExhibitionShortcutItemView: UIView {
         }
     }
     
-    init() {
+    let thumbnailUrl: String
+    
+    init(thumbnailUrl: String){
+        self.thumbnailUrl = thumbnailUrl
         super.init(frame: .zero)
         setupView()
     }
@@ -70,6 +74,7 @@ final class ExhibitionShortcutItemView: UIView {
         ])
         indicatorView.isHidden = true
         
-        imageView.image = UIImage(named: "mock_bed")
+        let url = URL(string: thumbnailUrl)
+        imageView.kf.setImage(with: url)
     }
 }

@@ -76,11 +76,19 @@ final class ExhibitionShortcutView: UIView {
             stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
         ])
+    }
+    
+    func setThumbnails(urls: [String]) {
+        if !stackView.arrangedSubviews.isEmpty {
+            for view in stackView.arrangedSubviews {
+                stackView.removeArrangedSubview(view)
+                view.removeFromSuperview()
+            }
+        }
         
-        
-        for i in 0..<10 {
-            let view = ExhibitionShortcutItemView()
-            if i == 0 {
+        for (idx, url) in urls.enumerated() {
+            let view = ExhibitionShortcutItemView(thumbnailUrl: url)
+            if idx == 0 {
                 view.isSelected = true
             }
             stackView.addArrangedSubview(view)

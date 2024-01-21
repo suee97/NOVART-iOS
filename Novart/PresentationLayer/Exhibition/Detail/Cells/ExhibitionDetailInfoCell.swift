@@ -288,6 +288,7 @@ extension ExhibitionDetailInfoCell {
         categoryLabel.text = viewModel.category ?? "없음"
         durationLabel.text = viewModel.duration
         descriptionLabel.text = viewModel.description
+        shortcutView.setThumbnails(urls: viewModel.shortcutThumbnailUrls)
         collectionView.reloadData()
     }
 }

@@ -115,12 +115,19 @@ final class ExhibitionDetailViewController: BaseViewController {
         viewModel.detailInfoItemSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] item in
-                self?.apply(item)
+                guard let self else { return }
+                self.apply(item)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.shortcutThumbnailUrlsSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] urls in
+                guard let self else { return }
+                self.shortcutView.setThumbnails(urls: urls)
             }
             .store(in: &cancellables)
     }
-    
-
 }
 
 // MARK: - CollectionView
