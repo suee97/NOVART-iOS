@@ -136,12 +136,21 @@ private extension ExhibitionDetailViewController {
         let infoCellRegistration = UICollectionView.CellRegistration<ExhibitionDetailInfoCell, ExhibitionDetailInfoModel> { [weak self] cell, _, item in
             guard let self else { return }
             self.detailInfoCell = cell
+            
             self.detailInfoCell?.exhibitionShortcutViewXOffsetSubject
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] xOffset in
-                    self?.shortcutView.contentXOffset = xOffset
+                .sink(receiveValue: { xOffset in
+                    self.shortcutView.contentXOffset = xOffset
                 })
                 .store(in: &self.cancellables)
+            
+            self.detailInfoCell?.selectedShorcutIndexSubject
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { index in
+                    self.scrollToExhibition(idx: index)
+                })
+                .store(in: &self.cancellables)
+            
             cell.update(with: item)
         }
         
@@ -181,6 +190,12 @@ private extension ExhibitionDetailViewController {
         snapshot.appendSections([.end])
         snapshot.appendItems(items[.end] ?? [], toSection: .end)
         dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func scrollToExhibition(idx: Int) {
+        let indexPath = IndexPath(item: idx, section: 1)
+        collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+
     }
 }
 
@@ -269,5 +284,9 @@ extension ExhibitionDetailViewController: ExhibitionShortcutViewDelegate {
     func exhibitionShortcutViewDidScroll(scrollView: UIScrollView) {
         let contentXOffset = scrollView.contentOffset.x
         detailInfoCell?.shortcutViewXOffset = contentXOffset
+    }
+    
+    func exhibitionShortcutViewDidSelectIndexAt(index: Int) {
+        scrollToExhibition(idx: index)
     }
 }

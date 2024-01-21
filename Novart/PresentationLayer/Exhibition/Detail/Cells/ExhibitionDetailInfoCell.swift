@@ -190,7 +190,7 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
     }
     
     var exhibitionShortcutViewXOffsetSubject: PassthroughSubject<CGFloat, Never> = .init()
-    
+    var selectedShorcutIndexSubject: PassthroughSubject<Int, Never> = .init()
     // MARK: - Initialization
 
     override init(frame: CGRect) {
@@ -339,5 +339,9 @@ extension ExhibitionDetailInfoCell {
 extension ExhibitionDetailInfoCell: ExhibitionShortcutViewDelegate {
     func exhibitionShortcutViewDidScroll(scrollView: UIScrollView) {
         exhibitionShortcutViewXOffsetSubject.send(scrollView.contentOffset.x)
+    }
+    
+    func exhibitionShortcutViewDidSelectIndexAt(index: Int) {
+        selectedShorcutIndexSubject.send(index)
     }
 }

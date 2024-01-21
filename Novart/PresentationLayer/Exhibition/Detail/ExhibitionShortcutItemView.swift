@@ -49,6 +49,8 @@ final class ExhibitionShortcutItemView: UIView {
         }
     }
     
+    var didTap: (() -> Void)?
+    
     let thumbnailUrl: String
     
     init(thumbnailUrl: String){
@@ -76,5 +78,13 @@ final class ExhibitionShortcutItemView: UIView {
         
         let url = URL(string: thumbnailUrl)
         imageView.kf.setImage(with: url)
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+        addGestureRecognizer(tapRecognizer)
+    }
+    
+    @objc
+    private func didTapView() {
+        didTap?()
     }
 }

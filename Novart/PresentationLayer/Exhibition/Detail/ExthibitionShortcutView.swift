@@ -9,6 +9,7 @@ import UIKit
 
 protocol ExhibitionShortcutViewDelegate: AnyObject {
     func exhibitionShortcutViewDidScroll(scrollView: UIScrollView)
+    func exhibitionShortcutViewDidSelectIndexAt(index: Int)
 }
 
 final class ExhibitionShortcutView: UIView {
@@ -90,6 +91,19 @@ final class ExhibitionShortcutView: UIView {
             let view = ExhibitionShortcutItemView(thumbnailUrl: url)
             if idx == 0 {
                 view.isSelected = true
+            }
+            view.didTap = { [weak self] in
+                guard let self else { return }
+                
+                for itemView in self.stackView.arrangedSubviews {
+                    guard let itemView = itemView as? ExhibitionShortcutItemView else { return }
+                    if itemView == view {
+                        itemView.isSelected = true
+                    } else {
+                        itemView.isSelected = false
+                    }
+                }
+                self.delegate?.exhibitionShortcutViewDidSelectIndexAt(index: idx)
             }
             stackView.addArrangedSubview(view)
         }
