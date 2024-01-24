@@ -4,9 +4,11 @@ import Combine
 final class MyPageSettingViewModel {
     // MARK: - Properties
     private let coordinator: MyPageCoordinator
+    var user: PlainUser?
     
-    init(coordinator: MyPageCoordinator) {
+    init(coordinator: MyPageCoordinator, user: PlainUser? = nil) {
         self.coordinator = coordinator
+        self.user = user
     }
     
     

@@ -6,6 +6,7 @@ final class MyPageSettingViewController: BaseViewController {
 
     // MARK: - Constants
     private enum Constants {
+        static let screenWidth = UIScreen.main.bounds.size.width
         static let defaultHorizontalMargin: CGFloat = 24
         static let defaultVerticalMargin: CGFloat = 24
         static let cellHeight: CGFloat = 40
@@ -42,6 +43,7 @@ final class MyPageSettingViewController: BaseViewController {
         
         enum UsageInfo {
             static let sectionTitle: String = "이용 정보"
+            static let sectionNonLoginTopMargin: CGFloat = 24
             
             static let usagePolicyTitle: String = "이용약관"
             static let usagePolicyTopMargin: CGFloat = 8
@@ -70,6 +72,13 @@ final class MyPageSettingViewController: BaseViewController {
             static let deleteTopMargin: CGFloat = 6
             static let deletBottomMargin: CGFloat = 49
         }
+        
+        enum LoginButton {
+            static let text = "로그인 하기"
+            static let height = (Constants.screenWidth - 48) * 54 / 342
+            static let topMargin: CGFloat = 16
+            static let font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        }
     }
     
     
@@ -91,6 +100,7 @@ final class MyPageSettingViewController: BaseViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     
     // MARK: - UI
     private let scrollView: UIScrollView = {
@@ -194,24 +204,40 @@ final class MyPageSettingViewController: BaseViewController {
         return button
     }()
     
+    private lazy var loginButton: PlainButton = {
+        let button = PlainButton()
+        button.setTitle(Constants.LoginButton.text, for: .normal)
+        button.titleLabel?.font = Constants.LoginButton.font
+        button.addAction(UIAction(handler: { _ in
+            print("login button tapped!")
+        }), for: .touchUpInside)
+        return button
+    }()
+    
     override func setupView() {
         view.backgroundColor = .white
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(notificationSectionLabel)
-        contentView.addSubview(activityToggleView)
-        contentView.addSubview(registerToggleView)
-        contentView.addSubview(serviceToggleView)
-        contentView.addSubview(inquireToggleView)
+        
+        if viewModel.user != nil {
+            contentView.addSubview(notificationSectionLabel)
+            contentView.addSubview(activityToggleView)
+            contentView.addSubview(registerToggleView)
+            contentView.addSubview(serviceToggleView)
+            contentView.addSubview(inquireToggleView)
+            contentView.addSubview(logoutButton)
+            contentView.addSubview(deleteButton)
+        } else {
+            contentView.addSubview(loginButton)
+        }
+        
         contentView.addSubview(usageSectionLabel)
         contentView.addSubview(usagePolicyButton)
         contentView.addSubview(privacyPolicyButton)
         contentView.addSubview(etcSectionLabel)
         contentView.addSubview(noticePolicyButton)
         contentView.addSubview(updateInfoView)
-        contentView.addSubview(logoutButton)
-        contentView.addSubview(deleteButton)
         
         scrollView.snp.makeConstraints({ m in
             m.edges.equalTo(view.safeAreaLayoutGuide)
@@ -221,41 +247,55 @@ final class MyPageSettingViewController: BaseViewController {
             m.top.bottom.width.equalToSuperview()
         })
         
-        notificationSectionLabel.snp.makeConstraints({ m in
-            m.left.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-            m.top.equalToSuperview().inset(Constants.Notification.sectionTitleTopMargin)
-        })
-        
-        activityToggleView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-            m.top.equalTo(notificationSectionLabel.snp.bottom).offset(Constants.Notification.activityTopMargin)
-            m.height.equalTo(Constants.cellHeight)
-        })
-        
-        registerToggleView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-            m.top.equalTo(activityToggleView.snp.bottom).offset(Constants.defaultVerticalMargin)
-            m.height.equalTo(Constants.cellHeight)
-        })
-        
-        serviceToggleView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-            m.top.equalTo(registerToggleView.snp.bottom).offset(Constants.defaultVerticalMargin)
-            m.height.equalTo(Constants.cellHeight)
-        })
-        
-        insertDivider(before: serviceToggleView, topOffset: Constants.defaultVerticalMargin, after: inquireToggleView, bottomOffset: Constants.defaultVerticalMargin)
-        
-        inquireToggleView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-            m.height.equalTo(Constants.cellHeight)
-        })
-        
-        insertDivider(before: inquireToggleView, topOffset: Constants.defaultVerticalMargin, after: usageSectionLabel, bottomOffset: Constants.defaultVerticalMargin)
-        
-        usageSectionLabel.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-        })
+        if viewModel.user != nil {
+            notificationSectionLabel.snp.makeConstraints({ m in
+                m.left.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.top.equalToSuperview().inset(Constants.Notification.sectionTitleTopMargin)
+            })
+            
+            activityToggleView.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.top.equalTo(notificationSectionLabel.snp.bottom).offset(Constants.Notification.activityTopMargin)
+                m.height.equalTo(Constants.cellHeight)
+            })
+            
+            registerToggleView.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.top.equalTo(activityToggleView.snp.bottom).offset(Constants.defaultVerticalMargin)
+                m.height.equalTo(Constants.cellHeight)
+            })
+            
+            serviceToggleView.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.top.equalTo(registerToggleView.snp.bottom).offset(Constants.defaultVerticalMargin)
+                m.height.equalTo(Constants.cellHeight)
+            })
+            
+            insertDivider(before: serviceToggleView, topOffset: Constants.defaultVerticalMargin, after: inquireToggleView, bottomOffset: Constants.defaultVerticalMargin)
+            
+            inquireToggleView.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.height.equalTo(Constants.cellHeight)
+            })
+            
+            insertDivider(before: inquireToggleView, topOffset: Constants.defaultVerticalMargin, after: usageSectionLabel, bottomOffset: Constants.defaultVerticalMargin)
+            
+            usageSectionLabel.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+            })
+        } else {
+            loginButton.snp.makeConstraints({ m in
+                m.top.equalToSuperview().inset(Constants.LoginButton.topMargin)
+                m.centerX.equalToSuperview()
+                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.height.equalTo(Constants.LoginButton.height)
+            })
+            
+            usageSectionLabel.snp.makeConstraints({ m in
+                m.top.equalTo(loginButton.snp.bottom).offset(Constants.UsageInfo.sectionNonLoginTopMargin)
+                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+            })
+        }
         
         usagePolicyButton.snp.makeConstraints({ m in
             m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
@@ -281,25 +321,34 @@ final class MyPageSettingViewController: BaseViewController {
             m.height.equalTo(Constants.cellHeight)
         })
         
-        updateInfoView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-            m.top.equalTo(noticePolicyButton.snp.bottom).offset(Constants.Etc.updateTopMargin)
-            m.height.equalTo(Constants.cellHeight)
-        })
-        
-        insertDivider(before: updateInfoView, topOffset: Constants.defaultVerticalMargin, after: logoutButton, bottomOffset: Constants.Account.logoutTopMargin)
-        
-        logoutButton.snp.makeConstraints({ m in
-            m.left.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-            m.height.equalTo(Constants.cellHeight)
-        })
-        
-        deleteButton.snp.makeConstraints({ m in
-            m.left.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-            m.top.equalTo(logoutButton.snp.bottom).offset(Constants.Account.deleteTopMargin)
-            m.height.equalTo(Constants.cellHeight)
-            m.bottom.equalToSuperview().offset(-Constants.Account.deletBottomMargin)
-        })
+        if viewModel.user != nil {
+            updateInfoView.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.top.equalTo(noticePolicyButton.snp.bottom).offset(Constants.Etc.updateTopMargin)
+                m.height.equalTo(Constants.cellHeight)
+            })
+            
+            insertDivider(before: updateInfoView, topOffset: Constants.defaultVerticalMargin, after: logoutButton, bottomOffset: Constants.Account.logoutTopMargin)
+            
+            logoutButton.snp.makeConstraints({ m in
+                m.left.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.height.equalTo(Constants.cellHeight)
+            })
+            
+            deleteButton.snp.makeConstraints({ m in
+                m.left.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.top.equalTo(logoutButton.snp.bottom).offset(Constants.Account.deleteTopMargin)
+                m.height.equalTo(Constants.cellHeight)
+                m.bottom.equalToSuperview().offset(-Constants.Account.deletBottomMargin)
+            })
+        } else {
+            updateInfoView.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.top.equalTo(noticePolicyButton.snp.bottom).offset(Constants.Etc.updateTopMargin)
+                m.height.equalTo(Constants.cellHeight)
+                m.bottom.equalToSuperview()
+            })
+        }
     }
     
     override func setupNavigationBar() {

@@ -48,7 +48,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     }
     
     private func showSetting() {
-        let viewModel = MyPageSettingViewModel(coordinator: self)
+        let user: PlainUser? = Authentication.shared.user
+        let viewModel = MyPageSettingViewModel(coordinator: self, user: user)
         let viewController = MyPageSettingViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }
