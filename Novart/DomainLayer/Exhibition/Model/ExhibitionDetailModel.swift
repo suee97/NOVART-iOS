@@ -47,7 +47,7 @@ struct ExhibitionDetailImageInfoModel: Decodable {
 
 struct ExhibitionArtistFollowInfoModel: Decodable {
     let userId: Int64
-    let artistNickname: String
+    let nickname: String
     let profileImageUrl: String?
     let following: Bool
 }
