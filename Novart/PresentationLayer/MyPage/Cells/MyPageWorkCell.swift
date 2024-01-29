@@ -10,7 +10,7 @@ final class MyPageWorkCell: UICollectionViewCell {
         
         enum ContentView {
             static let radius: CGFloat = 12
-            static let backgroundColor = UIColor.Common.grey00
+            static let backgroundColor = UIColor.init(hexString: "#F7F9FA")
             static let shadowColor = UIColor.black.cgColor
             static let shadowOpacity: Float = 0.1
             static let shadowOffset = CGSize(width: 0, height: 2)
@@ -87,7 +87,7 @@ final class MyPageWorkCell: UICollectionViewCell {
 
 extension MyPageWorkCell {
     func update(with item: MyPageWork) {
-        if let urlString = item.thumbnailImgUrl, let url = URL(string: urlString), let workName = item.name {
+        if let urlString = item.thumbnailImageUrl, let url = URL(string: urlString), let workName = item.name {
             workImageView.kf.setImage(with: url)
             workNameLabel.text = workName
         }
