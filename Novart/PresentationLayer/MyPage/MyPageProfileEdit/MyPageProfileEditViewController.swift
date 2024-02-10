@@ -57,6 +57,7 @@ final class MyPageProfileEditViewController: BaseViewController {
             static let cameraOrigin = CGPoint(x: getRelativeWidth(from: 77), y: getRelativeHeight(from: 38))
             static let cameraSize = CGSize(width: getRelativeWidth(from: 24), height: getRelativeWidth(from: 24))
             static let cameraAlpha: CGFloat = 0.5
+            static let defaultColor = UIColor.Common.sub
         }
         
         enum Nickname {
@@ -157,6 +158,14 @@ final class MyPageProfileEditViewController: BaseViewController {
             static let title: String = "이메일"
             static let titleTopMargin: CGFloat = getRelativeHeight(from: 32)
             static let placeHolder: String = "소통할 이메일 입력"
+            
+            enum ValidationLabel {
+                static let text = "이메일 형식이 올바르지 않습니다."
+                static let font = UIFont.systemFont(ofSize: 12, weight: .regular)
+                static let textColor = UIColor.init(hexString: "#FF3E31")
+                static let leftMargin: CGFloat = 36
+                static let topMargin: CGFloat = 4
+            }
         }
         
         enum Link {
@@ -183,13 +192,7 @@ final class MyPageProfileEditViewController: BaseViewController {
     private var recommendExpanded: Bool = false
     private var nicknameDupChecked: Bool = true {
         didSet {
-            if nicknameDupChecked {
-                applyButton.setTitleColor(Constants.Navigation.applyActiveColor, for: .normal)
-                applyButton.isEnabled = true
-            } else {
-                applyButton.setTitleColor(Constants.Navigation.applyInActiveColor, for: .normal)
-                applyButton.isEnabled = false
-            }
+            validateApply(nicknameDupChecked: nicknameDupChecked, emailText: emailField.text)
         }
     }
     
@@ -339,6 +342,15 @@ final class MyPageProfileEditViewController: BaseViewController {
         return textField
     }()
     
+    private let emailValidationLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.Email.ValidationLabel.text
+        label.textColor = Constants.Email.ValidationLabel.textColor
+        label.font = Constants.Email.ValidationLabel.font
+        label.isHidden = true
+        return label
+    }()
+    
     private lazy var linkField: ProfileEditTextField = {
         let textField = ProfileEditTextField(placeholder: Constants.Link.Field.placeHolder)
         textField.text = viewModel.user.openChatUrl
@@ -389,7 +401,8 @@ final class MyPageProfileEditViewController: BaseViewController {
         backgroundImageView.addGestureRecognizer(gesture)
         
         guard let urlString = viewModel.user.backgroundImageUrl, let url = URL(string: urlString) else {
-            backgroundImageView.image = UIImage(named: "default_user_background_image")
+            backgroundImageView.image = nil
+            backgroundImageView.backgroundColor = Constants.BackgroundImage.defaultColor
             return backgroundImageView
         }
         
@@ -528,6 +541,7 @@ final class MyPageProfileEditViewController: BaseViewController {
         contentView.addSubview(recommendTagView)
         contentView.addSubview(emailLabel)
         contentView.addSubview(emailField)
+        contentView.addSubview(emailValidationLabel)
         contentView.addSubview(linkLabel)
         contentView.addSubview(linkField)
         
@@ -668,6 +682,11 @@ final class MyPageProfileEditViewController: BaseViewController {
             m.height.equalTo(Constants.CommonLayout.fieldHeight)
         })
         
+        emailValidationLabel.snp.makeConstraints({ m in
+            m.left.equalToSuperview().inset(Constants.Email.ValidationLabel.leftMargin)
+            m.top.equalTo(emailField.snp.bottom).offset(Constants.Email.ValidationLabel.topMargin)
+        })
+        
         linkLabel.snp.makeConstraints({ m in
             m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
             m.top.equalTo(emailField.snp.bottom).offset(Constants.Link.Label.topMargin)
@@ -769,6 +788,17 @@ final class MyPageProfileEditViewController: BaseViewController {
             present(backgroundPicker, animated: true)
         }
     }
+    
+    private func validateApply(nicknameDupChecked: Bool, emailText: String?) {
+        guard let emailText else { return }
+        if nicknameDupChecked && viewModel.validateEmail(text: emailText) {
+            applyButton.setTitleColor(Constants.Navigation.applyActiveColor, for: .normal)
+            applyButton.isEnabled = true
+        } else {
+            applyButton.setTitleColor(Constants.Navigation.applyInActiveColor, for: .normal)
+            applyButton.isEnabled = false
+        }
+    }
 }
 
 
@@ -825,7 +855,10 @@ extension MyPageProfileEditViewController: UITextFieldDelegate {
             recommendTagView.applyItems(viewModel.recommendTagItems)
         case emailField:
             guard let text = emailField.text else { return }
-            userData.email = text
+            validateApply(nicknameDupChecked: nicknameDupChecked, emailText: text)
+            let validationResult: Bool = viewModel.validateEmail(text: text)
+            emailValidationLabel.isHidden = validationResult
+            if validationResult { userData.email = text }
         case linkField:
             guard let text = linkField.text else { return }
             userData.link = text

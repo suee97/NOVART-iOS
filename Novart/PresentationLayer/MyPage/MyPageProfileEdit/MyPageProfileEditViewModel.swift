@@ -3,6 +3,7 @@ import Combine
 import Alamofire
 
 final class MyPageProfileEditViewModel {
+    
     // MARK: - Properties
     private let coordinator: MyPageCoordinator
     private var interactor = MyPageDownloadInteractor()
@@ -134,6 +135,16 @@ final class MyPageProfileEditViewModel {
         }
         updateRecommendTagItemSelectCount()
     }
+    
+    func validateEmail(text: String) -> Bool {
+        if text.isEmpty { return true }
+        let pattern = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}\\@[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+"
+        guard let _ = text.range(of: pattern, options: .regularExpression) else {
+            return false
+        }
+        return true
+    }
+    
 }
 
 
