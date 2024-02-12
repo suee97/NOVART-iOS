@@ -18,7 +18,7 @@ final class SearchArtistCell: UICollectionViewCell {
         enum BottomInfo {
             static let textColor: UIColor = UIColor.Common.black
             static let font: UIFont = UIFont.systemFont(ofSize: 14, weight: .bold)
-            static let backgroundColor: UIColor = UIColor.Common.grey00
+            static let backgroundColor: UIColor = UIColor.init(hexString: "#F7F9FA")
             static let height: CGFloat = 40
         }
     }

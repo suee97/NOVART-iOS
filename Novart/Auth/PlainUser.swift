@@ -16,4 +16,5 @@ struct PlainUser: Codable {
     let jobs: [String]
     let email: String?
     let openChatUrl: String?
+    var following: Bool
 }
