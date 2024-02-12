@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 import SnapKit
 
 final class ReportViewController: BaseViewController {
@@ -150,19 +151,19 @@ final class ReportViewController: BaseViewController {
     
     private lazy var abuseCheckRowView: CheckRowView = {
         let view = CheckRowView(text: Constants.AbuseCheckRowView.text)
-        view.onTapCheckBoxButton = { self.validateReportButton() }
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .hateSpeech) }
         return view
     }()
     
     private lazy var issueCheckRowView: CheckRowView = {
         let view = CheckRowView(text: Constants.IssueCheckRowView.text)
-        view.onTapCheckBoxButton = { self.validateReportButton() }
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .transactionProblem) }
         return view
     }()
     
     private lazy var fraudCheckRowView: CheckRowView = {
         let view = CheckRowView(text: Constants.FraudCheckRowView.text)
-        view.onTapCheckBoxButton = { self.validateReportButton() }
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .fraud) }
         return view
     }()
     
@@ -223,6 +224,7 @@ final class ReportViewController: BaseViewController {
     
     // MARK: - Properties
     private var viewModel: ReportViewModel
+    private var cancellables: Set<AnyCancellable> = .init()
 
     // MARK: - Initialization
     init(viewModel: ReportViewModel) {
@@ -301,50 +303,47 @@ final class ReportViewController: BaseViewController {
         })
     }
     
+    override func setupBindings() {
+        viewModel.reportButtonEnableSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] shouldEnable in
+                guard let self else { return }
+                if shouldEnable {
+                    self.reportButton.titleLabel?.textColor = Constants.ReportButton.enabledTextColor
+                    self.reportButton.backgroundColor = Constants.ReportButton.enabledBackgroundColor
+                    self.reportButton.isEnabled = true
+                } else {
+                    self.reportButton.titleLabel?.textColor = Constants.ReportButton.disabledTextColor
+                    self.reportButton.backgroundColor = Constants.ReportButton.disabledBackgroundColor
+                    self.reportButton.isEnabled = false
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
     
     // MARK: - Functions
     private func onTapCancelButton() {
         self.dismiss(animated: true)
     }
     
-    private func validateReportButton() {
-        if abuseCheckRowView.isChecked || issueCheckRowView.isChecked || fraudCheckRowView.isChecked {
-            reportButton.titleLabel?.textColor = Constants.ReportButton.enabledTextColor
-            reportButton.backgroundColor = Constants.ReportButton.enabledBackgroundColor
-            reportButton.isEnabled = true
+    private func validateReportButton(checked: Bool, reportType: ReportType) {
+        if checked {
+            viewModel.addReport(type: reportType)
         } else {
-            reportButton.titleLabel?.textColor = Constants.ReportButton.disabledTextColor
-            reportButton.backgroundColor = Constants.ReportButton.disabledBackgroundColor
-            reportButton.isEnabled = false
+            viewModel.removeReport(type: reportType)
         }
     }
     
     private func onTapReportButton() {
-        // MARK: - TODO: API 요청
-        let removeViews = [titleLabel, cancelButton, abuseCheckRowView, divider1, issueCheckRowView, divider2, fraudCheckRowView]
-        removeViews.forEach { $0.removeFromSuperview() }
-        contentView.addSubview(confirmView)
-        confirmView.snp.makeConstraints({ m in
-            m.left.right.top.equalToSuperview()
-            m.height.equalTo(Constants.ConfirmView.height)
-        })
-        reportButton.setTitle("확인", for: .normal)
-        reportButton.enumerateEventHandlers { action, _, event, _ in
-            if let action = action {
-                reportButton.removeAction(action, for: event)
-            }
-        }
-        reportButton.addAction(UIAction(handler: { [weak self] _ in
-            guard let self else { return }
-            self.dismiss(animated: true)
-        }), for: .touchUpInside)
+        viewModel.sendReportRequest()
     }
 }
 
 // MARK: - CheckRowView & Divider
 fileprivate final class CheckRowView: UIView {
     var isChecked = false
-    var onTapCheckBoxButton: () -> Void = {}
+    var onTapCheckBoxButton: ((Bool) -> Void)?
     
     private let label: UILabel = {
         let label = UILabel()
@@ -361,7 +360,7 @@ fileprivate final class CheckRowView: UIView {
             self.isChecked = !self.isChecked
             let image = self.isChecked ? UIImage(named: "icon_check_fill") : UIImage(named: "icon_check_box")
             button.setImage(image, for: .normal)
-            self.onTapCheckBoxButton()
+            self.onTapCheckBoxButton?(self.isChecked)
         }), for: .touchUpInside)
         return button
     }()

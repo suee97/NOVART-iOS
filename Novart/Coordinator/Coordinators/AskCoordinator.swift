@@ -9,6 +9,9 @@ import UIKit
 
 final class AskCoordinator: BaseStackCoordinator<AskStep> {
     
+    @LateInit
+    var userId: Int64
+    
     override func start() {
         super.start()
         

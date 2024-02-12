@@ -46,12 +46,12 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
             showArtistProfile(userId: id)
         case let .exhibitionDetail(id):
             showExhibitionDetailScene(exhibitionId: id)
-        case .block:
-            showBlockSheet()
-        case .report:
-            showReportSheet()
-        case .ask:
-            showAskSheet()
+        case let .block(userId):
+            showBlockSheet(userId: userId)
+        case let .report(userId):
+            showReportSheet(userId: userId)
+        case let .ask(userId):
+            showAskSheet(userId: userId)
             
         }
     }
@@ -138,34 +138,37 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     }
     
     @MainActor
-    private func showBlockSheet() {
+    private func showBlockSheet(userId: Int64) {
         let bottomSheetRoot = BottomSheetNavigationController()
         bottomSheetRoot.bottomSheetConfiguration.customHeight = 390
         let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
         let coordinator = BlockCoordinator(navigator: stackNavigator)
-        
+        coordinator.userId = userId
+
         add(coordinators: coordinator)
         coordinator.start()
     }
     
     @MainActor
-    private func showReportSheet() {
+    private func showReportSheet(userId: Int64) {
         let bottomSheetRoot = BottomSheetNavigationController()
         bottomSheetRoot.bottomSheetConfiguration.customHeight = 390
         let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
         let coordinator = ReportCoordinator(navigator: stackNavigator)
+        coordinator.userId = userId
         
         add(coordinators: coordinator)
         coordinator.start()
     }
     
     @MainActor
-    private func showAskSheet() {
+    private func showAskSheet(userId: Int64) {
         let bottomSheetRoot = BottomSheetNavigationController()
         bottomSheetRoot.bottomSheetConfiguration.customHeight = 248
         let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
         let coordinator = AskCoordinator(navigator: stackNavigator)
-        
+        coordinator.userId = userId
+
         add(coordinators: coordinator)
         coordinator.start()
     }

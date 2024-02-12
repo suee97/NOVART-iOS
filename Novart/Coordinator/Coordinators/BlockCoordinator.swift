@@ -9,6 +9,9 @@ import UIKit
 
 final class BlockCoordinator: BaseStackCoordinator<BlockStep> {
     
+    @LateInit
+    var userId: Int64
+    
     override func start() {
         super.start()
         

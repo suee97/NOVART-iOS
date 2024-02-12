@@ -223,6 +223,9 @@
 		0EE1F6AA2B79FE1700756891 /* AskCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6A92B79FE1700756891 /* AskCoordinator.swift */; };
 		0EE1F6AE2B79FFE400756891 /* ReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6AD2B79FFE400756891 /* ReportViewModel.swift */; };
 		0EE1F6B12B7A010300756891 /* ReportType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6B02B7A010300756891 /* ReportType.swift */; };
+		0EE1F6B42B7A1D5100756891 /* CleanInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6B32B7A1D5100756891 /* CleanInteractor.swift */; };
+		0EE1F6B72B7A1DDB00756891 /* CleanTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6B62B7A1DDB00756891 /* CleanTarget.swift */; };
+		0EE1F6B92B7A1F8A00756891 /* APIClient+Clean.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6B82B7A1F8A00756891 /* APIClient+Clean.swift */; };
 		0EE255882ABC6662008CE0D1 /* CategoryTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */; };
 		0EE2558A2ABC6B37008CE0D1 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */; };
 		0EE2558C2AC0134A008CE0D1 /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2558B2AC0134A008CE0D1 /* ProductCell.swift */; };
@@ -497,6 +500,9 @@
 		0EE1F6A92B79FE1700756891 /* AskCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskCoordinator.swift; sourceTree = "<group>"; };
 		0EE1F6AD2B79FFE400756891 /* ReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewModel.swift; sourceTree = "<group>"; };
 		0EE1F6B02B7A010300756891 /* ReportType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportType.swift; sourceTree = "<group>"; };
+		0EE1F6B32B7A1D5100756891 /* CleanInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanInteractor.swift; sourceTree = "<group>"; };
+		0EE1F6B62B7A1DDB00756891 /* CleanTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanTarget.swift; sourceTree = "<group>"; };
+		0EE1F6B82B7A1F8A00756891 /* APIClient+Clean.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIClient+Clean.swift"; sourceTree = "<group>"; };
 		0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTabButton.swift; sourceTree = "<group>"; };
 		0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		0EE2558B2AC0134A008CE0D1 /* ProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCell.swift; sourceTree = "<group>"; };
@@ -1334,6 +1340,7 @@
 				0EE019A32A6BC5AB00389A95 /* APISerializer.swift */,
 				0EE019A12A6BC59B00389A95 /* APIEventMonitor.swift */,
 				0EE019BE2A6BCBEA00389A95 /* TokenRefreshResponse.swift */,
+				0EE1F6B52B7A1DAC00756891 /* Clean */,
 				0E6C65A72B4A70B6005E269E /* Media */,
 				0ECDFC162B1202C000F63921 /* Comment */,
 				0E1E211A2AE531AF00F15009 /* Product */,
@@ -1399,8 +1406,18 @@
 			isa = PBXGroup;
 			children = (
 				0EE1F6B02B7A010300756891 /* ReportType.swift */,
+				0EE1F6B32B7A1D5100756891 /* CleanInteractor.swift */,
 			);
 			path = Report;
+			sourceTree = "<group>";
+		};
+		0EE1F6B52B7A1DAC00756891 /* Clean */ = {
+			isa = PBXGroup;
+			children = (
+				0EE1F6B62B7A1DDB00756891 /* CleanTarget.swift */,
+				0EE1F6B82B7A1F8A00756891 /* APIClient+Clean.swift */,
+			);
+			path = Clean;
 			sourceTree = "<group>";
 		};
 		0EE2558D2AC0134D008CE0D1 /* Cell */ = {
@@ -1743,6 +1760,7 @@
 				0EE019922A6BAFFA00389A95 /* ServiceError.swift in Sources */,
 				0E760E862B1B111F0051CB6C /* ParticipantCell.swift in Sources */,
 				5BDD4A4A2AD6BE1F00937352 /* PlainEditTextField.swift in Sources */,
+				0EE1F6B72B7A1DDB00756891 /* CleanTarget.swift in Sources */,
 				0EE019452A56EEF300389A95 /* SearchViewController.swift in Sources */,
 				0EA8F8352A90967300ADFBFB /* HomeFeedCell.swift in Sources */,
 				5BB9F16E2ADD029500C347F3 /* ToggleSwitchView.swift in Sources */,
@@ -1811,6 +1829,7 @@
 				5BFC08572B3FEEA80063EF89 /* APIClient+MyPage.swift in Sources */,
 				0E1E21262AECDDD900F15009 /* ProductDetailCoordinator.swift in Sources */,
 				0E111B542B18CC5800A6BB95 /* FilterMenuViewDelegate.swift in Sources */,
+				0EE1F6B42B7A1D5100756891 /* CleanInteractor.swift in Sources */,
 				5BDD4A382AD25AC000937352 /* MyPageProfileEditViewController.swift in Sources */,
 				0E41738C2B25DF610017AAD9 /* MediaPickerTypeAlias.swift in Sources */,
 				0EAF1F3F2ADC0EFF00E9A10C /* RecentSearchView.swift in Sources */,
@@ -1861,6 +1880,7 @@
 				0EE019C42A6BCC8B00389A95 /* AuthTarget.swift in Sources */,
 				0E43AB4E2B78E25D0087922A /* UIViewController+BottomSheet.swift in Sources */,
 				0EE019132A482E0500389A95 /* MainStep.swift in Sources */,
+				0EE1F6B92B7A1F8A00756891 /* APIClient+Clean.swift in Sources */,
 				0EE019B32A6BCAB900389A95 /* TargetType.swift in Sources */,
 				0EE2558C2AC0134A008CE0D1 /* ProductCell.swift in Sources */,
 				0EE019372A514AE500389A95 /* LoginInteractor.swift in Sources */,
