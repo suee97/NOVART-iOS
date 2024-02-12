@@ -17,4 +17,9 @@ final class MyPageSettingViewModel {
     func showMain() {
         coordinator.navigate(to: .MyPageMain)
     }
+    
+    @MainActor
+    func showLoginModal() {
+        coordinator.navigate(to: .LoginModal)
+    }
 }

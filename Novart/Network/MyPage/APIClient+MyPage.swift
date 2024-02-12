@@ -18,8 +18,24 @@ extension APIClient {
         try await APIClient.request(target: MyPageTarget.fetchMyPageExhibitions(userId: userId), type: [MyPageExhibition].self)
     }
     
-    static func fetchMyPageUserInfo(userId: Int64) async throws -> MyPageUserInfo {
-        try await APIClient.request(target: MyPageTarget.fetchMyPageUserInfo(userId: userId), type: MyPageUserInfo.self)
+    static func fetchRecommendInterests() async throws -> [ProductModel] {
+        try await APIClient.request(target: MyPageTarget.fetchRecommenInterests, type: [ProductModel].self)
+    }
+    
+    static func fetchRecommendFollowings() async throws -> [ArtistModel] {
+        try await APIClient.request(target: MyPageTarget.fetchRecommenFollowings, type: [ArtistModel].self)
+    }
+    
+    static func fetchMyPageUserInfo(userId: Int64) async throws -> PlainUser {
+        try await APIClient.request(target: MyPageTarget.fetchMyPageUserInfo(userId: userId), type: PlainUser.self)
+    }
+    
+    static func follow(userId: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: MyPageTarget.follow(userId: userId), type: EmptyResponseModel.self)
+    }
+    
+    static func unFollow(userId: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: MyPageTarget.unFollow(userId: userId), type: EmptyResponseModel.self)
     }
     
     static func checkDuplicateNickname(nickname: String) async throws -> Bool {

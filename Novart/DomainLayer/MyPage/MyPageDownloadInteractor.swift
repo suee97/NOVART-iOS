@@ -1,4 +1,5 @@
 import Foundation
+import Alamofire
 
 final class MyPageDownloadInteractor {
     func fetchMyPageInterests(userId: Int64) async throws -> [ProductModel] {
@@ -17,8 +18,24 @@ final class MyPageDownloadInteractor {
         try await APIClient.fetchMyPageExhibitions(userId: userId)
     }
     
-    func fetchMyPageUserInfo(userId: Int64) async throws -> MyPageUserInfo {
+    func fetchRecommendInterests() async throws -> [ProductModel] {
+        try await APIClient.fetchRecommendInterests()
+    }
+    
+    func fetchRecommendFollowings() async throws -> [ArtistModel] {
+        try await APIClient.fetchRecommendFollowings()
+    }
+    
+    func fetchMyPageUserInfo(userId: Int64) async throws -> PlainUser {
         try await APIClient.fetchMyPageUserInfo(userId: userId)
+    }
+    
+    func follow(userId: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.follow(userId: userId)
+    }
+    
+    func unFollow(userId: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.unFollow(userId: userId)
     }
     
     func checkDuplicateNickname(nickname: String) async throws -> Bool {

@@ -30,7 +30,7 @@ class MainTabBarViewController: UITabBarController {
         tabBar.tintColor = UIColor.Common.black
         tabBar.unselectedItemTintColor = UIColor.Common.grey02
         
-        tabBar.layer.borderWidth = 1.0
+        tabBar.layer.borderWidth = 0.25
         tabBar.layer.borderColor = UIColor.Common.grey01.cgColor
         // Change to your desired color
     }

@@ -9,7 +9,7 @@ import UIKit
 
 final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     override func start() {
-        let viewModel = MyPageViewModel(coordinator: self)
+        let viewModel = MyPageViewModel(coordinator: self, userId: nil) // MARK: - TEST
         let viewController = MyPageViewController(viewModel: viewModel)
         
         let tabBarItem = UITabBarItem(
@@ -33,6 +33,17 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
             showSetting()
         case .MyPageNotification:
             showNotification()
+        case .LoginModal:
+            showLoginModal()
+        case .Close:
+            close()
+            
+        case let .product(id):
+            presentProductDetailVC(productId: id)
+        case let .artist(id):
+            showArtistProfile(userId: id)
+        case let .exhibitionDetail(id):
+            showExhibitionDetailScene(exhibitionId: id)
         }
     }
     
@@ -58,6 +69,46 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         let viewModel = MyPageNotificationViewModel(coordinator: self)
         let viewController = MyPageNotificationViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
+    }
+    
+    private func showLoginModal() {
+        let viewController = LoginModalViewController()
+//        if let sheet = viewController.sheetPresentationController {
+//            sheet.detents = [.large()]
+//            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+//            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+//        }
+        navigator.rootViewController.present(viewController, animated: true)
+    }
+    
+    private func close() {
+        navigator.pop(animated: true)
+    }
+    
+    private func presentProductDetailVC(productId: Int64) {
+        let root = BaseNavigationController()
+        let productDetailStackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
+        let productDetailCoordinator = ProductDetailCoordinator(navigator: productDetailStackNavigator)
+        productDetailCoordinator.productId = productId
+        add(coordinators: productDetailCoordinator)
+        
+        productDetailCoordinator.start()
+    }
+    
+    private func showArtistProfile(userId: Int64) {
+        let viewModel = MyPageViewModel(coordinator: self, userId: userId)
+        let viewController = MyPageViewController(viewModel: viewModel)
+        navigator.push(viewController, animated: true)
+    }
+    
+    private func showExhibitionDetailScene(exhibitionId: Int64) {
+        let root = BaseNavigationController()
+        let stackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
+        let exhibitionDetailCoordinator = ExhibitionDetailCoordinator(navigator: stackNavigator)
+        exhibitionDetailCoordinator.exhibitionId = exhibitionId
+        add(coordinators: exhibitionDetailCoordinator)
+        
+        exhibitionDetailCoordinator.start()
     }
 }
 

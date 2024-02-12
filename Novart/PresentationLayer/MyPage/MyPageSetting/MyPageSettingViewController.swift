@@ -106,6 +106,7 @@ final class MyPageSettingViewController: BaseViewController {
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.bounces = false
+        scrollView.delaysContentTouches = false
         return scrollView
     }()
     
@@ -208,8 +209,9 @@ final class MyPageSettingViewController: BaseViewController {
         let button = PlainButton()
         button.setTitle(Constants.LoginButton.text, for: .normal)
         button.titleLabel?.font = Constants.LoginButton.font
-        button.addAction(UIAction(handler: { _ in
-            print("login button tapped!")
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.showLoginModal()
         }), for: .touchUpInside)
         return button
     }()

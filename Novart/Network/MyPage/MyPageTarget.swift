@@ -8,12 +8,16 @@ enum MyPageTarget: TargetType {
     case fetchMyPageFollowings(userId: Int64)
     case fetchMyPageWorks(userId: Int64)
     case fetchMyPageExhibitions(userId: Int64)
+    case fetchRecommenInterests
+    case fetchRecommenFollowings
     case fetchMyPageUserInfo(userId: Int64)
-    case putImageData(data: Data, presignedUrl: String)
+    case follow(userId: Int64)
+    case unFollow(userId: Int64)
     
     // MyPageProfileEdit
     case checkDuplicateNickname(nickname: String)
     case requestPresignedUrl(filename: String, category: String)
+    case putImageData(data: Data, presignedUrl: String)
     case profileEdit(profileEditRequestBodyModel: ProfileEditRequestBodyModel)
     
     var baseURL: String {
@@ -35,8 +39,16 @@ enum MyPageTarget: TargetType {
             return "users/\(userId)/arts"
         case let .fetchMyPageExhibitions(userId):
             return "users/\(userId)/exhibitions"
+        case .fetchRecommenInterests:
+            return "users/me/likes/recommendation"
+        case .fetchRecommenFollowings:
+            return "users/me/follow/recommendation"
         case let .fetchMyPageUserInfo(userId):
             return "users/\(userId)/info"
+        case let .follow(userId):
+            return "follow/\(userId)"
+        case let .unFollow(userId):
+            return "follow/\(userId)"
         case let .checkDuplicateNickname(nickname):
             return "users/check-duplicate-nickname/\(nickname)"
         case .requestPresignedUrl:
@@ -50,20 +62,22 @@ enum MyPageTarget: TargetType {
     
     var method: HTTPMethod {
         switch self {
-        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchMyPageUserInfo, .checkDuplicateNickname:
+        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchRecommenInterests, .fetchRecommenFollowings, .fetchMyPageUserInfo, .checkDuplicateNickname:
             return .get
-        case .requestPresignedUrl:
+        case .follow, .requestPresignedUrl:
             return .post
         case .profileEdit:
             return .put
         case .putImageData:
             return .put
+        case .unFollow:
+            return .delete
         }
     }
     
     var parameters: RequestParams {
         switch self {
-        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchMyPageUserInfo, .checkDuplicateNickname:
+        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchRecommenInterests, .fetchRecommenFollowings, .fetchMyPageUserInfo, .follow, .unFollow, .checkDuplicateNickname:
             return .query(nil)
         case let .requestPresignedUrl(filename, category):
             return .body(["filename": filename, "category": category])
