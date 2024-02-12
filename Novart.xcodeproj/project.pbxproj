@@ -219,6 +219,8 @@
 		0EE019D72A6C36B300389A95 /* PolicyContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019D62A6C36B300389A95 /* PolicyContentView.swift */; };
 		0EE1F6A42B79F81D00756891 /* ReportCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6A32B79F81D00756891 /* ReportCoordinator.swift */; };
 		0EE1F6A62B79F82F00756891 /* ReportStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6A52B79F82F00756891 /* ReportStep.swift */; };
+		0EE1F6A82B79FE0000756891 /* AskStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6A72B79FE0000756891 /* AskStep.swift */; };
+		0EE1F6AA2B79FE1700756891 /* AskCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6A92B79FE1700756891 /* AskCoordinator.swift */; };
 		0EE255882ABC6662008CE0D1 /* CategoryTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */; };
 		0EE2558A2ABC6B37008CE0D1 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */; };
 		0EE2558C2AC0134A008CE0D1 /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2558B2AC0134A008CE0D1 /* ProductCell.swift */; };
@@ -267,7 +269,7 @@
 		5BDD4A4A2AD6BE1F00937352 /* PlainEditTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A492AD6BE1F00937352 /* PlainEditTextField.swift */; };
 		5BF6242F2B60CB3200F502FE /* LoginModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF6242E2B60CB3200F502FE /* LoginModalViewController.swift */; };
 		5BF624322B60E43C00F502FE /* LoginModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624312B60E43C00F502FE /* LoginModalViewModel.swift */; };
-		5BF624382B6FDDE500F502FE /* MyPageAskModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624372B6FDDE500F502FE /* MyPageAskModalViewController.swift */; };
+		5BF624382B6FDDE500F502FE /* AskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624372B6FDDE500F502FE /* AskViewController.swift */; };
 		5BF6243A2B6FDF0F00F502FE /* MyPageAskModalPresentaionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624392B6FDF0E00F502FE /* MyPageAskModalPresentaionController.swift */; };
 		5BF6243D2B76026300F502FE /* EmptyResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF6243C2B76026300F502FE /* EmptyResponseModel.swift */; };
 		5BF6243F2B78921000F502FE /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF6243E2B78921000F502FE /* ReportViewController.swift */; };
@@ -489,6 +491,8 @@
 		0EE019D62A6C36B300389A95 /* PolicyContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyContentView.swift; sourceTree = "<group>"; };
 		0EE1F6A32B79F81D00756891 /* ReportCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportCoordinator.swift; sourceTree = "<group>"; };
 		0EE1F6A52B79F82F00756891 /* ReportStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportStep.swift; sourceTree = "<group>"; };
+		0EE1F6A72B79FE0000756891 /* AskStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskStep.swift; sourceTree = "<group>"; };
+		0EE1F6A92B79FE1700756891 /* AskCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskCoordinator.swift; sourceTree = "<group>"; };
 		0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTabButton.swift; sourceTree = "<group>"; };
 		0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		0EE2558B2AC0134A008CE0D1 /* ProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCell.swift; sourceTree = "<group>"; };
@@ -533,7 +537,7 @@
 		5BDD4A492AD6BE1F00937352 /* PlainEditTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainEditTextField.swift; sourceTree = "<group>"; };
 		5BF6242E2B60CB3200F502FE /* LoginModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModalViewController.swift; sourceTree = "<group>"; };
 		5BF624312B60E43C00F502FE /* LoginModalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModalViewModel.swift; sourceTree = "<group>"; };
-		5BF624372B6FDDE500F502FE /* MyPageAskModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageAskModalViewController.swift; sourceTree = "<group>"; };
+		5BF624372B6FDDE500F502FE /* AskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskViewController.swift; sourceTree = "<group>"; };
 		5BF624392B6FDF0E00F502FE /* MyPageAskModalPresentaionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageAskModalPresentaionController.swift; sourceTree = "<group>"; };
 		5BF6243C2B76026300F502FE /* EmptyResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponseModel.swift; sourceTree = "<group>"; };
 		5BF6243E2B78921000F502FE /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
@@ -938,6 +942,7 @@
 				0E41737E2B25A2FB0017AAD9 /* ProductUploadCoordinator.swift */,
 				0E43AB552B78E5FC0087922A /* BlockCoordinator.swift */,
 				0EE1F6A32B79F81D00756891 /* ReportCoordinator.swift */,
+				0EE1F6A92B79FE1700756891 /* AskCoordinator.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -956,6 +961,7 @@
 				0E4173802B25A3590017AAD9 /* ProductUploadStep.swift */,
 				0E43AB572B78E6260087922A /* BlockStep.swift */,
 				0EE1F6A52B79F82F00756891 /* ReportStep.swift */,
+				0EE1F6A72B79FE0000756891 /* AskStep.swift */,
 			);
 			path = Steps;
 			sourceTree = "<group>";
@@ -1246,7 +1252,7 @@
 				5BDD4A102AC955A600937352 /* MyPageViewModel.swift */,
 				5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */,
 				5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */,
-				5BF624372B6FDDE500F502FE /* MyPageAskModalViewController.swift */,
+				5BF624372B6FDDE500F502FE /* AskViewController.swift */,
 				5BF624402B78F10200F502FE /* MyPageUserBlockViewController.swift */,
 				5BF6243E2B78921000F502FE /* ReportViewController.swift */,
 				5BF624392B6FDF0E00F502FE /* MyPageAskModalPresentaionController.swift */,
@@ -1685,6 +1691,7 @@
 				0EE019052A481F2E00389A95 /* BaseViewController.swift in Sources */,
 				0EA8F82E2A6D0DB400ADFBFB /* HomeTarget.swift in Sources */,
 				5B97D4BF2B131573009CEA05 /* ExhibitionDownloadInteractor.swift in Sources */,
+				0EE1F6AA2B79FE1700756891 /* AskCoordinator.swift in Sources */,
 				0E9BB0892AD149720002A76D /* ProductCoverCell.swift in Sources */,
 				0EE0190D2A48293500389A95 /* BaseStackCoordinator.swift in Sources */,
 				0EE019D32A6BEBA500389A95 /* PrivacyPolicyViewController.swift in Sources */,
@@ -1809,6 +1816,7 @@
 				0EE019332A51498100389A95 /* LoginViewModel.swift in Sources */,
 				0EE019AF2A6BC63B00389A95 /* APIError.swift in Sources */,
 				0EE0198E2A6BAF9B00389A95 /* SignInProvider.swift in Sources */,
+				0EE1F6A82B79FE0000756891 /* AskStep.swift in Sources */,
 				5BFC08552B3FEDE80063EF89 /* MyPageTarget.swift in Sources */,
 				0E08B2772AC96B46001F1CB3 /* SetNicknameViewModel.swift in Sources */,
 				0EE019D72A6C36B300389A95 /* PolicyContentView.swift in Sources */,
@@ -1875,7 +1883,7 @@
 				0EAF1F392ADBFD3C00E9A10C /* SearchTarget.swift in Sources */,
 				0E1E212B2AECE34600F15009 /* LateInit.swift in Sources */,
 				0EE018E32A48156C00389A95 /* SceneDelegate.swift in Sources */,
-				5BF624382B6FDDE500F502FE /* MyPageAskModalViewController.swift in Sources */,
+				5BF624382B6FDDE500F502FE /* AskViewController.swift in Sources */,
 				0E9BB0972AD6E6920002A76D /* UserInteractor.swift in Sources */,
 				0E1E21192AE52E1600F15009 /* ProductDetailModel.swift in Sources */,
 				0EE019192A482FF000389A95 /* SplashViewController.swift in Sources */,
