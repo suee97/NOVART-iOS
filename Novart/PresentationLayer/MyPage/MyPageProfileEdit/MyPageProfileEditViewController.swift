@@ -322,21 +322,21 @@ final class MyPageProfileEditViewController: BaseViewController {
     private let emailLabel = ProfileEditLabel(title: Constants.Email.title)
     private let linkLabel = ProfileEditLabel(title: Constants.Link.Label.title)
     
-    private lazy var nicknameField: ProfileEditTextField = {
-        let textField = ProfileEditTextField(placeholder: Constants.Nickname.Field.placeHolder)
+    private lazy var nicknameField: PlainEditTextField = {
+        let textField = PlainEditTextField(placeholder: Constants.Nickname.Field.placeHolder)
         textField.text = viewModel.user.nickname
         textField.addTarget(self, action: #selector(textFieldDidchanged(_:)), for: .editingChanged)
         return textField
     }()
     
-    private lazy var tagField: ProfileEditTextField = {
-        let textField = ProfileEditTextField(placeholder: Constants.Tag.Field.placeHolder)
+    private lazy var tagField: PlainEditTextField = {
+        let textField = PlainEditTextField(placeholder: Constants.Tag.Field.placeHolder)
         textField.addTarget(self, action: #selector(textFieldDidchanged(_:)), for: .editingChanged)
         return textField
     }()
     
-    private lazy var emailField: ProfileEditTextField = {
-        let textField = ProfileEditTextField(placeholder: Constants.Email.placeHolder)
+    private lazy var emailField: PlainEditTextField = {
+        let textField = PlainEditTextField(placeholder: Constants.Email.placeHolder)
         textField.text = viewModel.user.email
         textField.addTarget(self, action: #selector(textFieldDidchanged(_:)), for: .editingChanged)
         return textField
@@ -351,8 +351,8 @@ final class MyPageProfileEditViewController: BaseViewController {
         return label
     }()
     
-    private lazy var linkField: ProfileEditTextField = {
-        let textField = ProfileEditTextField(placeholder: Constants.Link.Field.placeHolder)
+    private lazy var linkField: PlainEditTextField = {
+        let textField = PlainEditTextField(placeholder: Constants.Link.Field.placeHolder)
         textField.text = viewModel.user.openChatUrl
         textField.addTarget(self, action: #selector(textFieldDidchanged(_:)), for: .editingChanged)
         return textField

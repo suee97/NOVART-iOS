@@ -183,65 +183,50 @@ final class MyPageViewController: BaseViewController {
                 }
             }
         }
+    }
 //        self.dismiss(animated: true)
     // MARK: - UI
-    private let collectionViewLayout: UICollectionViewFlowLayout = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 12
-        return layout
-    }()
-    
-    private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
-        collectionView.backgroundColor = .clear
-        collectionView.contentInsetAdjustmentBehavior = .never
-        collectionView.bounces = false
-        collectionView.showsVerticalScrollIndicator = false
-        return collectionView
-    }()
-    
-    private lazy var meatballsMenu: UIMenu = {
-        let menuItems: [UIAction] = {
-            return [
-                UIAction(title: "프로필 편집", handler: { _ in
-                    self.viewModel.showProfileEdit()
-                }),
-                UIAction(title: "공유", handler: { _ in}),
-            ]
-        }()
-        let menu: UIMenu = UIMenu(options: [], children: menuItems)
-        return menu
-    }()
-    
-    private lazy var meatballsButton: UIButton = {
-        let button = UIButton(frame: Constants.navIconSize)
-        button.setBackgroundImage(UIImage(named: "icon_meatballs"), for: .normal)
-        button.menu = meatballsMenu
-        button.showsMenuAsPrimaryAction = true
-        return button
-    }()
-    
-    private lazy var notificationButton: UIButton = {
-        let button = UIButton(frame: Constants.navIconSize)
-        button.setBackgroundImage(UIImage(named: "icon_notification2"), for: .normal) // 기존 icon_notification이 존재해서 숫자 2를 붙임. 기존 아이콘 사용 안하는거면 수정이 필요합니다
-        button.addAction(UIAction(handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.viewModel.showNotification()
-        }), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var settingButton: UIButton = {
-        let button = UIButton(frame: Constants.navIconSize)
-        button.setBackgroundImage(UIImage(named: "icon_setting"), for: .normal)
-        button.addAction(UIAction(handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.viewModel.showSetting()
-        }), for: .touchUpInside)
-        return button
-    }()
-    
+//    private lazy var meatballsMenu: UIMenu = {
+//        let menuItems: [UIAction] = {
+//            return [
+//                UIAction(title: "프로필 편집", handler: { _ in
+//                    self.viewModel.showProfileEdit()
+//                }),
+//                UIAction(title: "공유", handler: { _ in}),
+//            ]
+//        }()
+//        let menu: UIMenu = UIMenu(options: [], children: menuItems)
+//        return menu
+//    }()
+//    
+//    private lazy var meatballsButton: UIButton = {
+//        let button = UIButton(frame: Constants.navIconSize)
+//        button.setBackgroundImage(UIImage(named: "icon_meatballs"), for: .normal)
+//        button.menu = meatballsMenu
+//        button.showsMenuAsPrimaryAction = true
+//        return button
+//    }()
+//    
+//    private lazy var notificationButton: UIButton = {
+//        let button = UIButton(frame: Constants.navIconSize)
+//        button.setBackgroundImage(UIImage(named: "icon_notification2"), for: .normal) // 기존 icon_notification이 존재해서 숫자 2를 붙임. 기존 아이콘 사용 안하는거면 수정이 필요합니다
+//        button.addAction(UIAction(handler: { [weak self] _ in
+//            guard let self = self else { return }
+//            self.viewModel.showNotification()
+//        }), for: .touchUpInside)
+//        return button
+//    }()
+//    
+//    private lazy var settingButton: UIButton = {
+//        let button = UIButton(frame: Constants.navIconSize)
+//        button.setBackgroundImage(UIImage(named: "icon_setting"), for: .normal)
+//        button.addAction(UIAction(handler: { [weak self] _ in
+//            guard let self = self else { return }
+//            self.viewModel.showSetting()
+//        }), for: .touchUpInside)
+//        return button
+//    }()
+//    
     private lazy var uploadProductButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.Common.main
@@ -260,42 +245,42 @@ final class MyPageViewController: BaseViewController {
         return button
     }()
     
-    override func setupNavigationBar() {
-        let spacer = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        spacer.width = Constants.Layout.navigationBarSpacerWidth
-        
-        let notificationItem = UIBarButtonItem(customView: notificationButton)
-        let settingItem = UIBarButtonItem(customView: settingButton)
-        let meatballsItem = UIBarButtonItem(customView: meatballsButton)
-
-        self.navigationItem.rightBarButtonItems = [meatballsItem, spacer, notificationItem]
-        self.navigationItem.leftBarButtonItem = settingItem
-    }
-    
-    override func setupView() {
-        viewModel.getUserInfo()
-        viewModel.getAllItems()
-        
-        let safeArea = view.safeAreaLayoutGuide
-        
-        view.backgroundColor = .white
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(MyPageHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageHeaderView.reuseIdentifier)
-        
-        view.addSubview(collectionView)
-        
-        collectionView.snp.makeConstraints({ m in
-            m.left.right.top.bottom.equalTo(view)
-        })
-        
-        view.addSubview(uploadProductButton)
-        uploadProductButton.snp.makeConstraints { m in
-            m.bottom.equalTo(safeArea).inset(Constants.UploadButton.bottomMargin)
-            m.centerX.equalToSuperview()
-        }
-    }
-    
+//    override func setupNavigationBar() {
+//        let spacer = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+//        spacer.width = Constants.Layout.navigationBarSpacerWidth
+//        
+//        let notificationItem = UIBarButtonItem(customView: notificationButton)
+//        let settingItem = UIBarButtonItem(customView: settingButton)
+//        let meatballsItem = UIBarButtonItem(customView: meatballsButton)
+//
+//        self.navigationItem.rightBarButtonItems = [meatballsItem, spacer, notificationItem]
+//        self.navigationItem.leftBarButtonItem = settingItem
+//    }
+//    
+//    override func setupView() {
+//        viewModel.getUserInfo()
+//        viewModel.getAllItems()
+//        
+//        let safeArea = view.safeAreaLayoutGuide
+//        
+//        view.backgroundColor = .white
+//        collectionView.delegate = self
+//        collectionView.dataSource = self
+//        collectionView.register(MyPageHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageHeaderView.reuseIdentifier)
+//        
+//        view.addSubview(collectionView)
+//        
+//        collectionView.snp.makeConstraints({ m in
+//            m.left.right.top.bottom.equalTo(view)
+//        })
+//        
+//        view.addSubview(uploadProductButton)
+//        uploadProductButton.snp.makeConstraints { m in
+//            m.bottom.equalTo(safeArea).inset(Constants.UploadButton.bottomMargin)
+//            m.centerX.equalToSuperview()
+//        }
+//    }
+//    
     
     // MARK: - Binding
     override func setupBindings() {
@@ -596,6 +581,8 @@ final class MyPageViewController: BaseViewController {
     override func setupView() {
         viewModel.getAllItems()
         viewModel.getOtherUserInfo()
+    
+        let safeArea = view.safeAreaLayoutGuide
         
         view.backgroundColor = .white
         collectionView.delegate = self
@@ -606,6 +593,12 @@ final class MyPageViewController: BaseViewController {
         collectionView.snp.makeConstraints({ m in
             m.left.right.top.bottom.equalTo(view)
         })
+        
+        view.addSubview(uploadProductButton)
+        uploadProductButton.snp.makeConstraints { m in
+            m.bottom.equalTo(safeArea).inset(Constants.UploadButton.bottomMargin)
+            m.centerX.equalToSuperview()
+        }
     }
     
     

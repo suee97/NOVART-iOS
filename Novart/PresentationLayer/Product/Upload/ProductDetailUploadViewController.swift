@@ -114,8 +114,8 @@ final class ProductDetailUploadViewController: BaseViewController {
         return label
     }()
     
-    private lazy var titleTextField: CustomEditTextField = {
-        let textField = CustomEditTextField(placeholder: Constants.TextField.titleTextFieldPlaceholder)
+    private lazy var titleTextField: PlainEditTextField = {
+        let textField = PlainEditTextField(placeholder: Constants.TextField.titleTextFieldPlaceholder)
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
@@ -252,8 +252,8 @@ final class ProductDetailUploadViewController: BaseViewController {
         return label
     }()
     
-    private lazy var tagTextField: CustomEditTextField = {
-        let textField = CustomEditTextField(placeholder: Constants.TextField.tagTextFieldPlaceholder)
+    private lazy var tagTextField: PlainEditTextField = {
+        let textField = PlainEditTextField(placeholder: Constants.TextField.tagTextFieldPlaceholder)
         textField.addTarget(self, action: #selector(tagFieldDidChanged(_:)), for: .editingChanged)
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
@@ -318,8 +318,8 @@ final class ProductDetailUploadViewController: BaseViewController {
         return tagView
     }()
 
-    private let priceTextField: CustomEditTextField = {
-       let textField = CustomEditTextField(placeholder: Constants.TextField.priceTextFieldPlaceholder)
+    private let priceTextField: PlainEditTextField = {
+       let textField = PlainEditTextField(placeholder: Constants.TextField.priceTextFieldPlaceholder)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.keyboardType = .numberPad
         return textField
