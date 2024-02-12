@@ -12,7 +12,8 @@ final class ReportCoordinator: BaseStackCoordinator<ReportStep> {
     override func start() {
         super.start()
         
-        let viewController = ReportViewController()
+        let viewModel = ReportViewModel(coordinator: self)
+        let viewController = ReportViewController(viewModel: viewModel)
         navigator.start(viewController)
     }
 }

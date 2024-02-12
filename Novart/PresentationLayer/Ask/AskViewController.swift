@@ -7,10 +7,8 @@ final class AskViewController: BaseViewController {
     private enum Constants {
         static let screenWidth = UIScreen.main.bounds.size.width
         static let screenHeight = UIScreen.main.bounds.size.height
-        static func getRelativeWidth(from width: CGFloat) -> CGFloat { screenWidth * (width/390) }
-        static func getRelativeHeight(from height: CGFloat) -> CGFloat { screenHeight * (height/844) }
-        
-        static let height = getRelativeHeight(from: 248)
+
+        static let height: CGFloat = 248
         static let offsetY = screenHeight - height
         
         static let backgroundColor = UIColor.Common.white
@@ -27,64 +25,64 @@ final class AskViewController: BaseViewController {
             static let backgroundColor = UIColor.Common.grey01
             static let width: CGFloat = 40
             static let height: CGFloat = 4
-            static let topMargin: CGFloat = getRelativeHeight(from: 12)
+            static let topMargin: CGFloat = 12
         }
         
         enum AskLabel {
             static let text = "문의"
             static let textColor = UIColor.Common.black
             static let font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-            static let topMargin = getRelativeHeight(from: 8)
+            static let topMargin: CGFloat = 8
         }
         
         enum CancelButton {
-            static let diameter = getRelativeWidth(from: 24)
+            static let diameter: CGFloat = 24
             static let imagePath = "icon_cancel"
-            static let rightMargin = getRelativeWidth(from: 24)
+            static let rightMargin: CGFloat = 24
         }
         
         enum Divider {
-            static let width = getRelativeWidth(from: 342)
+            static let width: CGFloat = 342
             static let height = 0.5
-            static let topMargin = getRelativeHeight(from: 4)
+            static let topMargin: CGFloat = 4
             static let color = UIColor.Common.grey01
         }
         
         enum KakaoAskView {
-            static let leftMargin = getRelativeWidth(from: 24)
-            static let rightMargin = getRelativeWidth(from: 24)
-            static let topMargin = getRelativeHeight(from: 16)
-            static let height = getRelativeHeight(from: 40 + 32)
+            static let leftMargin: CGFloat = 24
+            static let rightMargin: CGFloat = 24
+            static let topMargin: CGFloat = 16
+            static let height: CGFloat = 72
             
             enum ImageView {
-                static let imagePath = "login_kakao"
-                static let diameter = getRelativeWidth(from: 40)
+                static let imagePath = "icon_ask_kakao"
+                static let diameter: CGFloat = 40
             }
             
             enum Label {
                 static let text = "카카오톡으로 문의"
                 static let textColor = UIColor.Common.black
                 static let font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-                static let leftMargin = getRelativeWidth(from: 12)
+                static let leftMargin: CGFloat = 12
             }
         }
         
         enum EmailAskView {
-            static let leftMargin = getRelativeWidth(from: 24)
-            static let rightMargin = getRelativeWidth(from: 24)
-            static let topMargin = getRelativeHeight(from: 4)
-            static let height = getRelativeHeight(from: 40 + 32)
+            static let leftMargin: CGFloat = 24
+            static let rightMargin: CGFloat = 24
+            static let topMargin: CGFloat = 4
+            static let height: CGFloat = 72
             
             enum ImageView {
                 static let imagePath = "icon_email"
-                static let diameter = getRelativeWidth(from: 40)
+                static let diameter: CGFloat = 40
             }
             
             enum Label {
                 static let text = "이메일로 문의"
                 static let textColor = UIColor.Common.black
                 static let font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-                static let leftMargin = getRelativeWidth(from: 12)
+                static let leftMargin: CGFloat = 12
             }
         }
     }
