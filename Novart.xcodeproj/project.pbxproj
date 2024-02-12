@@ -217,6 +217,8 @@
 		0EE019D32A6BEBA500389A95 /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019D22A6BEBA500389A95 /* PrivacyPolicyViewController.swift */; };
 		0EE019D52A6BF22B00389A95 /* PrivacyPolicyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019D42A6BF22B00389A95 /* PrivacyPolicyViewModel.swift */; };
 		0EE019D72A6C36B300389A95 /* PolicyContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE019D62A6C36B300389A95 /* PolicyContentView.swift */; };
+		0EE1F6A42B79F81D00756891 /* ReportCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6A32B79F81D00756891 /* ReportCoordinator.swift */; };
+		0EE1F6A62B79F82F00756891 /* ReportStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6A52B79F82F00756891 /* ReportStep.swift */; };
 		0EE255882ABC6662008CE0D1 /* CategoryTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */; };
 		0EE2558A2ABC6B37008CE0D1 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */; };
 		0EE2558C2AC0134A008CE0D1 /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2558B2AC0134A008CE0D1 /* ProductCell.swift */; };
@@ -268,7 +270,7 @@
 		5BF624382B6FDDE500F502FE /* MyPageAskModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624372B6FDDE500F502FE /* MyPageAskModalViewController.swift */; };
 		5BF6243A2B6FDF0F00F502FE /* MyPageAskModalPresentaionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624392B6FDF0E00F502FE /* MyPageAskModalPresentaionController.swift */; };
 		5BF6243D2B76026300F502FE /* EmptyResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF6243C2B76026300F502FE /* EmptyResponseModel.swift */; };
-		5BF6243F2B78921000F502FE /* MyPageReportModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF6243E2B78921000F502FE /* MyPageReportModalViewController.swift */; };
+		5BF6243F2B78921000F502FE /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF6243E2B78921000F502FE /* ReportViewController.swift */; };
 		5BF624412B78F10200F502FE /* MyPageUserBlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624402B78F10200F502FE /* MyPageUserBlockViewController.swift */; };
 		5BFC07CF2B317CA10063EF89 /* NotificationDownloadInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07CE2B317CA10063EF89 /* NotificationDownloadInteractor.swift */; };
 		5BFC07D52B343EEB0063EF89 /* MyPagePutNotificationReadStatusResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07D42B343EEB0063EF89 /* MyPagePutNotificationReadStatusResponseModel.swift */; };
@@ -485,6 +487,8 @@
 		0EE019D22A6BEBA500389A95 /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
 		0EE019D42A6BF22B00389A95 /* PrivacyPolicyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewModel.swift; sourceTree = "<group>"; };
 		0EE019D62A6C36B300389A95 /* PolicyContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyContentView.swift; sourceTree = "<group>"; };
+		0EE1F6A32B79F81D00756891 /* ReportCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportCoordinator.swift; sourceTree = "<group>"; };
+		0EE1F6A52B79F82F00756891 /* ReportStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportStep.swift; sourceTree = "<group>"; };
 		0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTabButton.swift; sourceTree = "<group>"; };
 		0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		0EE2558B2AC0134A008CE0D1 /* ProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCell.swift; sourceTree = "<group>"; };
@@ -532,7 +536,7 @@
 		5BF624372B6FDDE500F502FE /* MyPageAskModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageAskModalViewController.swift; sourceTree = "<group>"; };
 		5BF624392B6FDF0E00F502FE /* MyPageAskModalPresentaionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageAskModalPresentaionController.swift; sourceTree = "<group>"; };
 		5BF6243C2B76026300F502FE /* EmptyResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponseModel.swift; sourceTree = "<group>"; };
-		5BF6243E2B78921000F502FE /* MyPageReportModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageReportModalViewController.swift; sourceTree = "<group>"; };
+		5BF6243E2B78921000F502FE /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
 		5BF624402B78F10200F502FE /* MyPageUserBlockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageUserBlockViewController.swift; sourceTree = "<group>"; };
 		5BFC07CA2B317B450063EF89 /* NotificationTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTarget.swift; sourceTree = "<group>"; };
 		5BFC07CC2B317BFD0063EF89 /* APIClient+Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIClient+Notification.swift"; sourceTree = "<group>"; };
@@ -933,6 +937,7 @@
 				0E760E742B1B111E0051CB6C /* ExhibitionDetailCoordinator.swift */,
 				0E41737E2B25A2FB0017AAD9 /* ProductUploadCoordinator.swift */,
 				0E43AB552B78E5FC0087922A /* BlockCoordinator.swift */,
+				0EE1F6A32B79F81D00756891 /* ReportCoordinator.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -950,6 +955,7 @@
 				0E760E762B1B111E0051CB6C /* ExhibitionDetailStep.swift */,
 				0E4173802B25A3590017AAD9 /* ProductUploadStep.swift */,
 				0E43AB572B78E6260087922A /* BlockStep.swift */,
+				0EE1F6A52B79F82F00756891 /* ReportStep.swift */,
 			);
 			path = Steps;
 			sourceTree = "<group>";
@@ -1242,7 +1248,7 @@
 				5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */,
 				5BF624372B6FDDE500F502FE /* MyPageAskModalViewController.swift */,
 				5BF624402B78F10200F502FE /* MyPageUserBlockViewController.swift */,
-				5BF6243E2B78921000F502FE /* MyPageReportModalViewController.swift */,
+				5BF6243E2B78921000F502FE /* ReportViewController.swift */,
 				5BF624392B6FDF0E00F502FE /* MyPageAskModalPresentaionController.swift */,
 				5BDD4A152AC955C100937352 /* Cells */,
 			);
@@ -1687,6 +1693,7 @@
 				0E6C65892B36B3C7005E269E /* UploadCellActionDelegate.swift in Sources */,
 				5BF624412B78F10200F502FE /* MyPageUserBlockViewController.swift in Sources */,
 				5BDD4A122AC955A600937352 /* MyPageHeaderView.swift in Sources */,
+				0EE1F6A42B79F81D00756891 /* ReportCoordinator.swift in Sources */,
 				5BAE07EF2B4AC06F007E5CF5 /* MyPageCategory.swift in Sources */,
 				0EA8F81C2A6CFBAA00ADFBFB /* SetNicknameViewController.swift in Sources */,
 				5BDD4A262AC955C100937352 /* MyPageWorks.swift in Sources */,
@@ -1751,6 +1758,7 @@
 				0E43AB442B74E18F0087922A /* ProductInteractor.swift in Sources */,
 				0EE019AD2A6BC62D00389A95 /* NetworkResponse.swift in Sources */,
 				0EAF1F262ADAFE2A00E9A10C /* ProductSearchViewModel.swift in Sources */,
+				0EE1F6A62B79F82F00756891 /* ReportStep.swift in Sources */,
 				0E111B512B18CC5800A6BB95 /* CategoryType.swift in Sources */,
 				0ED335672AF9302000DCC40A /* TagView.swift in Sources */,
 				0E6C658D2B36C9B7005E269E /* UploadMediaDetailCell.swift in Sources */,
@@ -1773,7 +1781,7 @@
 				0EE0197C2A629DFF00389A95 /* CategoryButton.swift in Sources */,
 				0EE019A82A6BC5ED00389A95 /* HeadersAdapter.swift in Sources */,
 				5BFC08592B3FEF5F0063EF89 /* MyPageDownloadInteractor.swift in Sources */,
-				5BF6243F2B78921000F502FE /* MyPageReportModalViewController.swift in Sources */,
+				5BF6243F2B78921000F502FE /* ReportViewController.swift in Sources */,
 				0E1E212F2AECE43C00F15009 /* CommentViewModel.swift in Sources */,
 				5BFC08612B4A84980063EF89 /* ProfileEditRequestBodyModel.swift in Sources */,
 				0ECDFC192B1202EB00F63921 /* APIClient+Comment.swift in Sources */,

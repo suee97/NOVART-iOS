@@ -1,7 +1,7 @@
 import UIKit
 import SnapKit
 
-final class MyPageReportModalViewController: BaseViewController {
+final class ReportViewController: BaseViewController {
 
     // MARK: - Constants
     private enum Constants {
@@ -13,7 +13,6 @@ final class MyPageReportModalViewController: BaseViewController {
         enum ContentView {
             static let radius: CGFloat = 12
             static let width = screenWidth
-            static let height = width * (398/390)
             
             enum Shadow {
                 static let color: CGColor = UIColor.black.withAlphaComponent(0.25).cgColor
@@ -225,28 +224,17 @@ final class MyPageReportModalViewController: BaseViewController {
     }()
     
     override func setupView() {
-        view.backgroundColor = .clear
+        view.backgroundColor = UIColor.Common.white
         
-        view.isUserInteractionEnabled = true
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapView))
-        view.addGestureRecognizer(gesture)
-        gesture.delegate = self
-        
-        view.addSubview(contentView)
-        contentView.addSubview(topBar)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(cancelButton)
-        contentView.addSubview(abuseCheckRowView)
-        contentView.addSubview(divider1)
-        contentView.addSubview(issueCheckRowView)
-        contentView.addSubview(divider2)
-        contentView.addSubview(fraudCheckRowView)
-        contentView.addSubview(reportButton)
-        
-        contentView.snp.makeConstraints({ m in
-            m.left.right.bottom.equalToSuperview()
-            m.height.equalTo(Constants.ContentView.height)
-        })
+        view.addSubview(topBar)
+        view.addSubview(titleLabel)
+        view.addSubview(cancelButton)
+        view.addSubview(abuseCheckRowView)
+        view.addSubview(divider1)
+        view.addSubview(issueCheckRowView)
+        view.addSubview(divider2)
+        view.addSubview(fraudCheckRowView)
+        view.addSubview(reportButton)
         
         topBar.snp.makeConstraints({ m in
             m.centerX.equalToSuperview()
@@ -303,10 +291,6 @@ final class MyPageReportModalViewController: BaseViewController {
     
     
     // MARK: - Functions
-    @objc private func onTapView(_ sender: UITapGestureRecognizer) {
-        self.dismiss(animated: true)
-    }
-    
     private func onTapCancelButton() {
         self.dismiss(animated: true)
     }
@@ -344,22 +328,6 @@ final class MyPageReportModalViewController: BaseViewController {
         }), for: .touchUpInside)
     }
 }
-
-
-// MARK: - UIGestureRecognizerDelegate
-extension MyPageReportModalViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        let touchDisableViews = [contentView, abuseCheckRowView, issueCheckRowView, fraudCheckRowView]
-        
-        guard let touchView = touch.view else { return false }
-        
-        if touchDisableViews.contains(touchView) {
-            return false
-        }
-        return true
-    }
-}
-
 
 // MARK: - CheckRowView & Divider
 fileprivate final class CheckRowView: UIView {

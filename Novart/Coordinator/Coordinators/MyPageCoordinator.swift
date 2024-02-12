@@ -46,6 +46,13 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
             showArtistProfile(userId: id)
         case let .exhibitionDetail(id):
             showExhibitionDetailScene(exhibitionId: id)
+        case .block:
+            showBlockSheet()
+        case .report:
+            showReportSheet()
+        case .ask:
+            showAskSheet()
+            
         }
     }
     
@@ -128,6 +135,39 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         add(coordinators: exhibitionDetailCoordinator)
         
         exhibitionDetailCoordinator.start()
+    }
+    
+    @MainActor
+    private func showBlockSheet() {
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = 390
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let coordinator = BlockCoordinator(navigator: stackNavigator)
+        
+        add(coordinators: coordinator)
+        coordinator.start()
+    }
+    
+    @MainActor
+    private func showReportSheet() {
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = 390
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let coordinator = ReportCoordinator(navigator: stackNavigator)
+        
+        add(coordinators: coordinator)
+        coordinator.start()
+    }
+    
+    @MainActor
+    private func showAskSheet() {
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = 400
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let coordinator = BlockCoordinator(navigator: stackNavigator)
+        
+        add(coordinators: coordinator)
+        coordinator.start()
     }
 }
 

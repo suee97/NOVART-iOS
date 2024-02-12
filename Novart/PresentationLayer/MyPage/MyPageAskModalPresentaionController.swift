@@ -36,7 +36,7 @@ final class MyPageAskModalPresentaionController: UIPresentationController {
                                          width: containerSize.width, height: preferredSize.height)
         }
         
-        if presentedViewController.isKind(of: MyPageReportModalViewController.self) || presentedViewController.isKind(of: MyPageUserBlockViewController.self) {
+        if presentedViewController.isKind(of: ReportViewController.self) || presentedViewController.isKind(of: MyPageUserBlockViewController.self) {
             containerView.insertSubview(dimmingView, at: 0)
             dimmingView.snp.makeConstraints({ m in
                 m.edges.equalToSuperview()

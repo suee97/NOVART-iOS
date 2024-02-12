@@ -184,6 +184,21 @@ extension MyPageViewModel {
     func showExhibitionDetail(exhibitionId: Int64) {
         coordinator?.navigate(to: .exhibitionDetail(id: exhibitionId))
     }
+    
+    @MainActor
+    func showBlockSheet() {
+        coordinator?.navigate(to: .block)
+    }
+    
+    @MainActor
+    func showReportSheet() {
+        coordinator?.navigate(to: .report)
+    }
+    
+    @MainActor
+    func showAskSheet() {
+        coordinator?.navigate(to: .ask)
+    }
 }
 
 enum MyPageUserState {
