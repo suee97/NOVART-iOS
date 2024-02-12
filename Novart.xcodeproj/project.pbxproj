@@ -558,7 +558,6 @@
 		0E1E21212AE564F200F15009 /* DomainLayer */ = {
 			isa = PBXGroup;
 			children = (
-				0E6C65AC2B4A7414005E269E /* Media */,
 				0ECDFC1B2B12035100F63921 /* Comment */,
 				0E3ECC682AE4F64D00790CB9 /* PlainItem.swift */,
 				0ED9F04B2B11FD0800EDCD3C /* Product */,
@@ -696,21 +695,6 @@
 				0E6C65AA2B4A71F0005E269E /* APIClient+Media.swift */,
 			);
 			path = Media;
-			sourceTree = "<group>";
-		};
-		0E6C65AC2B4A7414005E269E /* Media */ = {
-			isa = PBXGroup;
-			children = (
-				0E6C65AD2B4A741E005E269E /* Model */,
-			);
-			path = Media;
-			sourceTree = "<group>";
-		};
-		0E6C65AD2B4A741E005E269E /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		0E6C65B72B4AB8D8005E269E /* Resource */ = {
