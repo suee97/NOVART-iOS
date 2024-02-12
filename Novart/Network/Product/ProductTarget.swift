@@ -11,6 +11,8 @@ import Alamofire
 enum ProductTarget: TargetType {
     case productDetail(id: Int64)
     case uploadProduct(product: ProductUploadRequestModel)
+    case like(id: Int64)
+    case cancelLike(id: Int64)
     
     var baseURL: String {
         API.baseURL
@@ -22,6 +24,10 @@ enum ProductTarget: TargetType {
             return "arts/\(id)"
         case .uploadProduct:
             return "arts"
+        case let .like(id):
+            return "likes/\(id)"
+        case let .cancelLike(id):
+            return "likes/\(id)"
         }
     }
     
@@ -31,6 +37,10 @@ enum ProductTarget: TargetType {
             return .get
         case .uploadProduct:
             return .post
+        case .like:
+            return .post
+        case .cancelLike:
+            return .delete
         }
     }
     
@@ -38,9 +48,12 @@ enum ProductTarget: TargetType {
         switch self {
         case .productDetail:
             return .query(nil)
-            
         case let .uploadProduct(product):
             return .body(product)
+        case .like:
+            return .body(nil)
+        case .cancelLike:
+            return .body(nil)
         }
     }
 }

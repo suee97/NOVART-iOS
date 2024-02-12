@@ -15,8 +15,17 @@ final class ProductDetailViewModel {
     
     let productId: Int64
     
-    let productDetailSubject: PassthroughSubject<ProductDetailModel, Never> = .init()
+    let productDetailSubject: CurrentValueSubject<ProductDetailModel?, Never> = .init(nil)
     let productImages: PassthroughSubject<[UIImage?], Never> = .init()
+    
+    var isFollowingArtist: Bool {
+        productDetailSubject.value?.artist.following ?? false
+    }
+    
+    var isMine: Bool {
+        let artistId = productDetailSubject.value?.artist.userId ?? -1
+        return Authentication.shared.user?.id == artistId
+    }
     
     init(productId: Int64, coordinator: ProductDetailCoordinator) {
         self.coordinator = coordinator
@@ -31,6 +40,21 @@ final class ProductDetailViewModel {
     @MainActor
     func closeCoordinator() {
         coordinator?.close()
+    }
+}
+
+extension ProductDetailViewModel {
+    func attributedDescriptionsString(for text: String) -> NSAttributedString {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 4
+        let attributes: [NSAttributedString.Key: Any] = [
+            .paragraphStyle: paragraphStyle,
+            .font: UIFont.systemFont(ofSize: 14, weight: .regular),
+            .foregroundColor: UIColor.Common.warmBlack
+        ]
+        
+        let attributedString = NSAttributedString(string: text, attributes: attributes)
+        return attributedString
     }
 }
 

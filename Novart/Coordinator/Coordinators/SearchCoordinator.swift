@@ -33,12 +33,14 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
         }
     }
     
+    @MainActor
     private func showSearchResultScene(data: SearchResultModel) {
         let viewModel = SearchViewModel(data: data, coordinator: self)
         let searchViewController = SearchViewController(viewModel: viewModel)
         navigator.push(searchViewController, animated: true)
     }
     
+    @MainActor
     private func presentProductDetailVC(productId: Int64) {
         let root = BaseNavigationController()
         let productDetailStackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)

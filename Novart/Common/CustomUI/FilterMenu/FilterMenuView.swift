@@ -7,6 +7,8 @@
 
 import UIKit
 
+
+
 final class FilterMenuView: UIView {
     
     // MARK: - Constants
@@ -17,7 +19,7 @@ final class FilterMenuView: UIView {
         static let cornerRadius: CGFloat = 12
         static let topInset: CGFloat = 8
         static let bottomInset: CGFloat = 8
-        static let menuBackgroundColor: UIColor = UIColor.Common.white.withAlphaComponent(0.9)
+        static let menuBackgroundColor: UIColor = UIColor.Common.white
         
         enum Shadow {
             static let color: CGColor = UIColor.black.withAlphaComponent(0.25).cgColor
@@ -43,6 +45,7 @@ final class FilterMenuView: UIView {
     let anchorPosition: CGPoint
     let filterTypes: [CategoryType]
     weak var delegate: FilterMenuViewDelegate?
+    weak var senderDelegate: FilterMenuViewSendable?
     
     // MARK: - Initialization
 
@@ -62,6 +65,7 @@ final class FilterMenuView: UIView {
         guard let touch = touches.first else { return }
 
         if touch.view?.tag != 999 {
+            senderDelegate?.didHideMenu()
             removeFromSuperview()
         }
     }

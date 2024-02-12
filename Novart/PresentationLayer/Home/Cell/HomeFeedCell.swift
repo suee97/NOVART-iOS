@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class HomeFeedCell: UICollectionViewCell {
     
@@ -81,6 +82,10 @@ final class HomeFeedCell: UICollectionViewCell {
         let button = UIButton()
         button.setImage(UIImage(named: "icon_heart"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel?.didTapLikeButton()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -109,6 +114,9 @@ final class HomeFeedCell: UICollectionViewCell {
     // MARK: - Properties
     
     private var dataSource: FeedImageDataSource?
+    private var viewModel: FeedItemViewModel?
+    private var cancellables: Set<AnyCancellable> = .init()
+    private var setupComplete: Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -130,7 +138,6 @@ final class HomeFeedCell: UICollectionViewCell {
         collectionView.layer.cornerRadius = Constants.cornerRadius
         collectionView.clipsToBounds = true
         collectionView.delegate = self
-        
         
         contentView.addSubview(collectionView)
         NSLayoutConstraint.activate([
@@ -182,13 +189,31 @@ final class HomeFeedCell: UICollectionViewCell {
     }
     
     func update(with item: FeedItemViewModel) {
+        cancellables.removeAll()
+        
+        viewModel = item
         itemNameLabel.text = item.name
         artistNameLabel.text = item.artist
-        categoryBadge.text = "그래픽"
-        pageControl.numberOfPages = 2
+        categoryBadge.text = item.category.rawValue
+        pageControl.numberOfPages = item.imageUrls.count
+        dataSource = FeedImageDataSource(collectionView: collectionView, dataProvider: item.dataProvider(index:))
+        let applyData = Array(0..<item.loopedImageUrls.count)
+        dataSource?.apply(applyData)
         
-        dataSource = FeedImageDataSource(collectionView: collectionView)
-        dataSource?.apply(item.imageUrls)
+        if item.imageUrls.count < 2 {
+            collectionView.isScrollEnabled = false
+        } else {
+            collectionView.isScrollEnabled = true
+        }
+        
+        item.$liked
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLiked in
+                guard let self else { return }
+                let image = isLiked ? UIImage(named: "icon_heart_fill") : UIImage(named: "icon_heart")
+                self.likeButton.setImage(image, for: .normal)
+            }
+            .store(in: &cancellables)
     }
     
     @objc
@@ -203,6 +228,13 @@ final class HomeFeedCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         dataSource = nil
+        setupComplete = false
+    }
+    
+    func scrollToMiddle() {
+        guard let viewModel else { return }
+        let middleSectionIndex = viewModel.imageUrls.count
+        collectionView.scrollToItem(at: IndexPath(item: middleSectionIndex, section: 0), at: .centeredHorizontally, animated: false)
     }
 }
 
@@ -220,11 +252,22 @@ private extension HomeFeedCell {
         section.interGroupSpacing = 0
         
         section.visibleItemsInvalidationHandler = { [weak self] _, point, _ in
+            guard let self else { return }
+            guard let viewModel = self.viewModel, self.setupComplete else { return }
+            let offset = point.x
+            let width = collectionView.bounds.size.width
+            let originalCount = viewModel.imageUrls.count
             let itemWidth = Constants.Image.itemWidth
             let margin = itemWidth / 2
-            let horizontalOffset = point.x + margin
+            var horizontalOffset = point.x + margin - width * 2
             let pageIndex = Int(horizontalOffset / itemWidth)
-            self?.pageControl.currentPage = pageIndex
+            self.pageControl.currentPage = pageIndex
+
+            if offset <= width * CGFloat(originalCount - 1) {
+                self.collectionView.scrollToItem(at: .init(row: originalCount * 2 - 1, section: 0), at: .centeredHorizontally, animated: false)
+            } else if offset >= width * CGFloat(originalCount * 2) {
+                self.collectionView.scrollToItem(at: .init(row: originalCount, section: 0), at: .centeredHorizontally, animated: false)
+            }
         }
         
         return section
@@ -243,5 +286,26 @@ private extension HomeFeedCell {
 // MARK: - CollectionViewDelegate
 extension HomeFeedCell: UICollectionViewDelegate, UIScrollViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if !setupComplete {
+            scrollToMiddle()
+            setupComplete = true
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let viewModel else { return }
+        let offset = scrollView.contentOffset.x
+        let width = scrollView.bounds.size.width
+        let totalCount = viewModel.loopedImageUrls.count
+        let originalCount = viewModel.imageUrls.count
+
+//        if offset <= width * CGFloat(originalCount) { // Reached the beginning
+//            collectionView.contentOffset = CGPoint(x: width * CGFloat(originalCount) + offset, y: 0)
+//        } else if offset >= width * CGFloat(originalCount * 2) { // Reached the end
+//            collectionView.contentOffset = CGPoint(x: offset - width * CGFloat(originalCount), y: 0)
+//        }
     }
 }

@@ -38,6 +38,7 @@ final class ProductInfoView: UIView {
             static let textColor: UIColor = UIColor.Common.black
             static let topMargin: CGFloat = 24
             static let spacing: CGFloat = 8
+            static let bottomMargin: CGFloat = 24
         }
     }
     
@@ -97,6 +98,14 @@ final class ProductInfoView: UIView {
         tagView.delegate = self
         tagView.translatesAutoresizingMaskIntoConstraints = false
         return tagView
+    }()
+    
+    private lazy var copyrightImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleToFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "product_detail_copyright")
+        return imageView
     }()
     
     var viewModel: ProductDetailModel? {
@@ -160,15 +169,22 @@ final class ProductInfoView: UIView {
             dateTitleLabel.topAnchor.constraint(equalTo: tagView.bottomAnchor, constant: Constants.Date.topMargin),
             dateTitleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             dateLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            dateLabel.topAnchor.constraint(equalTo: dateTitleLabel.bottomAnchor, constant: Constants.Date.spacing),
-            dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            dateLabel.topAnchor.constraint(equalTo: dateTitleLabel.bottomAnchor, constant: Constants.Date.spacing)
+        ])
+        
+        addSubview(copyrightImageView)
+        NSLayoutConstraint.activate([
+            copyrightImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            copyrightImageView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: Constants.Date.bottomMargin),
+            copyrightImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
     
     private func setupData(viewModel: ProductDetailModel) {
         titleLabel.text = viewModel.name
-        priceLabel.text = "\(viewModel.price)원"
-        dateLabel.text = viewModel.createdAt
+        let priceText = Int(viewModel.price).toFormattedString() ?? "0"
+        priceLabel.text = "\(priceText)원"
+        dateLabel.text = viewModel.createdAt.toFormattedString()
         let tagItems = viewModel.artTagList.map { TagItem(tag: $0) }
         tagView.applyItems(tagItems)
     }

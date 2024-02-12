@@ -20,6 +20,7 @@ class BaseStackCoordinator<CurrentStep: Step>: Coordinator {
         self.navigator = navigator
     }
     
+    @MainActor
     func start() {
         navigator.onDismissed = { [weak self] in
             self?.end()

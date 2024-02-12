@@ -7,10 +7,10 @@
 
 import UIKit
 
-typealias FeedImageDataSourceType = UICollectionViewDiffableDataSource<FeedImageDataSource.Section, String>
+typealias FeedImageDataSourceType = UICollectionViewDiffableDataSource<FeedImageDataSource.Section, Int>
 
-private typealias FeedImageDataSourceSnapshot = NSDiffableDataSourceSnapshot<HomeDataSource.Section, String>
-private typealias FeedImageCellRegistration = UICollectionView.CellRegistration<FeedImageCell, String>
+private typealias FeedImageDataSourceSnapshot = NSDiffableDataSourceSnapshot<HomeDataSource.Section, Int>
+private typealias FeedImageCellRegistration = UICollectionView.CellRegistration<FeedImageCell, Int>
 
 final class FeedImageDataSource: FeedImageDataSourceType {
 
@@ -19,9 +19,12 @@ final class FeedImageDataSource: FeedImageDataSourceType {
         case image
     }
     
-    init(collectionView: UICollectionView) {
+//    let dataProvid
+    
+    init(collectionView: UICollectionView, dataProvider: @escaping ((Int) -> String)) {
         let feedImageCellRegistration = FeedImageCellRegistration { cell, _, item in
-            cell.update(with: item)
+            let imageUrl = dataProvider(item)
+            cell.update(with: imageUrl)
         }
         
         super.init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
@@ -29,7 +32,7 @@ final class FeedImageDataSource: FeedImageDataSourceType {
         }
     }
     
-    func apply(_ items: [String]) {
+    func apply(_ items: [Int]) {
         var snapshot = snapshot()
         
         snapshot.deleteSections([.image])
