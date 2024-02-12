@@ -162,9 +162,9 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     @MainActor
     private func showAskSheet() {
         let bottomSheetRoot = BottomSheetNavigationController()
-        bottomSheetRoot.bottomSheetConfiguration.customHeight = 400
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = 248
         let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
-        let coordinator = BlockCoordinator(navigator: stackNavigator)
+        let coordinator = AskCoordinator(navigator: stackNavigator)
         
         add(coordinators: coordinator)
         coordinator.start()

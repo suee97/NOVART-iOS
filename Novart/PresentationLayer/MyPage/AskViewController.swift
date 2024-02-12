@@ -1,7 +1,7 @@
 import UIKit
 import SnapKit
 
-final class MyPageAskModalViewController: BaseViewController {
+final class AskViewController: BaseViewController {
 
     // MARK: - Constants
     private enum Constants {
@@ -179,8 +179,6 @@ final class MyPageAskModalViewController: BaseViewController {
     }()
     
     override func setupView() {
-        preferredContentSize = CGSize(width: Constants.screenWidth, height: Constants.height)
-
         view.backgroundColor = Constants.backgroundColor
         view.layer.cornerRadius = Constants.radius
         

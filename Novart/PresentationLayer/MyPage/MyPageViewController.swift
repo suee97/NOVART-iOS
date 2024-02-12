@@ -604,11 +604,7 @@ final class MyPageViewController: BaseViewController {
     
     // MARK: - Functions
     private func onTapAskButton() {
-        let viewController = MyPageAskModalViewController()
-        askModalTransitioningDelegate = MyPageAskModalTransitioningDelegate(from: self, to: viewController)
-        viewController.modalPresentationStyle = .custom
-        viewController.transitioningDelegate = askModalTransitioningDelegate
-        tabBarController?.present(viewController, animated: true, completion: nil)
+        viewModel.showAskSheet()
     }
     
     private func onTapFollowButton() {
