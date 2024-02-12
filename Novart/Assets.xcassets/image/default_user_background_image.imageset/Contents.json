@@ -1,8 +1,19 @@
 {
   "images" : [
     {
-      "filename" : "default_user_background_image.svg",
-      "idiom" : "universal"
+      "filename" : "Frame 1137.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "Frame 1137@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "Frame 1137@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

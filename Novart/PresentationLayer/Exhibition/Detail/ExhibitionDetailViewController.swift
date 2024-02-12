@@ -10,6 +10,10 @@ import Combine
 
 final class ExhibitionDetailViewController: BaseViewController {
     
+    private enum Constants {
+        static let shortcutViewCornerRadius: CGFloat = 12
+    }
+    
     // MARK: - DataSource
     
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, ExhibitionDetailItem>
@@ -29,11 +33,20 @@ final class ExhibitionDetailViewController: BaseViewController {
         return collectionView
     }()
     
+    private lazy var shortcutView: ExhibitionShortcutView = {
+        let view = ExhibitionShortcutView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.roundCorners(cornerRadius: Constants.shortcutViewCornerRadius, maskCorners: [.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+        view.delegate = self
+        return view
+    }()
+    
     // MARK: - Properties
     
     private var viewModel: ExhibitionDetailViewModel
     private lazy var dataSource: DataSource = createDataSource()
     private var cancellables: Set<AnyCancellable> = .init()
+    private weak var detailInfoCell: ExhibitionDetailInfoCell?
     
     // MARK: - Init
     
@@ -87,24 +100,57 @@ final class ExhibitionDetailViewController: BaseViewController {
             collectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        collectionView.delegate = self
+        
+        view.addSubview(shortcutView)
+        NSLayoutConstraint.activate([
+            shortcutView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            shortcutView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            shortcutView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
+        ])
+        shortcutView.isHidden = true
     }
     
     override func setupBindings() {
         viewModel.detailInfoItemSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] item in
-                self?.apply(item)
+                guard let self else { return }
+                self.apply(item)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.shortcutThumbnailUrlsSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] urls in
+                guard let self else { return }
+                self.shortcutView.setThumbnails(urls: urls)
             }
             .store(in: &cancellables)
     }
-    
-
 }
 
 // MARK: - CollectionView
 private extension ExhibitionDetailViewController {
     private func createDataSource() -> DataSource {
-        let infoCellRegistration = UICollectionView.CellRegistration<ExhibitionDetailInfoCell, ExhibitionDetailInfoModel> { cell, _, item in
+        let infoCellRegistration = UICollectionView.CellRegistration<ExhibitionDetailInfoCell, ExhibitionDetailInfoModel> { [weak self] cell, _, item in
+            guard let self else { return }
+            self.detailInfoCell = cell
+            
+            self.detailInfoCell?.exhibitionShortcutViewXOffsetSubject
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { xOffset in
+                    self.shortcutView.contentXOffset = xOffset
+                })
+                .store(in: &self.cancellables)
+            
+            self.detailInfoCell?.selectedShorcutIndexSubject
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { index in
+                    self.scrollToExhibition(idx: index)
+                })
+                .store(in: &self.cancellables)
+            
             cell.update(with: item)
         }
         
@@ -144,6 +190,12 @@ private extension ExhibitionDetailViewController {
         snapshot.appendSections([.end])
         snapshot.appendItems(items[.end] ?? [], toSection: .end)
         dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func scrollToExhibition(idx: Int) {
+        let indexPath = IndexPath(item: idx, section: 1)
+        collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+
     }
 }
 
@@ -205,3 +257,36 @@ private extension ExhibitionDetailViewController {
     }
 }
 
+// MARK: - ScrollViewDelegate
+extension ExhibitionDetailViewController: UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let detailInfoCell else { return }
+        let scrollViewContentBottomOffset = scrollView.contentOffset.y + UIScreen.main.bounds.height
+        collectionView.convert(detailInfoCell.frame, to: self.view)
+        let shortcutViewBottomOffset = collectionView.convert(detailInfoCell.frame, to: self.view).maxY
+        let fixedShortcutViewBottomOffset = shortcutView.frame.maxY
+
+        let shouldShowFixedView = shortcutViewBottomOffset < fixedShortcutViewBottomOffset
+        
+        if shouldShowFixedView {
+            if shortcutView.isHidden {
+                shortcutView.isHidden = false
+            }
+        } else {
+            if !shortcutView.isHidden {
+                shortcutView.isHidden = true
+            }
+        }
+    }
+}
+
+extension ExhibitionDetailViewController: ExhibitionShortcutViewDelegate {
+    func exhibitionShortcutViewDidScroll(scrollView: UIScrollView) {
+        let contentXOffset = scrollView.contentOffset.x
+        detailInfoCell?.shortcutViewXOffset = contentXOffset
+    }
+    
+    func exhibitionShortcutViewDidSelectIndexAt(index: Int) {
+        scrollToExhibition(idx: index)
+    }
+}

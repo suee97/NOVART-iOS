@@ -115,9 +115,9 @@ final class CommentCell: UITableViewCell {
 
 extension CommentCell {
     func update(with data: CommentModel) {
-        let url = URL(string: data.userProfileimgUrl ?? "")
+        let url = URL(string: data.profileImageUrl ?? "")
         profileImageView.kf.setImage(with: url)
-        nameLabel.text = data.userNickname
+        nameLabel.text = data.nickname
         dateLabel.text = data.createdAt
         contentLabel.text = data.content
     }

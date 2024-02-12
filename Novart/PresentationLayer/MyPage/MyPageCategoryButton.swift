@@ -3,8 +3,8 @@ import UIKit
 final class MyPageCategoryButton: UIButton {
 
     private enum Constants {
-        static let unSelectedFont = UIFont(name: "Apple SD Gothic Neo Regular", size: 14)
-        static let selectedFont = UIFont(name: "Apple SD Gothic Neo Bold", size: 14)
+        static let unSelectedFont = UIFont.systemFont(ofSize: 14, weight: .regular)
+        static let selectedFont = UIFont.systemFont(ofSize: 14, weight: .bold)
     }
     
     var category: MyPageCategory!

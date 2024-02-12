@@ -11,7 +11,7 @@ import Combine
 protocol TagViewDelegate: AnyObject {
     func tagView(_ tagView: TagView, didSelectItemAt indexPath: IndexPath)
     func tagView(_ tagView: TagView, didDeselectItemAt indexPath: IndexPath)
-    func invalidateLayout(_ contentHeight: CGFloat)
+    func invalidateLayout(_ tagView: TagView, contentHeight: CGFloat)
 }
 
 extension TagViewDelegate {
@@ -98,13 +98,14 @@ extension TagView {
         var snaphot = TagSnapshot()
         snaphot.appendSections([.zero])
         snaphot.appendItems(viewModel.tagIDs())
-        dataSource.apply(snaphot, animatingDifferences: false)
-        reloadCollectionLayout()
+        dataSource.apply(snaphot, animatingDifferences: false) { [weak self] in
+            self?.reloadCollectionLayout()
+        }
     }
     
     func reloadCollectionLayout() {
         collectionView.collectionViewLayout.invalidateLayout()
-        delegate?.invalidateLayout(contentHeight())
+        delegate?.invalidateLayout(self, contentHeight: contentHeight())
     }
     
 }

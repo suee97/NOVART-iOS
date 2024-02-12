@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 import Kingfisher
 
 final class ExhibitionDetailInfoCell: UICollectionViewCell {
@@ -15,7 +16,6 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
     private enum Constants {
         
         static let topMargin: CGFloat = 24
-        static let bottomMargin: CGFloat = 24
         static let horizontalMargin: CGFloat = 24
         
         enum Poster {
@@ -52,6 +52,7 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
         enum Participant {
             static let height: CGFloat = 70
             static let spacing: CGFloat = 32
+            static let bottomMargin: CGFloat = 24
         }
     }
     
@@ -163,6 +164,13 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
         return collectionView
     }()
     
+    private lazy var shortcutView: ExhibitionShortcutView = {
+        let view = ExhibitionShortcutView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.delegate = self
+        return view
+    }()
+    
     // MARK: - Properties
     
     private var viewModel: ExhibitionDetailInfoModel? {
@@ -173,6 +181,16 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
         }
     }
     
+    var shortcutViewXOffset: CGFloat {
+        get {
+            return shortcutView.contentXOffset
+        } set {
+            shortcutView.contentXOffset = newValue
+        }
+    }
+    
+    var exhibitionShortcutViewXOffsetSubject: PassthroughSubject<CGFloat, Never> = .init()
+    var selectedShorcutIndexSubject: PassthroughSubject<Int, Never> = .init()
     // MARK: - Initialization
 
     override init(frame: CGRect) {
@@ -240,8 +258,15 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
             collectionView.heightAnchor.constraint(equalToConstant: Constants.Participant.height),
             collectionView.topAnchor.constraint(equalTo: participantTitleLabel.bottomAnchor, constant: Constants.Info.collectionViewSpacing),
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.bottomMargin)
+            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        ])
+        
+        contentView.addSubview(shortcutView)
+        NSLayoutConstraint.activate([
+            shortcutView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            shortcutView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            shortcutView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: Constants.Participant.bottomMargin),
+            shortcutView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
 }
@@ -263,6 +288,7 @@ extension ExhibitionDetailInfoCell {
         categoryLabel.text = viewModel.category ?? "없음"
         durationLabel.text = viewModel.duration
         descriptionLabel.text = viewModel.description
+        shortcutView.setThumbnails(urls: viewModel.shortcutThumbnailUrls)
         collectionView.reloadData()
     }
 }
@@ -307,5 +333,15 @@ extension ExhibitionDetailInfoCell {
             return self.sectionLayout
         }
         return layout
+    }
+}
+
+extension ExhibitionDetailInfoCell: ExhibitionShortcutViewDelegate {
+    func exhibitionShortcutViewDidScroll(scrollView: UIScrollView) {
+        exhibitionShortcutViewXOffsetSubject.send(scrollView.contentOffset.x)
+    }
+    
+    func exhibitionShortcutViewDidSelectIndexAt(index: Int) {
+        selectedShorcutIndexSubject.send(index)
     }
 }

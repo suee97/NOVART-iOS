@@ -23,7 +23,7 @@ final class ProductCell: UICollectionViewCell {
             static let productFont: UIFont = UIFont.systemFont(ofSize: 14, weight: .bold)
             static let artistTextColor: UIColor = UIColor.Common.grey03
             static let artistFont: UIFont = UIFont.systemFont(ofSize: 12, weight: .regular)
-            static let backgroundColor: UIColor = UIColor.Common.grey00
+            static let backgroundColor: UIColor = UIColor.init(hexString: "#F7F9FA")
             static let height: CGFloat = 56
         }
     }
@@ -120,7 +120,7 @@ final class ProductCell: UICollectionViewCell {
 extension ProductCell {
     func update(with data: ProductModel) {
         productLabel.text = data.name
-        artistLabel.text = data.artistNickname
+        artistLabel.text = data.nickname
         
         if let thumbnailUrl = data.thumbnailImageUrl,
            let url = URL(string: thumbnailUrl) {
