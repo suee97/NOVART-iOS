@@ -273,6 +273,7 @@ final class ProductDetailViewController: BaseViewController {
         view.addSubview(artistNameLabel)
         view.addSubview(contactButton)
         view.addSubview(followButton)
+        view.addSubview(myProfileButton)
         NSLayoutConstraint.activate([
             artistImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.ArtistInfo.horizontalMargin),
             artistImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
