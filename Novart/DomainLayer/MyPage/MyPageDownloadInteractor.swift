@@ -53,4 +53,8 @@ final class MyPageDownloadInteractor {
     func getUser() async throws -> PlainUser {
         try await APIClient.getUser()
     }
+
+    func fetchUserInfo() async throws -> PlainUser {
+        try await APIClient.getUser()
+    }
 }

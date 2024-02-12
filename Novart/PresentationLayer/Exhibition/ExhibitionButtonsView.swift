@@ -89,7 +89,7 @@ final class ExhibitionButtonsView: UIView {
             })
             
             // LikeHeart
-            self.likeHeartImageView.image = self.viewModel.processedExhibitions[value].liked ? UIImage(named: "icon_exhibition_heart") : UIImage(named: "icon_exhibition_heart_fill")
+            self.likeHeartImageView.image = self.viewModel.processedExhibitions[value].likes ? UIImage(named: "icon_exhibition_heart") : UIImage(named: "icon_exhibition_heart_fill")
             
             // CommentView
             self.commentCountLabel.text = self.convertCountToString(count: self.viewModel.processedExhibitions[value].commentCount)

@@ -13,10 +13,10 @@ class ProductModel: PlainItem, Decodable {
     let nickname: String
     let thumbnailImageUrl: String?
     
-    init(id: Int64, name: String, artistNickname: String, thumbnailImageUrl: String?) {
+    init(id: Int64, name: String, nickname: String, thumbnailImageUrl: String?) {
         self.id = id
         self.name = name
-        self.nickname = artistNickname
+        self.nickname = nickname
         self.thumbnailImageUrl = thumbnailImageUrl
     }
 }

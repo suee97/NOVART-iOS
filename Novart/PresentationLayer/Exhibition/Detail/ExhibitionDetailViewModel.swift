@@ -12,6 +12,7 @@ final class ExhibitionDetailViewModel {
     
     private weak var coordinator: ExhibitionDetailCoordinator?
     var detailInfoItemSubject: PassthroughSubject<[ExhibitionDetailViewController.Section: [ExhibitionDetailItem]], Never> = .init()
+    var shortcutThumbnailUrlsSubject: PassthroughSubject<[String], Never> = .init()
     
     let exhibitionId: Int64
     
@@ -44,6 +45,8 @@ extension ExhibitionDetailViewModel {
                 let endItem = ExhibitionEndItem(likeCount: exhibitionData.likesCount, commentCount: exhibitionData.commentCount)
                 
                 detailInfoItemSubject.send([.info: [infoItem], .art: artItems, .end: [endItem]])
+                let shorcutThumbnailUrls = exhibitionData.arts.compactMap { $0.thumbnailImageUrls.first }
+                shortcutThumbnailUrlsSubject.send(shorcutThumbnailUrls)
             } catch {
                 print(error.localizedDescription)
 

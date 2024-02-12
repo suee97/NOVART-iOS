@@ -10,6 +10,7 @@ import Foundation
 enum ErrorCode: String {
     case UNKNOWN
     case TokenRefreshFail
+    case invalidUrl
     
     init(fromRawValue: String) {
         self = ErrorCode(rawValue: fromRawValue) ?? .UNKNOWN

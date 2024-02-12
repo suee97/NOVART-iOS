@@ -26,7 +26,7 @@ final class FeedItemViewModel: Identifiable, Hashable {
     init(_ item: FeedItem) {
         self.id = item.id
         self.name = item.name
-        self.artist = item.artistNickname
-        self.imageUrls = item.thumbnailImage.map { $0.url }
+        self.artist = item.nickname
+        self.imageUrls = item.thumbnailImageUrl.map { $0.url }
     }
 }

@@ -1,6 +1,6 @@
 import UIKit
 
-final class ProfileEditTextField: UITextField {
+final class CustomEditTextField: UITextField {
     enum Constants {
         static let leftMargin: CGFloat = 14
         static let font = UIFont.systemFont(ofSize: 16, weight: .regular)

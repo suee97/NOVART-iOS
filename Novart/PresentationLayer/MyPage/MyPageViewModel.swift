@@ -156,6 +156,11 @@ extension MyPageViewModel {
     }
     
     @MainActor
+    func showProductUploadScene() {
+        coordinator?.navigate(to: .productUpload)
+    }
+    
+    @MainActor
     func showLoginModal() {
         coordinator?.navigate(to: .LoginModal)
     }

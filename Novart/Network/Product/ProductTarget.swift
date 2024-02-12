@@ -10,6 +10,7 @@ import Alamofire
 
 enum ProductTarget: TargetType {
     case productDetail(id: Int64)
+    case uploadProduct(product: ProductUploadRequestModel)
     
     var baseURL: String {
         API.baseURL
@@ -19,6 +20,8 @@ enum ProductTarget: TargetType {
         switch self {
         case let .productDetail(id):
             return "arts/\(id)"
+        case .uploadProduct:
+            return "arts"
         }
     }
     
@@ -26,6 +29,8 @@ enum ProductTarget: TargetType {
         switch self {
         case .productDetail:
             return .get
+        case .uploadProduct:
+            return .post
         }
     }
     
@@ -33,6 +38,9 @@ enum ProductTarget: TargetType {
         switch self {
         case .productDetail:
             return .query(nil)
+            
+        case let .uploadProduct(product):
+            return .body(product)
         }
     }
 }

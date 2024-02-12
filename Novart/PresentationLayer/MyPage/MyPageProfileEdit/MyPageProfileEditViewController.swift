@@ -951,7 +951,8 @@ extension MyPageProfileEditViewController: TagViewDelegate {
         }
     }
     
-    func invalidateLayout(_ contentHeight: CGFloat) {}
+    func invalidateLayout(_ tagView: TagView, contentHeight: CGFloat) {
+    }
 }
 
 

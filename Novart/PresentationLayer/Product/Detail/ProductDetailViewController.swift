@@ -37,7 +37,7 @@ final class ProductDetailViewController: BaseViewController {
         }
         
         enum Description {
-            static let topMargin: CGFloat = 20
+            static let topMargin: CGFloat = 32
             static let spacing: CGFloat = 8
             static let titleFont: UIFont = .systemFont(ofSize: 16, weight: .semibold)
             static let font: UIFont = .systemFont(ofSize: 14, weight: .regular)
@@ -45,7 +45,7 @@ final class ProductDetailViewController: BaseViewController {
         }
         
         enum DetailImage {
-            static let topMargin: CGFloat = 40
+            static let topMargin: CGFloat = 32
             static let spacing: CGFloat = 16
         }
         
@@ -155,16 +155,7 @@ final class ProductDetailViewController: BaseViewController {
         pageController.translatesAutoresizingMaskIntoConstraints = false
         return pageController
     }()
-    
-    private lazy var productDescriptionTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = Constants.Description.titleFont
-        label.textColor = Constants.Description.textColor
-        label.text = "작품 설명"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
+
     private lazy var productDescriptionLabel: UILabel = {
         let label = UILabel()
         label.font = Constants.Description.font
@@ -423,12 +414,9 @@ final class ProductDetailViewController: BaseViewController {
             pageController.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
         
-        contentView.addSubview(productDescriptionTitleLabel)
         contentView.addSubview(productDescriptionLabel)
         NSLayoutConstraint.activate([
-            productDescriptionTitleLabel.topAnchor.constraint(equalTo: pageController.bottomAnchor, constant: Constants.Description.topMargin),
-            productDescriptionTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
-            productDescriptionLabel.topAnchor.constraint(equalTo: productDescriptionTitleLabel.bottomAnchor, constant: Constants.Description.spacing),
+            productDescriptionLabel.topAnchor.constraint(equalTo: pageController.bottomAnchor, constant: Constants.Description.topMargin),
             productDescriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
             productDescriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin)
         ])
@@ -518,13 +506,13 @@ final class ProductDetailViewController: BaseViewController {
     }
     
     private func setupData(data: ProductDetailModel) {
-        let thumbnailUrls = data.thumbNailImageUrls
+        let thumbnailUrls = data.thumbnailImageUrls
         pageController.totalCount = thumbnailUrls.count
         productCoverDataSource = ProductCoverImageDataSource(collectionView: coverCollectionView)
         productCoverDataSource.apply(thumbnailUrls)
         
         barTitleLabel.text = data.name
-        barArtistLabel.text = data.artist.artistNickname
+        barArtistLabel.text = data.artist.nickname
         
         if let artistImageUrl = data.artist.profileImageUrl {
             let url = URL(string: artistImageUrl)
@@ -533,26 +521,26 @@ final class ProductDetailViewController: BaseViewController {
         }
         
         productDescriptionLabel.text = data.description
-        artistNameLabel.text = data.artist.artistNickname
+        artistNameLabel.text = data.artist.nickname
         productInfoView.viewModel = data
         let artistProducts = [
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil)
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil)
             ]
         
         var artistExhibitions = [ExhibitionModel]()
         for i in 0..<4 {
-            artistExhibitions.append(ExhibitionModel(id: Int64(i), posterImageUrl: "https://t3.ftcdn.net/jpg/02/30/40/74/240_F_230407433_uF2iM6tUs1Sge24999FWdo241t8FMBi7.jpg", description: "description", likesCount: 1, commentCount: 1, liked: true))
+            artistExhibitions.append(ExhibitionModel(id: Int64(i), posterImageUrl: "https://t3.ftcdn.net/jpg/02/30/40/74/240_F_230407433_uF2iM6tUs1Sge24999FWdo241t8FMBi7.jpg", description: "description", likesCount: 1, commentCount: 1, likes: true))
 
         }
         
         let similarProducts = [
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", artistNickname: "작가이름", thumbnailImageUrl: nil)
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
+            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil)
             ]
         
         let recommendationDic: [RecommendationDataSource.Section: [PlainItem]] = [.artistProduct: artistProducts,

@@ -12,6 +12,7 @@ enum MyPageStep: Step {
     case MyPageProfileEdit
     case MyPageSetting
     case MyPageNotification
+    case productUpload
     case LoginModal
     case Close
     

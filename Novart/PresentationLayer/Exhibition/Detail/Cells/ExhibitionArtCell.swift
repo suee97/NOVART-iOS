@@ -273,9 +273,9 @@ final class ExhibitionArtCell: UICollectionViewCell {
     private func setupData(viewModel: ExhibitionArtItem) {
         pageController.totalCount = viewModel.thumbnailImageUrls.count
         titleLabel.text = viewModel.title
-        artistLabel.text = viewModel.artistInfo.artistNickname
+        artistLabel.text = viewModel.artistInfo.nickname
         descriptionLabel.text = viewModel.description
-        artistNameLabel.text = viewModel.artistInfo.artistNickname
+        artistNameLabel.text = viewModel.artistInfo.nickname
         if let profileImageUrl = viewModel.artistInfo.profileImageUrl {
             let artistImageUrl = URL(string: profileImageUrl)
             artistImageView.kf.setImage(with: artistImageUrl)
