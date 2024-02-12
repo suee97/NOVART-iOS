@@ -56,16 +56,28 @@ extension StackNavigator: NavigationActionable {
         presenter.present(viewController, animated: animated)
     }
     
+    @MainActor
+    private func presentSheet(_ viewController: UIViewController, with configuration: BottomSheetConfiguration) {
+        viewController.modalPresentationStyle = .pageSheet
+        presenter?.presentSheet(viewController, with: configuration)
+    }
+    
     private func target(_ filter: ((UIViewController) throws -> Bool) throws -> UIViewController?, is type: UIViewController.Type) -> UIViewController? {
         try? filter { viewController in
             Swift.type(of: viewController) == type
         }
     }
     
+    @MainActor
     func start(_ viewController: UIViewController) {
         if self.presenter != nil {
             set(root: viewController)
-            present(rootViewController, animated: true)
+            
+            if let root = rootViewController as? BottomSheetNavigationController {
+                presentSheet(rootViewController, with: root.bottomSheetConfiguration)
+            } else {
+                present(rootViewController, animated: true)
+            }
         } else if rootViewController.viewControllers.isEmpty {
             set(root: viewController)
         } else {
@@ -77,10 +89,12 @@ extension StackNavigator: NavigationActionable {
         }
     }
     
+    @MainActor
     func push(_ viewController: UIViewController, animated: Bool) {
         rootViewController.pushViewController(viewController, animated: animated)
     }
     
+    @MainActor
     func pop(animated: Bool) {
         rootViewController.popViewController(animated: animated)
     }
@@ -95,11 +109,13 @@ extension StackNavigator: NavigationActionable {
         return self.target(viewControllers.last(where:), is: type)
     }
     
+    @MainActor
     func pop(to type: UIViewController.Type, animated: Bool) {
         guard let targetViewController = last(is: type) else { return }
         rootViewController.popToViewController(targetViewController, animated: animated)
     }
     
+    @MainActor
     func popToRoot(animated: Bool) {
         rootViewController.popToRootViewController(animated: animated)
     }

@@ -24,6 +24,7 @@ final class ExhibitionCoordinator: BaseStackCoordinator<ExhibitionStep> {
         }
     }
     
+    @MainActor
     private func showExhibitionDetailScene(exhibitionId: Int64) {
         let root = BaseNavigationController()
         let stackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)

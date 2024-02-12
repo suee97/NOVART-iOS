@@ -29,6 +29,8 @@ final class HomeCoordinator: BaseStackCoordinator<HomeStep> {
         switch step {
         case let .productDetail(id):
             presentProductDetailVC(productId: id)
+        case .block:
+            presentBlockSheet()
         default:
             break
         }
@@ -43,10 +45,25 @@ final class HomeCoordinator: BaseStackCoordinator<HomeStep> {
         }
     }
     
+    @MainActor
     private func presentProductDetailVC(productId: Int64) {
-//        let viewModel = ProductDetailViewModel(productId: productId)
-//        let viewController = ProductDetailViewController(viewModel: viewModel)
-//        viewController.modalPresentationStyle = .fullScreen
-//        navigator.rootViewController.present(viewController, animated: true)
+        let root = BaseNavigationController()
+        let productDetailStackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
+        let productDetailCoordinator = ProductDetailCoordinator(navigator: productDetailStackNavigator)
+        productDetailCoordinator.productId = productId
+        add(coordinators: productDetailCoordinator)
+        
+        productDetailCoordinator.start()
+    }
+    
+    @MainActor
+    private func presentBlockSheet() {
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = 400
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let coordinator = BlockCoordinator(navigator: stackNavigator)
+        
+        add(coordinators: coordinator)
+        coordinator.start()
     }
 }

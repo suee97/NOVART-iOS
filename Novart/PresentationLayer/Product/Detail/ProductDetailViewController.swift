@@ -14,12 +14,20 @@ final class ProductDetailViewController: BaseViewController {
     
     private enum Constants {
         static let horizontalMargin: CGFloat = 24
-        static let topMargin: CGFloat = 54
+        static let topMargin: CGFloat = 62
         static let screenWidth: CGFloat = UIScreen.main.bounds.width
         
         enum TitleLabel {
             static let font: UIFont = .systemFont(ofSize: 20, weight: .semibold)
             static let textColor: UIColor = UIColor.Common.warmBlack
+            static let trailingMargin: CGFloat = 48
+        }
+        
+        enum ButtonShadow {
+            static let color: CGColor = UIColor.black.withAlphaComponent(0.2).cgColor
+            static let radius: CGFloat = 4
+            static let offset: CGSize = CGSize(width: 0, height: 0)
+            static let opacity: Float = 1
         }
         
         enum ArtistView {
@@ -30,8 +38,15 @@ final class ProductDetailViewController: BaseViewController {
             static let imageSize: CGFloat = 24
         }
         
+        enum ArtistViewShadow {
+            static let color: CGColor = UIColor.black.withAlphaComponent(0.15).cgColor
+            static let radius: CGFloat = 6
+            static let offset: CGSize = CGSize(width: 0, height: 0)
+            static let opacity: Float = 1
+        }
+        
         enum CoverImage {
-            static let topMargin: CGFloat = 8
+            static let topMargin: CGFloat = 12
             static let imageSize: CGFloat = screenWidth
             static let bottomMagrin: CGFloat = 16
         }
@@ -46,7 +61,7 @@ final class ProductDetailViewController: BaseViewController {
         
         enum DetailImage {
             static let topMargin: CGFloat = 32
-            static let spacing: CGFloat = 16
+            static let spacing: CGFloat = 8
         }
         
         enum ArtistInfo {
@@ -57,8 +72,12 @@ final class ProductDetailViewController: BaseViewController {
             static let buttonHeight: CGFloat = 40
             static let contactButtonWidth: CGFloat = 60
             static let followButtonWidth: CGFloat = 74
+            static let profileButtonWidth: CGFloat = 226
             static let contactButtonColor: UIColor = UIColor.Common.grey04
             static let followButtonColor: UIColor = UIColor.Common.main
+            static let followingButtonColor: UIColor = UIColor.Common.grey04
+            static let profileButtonColor: UIColor = UIColor.Common.white
+            static let profileButtonTextColor: UIColor = UIColor.Common.black
             static let horizontalMargin: CGFloat = 10
             static let imageSize: CGFloat = 40
             static let artistNameFont: UIFont = .systemFont(ofSize: 20, weight: .semibold)
@@ -137,6 +156,11 @@ final class ProductDetailViewController: BaseViewController {
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.viewModel.closeCoordinator()
         }), for: .touchUpInside)
+        
+        button.layer.shadowColor = Constants.ButtonShadow.color
+        button.layer.shadowOffset = Constants.ButtonShadow.offset
+        button.layer.shadowRadius = Constants.ButtonShadow.radius
+        button.layer.shadowOpacity = Constants.ButtonShadow.opacity
         return button
     }()
     
@@ -158,8 +182,6 @@ final class ProductDetailViewController: BaseViewController {
 
     private lazy var productDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Description.font
-        label.textColor = Constants.Description.textColor
         label.numberOfLines = 0
         label.lineBreakMode = .byCharWrapping
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -204,6 +226,21 @@ final class ProductDetailViewController: BaseViewController {
         return button
     }()
     
+    private lazy var myProfileButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("프로필 보기", for: .normal)
+        button.setTitleColor(Constants.ArtistInfo.profileButtonTextColor, for: .normal)
+        button.titleLabel?.font = Constants.ArtistInfo.buttonFont
+        button.backgroundColor = Constants.ArtistInfo.profileButtonColor
+        button.layer.cornerRadius = Constants.ArtistInfo.cornerRadius
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: Constants.ArtistInfo.profileButtonWidth),
+            button.heightAnchor.constraint(equalToConstant: Constants.ArtistInfo.buttonHeight)
+        ])
+        return button
+    }()
+    
     private lazy var artistImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
@@ -221,6 +258,7 @@ final class ProductDetailViewController: BaseViewController {
         let label = UILabel()
         label.font = Constants.ArtistInfo.artistNameFont
         label.textColor = Constants.ArtistInfo.artistNameTextColor
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -229,7 +267,6 @@ final class ProductDetailViewController: BaseViewController {
         let view = UIView()
         view.backgroundColor = Constants.ArtistInfo.backgroundColor
         view.layer.cornerRadius = Constants.ArtistInfo.cornerRadius
-        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(artistImageView)
@@ -243,9 +280,18 @@ final class ProductDetailViewController: BaseViewController {
             artistNameLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             followButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.ArtistInfo.horizontalMargin),
             followButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            artistNameLabel.trailingAnchor.constraint(equalTo: followButton.leadingAnchor, constant: Constants.ArtistInfo.spacing),
             contactButton.trailingAnchor.constraint(equalTo: followButton.leadingAnchor, constant: -Constants.ArtistInfo.spacing),
-            contactButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            contactButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            myProfileButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.ArtistInfo.horizontalMargin),
+            myProfileButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+
+        view.layer.shadowColor = Constants.ArtistViewShadow.color
+        view.layer.shadowOffset = Constants.ArtistViewShadow.offset
+        view.layer.shadowRadius = Constants.ArtistViewShadow.radius
+        view.layer.shadowOpacity = Constants.ArtistViewShadow.opacity
+        
         return view
     }()
     
@@ -275,7 +321,7 @@ final class ProductDetailViewController: BaseViewController {
         likeButton.layer.cornerRadius = Constants.FloatingButton.buttonSize / 2
         
         likeButton.layer.shadowColor = UIColor.black.cgColor
-        likeButton.layer.shadowOpacity = 0.1
+        likeButton.layer.shadowOpacity = 0.15
         likeButton.layer.shadowOffset = CGSize(width: 0, height: 2)
         
         NSLayoutConstraint.activate([
@@ -290,7 +336,7 @@ final class ProductDetailViewController: BaseViewController {
         commentButton.layer.cornerRadius = Constants.FloatingButton.buttonSize / 2
         
         commentButton.layer.shadowColor = UIColor.black.cgColor
-        commentButton.layer.shadowOpacity = 0.1
+        commentButton.layer.shadowOpacity = 0.15
         commentButton.layer.shadowOffset = CGSize(width: 0, height: 2)
         
         NSLayoutConstraint.activate([
@@ -308,7 +354,7 @@ final class ProductDetailViewController: BaseViewController {
         shareButton.layer.cornerRadius = Constants.FloatingButton.buttonSize / 2
         
         shareButton.layer.shadowColor = UIColor.black.cgColor
-        shareButton.layer.shadowOpacity = 0.1
+        shareButton.layer.shadowOpacity = 0.15
         shareButton.layer.shadowOffset = CGSize(width: 0, height: 2)
         
         NSLayoutConstraint.activate([
@@ -316,7 +362,22 @@ final class ProductDetailViewController: BaseViewController {
             shareButton.heightAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize)
         ])
         
-        let stackView = UIStackView(arrangedSubviews: [likeButton, commentButton, shareButton])
+        let moreButton = UIButton()
+        moreButton.backgroundColor = UIColor.Common.white.withAlphaComponent(0.72)
+        moreButton.setImage(UIImage(named: "icon_more"), for: .normal)
+        moreButton.translatesAutoresizingMaskIntoConstraints = false
+        moreButton.layer.cornerRadius = Constants.FloatingButton.buttonSize / 2
+        
+        moreButton.layer.shadowColor = UIColor.black.cgColor
+        moreButton.layer.shadowOpacity = 0.15
+        moreButton.layer.shadowOffset = CGSize(width: 0, height: 2)
+        
+        NSLayoutConstraint.activate([
+            moreButton.widthAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize),
+            moreButton.heightAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize)
+        ])
+        
+        let stackView = UIStackView(arrangedSubviews: [likeButton, commentButton, shareButton, moreButton])
         stackView.axis = .vertical
         stackView.spacing = Constants.FloatingButton.spacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -395,12 +456,13 @@ final class ProductDetailViewController: BaseViewController {
         contentView.addSubview(closeButton)
         NSLayoutConstraint.activate([
             closeButton.centerYAnchor.constraint(equalTo: barTitleLabel.centerYAnchor),
-            closeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin)
+            closeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin),
+            closeButton.leadingAnchor.constraint(greaterThanOrEqualTo: barTitleLabel.trailingAnchor, constant: Constants.TitleLabel.trailingMargin)
         ])
         
         contentView.addSubview(coverCollectionView)
         NSLayoutConstraint.activate([
-            coverCollectionView.topAnchor.constraint(equalTo: barArtistLabel.bottomAnchor, constant: Constants.CoverImage.topMargin),
+            coverCollectionView.topAnchor.constraint(equalTo: barArtistImageView.bottomAnchor, constant: Constants.CoverImage.topMargin),
             coverCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             coverCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             coverCollectionView.heightAnchor.constraint(equalTo: contentView.widthAnchor)
@@ -473,7 +535,7 @@ final class ProductDetailViewController: BaseViewController {
         viewModel.productDetailSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
-                guard let self else { return }
+                guard let self, let data else { return }
                 self.setupData(data: data)
             }
             .store(in: &cancellables)
@@ -520,9 +582,22 @@ final class ProductDetailViewController: BaseViewController {
             artistImageView.kf.setImage(with: url)
         }
         
-        productDescriptionLabel.text = data.description
+        productDescriptionLabel.attributedText = viewModel.attributedDescriptionsString(for: data.description)
         artistNameLabel.text = data.artist.nickname
+        
+        if viewModel.isMine {
+            myProfileButton.isHidden = false
+            followButton.isHidden = true
+            contactButton.isHidden = true
+        } else {
+            myProfileButton.isHidden = true
+            followButton.isHidden = false
+            contactButton.isHidden = false
+            followButton.backgroundColor = data.artist.following ? Constants.ArtistInfo.followingButtonColor : Constants.ArtistInfo.followButtonColor
+        }
+        
         productInfoView.viewModel = data
+        
         let artistProducts = [
             ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
             ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),

@@ -34,6 +34,7 @@ final class LoginCoordinator: BaseStackCoordinator<LoginStep> {
         UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {}, completion: { _ in})
     }
     
+    @MainActor
     private func showPrivacyPolicyViewController() {
         let viewModel = PrivacyPolicyViewModel(coordinator: self)
         let viewController = PrivacyPolicyViewController(viewModel: viewModel)

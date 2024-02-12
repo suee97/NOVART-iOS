@@ -38,6 +38,12 @@ final class HomeViewModel {
     func presentProductDetailScene(productId: Int64) {
         coordinator?.navigate(to: .productDetail(id: productId))
     }
+    
+    @MainActor
+    func didSelectProductAt(index: Int) {
+        let productId = feedData[index].id
+        presentProductDetailScene(productId: productId)
+    }
 }
 
 extension HomeViewModel {
@@ -71,16 +77,18 @@ extension HomeViewModel {
         }
     }
     
+    @MainActor
     func tempInfoCall() {
-        let userInteractor = UserInteractor()
-        Task {
-            do {
-                let user = try await userInteractor.getUserInfo()
-                print("성공")
-                print(user.nickname)
-            } catch {
-                print("이거 실패")
-            }
-        }
+//        let userInteractor = UserInteractor()
+//        Task {
+//            do {
+//                let user = try await userInteractor.getUserInfo()
+//                print("성공")
+//                print(user.nickname)
+//            } catch {
+//                print("이거 실패")
+//            }
+//        }
+        coordinator?.navigate(to: .block)
     }
 }

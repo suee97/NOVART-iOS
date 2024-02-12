@@ -30,6 +30,7 @@ final class AppCoordinator: BaseWindowCoordinator<AppStep> {
         }
     }
     
+    @MainActor
     private func showLogin() {
         let loginNavigationController = BaseNavigationController()
         let loginStackNavigator = StackNavigator(rootViewController: loginNavigationController)

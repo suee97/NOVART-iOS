@@ -49,10 +49,12 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         }
     }
     
+    @MainActor
     private func showMain() {
         navigator.pop(animated: true)
     }
     
+    @MainActor
     private func showProfileEdit() {
         guard let user = Authentication.shared.user else { return }
         let viewModel = MyPageProfileEditViewModel(coordinator: self, user: user)
@@ -60,6 +62,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         navigator.push(viewController, animated: true)
     }
     
+    @MainActor
     private func showSetting() {
         let user: PlainUser? = Authentication.shared.user
         let viewModel = MyPageSettingViewModel(coordinator: self, user: user)
@@ -67,12 +70,14 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         navigator.push(viewController, animated: true)
     }
     
+    @MainActor
     private func showNotification() {
         let viewModel = MyPageNotificationViewModel(coordinator: self)
         let viewController = MyPageNotificationViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }
     
+    @MainActor
     private func showProductUploadScene() {
         let root = BaseNavigationController()
         let productUploadStackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
@@ -91,10 +96,12 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         navigator.rootViewController.present(viewController, animated: true)
     }
     
+    @MainActor
     private func close() {
         navigator.pop(animated: true)
     }
     
+    @MainActor
     private func presentProductDetailVC(productId: Int64) {
         let root = BaseNavigationController()
         let productDetailStackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
@@ -105,12 +112,14 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         productDetailCoordinator.start()
     }
     
+    @MainActor
     private func showArtistProfile(userId: Int64) {
         let viewModel = MyPageViewModel(coordinator: self, userId: userId)
         let viewController = MyPageViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }
     
+    @MainActor
     private func showExhibitionDetailScene(exhibitionId: Int64) {
         let root = BaseNavigationController()
         let stackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)

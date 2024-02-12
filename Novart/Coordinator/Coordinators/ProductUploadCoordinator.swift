@@ -43,6 +43,7 @@ final class ProductUploadCoordinator: BaseStackCoordinator<ProductUploadStep>, M
         productUploadViewController = viewController
     }
     
+    @MainActor
     private func showDetailImageUpload(coverImages: [UploadMediaItem]) {
         let viewModel = ProductUploadViewModel(coordinator: self, coverImages: coverImages)
         let viewController = ProductUploadViewController(viewModel: viewModel)
@@ -50,18 +51,21 @@ final class ProductUploadCoordinator: BaseStackCoordinator<ProductUploadStep>, M
         navigator.push(viewController, animated: true)
     }
 
+    @MainActor
     private func showDetailInfoUpload(coverImages: [UploadMediaItem], detailImage: [UploadMediaItem]) {
         let viewModel = ProductDetailUploadViewModel(coordinator: self, selectedCoverImages: coverImages, selectedDetailImages: detailImage)
         let viewController = ProductDetailUploadViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }
     
+    @MainActor
     private func showPreview(data: ProductPreviewModel) {
         let viewModel = ProductPreviewViewModel(productPreviewData: data, coordinator: self)
         let viewController = ProductPreviewViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }
     
+    @MainActor
     private func showUploadScene(data: ProductPreviewModel) {
         let viewModel = ProductUploadingViewModel(data: data, coordinator: self)
         let viewController = ProductUploadingViewController(viewModel: viewModel)
