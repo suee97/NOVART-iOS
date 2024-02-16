@@ -99,6 +99,10 @@ final class MyPageViewController: BaseViewController {
             static let size: CGFloat = 50
             static let backgrounColor: UIColor = UIColor.Common.main
             static let bottomMargin: CGFloat = 12
+            static let shadowColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.12
+            static let shadowOffset = CGSize.zero
+            static let shadowRadius: CGFloat = 6
         }
     }
     
@@ -136,19 +140,16 @@ final class MyPageViewController: BaseViewController {
         navigationController?.navigationBar.compactAppearance = Constants.appearance
         navigationController?.navigationBar.standardAppearance = Constants.appearance
         navigationController?.navigationBar.scrollEdgeAppearance = Constants.appearance
-//        collectionView.reloadData()
         
-        // MARK: - Tab bar setup
         if viewModel.userState == .other {
             if let tab = tabBarController {
                 let backgroundView = UIView(frame: tab.tabBar.frame)
-//                let backgroundView = UIView(frame: CGRect(x: 150, y: 800, width: 100, height: 100))
                 backgroundView.layer.cornerRadius = 12
                 backgroundView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
                 backgroundView.layer.borderColor = UIColor.Common.grey01.cgColor
                 backgroundView.layer.borderWidth = 0.5
                 backgroundView.backgroundColor = .white
-                backgroundView.tag = 10
+                backgroundView.tag = 2000
                 
                 backgroundView.addSubview(askButton)
                 backgroundView.addSubview(followButton)
@@ -178,109 +179,21 @@ final class MyPageViewController: BaseViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = Constants.appearance
         if let tab = tabBarController {
             for v in tab.view.subviews {
-                if v.tag == 10 {
+                if v.tag == 2000 {
                     v.removeFromSuperview()
                 }
             }
         }
     }
-//        self.dismiss(animated: true)
-    // MARK: - UI
-//    private lazy var meatballsMenu: UIMenu = {
-//        let menuItems: [UIAction] = {
-//            return [
-//                UIAction(title: "프로필 편집", handler: { _ in
-//                    self.viewModel.showProfileEdit()
-//                }),
-//                UIAction(title: "공유", handler: { _ in}),
-//            ]
-//        }()
-//        let menu: UIMenu = UIMenu(options: [], children: menuItems)
-//        return menu
-//    }()
-//    
-//    private lazy var meatballsButton: UIButton = {
-//        let button = UIButton(frame: Constants.navIconSize)
-//        button.setBackgroundImage(UIImage(named: "icon_meatballs"), for: .normal)
-//        button.menu = meatballsMenu
-//        button.showsMenuAsPrimaryAction = true
-//        return button
-//    }()
-//    
-//    private lazy var notificationButton: UIButton = {
-//        let button = UIButton(frame: Constants.navIconSize)
-//        button.setBackgroundImage(UIImage(named: "icon_notification2"), for: .normal) // 기존 icon_notification이 존재해서 숫자 2를 붙임. 기존 아이콘 사용 안하는거면 수정이 필요합니다
-//        button.addAction(UIAction(handler: { [weak self] _ in
-//            guard let self = self else { return }
-//            self.viewModel.showNotification()
-//        }), for: .touchUpInside)
-//        return button
-//    }()
-//    
-//    private lazy var settingButton: UIButton = {
-//        let button = UIButton(frame: Constants.navIconSize)
-//        button.setBackgroundImage(UIImage(named: "icon_setting"), for: .normal)
-//        button.addAction(UIAction(handler: { [weak self] _ in
-//            guard let self = self else { return }
-//            self.viewModel.showSetting()
-//        }), for: .touchUpInside)
-//        return button
-//    }()
-//    
-    private lazy var uploadProductButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor.Common.main
-        button.setImage(UIImage(named: "icon_upload_plus"), for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: Constants.UploadButton.size),
-            button.heightAnchor.constraint(equalToConstant: Constants.UploadButton.size)
-        ])
-        button.layer.cornerRadius = Constants.UploadButton.size / 2
-        button.clipsToBounds = true
-        
-        button.addAction(UIAction(handler: { [weak self] _ in
-            self?.viewModel.showProductUploadScene()
-        }), for: .touchUpInside)
-        return button
-    }()
     
-//    override func setupNavigationBar() {
-//        let spacer = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-//        spacer.width = Constants.Layout.navigationBarSpacerWidth
-//        
-//        let notificationItem = UIBarButtonItem(customView: notificationButton)
-//        let settingItem = UIBarButtonItem(customView: settingButton)
-//        let meatballsItem = UIBarButtonItem(customView: meatballsButton)
-//
-//        self.navigationItem.rightBarButtonItems = [meatballsItem, spacer, notificationItem]
-//        self.navigationItem.leftBarButtonItem = settingItem
-//    }
-//    
-//    override func setupView() {
-//        viewModel.getUserInfo()
-//        viewModel.getAllItems()
-//        
-//        let safeArea = view.safeAreaLayoutGuide
-//        
-//        view.backgroundColor = .white
-//        collectionView.delegate = self
-//        collectionView.dataSource = self
-//        collectionView.register(MyPageHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageHeaderView.reuseIdentifier)
-//        
-//        view.addSubview(collectionView)
-//        
-//        collectionView.snp.makeConstraints({ m in
-//            m.left.right.top.bottom.equalTo(view)
-//        })
-//        
-//        view.addSubview(uploadProductButton)
-//        uploadProductButton.snp.makeConstraints { m in
-//            m.bottom.equalTo(safeArea).inset(Constants.UploadButton.bottomMargin)
-//            m.centerX.equalToSuperview()
-//        }
-//    }
-//    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if !isGradient {
+            addGradient()
+            isGradient = true
+        }
+    }
+
     
     // MARK: - Binding
     override func setupBindings() {
@@ -310,6 +223,7 @@ final class MyPageViewController: BaseViewController {
             if self.isHeaderSticky {
                 self.collectionView.contentOffset = CGPoint(x: 0, y: Constants.headerTransitionHeight)
             }
+            self.uploadProductButton.isHidden = (self.viewModel.userState == .me && value == .Work) ? false : true
             self.collectionView.reloadData()
         }).store(in: &cancellables)
         
@@ -556,27 +470,30 @@ final class MyPageViewController: BaseViewController {
         view.isHidden = true
         return view
     }()
-
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        if !isGradient {
-            addGradient()
-            isGradient = true
-        }
-    }
-    
-    private func addGradient() {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = view.bounds
-        let colors: [CGColor] = [UIColor.white.withAlphaComponent(0.5).cgColor, UIColor.white.withAlphaComponent(0.0).cgColor]
-        gradientLayer.colors = colors
-
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.16)
-        view.layer.addSublayer(gradientLayer)
-    }
-    
+    private lazy var uploadProductButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.Common.main
+        button.setImage(UIImage(named: "icon_upload_plus"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: Constants.UploadButton.size),
+            button.heightAnchor.constraint(equalToConstant: Constants.UploadButton.size)
+        ])
+        button.layer.cornerRadius = Constants.UploadButton.size / 2
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self, self.viewModel.userState == .me else { return }
+            self.viewModel.showProductUploadScene()
+        }), for: .touchUpInside)
+        
+        button.layer.shadowColor = Constants.UploadButton.shadowColor
+        button.layer.shadowOpacity = Constants.UploadButton.shadowOpacity
+        button.layer.shadowOffset = Constants.UploadButton.shadowOffset
+        button.layer.shadowRadius = Constants.UploadButton.shadowRadius
+        button.isHidden = true
+        return button
+    }()
     
     override func setupView() {
         viewModel.getAllItems()
@@ -590,11 +507,12 @@ final class MyPageViewController: BaseViewController {
         
         view.addSubview(collectionView)
         view.addSubview(followToastView)
+        view.addSubview(uploadProductButton)
+        
         collectionView.snp.makeConstraints({ m in
             m.left.right.top.bottom.equalTo(view)
         })
         
-        view.addSubview(uploadProductButton)
         uploadProductButton.snp.makeConstraints { m in
             m.bottom.equalTo(safeArea).inset(Constants.UploadButton.bottomMargin)
             m.centerX.equalToSuperview()
@@ -673,6 +591,17 @@ final class MyPageViewController: BaseViewController {
         viewController.modalPresentationStyle = .custom
         viewController.transitioningDelegate = userBlockModalTransitioningDelegate
         tabBarController?.present(viewController, animated: true, completion: nil)
+    }
+    
+    private func addGradient() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = view.bounds
+        let colors: [CGColor] = [UIColor.white.withAlphaComponent(0.5).cgColor, UIColor.white.withAlphaComponent(0.0).cgColor]
+        gradientLayer.colors = colors
+
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.16)
+        view.layer.addSublayer(gradientLayer)
     }
 }
 
