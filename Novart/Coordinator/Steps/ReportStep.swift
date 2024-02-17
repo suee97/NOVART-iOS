@@ -8,6 +8,7 @@
 import UIKit
 
 enum ReportStep: Step {
+    case reportDone
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

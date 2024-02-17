@@ -226,6 +226,8 @@
 		0EE1F6B42B7A1D5100756891 /* CleanInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6B32B7A1D5100756891 /* CleanInteractor.swift */; };
 		0EE1F6B72B7A1DDB00756891 /* CleanTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6B62B7A1DDB00756891 /* CleanTarget.swift */; };
 		0EE1F6B92B7A1F8A00756891 /* APIClient+Clean.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6B82B7A1F8A00756891 /* APIClient+Clean.swift */; };
+		0EE1F6BB2B809C6A00756891 /* ReportDoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6BA2B809C6A00756891 /* ReportDoneViewController.swift */; };
+		0EE1F6BD2B80B1CC00756891 /* ReportDoneViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6BC2B80B1CC00756891 /* ReportDoneViewModel.swift */; };
 		0EE255882ABC6662008CE0D1 /* CategoryTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */; };
 		0EE2558A2ABC6B37008CE0D1 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */; };
 		0EE2558C2AC0134A008CE0D1 /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2558B2AC0134A008CE0D1 /* ProductCell.swift */; };
@@ -503,6 +505,8 @@
 		0EE1F6B32B7A1D5100756891 /* CleanInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanInteractor.swift; sourceTree = "<group>"; };
 		0EE1F6B62B7A1DDB00756891 /* CleanTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanTarget.swift; sourceTree = "<group>"; };
 		0EE1F6B82B7A1F8A00756891 /* APIClient+Clean.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIClient+Clean.swift"; sourceTree = "<group>"; };
+		0EE1F6BA2B809C6A00756891 /* ReportDoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDoneViewController.swift; sourceTree = "<group>"; };
+		0EE1F6BC2B80B1CC00756891 /* ReportDoneViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDoneViewModel.swift; sourceTree = "<group>"; };
 		0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTabButton.swift; sourceTree = "<group>"; };
 		0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		0EE2558B2AC0134A008CE0D1 /* ProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCell.swift; sourceTree = "<group>"; };
@@ -1390,6 +1394,8 @@
 			children = (
 				5BF6243E2B78921000F502FE /* ReportViewController.swift */,
 				0EE1F6AD2B79FFE400756891 /* ReportViewModel.swift */,
+				0EE1F6BA2B809C6A00756891 /* ReportDoneViewController.swift */,
+				0EE1F6BC2B80B1CC00756891 /* ReportDoneViewModel.swift */,
 			);
 			path = Report;
 			sourceTree = "<group>";
@@ -1710,6 +1716,7 @@
 				0E43AB562B78E5FC0087922A /* BlockCoordinator.swift in Sources */,
 				0E1E21202AE533F200F15009 /* ProductDetailInteractor.swift in Sources */,
 				0EE019592A56F18500389A95 /* SearchCoordinator.swift in Sources */,
+				0EE1F6BD2B80B1CC00756891 /* ReportDoneViewModel.swift in Sources */,
 				0E41738A2B25DF3C0017AAD9 /* MediaPickerProtocols.swift in Sources */,
 				0EE0194B2A56EF6F00389A95 /* HomeStep.swift in Sources */,
 				0E4173882B25DEB80017AAD9 /* MediaPickerController.swift in Sources */,
@@ -1914,6 +1921,7 @@
 				0EE018FB2A4818D800389A95 /* Step.swift in Sources */,
 				0EA8F8392A90A94300ADFBFB /* FeedImageCell.swift in Sources */,
 				0E760E892B1B111F0051CB6C /* ExhibitionArtItem.swift in Sources */,
+				0EE1F6BB2B809C6A00756891 /* ReportDoneViewController.swift in Sources */,
 				0EAF1F2A2ADBBFE000E9A10C /* ArtistSearchViewModel.swift in Sources */,
 				0E43AB4A2B78E1EA0087922A /* BottomSheetConfiguration.swift in Sources */,
 				0EE0192E2A5146EF00389A95 /* UIColor+.swift in Sources */,

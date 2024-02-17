@@ -19,5 +19,22 @@ final class ReportCoordinator: BaseStackCoordinator<ReportStep> {
         let viewController = ReportViewController(viewModel: viewModel)
         navigator.start(viewController)
     }
+    
+    override func navigate(to step: ReportStep) {
+        switch step {
+        case .reportDone:
+            showReportDoneScene()
+        }
+    }
+}
+
+extension ReportCoordinator {
+    
+    @MainActor
+    private func showReportDoneScene() {
+        let viewModel = ReportDoneViewModel(coordinator: self)
+        let viewController = ReportDoneViewController(viewModel: viewModel)
+        navigator.push(viewController, animated: true)
+    }
 }
 

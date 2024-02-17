@@ -319,19 +319,54 @@ final class ReportViewController: BaseViewController {
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.reportTypeUpdated
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] type in
+                guard let self else { return }
+                if let type {
+                    switch type {
+                    case.fraud:
+                        self.abuseCheckRowView.isChecked = false
+                        self.issueCheckRowView.isChecked = false
+                    case .hateSpeech:
+                        self.fraudCheckRowView.isChecked = false
+                        self.issueCheckRowView.isChecked = false
+                    case .transactionProblem:
+                        self.fraudCheckRowView.isChecked = false
+                        self.abuseCheckRowView.isChecked = false
+                    }
+                } else {
+                    self.issueCheckRowView.isChecked = false
+                    self.fraudCheckRowView.isChecked = false
+                    self.abuseCheckRowView.isChecked = false
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.reportDoneSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] success in
+                guard let self,
+                success else { return }
+                
+                self.viewModel.showReportDoneScene()
+            }
+            .store(in: &cancellables)
     }
     
     
     // MARK: - Functions
+    @MainActor
     private func onTapCancelButton() {
-        self.dismiss(animated: true)
+        viewModel.closeCoordinator()
     }
     
     private func validateReportButton(checked: Bool, reportType: ReportType) {
         if checked {
-            viewModel.addReport(type: reportType)
+            viewModel.selectReport(type: reportType)
         } else {
-            viewModel.removeReport(type: reportType)
+            viewModel.deselectReport()
         }
     }
     
@@ -342,7 +377,12 @@ final class ReportViewController: BaseViewController {
 
 // MARK: - CheckRowView & Divider
 fileprivate final class CheckRowView: UIView {
-    var isChecked = false
+    var isChecked = false {
+        didSet {
+            let image = isChecked ? UIImage(named: "icon_select_fill") : UIImage(named: "icon_select_circle")
+            checkBoxButton.setImage(image, for: .normal)
+        }
+    }
     var onTapCheckBoxButton: ((Bool) -> Void)?
     
     private let label: UILabel = {
@@ -354,12 +394,10 @@ fileprivate final class CheckRowView: UIView {
     
     private lazy var checkBoxButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "icon_check_box"), for: .normal)
+        button.setImage(UIImage(named: "icon_select_circle"), for: .normal)
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             self.isChecked = !self.isChecked
-            let image = self.isChecked ? UIImage(named: "icon_check_fill") : UIImage(named: "icon_check_box")
-            button.setImage(image, for: .normal)
             self.onTapCheckBoxButton?(self.isChecked)
         }), for: .touchUpInside)
         return button
@@ -379,15 +417,15 @@ fileprivate final class CheckRowView: UIView {
         addSubview(label)
         addSubview(checkBoxButton)
         
-        label.snp.makeConstraints({ m in
+        checkBoxButton.snp.makeConstraints({ m in
             m.left.equalToSuperview()
             m.centerY.equalToSuperview()
+            m.width.height.equalTo(24)
         })
         
-        checkBoxButton.snp.makeConstraints({ m in
-            m.right.equalToSuperview()
+        label.snp.makeConstraints({ m in
+            m.left.equalTo(checkBoxButton.snp.right).offset(8)
             m.centerY.equalToSuperview()
-            m.width.height.equalTo(24)
         })
     }
 }

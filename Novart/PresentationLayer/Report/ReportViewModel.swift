@@ -15,9 +15,12 @@ final class ReportViewModel {
     let userId: Int64
     
     var reportButtonEnableSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var reportTypeUpdated: PassthroughSubject<ReportType?, Never> = .init()
+    var reportDoneSubject: PassthroughSubject<Bool, Never> = .init()
     
-    var reportProblems: [ReportType] = [] {
+    var selectedReportType: ReportType? {
         didSet {
+            updateCheckUI()
             validateReportButton()
         }
     }
@@ -26,25 +29,35 @@ final class ReportViewModel {
         self.userId = userId
         self.coordinator = coordinator
     }
+    
+    @MainActor
+    func showReportDoneScene() {
+        coordinator?.navigate(to: .reportDone)
+    }
+    
+    @MainActor
+    func closeCoordinator() {
+        coordinator?.close()
+    }
+
 }
 
 // MARK: - Report
 extension ReportViewModel {
+    private func updateCheckUI() {
+        reportTypeUpdated.send(selectedReportType)
+    }
+    
     private func validateReportButton() {
-        reportButtonEnableSubject.send(!reportProblems.isEmpty)
+        reportButtonEnableSubject.send(selectedReportType != nil)
     }
     
-    func addReport(type: ReportType) {
-        if !reportProblems.contains(type) {
-            reportProblems.append(type)
-        }
+    func selectReport(type: ReportType) {
+        selectedReportType = type
     }
     
-    func removeReport(type: ReportType) {
-        if reportProblems.contains(type),
-           let idx = reportProblems.firstIndex(where: { $0.rawValue == type.rawValue }) {
-            reportProblems.remove(at: idx)
-        }
+    func deselectReport() {
+        selectedReportType = nil
     }
 }
 
@@ -53,9 +66,9 @@ extension ReportViewModel {
     func sendReportRequest() {
         Task {
             do {
-                if !reportProblems.isEmpty {
-                    try await cleanInteractor.sendReport(userId: userId, reportType: reportProblems.first ?? .hateSpeech)
-                    print("success!!!!!!!!!")
+                if let selectedReportType {
+                    try await cleanInteractor.sendReport(userId: userId, reportType: selectedReportType)
+                    reportDoneSubject.send(true)
                 }
             } catch {
                 print(error.localizedDescription)
