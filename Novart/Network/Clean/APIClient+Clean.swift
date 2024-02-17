@@ -12,4 +12,8 @@ extension APIClient {
     static func sendReport(userId: Int64, report: ReportType) async throws -> EmptyResponseModel {
         try await APIClient.request(target: CleanTarget.sendReport(userId: userId, report: report), type: EmptyResponseModel.self)
     }
+    
+    static func makeBlockRequest(userId: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: CleanTarget.requestBlock(userId: userId), type: EmptyResponseModel.self)
+    }
 }

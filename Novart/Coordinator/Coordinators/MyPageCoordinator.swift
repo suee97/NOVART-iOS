@@ -46,8 +46,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
             showArtistProfile(userId: id)
         case let .exhibitionDetail(id):
             showExhibitionDetailScene(exhibitionId: id)
-        case let .block(userId):
-            showBlockSheet(userId: userId)
+        case let .block(user):
+            showBlockSheet(user: user)
         case let .report(userId):
             showReportSheet(userId: userId)
         case let .ask(userId):
@@ -138,12 +138,12 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     }
     
     @MainActor
-    private func showBlockSheet(userId: Int64) {
+    private func showBlockSheet(user: PlainUser) {
         let bottomSheetRoot = BottomSheetNavigationController()
         bottomSheetRoot.bottomSheetConfiguration.customHeight = 390
         let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
         let coordinator = BlockCoordinator(navigator: stackNavigator)
-        coordinator.userId = userId
+        coordinator.user = user
 
         add(coordinators: coordinator)
         coordinator.start()

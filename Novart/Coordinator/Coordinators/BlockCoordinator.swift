@@ -10,12 +10,13 @@ import UIKit
 final class BlockCoordinator: BaseStackCoordinator<BlockStep> {
     
     @LateInit
-    var userId: Int64
+    var user: PlainUser
     
     override func start() {
         super.start()
         
-        let viewController = BlockViewController()
+        let viewModel = BlockViewModel(user: user, coordinator: self)
+        let viewController = BlockViewController(viewModel: viewModel)
         navigator.start(viewController)
     }
 }

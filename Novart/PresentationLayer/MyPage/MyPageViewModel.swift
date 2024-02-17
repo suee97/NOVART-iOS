@@ -187,19 +187,23 @@ extension MyPageViewModel {
     
     @MainActor
     func showBlockSheet() {
-        guard let userId else { return }
-        coordinator?.navigate(to: .block(userId: userId))
+        guard let userId,
+              userState == .other,
+              let otherUser else { return }
+        coordinator?.navigate(to: .block(user: otherUser))
     }
     
     @MainActor
     func showReportSheet() {
-        guard let userId else { return }
+        guard let userId,
+        userState == .other else { return }
         coordinator?.navigate(to: .report(userId: userId))
     }
     
     @MainActor
     func showAskSheet() {
-        guard let userId else { return }
+        guard let userId,
+        userState == .other else { return }
         coordinator?.navigate(to: .ask(userId: userId))
     }
 }

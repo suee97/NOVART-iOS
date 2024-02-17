@@ -16,6 +16,7 @@ enum CleanTarget: TargetType {
     }
     
     case sendReport(userId: Int64, report: ReportType)
+    case requestBlock(userId: Int64)
     
     var baseURL: String {
         API.baseURL
@@ -25,12 +26,16 @@ enum CleanTarget: TargetType {
         switch self {
         case .sendReport:
             return "report"
+        case let .requestBlock(userId):
+            return "block/\(userId)"
         }
     }
     
     var method: HTTPMethod {
         switch self {
         case .sendReport:
+            return .post
+        case .requestBlock:
             return .post
         }
     }
@@ -39,6 +44,8 @@ enum CleanTarget: TargetType {
         switch self {
         case let .sendReport(userId, report):
             return .body(ReportRequestBody(userId: userId, reportProblem: report.rawValue))
+        case .requestBlock:
+            return .body(nil)
         }
     }
 }
