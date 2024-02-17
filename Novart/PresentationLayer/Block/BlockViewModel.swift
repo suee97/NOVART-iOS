@@ -33,6 +33,7 @@ extension BlockViewModel {
 //                try await cleanInteractor.makeBlockRequest(userId: user.id)
                 DispatchQueue.main.async { [weak self] in
                     self?.closeCoordinator()
+                    PlainSnackbar.show(message: "이 사용자를 차단했어요.", configuration: .init(imageType: .icon(.block)))
                 }
             } catch {
                 print(error.localizedDescription)

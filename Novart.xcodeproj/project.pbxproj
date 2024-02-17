@@ -229,6 +229,11 @@
 		0EE1F6BB2B809C6A00756891 /* ReportDoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6BA2B809C6A00756891 /* ReportDoneViewController.swift */; };
 		0EE1F6BD2B80B1CC00756891 /* ReportDoneViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6BC2B80B1CC00756891 /* ReportDoneViewModel.swift */; };
 		0EE1F6BF2B80C99E00756891 /* BlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6BE2B80C99E00756891 /* BlockViewModel.swift */; };
+		0EE1F6C22B80D35D00756891 /* SnackbarContextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6C12B80D35D00756891 /* SnackbarContextViewController.swift */; };
+		0EE1F6C42B80D3A400756891 /* PlainSnackbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6C32B80D3A400756891 /* PlainSnackbarView.swift */; };
+		0EE1F6C62B80D40500756891 /* PlainSnackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6C52B80D40500756891 /* PlainSnackbar.swift */; };
+		0EE1F6C92B80D46700756891 /* PassThroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6C82B80D46700756891 /* PassThroughView.swift */; };
+		0EE1F6CC2B80D79300756891 /* Task+Sleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1F6CB2B80D79300756891 /* Task+Sleep.swift */; };
 		0EE255882ABC6662008CE0D1 /* CategoryTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */; };
 		0EE2558A2ABC6B37008CE0D1 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */; };
 		0EE2558C2AC0134A008CE0D1 /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2558B2AC0134A008CE0D1 /* ProductCell.swift */; };
@@ -509,6 +514,11 @@
 		0EE1F6BA2B809C6A00756891 /* ReportDoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDoneViewController.swift; sourceTree = "<group>"; };
 		0EE1F6BC2B80B1CC00756891 /* ReportDoneViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDoneViewModel.swift; sourceTree = "<group>"; };
 		0EE1F6BE2B80C99E00756891 /* BlockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlockView\U0010Model.swift"; sourceTree = "<group>"; };
+		0EE1F6C12B80D35D00756891 /* SnackbarContextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnackbarContextViewController.swift; sourceTree = "<group>"; };
+		0EE1F6C32B80D3A400756891 /* PlainSnackbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainSnackbarView.swift; sourceTree = "<group>"; };
+		0EE1F6C52B80D40500756891 /* PlainSnackbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainSnackbar.swift; sourceTree = "<group>"; };
+		0EE1F6C82B80D46700756891 /* PassThroughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughView.swift; sourceTree = "<group>"; };
+		0EE1F6CB2B80D79300756891 /* Task+Sleep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+Sleep.swift"; sourceTree = "<group>"; };
 		0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTabButton.swift; sourceTree = "<group>"; };
 		0EE255892ABC6B37008CE0D1 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		0EE2558B2AC0134A008CE0D1 /* ProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCell.swift; sourceTree = "<group>"; };
@@ -941,6 +951,8 @@
 		0ED9F0402B11ED4D00EDCD3C /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				0EE1F6C72B80D45A00756891 /* PassThroughView */,
+				0EE1F6C02B80D33C00756891 /* Snackbar */,
 				0E43AB482B78E1CE0087922A /* BottomSheet */,
 				0EE019712A61475A00389A95 /* CustomUI */,
 				0EE019902A6BAFEE00389A95 /* Error */,
@@ -1204,6 +1216,7 @@
 		0EE0192A2A5146C900389A95 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				0EE1F6CA2B80D78700756891 /* Task */,
 				0E6C65982B417716005E269E /* Date */,
 				0EE0192C2A5146E100389A95 /* UIKit */,
 				0EE019382A514C6700389A95 /* UIApplication+AppSharable.swift */,
@@ -1427,6 +1440,32 @@
 				0EE1F6B82B7A1F8A00756891 /* APIClient+Clean.swift */,
 			);
 			path = Clean;
+			sourceTree = "<group>";
+		};
+		0EE1F6C02B80D33C00756891 /* Snackbar */ = {
+			isa = PBXGroup;
+			children = (
+				0EE1F6C12B80D35D00756891 /* SnackbarContextViewController.swift */,
+				0EE1F6C32B80D3A400756891 /* PlainSnackbarView.swift */,
+				0EE1F6C52B80D40500756891 /* PlainSnackbar.swift */,
+			);
+			path = Snackbar;
+			sourceTree = "<group>";
+		};
+		0EE1F6C72B80D45A00756891 /* PassThroughView */ = {
+			isa = PBXGroup;
+			children = (
+				0EE1F6C82B80D46700756891 /* PassThroughView.swift */,
+			);
+			path = PassThroughView;
+			sourceTree = "<group>";
+		};
+		0EE1F6CA2B80D78700756891 /* Task */ = {
+			isa = PBXGroup;
+			children = (
+				0EE1F6CB2B80D79300756891 /* Task+Sleep.swift */,
+			);
+			path = Task;
 			sourceTree = "<group>";
 		};
 		0EE2558D2AC0134D008CE0D1 /* Cell */ = {
@@ -1692,12 +1731,14 @@
 				0E6C65912B373612005E269E /* ProductDetailUploadViewController.swift in Sources */,
 				0E6C658F2B36CA82005E269E /* UploadMediaItem.swift in Sources */,
 				5BB933F42AF3A8BA000185D1 /* UIColor+HSB.swift in Sources */,
+				0EE1F6C92B80D46700756891 /* PassThroughView.swift in Sources */,
 				0EE1F6BF2B80C99E00756891 /* BlockViewModel.swift in Sources */,
 				5BB933EC2AF3A876000185D1 /* ExhibitionCell.swift in Sources */,
 				0E760E802B1B111F0051CB6C /* ExhibitionDetailCoordinator.swift in Sources */,
 				0E760E8B2B1B35900051CB6C /* ExhibitionDetailModel.swift in Sources */,
 				0E760E822B1B111F0051CB6C /* ExhibitionDetailStep.swift in Sources */,
 				5BB933ED2AF3A876000185D1 /* ExhibitionCoordinator.swift in Sources */,
+				0EE1F6C42B80D3A400756891 /* PlainSnackbarView.swift in Sources */,
 				5BB933EE2AF3A876000185D1 /* ExhibitionStep.swift in Sources */,
 				5BB933EF2AF3A876000185D1 /* ExhibitionModel.swift in Sources */,
 				0E6C65AB2B4A71F0005E269E /* APIClient+Media.swift in Sources */,
@@ -1714,6 +1755,7 @@
 				0EAF1F2C2ADBC00400E9A10C /* ArtistModel.swift in Sources */,
 				5BC224522B19C1690032D3CE /* MyPageNotificationCell.swift in Sources */,
 				5BDD4A142AC955A600937352 /* MyPageViewModel.swift in Sources */,
+				0EE1F6CC2B80D79300756891 /* Task+Sleep.swift in Sources */,
 				0EE019092A48274B00389A95 /* BaseNavigationController.swift in Sources */,
 				0E9BB08F2AD2D45A0002A76D /* ProductInfoViewModel.swift in Sources */,
 				0E760E882B1B111F0051CB6C /* ExhibitionDetailItem.swift in Sources */,
@@ -1762,6 +1804,7 @@
 				5BAE07EF2B4AC06F007E5CF5 /* MyPageCategory.swift in Sources */,
 				0EA8F81C2A6CFBAA00ADFBFB /* SetNicknameViewController.swift in Sources */,
 				5BDD4A262AC955C100937352 /* MyPageWorks.swift in Sources */,
+				0EE1F6C62B80D40500756891 /* PlainSnackbar.swift in Sources */,
 				0E43AB582B78E6260087922A /* BlockStep.swift in Sources */,
 				0E43AB4C2B78E22F0087922A /* UISheenPresentationController+Configuration.swift in Sources */,
 				0E41739E2B25E4E40017AAD9 /* MediaPickerPresentable.swift in Sources */,
@@ -1780,6 +1823,7 @@
 				0EE019622A56F31100389A95 /* MainTabBarViewController.swift in Sources */,
 				0EA8F81E2A6D0CD700ADFBFB /* HomeDownloadInteractor.swift in Sources */,
 				0E4173812B25A3590017AAD9 /* ProductUploadStep.swift in Sources */,
+				0EE1F6C22B80D35D00756891 /* SnackbarContextViewController.swift in Sources */,
 				5BDD4A112AC955A600937352 /* MyPageCategoryButton.swift in Sources */,
 				0EE019B12A6BC65500389A95 /* HTTPHeaderField.swift in Sources */,
 				0EF59AB52AAB0DC300FD39E3 /* AutoResizableTableView.swift in Sources */,
