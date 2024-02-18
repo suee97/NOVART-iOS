@@ -79,16 +79,15 @@ extension HomeViewModel {
     
     @MainActor
     func tempInfoCall() {
-//        let userInteractor = UserInteractor()
-//        Task {
-//            do {
-//                let user = try await userInteractor.getUserInfo()
-//                print("성공")
-//                print(user.nickname)
-//            } catch {
-//                print("이거 실패")
-//            }
-//        }
-        coordinator?.navigate(to: .block)
+        let userInteractor = UserInteractor()
+        Task {
+            do {
+                let user = try await userInteractor.getUserInfo()
+                print("성공")
+                print(user.nickname)
+            } catch {
+                print("이거 실패")
+            }
+        }
     }
 }

@@ -69,7 +69,7 @@ class APIClient {
         let response = await APIClient.shared.session
             .request(target, interceptor: interceptor)
             .validate(statusCode: 200..<300)
-            .serializingDecodable(D.self)
+            .serializingDecodable(D.self, emptyResponseCodes: [200])
             .response
         
         switch response.result {

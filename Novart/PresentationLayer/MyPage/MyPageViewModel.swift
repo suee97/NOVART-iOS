@@ -184,6 +184,28 @@ extension MyPageViewModel {
     func showExhibitionDetail(exhibitionId: Int64) {
         coordinator?.navigate(to: .exhibitionDetail(id: exhibitionId))
     }
+    
+    @MainActor
+    func showBlockSheet() {
+        guard let userId,
+              userState == .other,
+              let otherUser else { return }
+        coordinator?.navigate(to: .block(user: otherUser))
+    }
+    
+    @MainActor
+    func showReportSheet() {
+        guard let userId,
+        userState == .other else { return }
+        coordinator?.navigate(to: .report(userId: userId))
+    }
+    
+    @MainActor
+    func showAskSheet() {
+        guard let userId,
+        userState == .other else { return }
+        coordinator?.navigate(to: .ask(userId: userId))
+    }
 }
 
 enum MyPageUserState {
