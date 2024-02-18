@@ -61,7 +61,6 @@ final class FeedItemViewModel: Identifiable, Hashable {
         Task {
             do {
                 try await productInteractor.likeProduct(id: id)
-                print("successssss")
             } catch {
                 liked = false
             }
@@ -72,7 +71,6 @@ final class FeedItemViewModel: Identifiable, Hashable {
         Task {
             do {
                 try await productInteractor.cancelLikeProduct(id: id)
-                print("successssss")
             } catch {
                 liked = true
             }

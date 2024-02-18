@@ -156,10 +156,8 @@ final class MyPageHeaderView: UICollectionReusableView {
         return view
     }()
     
-    private lazy var profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFill
+    private lazy var profileImageView: PlainProfileImageView = {
+        let imageView = PlainProfileImageView()
         return imageView
     }()
     
@@ -360,10 +358,6 @@ final class MyPageHeaderView: UICollectionReusableView {
                 backgroundImageView.image = UIImage(named: "default_user_background_image")
             }
             
-            if profileImageView.image == nil {
-                profileImageView.image = UIImage(named: "default_user_profile_image")
-            }
-            
             profileImageView.layer.cornerRadius = Constants.NonSticky.profileImageDiameter / 2
             profileLabel.font = Constants.NonSticky.profileFont
             
@@ -425,13 +419,8 @@ final class MyPageHeaderView: UICollectionReusableView {
                 }
             }
             
-            if user.profileImageUrl == nil {
-                profileImageView.image = UIImage(named: "default_user_profile_image")
-            } else {
-                if let urlString = user.profileImageUrl, let url = URL(string: urlString) {
-                    let retryStrategy = DelayRetryStrategy(maxRetryCount: 3, retryInterval: .seconds(1))
-                    profileImageView.kf.setImage(with: url, options: [.retryStrategy(retryStrategy)])
-                }
+            if let urlString = user.profileImageUrl, let url = URL(string: urlString) {
+                profileImageView.setImage(with: url)
             }
             
             profileLabel.text = user.nickname

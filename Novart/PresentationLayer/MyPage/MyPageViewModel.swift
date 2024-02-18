@@ -3,7 +3,7 @@ import UIKit
 import Alamofire
 
 final class MyPageViewModel {
-    var coordinator: MyPageCoordinator?
+    weak var coordinator: MyPageCoordinator?
     private var interactor = MyPageDownloadInteractor()
     
     @Published private (set) var selectedCategory: MyPageCategory = .Interest

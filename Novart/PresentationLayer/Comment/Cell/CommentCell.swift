@@ -67,9 +67,8 @@ final class CommentCell: UITableViewCell {
         return label
     }()
     
-    private lazy var profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+    private lazy var profileImageView: PlainProfileImageView = {
+        let imageView = PlainProfileImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: Constants.Profile.size),
@@ -116,9 +115,9 @@ final class CommentCell: UITableViewCell {
 extension CommentCell {
     func update(with data: CommentModel) {
         let url = URL(string: data.profileImageUrl ?? "")
-        profileImageView.kf.setImage(with: url)
+        profileImageView.setImage(with: url)
         nameLabel.text = data.nickname
-        dateLabel.text = data.createdAt
+        dateLabel.text = data.createdAt.toDateFormattedString()
         contentLabel.text = data.content
     }
 }
