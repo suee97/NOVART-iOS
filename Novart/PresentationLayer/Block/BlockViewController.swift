@@ -6,9 +6,12 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class BlockViewController: BaseViewController, BottomSheetable {
     
+    // MARK: - Constants
+
     private enum Constants {
         enum Handle {
             static let color: UIColor = UIColor.Common.grey01
@@ -49,6 +52,8 @@ final class BlockViewController: BaseViewController, BottomSheetable {
         }
     }
     
+    // MARK: - UI
+
     private lazy var handleView: UIView = {
         let view = UIView()
         view.backgroundColor = Constants.Handle.color
@@ -67,6 +72,10 @@ final class BlockViewController: BaseViewController, BottomSheetable {
         let button = UIButton()
         button.setImage(UIImage(named: "icon_close"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.closeCoordinator()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -80,7 +89,6 @@ final class BlockViewController: BaseViewController, BottomSheetable {
         ])
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = Constants.Profile.imageSize / 2
-        imageView.image = UIImage(named: "mock_artist")
         return imageView
     }()
     
@@ -127,10 +135,31 @@ final class BlockViewController: BaseViewController, BottomSheetable {
         button.translatesAutoresizingMaskIntoConstraints = false
         
         button.addAction(UIAction(handler: { [weak self] _ in
+            self?.viewModel.makeBlockRequest()
         }), for: .touchUpInside)
         
         return button
     }()
+    
+    // MARK: - Properties
+    private var viewModel: BlockViewModel
+
+    // MARK: - Initialization
+    init(viewModel: BlockViewModel) {
+        self.viewModel = viewModel
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - View Life Cycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupData()
+    }
     
     override func setupView() {
         view.backgroundColor = UIColor.Common.white
@@ -168,8 +197,8 @@ final class BlockViewController: BaseViewController, BottomSheetable {
         let attributedString = NSMutableAttributedString(string: descText, attributes: [.foregroundColor: UIColor.Common.grey03])
 
         let length = descText.count
-        let start = max(0, length - 18) // Start index for the last 100 characters
-        let range = NSRange(location: start, length: length - start) // Range for the last 100 characters'
+        let start = max(0, length - 18)
+        let range = NSRange(location: start, length: length - start)
         attributedString.addAttribute(.foregroundColor, value: UIColor.red, range: range)
         
         let paragraphStyle = NSMutableParagraphStyle()
@@ -186,5 +215,11 @@ final class BlockViewController: BaseViewController, BottomSheetable {
             blockButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.BlockButton.horizontalMargin),
             blockButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.BlockButton.bottomMargin)
         ])
+    }
+    
+    private func setupData() {
+        if let profileImageUrl = viewModel.user.profileImageUrl {
+            profileImageView.kf.setImage(with: URL(string: profileImageUrl))
+        }
     }
 }

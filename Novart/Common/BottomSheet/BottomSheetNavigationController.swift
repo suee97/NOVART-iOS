@@ -24,6 +24,7 @@ final class BottomSheetNavigationController: BaseNavigationController {
         super.viewDidLoad()
         isNavigationBarHidden = true
         bind()
+        view.backgroundColor = .Common.white
     }
     
     private func bind() {
