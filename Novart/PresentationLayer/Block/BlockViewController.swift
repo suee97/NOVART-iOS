@@ -79,16 +79,13 @@ final class BlockViewController: BaseViewController, BottomSheetable {
         return button
     }()
     
-    private lazy var profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+    private lazy var profileImageView: PlainProfileImageView = {
+        let imageView = PlainProfileImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: Constants.Profile.imageSize),
             imageView.heightAnchor.constraint(equalToConstant: Constants.Profile.imageSize)
         ])
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = Constants.Profile.imageSize / 2
         return imageView
     }()
     
@@ -219,7 +216,7 @@ final class BlockViewController: BaseViewController, BottomSheetable {
     
     private func setupData() {
         if let profileImageUrl = viewModel.user.profileImageUrl {
-            profileImageView.kf.setImage(with: URL(string: profileImageUrl))
+            profileImageView.setImage(with: URL(string: profileImageUrl))
         }
     }
 }
