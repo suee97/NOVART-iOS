@@ -55,9 +55,10 @@ extension Coordinator {
         end()
     }
     
-    func close() {
+    func close(completion: (() -> Void)? = nil) {
         if let dismissible = navigator as? Dismissible {
             dismissible.dismiss(animated: true)
+            completion?()
             end()
         }
     }

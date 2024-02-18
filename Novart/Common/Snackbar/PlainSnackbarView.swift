@@ -13,8 +13,8 @@ public final class PlainSnackbarView: UIView {
         
         static let leadingMargin: CGFloat = 16
         static let trailingMargin: CGFloat = 16
-        static let topMargin: CGFloat = 14
-        static let bottomMargin: CGFloat = 14
+        static let topMargin: CGFloat = 18
+        static let bottomMargin: CGFloat = 18
         
         static let messageLabelSpacing: CGFloat = 8
         

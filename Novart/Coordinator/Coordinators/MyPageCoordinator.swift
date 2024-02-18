@@ -8,6 +8,9 @@
 import UIKit
 
 final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
+    
+    var userId: Int64?
+    
     override func start() {
         let viewModel = MyPageViewModel(coordinator: self, userId: nil) // MARK: - TEST
         let viewController = MyPageViewController(viewModel: viewModel)
@@ -21,6 +24,13 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
 
         viewController.tabBarItem = tabBarItem
         navigator.start(viewController)
+    }
+    
+    @MainActor
+    func startAsPush() {
+        let viewModel = MyPageViewModel(coordinator: self, userId: userId)
+        let viewController = MyPageViewController(viewModel: viewModel)
+        navigator.push(viewController, animated: true)
     }
     
     override func navigate(to step: MyPageStep) {
@@ -106,6 +116,9 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     @MainActor
     private func close() {
         navigator.pop(animated: true)
+        if !(navigator.rootViewController.topViewController is MyPageViewController) {
+            end()
+        }
     }
     
     @MainActor

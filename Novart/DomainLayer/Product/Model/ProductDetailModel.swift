@@ -18,6 +18,7 @@ struct ProductDetailModel: Decodable {
     let artist: ProductDetailArtist
     let createdAt: String
     let likes: Bool
+    let forSale: Bool
     
     enum CodingKeys: CodingKey {
         case id
@@ -30,6 +31,7 @@ struct ProductDetailModel: Decodable {
         case artist
         case createdAt
         case likes
+        case forSale
     }
     
     init(from decoder: Decoder) throws {
@@ -44,6 +46,7 @@ struct ProductDetailModel: Decodable {
         self.artist = try container.decode(ProductDetailArtist.self, forKey: .artist)
         self.createdAt = try container.decode(String.self, forKey: .createdAt)
         self.likes = try container.decode(Bool.self, forKey: .likes)
+        self.forSale = try container.decode(Bool.self, forKey: .forSale)
     }
     
     init(previewData: ProductPreviewModel) {
@@ -58,6 +61,7 @@ struct ProductDetailModel: Decodable {
         self.artist = ProductDetailArtist(userId: user?.id ?? 0, nickname: user?.nickname ?? "", profileImageUrl: user?.profileImageUrl, following: false)
         self.createdAt = previewData.createdAt
         self.likes = false
+        self.forSale = previewData.forSale
     }
 }
 
