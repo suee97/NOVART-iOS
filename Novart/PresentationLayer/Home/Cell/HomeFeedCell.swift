@@ -232,7 +232,8 @@ final class HomeFeedCell: UICollectionViewCell {
     }
     
     func scrollToMiddle() {
-        guard let viewModel else { return }
+        guard let viewModel,
+              viewModel.imageUrls.count > 1 else { return }
         let middleSectionIndex = viewModel.imageUrls.count
         collectionView.scrollToItem(at: IndexPath(item: middleSectionIndex, section: 0), at: .centeredHorizontally, animated: false)
     }

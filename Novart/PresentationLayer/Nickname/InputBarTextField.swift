@@ -1,5 +1,5 @@
 //
-//  NicknameTextField.swift
+//  InputBarTextField.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/10/01.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NicknameTextField: UITextField {
+class InputBarTextField: UITextField {
 
     var textInset: CGFloat = 14
 

@@ -9,10 +9,10 @@ import Foundation
 
 final class ProductInteractor {
     func likeProduct(id: Int64) async throws {
-        try await APIClient.likeProduct(id: id)
+        _ = try await APIClient.likeProduct(id: id)
     }
     
     func cancelLikeProduct(id: Int64) async throws {
-        try await APIClient.cancelLikeProdcut(id: id)
+        _ = try await APIClient.cancelLikeProdcut(id: id)
     }
 }

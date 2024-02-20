@@ -604,11 +604,7 @@ final class MyPageViewController: BaseViewController {
     
     // MARK: - Functions
     private func onTapAskButton() {
-        let viewController = MyPageAskModalViewController()
-        askModalTransitioningDelegate = MyPageAskModalTransitioningDelegate(from: self, to: viewController)
-        viewController.modalPresentationStyle = .custom
-        viewController.transitioningDelegate = askModalTransitioningDelegate
-        tabBarController?.present(viewController, animated: true, completion: nil)
+        viewModel.showAskSheet()
     }
     
     private func onTapFollowButton() {
@@ -660,19 +656,16 @@ final class MyPageViewController: BaseViewController {
     }
     
     private func onTapReport() {
-        let viewController = MyPageReportModalViewController()
-        reportModalTransitioningDelegate = MyPageAskModalTransitioningDelegate(from: self, to: viewController)
-        viewController.modalPresentationStyle = .custom
-        viewController.transitioningDelegate = reportModalTransitioningDelegate
-        tabBarController?.present(viewController, animated: true, completion: nil)
+//        let viewController = MyPageReportModalViewController()
+//        reportModalTransitioningDelegate = MyPageAskModalTransitioningDelegate(from: self, to: viewController)
+//        viewController.modalPresentationStyle = .custom
+//        viewController.transitioningDelegate = reportModalTransitioningDelegate
+//        tabBarController?.present(viewController, animated: true, completion: nil)
+        viewModel.showReportSheet()
     }
     
     private func onTapUserBlock() {
-        let viewController = MyPageUserBlockViewController()
-        reportModalTransitioningDelegate = MyPageAskModalTransitioningDelegate(from: self, to: viewController)
-        viewController.modalPresentationStyle = .custom
-        viewController.transitioningDelegate = userBlockModalTransitioningDelegate
-        tabBarController?.present(viewController, animated: true, completion: nil)
+        viewModel.showBlockSheet()
     }
 }
 
