@@ -233,6 +233,7 @@
 		5B97D4BD2B1312DC009CEA05 /* APIClient+Exhibition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B97D4BC2B1312DC009CEA05 /* APIClient+Exhibition.swift */; };
 		5B97D4BF2B131573009CEA05 /* ExhibitionDownloadInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B97D4BE2B131573009CEA05 /* ExhibitionDownloadInteractor.swift */; };
 		5BAE07EF2B4AC06F007E5CF5 /* MyPageCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAE07EE2B4AC06F007E5CF5 /* MyPageCategory.swift */; };
+		5BB4A8DD2B848C8200F06959 /* SharePathManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB4A8DC2B848C8200F06959 /* SharePathManager.swift */; };
 		5BB933E02AF3A3AB000185D1 /* ColorThiefSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5BB9F19D2AEE6E4C00C347F3 /* ColorThiefSwift */; };
 		5BB933E12AF3A40D000185D1 /* ProductDetailExhibitionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3ECC6C2AE4F87E00790CB9 /* ProductDetailExhibitionCell.swift */; };
 		5BB933EC2AF3A876000185D1 /* ExhibitionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB933E42AF3A472000185D1 /* ExhibitionCell.swift */; };
@@ -501,6 +502,7 @@
 		5B97D4BE2B131573009CEA05 /* ExhibitionDownloadInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionDownloadInteractor.swift; sourceTree = "<group>"; };
 		5BAE07EE2B4AC06F007E5CF5 /* MyPageCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageCategory.swift; sourceTree = "<group>"; };
 		5BB4A8D92B81A70F00F06959 /* Novart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Novart.entitlements; sourceTree = "<group>"; };
+		5BB4A8DC2B848C8200F06959 /* SharePathManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePathManager.swift; sourceTree = "<group>"; };
 		5BB933E42AF3A472000185D1 /* ExhibitionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionCell.swift; sourceTree = "<group>"; };
 		5BB933E62AF3A472000185D1 /* ExhibitionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionCoordinator.swift; sourceTree = "<group>"; };
 		5BB933E72AF3A472000185D1 /* ExhibitionStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionStep.swift; sourceTree = "<group>"; };
@@ -589,6 +591,7 @@
 				0ED9F04A2B11FC2E00EDCD3C /* MyPage */,
 				0ED9F0462B11F88600EDCD3C /* Home */,
 				0E1E21232AE5652800F15009 /* Login */,
+				5BB4A8DA2B848C6800F06959 /* Share */,
 			);
 			path = DomainLayer;
 			sourceTree = "<group>";
@@ -1132,9 +1135,9 @@
 			isa = PBXGroup;
 			children = (
 				0EE018E02A48156C00389A95 /* AppDelegate.swift */,
-				0EE018E22A48156C00389A95 /* SceneDelegate.swift */,
 				0EE019142A482F0C00389A95 /* AppWindow.swift */,
 				0EE018F42A48175600389A95 /* AppCoordinator.swift */,
+				0EE018E22A48156C00389A95 /* SceneDelegate.swift */,
 				0EE0190E2A482D0E00389A95 /* AppStep.swift */,
 			);
 			path = App;
@@ -1422,6 +1425,22 @@
 			path = Exhibition;
 			sourceTree = "<group>";
 		};
+		5BB4A8DA2B848C6800F06959 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				5BB4A8DB2B848C7700F06959 /* Model */,
+			);
+			path = Share;
+			sourceTree = "<group>";
+		};
+		5BB4A8DB2B848C7700F06959 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5BB4A8DC2B848C8200F06959 /* SharePathManager.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		5BB933E22AF3A472000185D1 /* Exhibition */ = {
 			isa = PBXGroup;
 			children = (
@@ -1669,6 +1688,7 @@
 				0E760E872B1B111F0051CB6C /* ExhibitionDetailInfoCell.swift in Sources */,
 				0EE018FD2A48195400389A95 /* NavigationActionable.swift in Sources */,
 				0E9892A12B5287B5003F6DF9 /* ImageEditorPresentableCoordinator.swift in Sources */,
+				5BB4A8DD2B848C8200F06959 /* SharePathManager.swift in Sources */,
 				5BF6243D2B76026300F502FE /* EmptyResponseModel.swift in Sources */,
 				5BB9F1702ADD177100C347F3 /* MyPageSettingViewModel.swift in Sources */,
 				0E41738E2B25DFE10017AAD9 /* PHAssetInteractor.swift in Sources */,
