@@ -17,11 +17,11 @@ extension APIClient {
         try await APIClient.request(target: ProductTarget.uploadProduct(product: product), type: ProductModel.self)
     }
     
-    static func likeProduct(id: Int64) async throws {
-        _ = try await APIClient.request(target: ProductTarget.like(id: id), type: String.self)
+    static func likeProduct(id: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: ProductTarget.like(id: id), type: EmptyResponseModel.self)
     }
     
-    static func cancelLikeProdcut(id: Int64) async throws {
-        _ = try await APIClient.request(target: ProductTarget.cancelLike(id: id), type: String.self)
+    static func cancelLikeProdcut(id: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: ProductTarget.cancelLike(id: id), type: EmptyResponseModel.self)
     }
 }

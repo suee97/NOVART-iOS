@@ -1,19 +1,17 @@
 import UIKit
+import Combine
 import SnapKit
 
-final class MyPageReportModalViewController: BaseViewController {
+final class ReportViewController: BaseViewController {
 
     // MARK: - Constants
     private enum Constants {
         static let screenWidth = UIScreen.main.bounds.size.width
         static let screenHeight = UIScreen.main.bounds.size.height
-        static func getRelativeWidth(from width: CGFloat) -> CGFloat { screenWidth * (width/390) }
-        static func getRelativeHeight(from height: CGFloat) -> CGFloat { screenHeight * (height/844) }
-        
+
         enum ContentView {
             static let radius: CGFloat = 12
             static let width = screenWidth
-            static let height = width * (398/390)
             
             enum Shadow {
                 static let color: CGColor = UIColor.black.withAlphaComponent(0.25).cgColor
@@ -27,51 +25,51 @@ final class MyPageReportModalViewController: BaseViewController {
             static let backgroundColor = UIColor.Common.grey01
             static let width: CGFloat = 40
             static let height: CGFloat = 4
-            static let topMargin: CGFloat = getRelativeHeight(from: 12)
+            static let topMargin: CGFloat = 12
         }
         
         enum TitleLabel {
             static let text = "사용자 신고"
             static let textColor = UIColor.Common.black
             static let font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-            static let topMargin = getRelativeHeight(from: 8)
+            static let topMargin: CGFloat = 8
         }
         
         enum CancelButton {
-            static let diameter = getRelativeWidth(from: 24)
+            static let diameter: CGFloat = 24
             static let imagePath = "icon_cancel"
-            static let rightMargin = getRelativeWidth(from: 24)
+            static let rightMargin: CGFloat = 24
         }
         
         enum AbuseCheckRowView {
             static let text = "비방, 욕설 및 혐오표현을 사용해요"
             static let horizontalMargin: CGFloat = 24
-            static let height = Constants.getRelativeHeight(from: 24)
-            static let topMargin = Constants.getRelativeHeight(from: 34)
+            static let height: CGFloat = 24
+            static let topMargin: CGFloat = 34
         }
         
         enum Divider1 {
             static let horizontalMargin: CGFloat = 24
-            static let topMargin = Constants.getRelativeHeight(from: 24)
+            static let topMargin: CGFloat = 24
         }
         
         enum IssueCheckRowView {
             static let text = "이 사용자와 거래 중 문제가 발생했어요"
             static let horizontalMargin: CGFloat = 24
-            static let height = Constants.getRelativeHeight(from: 24)
-            static let topMargin = Constants.getRelativeHeight(from: 24)
+            static let height: CGFloat = 24
+            static let topMargin: CGFloat = 24
         }
         
         enum Divider2 {
             static let horizontalMargin: CGFloat = 24
-            static let topMargin = Constants.getRelativeHeight(from: 24)
+            static let topMargin: CGFloat = 24
         }
         
         enum FraudCheckRowView {
             static let text = "사기인 것 같아요"
             static let horizontalMargin: CGFloat = 24
-            static let height = Constants.getRelativeHeight(from: 24)
-            static let topMargin = Constants.getRelativeHeight(from: 24)
+            static let height: CGFloat = 24
+            static let topMargin: CGFloat = 24
         }
         
         enum ReportButton {
@@ -82,30 +80,30 @@ final class MyPageReportModalViewController: BaseViewController {
             static let disabledTextColor = UIColor.init(hexString: "#D3DEE0")
             static let enabledBackgroundColor = UIColor.Common.black
             static let enabledTextColor = UIColor.Common.white
-            static let topMargin = Constants.getRelativeHeight(from: 296)
-            static let height = Constants.getRelativeHeight(from: 54)
+            static let topMargin: CGFloat = 296
+            static let height: CGFloat = 54
             static let horizontalMargin: CGFloat = 24
         }
         
         enum ConfirmView {
-            static let height = Constants.getRelativeHeight(from: 280)
+            static let height: CGFloat = 280
             
             enum ConfirmImageView {
                 static let imageName = "icon_check_report"
-                static let diameter = Constants.getRelativeWidth(from: 64)
-                static let topMargin = Constants.getRelativeHeight(from: 80)
+                static let diameter: CGFloat = 64
+                static let topMargin: CGFloat = 80
             }
             enum AppreciateLabel {
                 static let text = "알려주셔서 감사합니다"
                 static let font = UIFont.systemFont(ofSize: 20, weight: .bold)
                 static let textColor = UIColor.Common.black
-                static let topMargin = Constants.getRelativeHeight(from: 24)
+                static let topMargin: CGFloat = 24
             }
             enum ImprovementLabel {
                 static let text = "회원님의 소중한 의견을 반영하여 더 나은 PLAIN을 만들기 위해 노력하겠습니다."
                 static let font = UIFont.systemFont(ofSize: 14, weight: .regular)
                 static let textColor = UIColor.init(hexString: "#5E6566")
-                static let topMargin = Constants.getRelativeHeight(from: 8)
+                static let topMargin: CGFloat = 8
                 static let width: CGFloat = 305
             }
         }
@@ -153,19 +151,19 @@ final class MyPageReportModalViewController: BaseViewController {
     
     private lazy var abuseCheckRowView: CheckRowView = {
         let view = CheckRowView(text: Constants.AbuseCheckRowView.text)
-        view.onTapCheckBoxButton = { self.validateReportButton() }
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .hateSpeech) }
         return view
     }()
     
     private lazy var issueCheckRowView: CheckRowView = {
         let view = CheckRowView(text: Constants.IssueCheckRowView.text)
-        view.onTapCheckBoxButton = { self.validateReportButton() }
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .transactionProblem) }
         return view
     }()
     
     private lazy var fraudCheckRowView: CheckRowView = {
         let view = CheckRowView(text: Constants.FraudCheckRowView.text)
-        view.onTapCheckBoxButton = { self.validateReportButton() }
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .fraud) }
         return view
     }()
     
@@ -224,29 +222,33 @@ final class MyPageReportModalViewController: BaseViewController {
         return view
     }()
     
+    // MARK: - Properties
+    private var viewModel: ReportViewModel
+    private var cancellables: Set<AnyCancellable> = .init()
+
+    // MARK: - Initialization
+    init(viewModel: ReportViewModel) {
+        self.viewModel = viewModel
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Setup
     override func setupView() {
-        view.backgroundColor = .clear
+        view.backgroundColor = UIColor.Common.white
         
-        view.isUserInteractionEnabled = true
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapView))
-        view.addGestureRecognizer(gesture)
-        gesture.delegate = self
-        
-        view.addSubview(contentView)
-        contentView.addSubview(topBar)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(cancelButton)
-        contentView.addSubview(abuseCheckRowView)
-        contentView.addSubview(divider1)
-        contentView.addSubview(issueCheckRowView)
-        contentView.addSubview(divider2)
-        contentView.addSubview(fraudCheckRowView)
-        contentView.addSubview(reportButton)
-        
-        contentView.snp.makeConstraints({ m in
-            m.left.right.bottom.equalToSuperview()
-            m.height.equalTo(Constants.ContentView.height)
-        })
+        view.addSubview(topBar)
+        view.addSubview(titleLabel)
+        view.addSubview(cancelButton)
+        view.addSubview(abuseCheckRowView)
+        view.addSubview(divider1)
+        view.addSubview(issueCheckRowView)
+        view.addSubview(divider2)
+        view.addSubview(fraudCheckRowView)
+        view.addSubview(reportButton)
         
         topBar.snp.makeConstraints({ m in
             m.centerX.equalToSuperview()
@@ -301,70 +303,87 @@ final class MyPageReportModalViewController: BaseViewController {
         })
     }
     
+    override func setupBindings() {
+        viewModel.reportButtonEnableSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] shouldEnable in
+                guard let self else { return }
+                if shouldEnable {
+                    self.reportButton.titleLabel?.textColor = Constants.ReportButton.enabledTextColor
+                    self.reportButton.backgroundColor = Constants.ReportButton.enabledBackgroundColor
+                    self.reportButton.isEnabled = true
+                } else {
+                    self.reportButton.titleLabel?.textColor = Constants.ReportButton.disabledTextColor
+                    self.reportButton.backgroundColor = Constants.ReportButton.disabledBackgroundColor
+                    self.reportButton.isEnabled = false
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.reportTypeUpdated
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] type in
+                guard let self else { return }
+                if let type {
+                    switch type {
+                    case.fraud:
+                        self.abuseCheckRowView.isChecked = false
+                        self.issueCheckRowView.isChecked = false
+                    case .hateSpeech:
+                        self.fraudCheckRowView.isChecked = false
+                        self.issueCheckRowView.isChecked = false
+                    case .transactionProblem:
+                        self.fraudCheckRowView.isChecked = false
+                        self.abuseCheckRowView.isChecked = false
+                    }
+                } else {
+                    self.issueCheckRowView.isChecked = false
+                    self.fraudCheckRowView.isChecked = false
+                    self.abuseCheckRowView.isChecked = false
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.reportDoneSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] success in
+                guard let self,
+                success else { return }
+                
+                self.viewModel.showReportDoneScene()
+            }
+            .store(in: &cancellables)
+    }
+    
     
     // MARK: - Functions
-    @objc private func onTapView(_ sender: UITapGestureRecognizer) {
-        self.dismiss(animated: true)
-    }
-    
+    @MainActor
     private func onTapCancelButton() {
-        self.dismiss(animated: true)
+        viewModel.closeCoordinator()
     }
     
-    private func validateReportButton() {
-        if abuseCheckRowView.isChecked || issueCheckRowView.isChecked || fraudCheckRowView.isChecked {
-            reportButton.titleLabel?.textColor = Constants.ReportButton.enabledTextColor
-            reportButton.backgroundColor = Constants.ReportButton.enabledBackgroundColor
-            reportButton.isEnabled = true
+    private func validateReportButton(checked: Bool, reportType: ReportType) {
+        if checked {
+            viewModel.selectReport(type: reportType)
         } else {
-            reportButton.titleLabel?.textColor = Constants.ReportButton.disabledTextColor
-            reportButton.backgroundColor = Constants.ReportButton.disabledBackgroundColor
-            reportButton.isEnabled = false
+            viewModel.deselectReport()
         }
     }
     
     private func onTapReportButton() {
-        // MARK: - TODO: API 요청
-        let removeViews = [titleLabel, cancelButton, abuseCheckRowView, divider1, issueCheckRowView, divider2, fraudCheckRowView]
-        removeViews.forEach { $0.removeFromSuperview() }
-        contentView.addSubview(confirmView)
-        confirmView.snp.makeConstraints({ m in
-            m.left.right.top.equalToSuperview()
-            m.height.equalTo(Constants.ConfirmView.height)
-        })
-        reportButton.setTitle("확인", for: .normal)
-        reportButton.enumerateEventHandlers { action, _, event, _ in
-            if let action = action {
-                reportButton.removeAction(action, for: event)
-            }
-        }
-        reportButton.addAction(UIAction(handler: { [weak self] _ in
-            guard let self else { return }
-            self.dismiss(animated: true)
-        }), for: .touchUpInside)
+        viewModel.sendReportRequest()
     }
 }
-
-
-// MARK: - UIGestureRecognizerDelegate
-extension MyPageReportModalViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        let touchDisableViews = [contentView, abuseCheckRowView, issueCheckRowView, fraudCheckRowView]
-        
-        guard let touchView = touch.view else { return false }
-        
-        if touchDisableViews.contains(touchView) {
-            return false
-        }
-        return true
-    }
-}
-
 
 // MARK: - CheckRowView & Divider
 fileprivate final class CheckRowView: UIView {
-    var isChecked = false
-    var onTapCheckBoxButton: () -> Void = {}
+    var isChecked = false {
+        didSet {
+            let image = isChecked ? UIImage(named: "icon_select_fill") : UIImage(named: "icon_select_circle")
+            checkBoxButton.setImage(image, for: .normal)
+        }
+    }
+    var onTapCheckBoxButton: ((Bool) -> Void)?
     
     private let label: UILabel = {
         let label = UILabel()
@@ -375,13 +394,11 @@ fileprivate final class CheckRowView: UIView {
     
     private lazy var checkBoxButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "icon_check_box"), for: .normal)
+        button.setImage(UIImage(named: "icon_select_circle"), for: .normal)
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             self.isChecked = !self.isChecked
-            let image = self.isChecked ? UIImage(named: "icon_check_fill") : UIImage(named: "icon_check_box")
-            button.setImage(image, for: .normal)
-            self.onTapCheckBoxButton()
+            self.onTapCheckBoxButton?(self.isChecked)
         }), for: .touchUpInside)
         return button
     }()
@@ -400,15 +417,15 @@ fileprivate final class CheckRowView: UIView {
         addSubview(label)
         addSubview(checkBoxButton)
         
-        label.snp.makeConstraints({ m in
+        checkBoxButton.snp.makeConstraints({ m in
             m.left.equalToSuperview()
             m.centerY.equalToSuperview()
+            m.width.height.equalTo(24)
         })
         
-        checkBoxButton.snp.makeConstraints({ m in
-            m.right.equalToSuperview()
+        label.snp.makeConstraints({ m in
+            m.left.equalTo(checkBoxButton.snp.right).offset(8)
             m.centerY.equalToSuperview()
-            m.width.height.equalTo(24)
         })
     }
 }

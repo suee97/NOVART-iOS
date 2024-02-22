@@ -39,7 +39,7 @@ final class ProductDetailViewController: BaseViewController {
         }
         
         enum ArtistViewShadow {
-            static let color: CGColor = UIColor.black.withAlphaComponent(0.15).cgColor
+            static let color: CGColor = UIColor.black.withAlphaComponent(0.1).cgColor
             static let radius: CGFloat = 6
             static let offset: CGSize = CGSize(width: 0, height: 0)
             static let opacity: Float = 1
@@ -72,7 +72,7 @@ final class ProductDetailViewController: BaseViewController {
             static let buttonHeight: CGFloat = 40
             static let contactButtonWidth: CGFloat = 60
             static let followButtonWidth: CGFloat = 74
-            static let profileButtonWidth: CGFloat = 226
+            static let profileButtonWidth: CGFloat = 106
             static let contactButtonColor: UIColor = UIColor.Common.grey04
             static let followButtonColor: UIColor = UIColor.Common.main
             static let followingButtonColor: UIColor = UIColor.Common.grey04
@@ -134,9 +134,8 @@ final class ProductDetailViewController: BaseViewController {
         return label
     }()
     
-    private lazy var barArtistImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
+    private lazy var barArtistImageView: PlainProfileImageView = {
+        let imageView = PlainProfileImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -223,6 +222,11 @@ final class ProductDetailViewController: BaseViewController {
             button.widthAnchor.constraint(equalToConstant: Constants.ArtistInfo.followButtonWidth),
             button.heightAnchor.constraint(equalToConstant: Constants.ArtistInfo.buttonHeight)
         ])
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.didTapFollowButton()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -238,19 +242,21 @@ final class ProductDetailViewController: BaseViewController {
             button.widthAnchor.constraint(equalToConstant: Constants.ArtistInfo.profileButtonWidth),
             button.heightAnchor.constraint(equalToConstant: Constants.ArtistInfo.buttonHeight)
         ])
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.didTapMyProfileButton()
+        }), for: .touchUpInside)
         return button
     }()
     
-    private lazy var artistImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
+    private lazy var artistImageView: PlainProfileImageView = {
+        let imageView = PlainProfileImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: Constants.ArtistInfo.imageSize),
             imageView.heightAnchor.constraint(equalToConstant: Constants.ArtistInfo.imageSize)
         ])
-        imageView.layer.cornerRadius = Constants.ArtistInfo.imageSize / 2
-        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -281,7 +287,7 @@ final class ProductDetailViewController: BaseViewController {
             artistNameLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             followButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.ArtistInfo.horizontalMargin),
             followButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            artistNameLabel.trailingAnchor.constraint(equalTo: followButton.leadingAnchor, constant: Constants.ArtistInfo.spacing),
+            artistNameLabel.trailingAnchor.constraint(equalTo: contactButton.leadingAnchor, constant: Constants.ArtistInfo.spacing),
             contactButton.trailingAnchor.constraint(equalTo: followButton.leadingAnchor, constant: -Constants.ArtistInfo.spacing),
             contactButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             myProfileButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.ArtistInfo.horizontalMargin),
@@ -293,6 +299,8 @@ final class ProductDetailViewController: BaseViewController {
         view.layer.shadowRadius = Constants.ArtistViewShadow.radius
         view.layer.shadowOpacity = Constants.ArtistViewShadow.opacity
         
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapArtistInfoView))
+        view.addGestureRecognizer(tapGestureRecognizer)
         return view
     }()
     
@@ -324,11 +332,16 @@ final class ProductDetailViewController: BaseViewController {
         likeButton.layer.shadowColor = UIColor.black.cgColor
         likeButton.layer.shadowOpacity = 0.15
         likeButton.layer.shadowOffset = CGSize(width: 0, height: 2)
+        likeButton.tag = 99
         
         NSLayoutConstraint.activate([
             likeButton.widthAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize),
             likeButton.heightAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize)
         ])
+        
+        likeButton.addAction(UIAction(handler: { [weak self] _ in
+            self?.viewModel.didTapLikeButton()
+        }), for: .touchUpInside)
         
         let commentButton = UIButton()
         commentButton.backgroundColor = UIColor.Common.white.withAlphaComponent(0.72)
@@ -345,7 +358,7 @@ final class ProductDetailViewController: BaseViewController {
             commentButton.heightAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize)
         ])
         commentButton.addAction(UIAction(handler: { [weak self] _ in
-            self?.viewModel.showCommentViewController()
+            self?.viewModel.didTapCommentButton()
         }), for: .touchUpInside)
         
         let shareButton = UIButton()
@@ -357,6 +370,9 @@ final class ProductDetailViewController: BaseViewController {
         shareButton.layer.shadowColor = UIColor.black.cgColor
         shareButton.layer.shadowOpacity = 0.15
         shareButton.layer.shadowOffset = CGSize(width: 0, height: 2)
+        shareButton.addAction(UIAction(handler: { [weak self] _ in
+            self?.viewModel.didTapShareButton()
+        }), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
             shareButton.widthAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize),
@@ -372,6 +388,9 @@ final class ProductDetailViewController: BaseViewController {
         moreButton.layer.shadowColor = UIColor.black.cgColor
         moreButton.layer.shadowOpacity = 0.15
         moreButton.layer.shadowOffset = CGSize(width: 0, height: 2)
+        moreButton.addAction(UIAction(handler: { [weak self] _ in
+            self?.viewModel.didTapMoreButton()
+        }), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
             moreButton.widthAnchor.constraint(equalToConstant: Constants.FloatingButton.buttonSize),
@@ -548,6 +567,22 @@ final class ProductDetailViewController: BaseViewController {
                 self.setupDetailImageViews(with: images)
             }
             .store(in: &cancellables)
+        
+        viewModel.isLikedSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] liked in
+                guard let self else { return }
+                self.updateLikeButton(isLiked: liked)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.isFollowingSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isFollowing in
+                guard let self else { return }
+                self.updateFollowButton(isFollowing: isFollowing)
+            }
+            .store(in: &cancellables)
     }
     
     private func setupDetailImageViews(with images: [UIImage?]) {
@@ -579,8 +614,8 @@ final class ProductDetailViewController: BaseViewController {
         
         if let artistImageUrl = data.artist.profileImageUrl {
             let url = URL(string: artistImageUrl)
-            barArtistImageView.kf.setImage(with: url)
-            artistImageView.kf.setImage(with: url)
+            barArtistImageView.setImage(with: url)
+            artistImageView.setImage(with: url)
         }
         
         productDescriptionLabel.attributedText = viewModel.attributedDescriptionsString(for: data.description)
@@ -623,6 +658,30 @@ final class ProductDetailViewController: BaseViewController {
                                                                                 .artistExhibition: artistExhibitions,
                                                                                 .similarProduct: similarProducts]
         recommendationDataSource.apply(recommendationDic)
+    }
+    
+    private func updateLikeButton(isLiked: Bool) {
+        guard let floatingLikeButton = floatingButtonStackView.arrangedSubviews.first(where: { $0.tag == 99 }) as? UIButton,
+              let fixedLikeButton = fixedButtonStackView.arrangedSubviews.first(where: { $0.tag == 99 }) as? UIButton else { return }
+        
+        let image = isLiked ? UIImage(named: "icon_heart_fill") : UIImage(named: "icon_heart_grey")
+        floatingLikeButton.setImage(image, for: .normal)
+        fixedLikeButton.setImage(image, for: .normal)
+    }
+    
+    private func updateFollowButton(isFollowing: Bool) {
+        let title: String = isFollowing ? "팔로잉" : "팔로우"
+        let buttonColor: UIColor = isFollowing ? Constants.ArtistInfo.followingButtonColor : Constants.ArtistInfo.followButtonColor
+        followButton.setTitle(title, for: .normal)
+        followButton.backgroundColor = buttonColor
+    }
+}
+
+// MARK: - Tap
+private extension ProductDetailViewController {
+    @objc
+    private func didTapArtistInfoView() {
+        viewModel.didTapUserProfile()
     }
 }
 

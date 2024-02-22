@@ -3,7 +3,7 @@ import UIKit
 import Alamofire
 
 final class MyPageViewModel {
-    var coordinator: MyPageCoordinator?
+    weak var coordinator: MyPageCoordinator?
     private var interactor = MyPageDownloadInteractor()
     
     @Published private (set) var selectedCategory: MyPageCategory = .Interest
@@ -183,6 +183,28 @@ extension MyPageViewModel {
     @MainActor
     func showExhibitionDetail(exhibitionId: Int64) {
         coordinator?.navigate(to: .exhibitionDetail(id: exhibitionId))
+    }
+    
+    @MainActor
+    func showBlockSheet() {
+        guard let userId,
+              userState == .other,
+              let otherUser else { return }
+        coordinator?.navigate(to: .block(user: otherUser))
+    }
+    
+    @MainActor
+    func showReportSheet() {
+        guard let userId,
+        userState == .other else { return }
+        coordinator?.navigate(to: .report(userId: userId))
+    }
+    
+    @MainActor
+    func showAskSheet() {
+        guard let userId,
+        userState == .other else { return }
+        coordinator?.navigate(to: .ask(userId: userId))
     }
 }
 

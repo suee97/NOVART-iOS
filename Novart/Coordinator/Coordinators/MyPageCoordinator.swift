@@ -8,6 +8,9 @@
 import UIKit
 
 final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
+    
+    var userId: Int64?
+    
     override func start() {
         let viewModel = MyPageViewModel(coordinator: self, userId: nil) // MARK: - TEST
         let viewController = MyPageViewController(viewModel: viewModel)
@@ -21,6 +24,13 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
 
         viewController.tabBarItem = tabBarItem
         navigator.start(viewController)
+    }
+    
+    @MainActor
+    func startAsPush() {
+        let viewModel = MyPageViewModel(coordinator: self, userId: userId)
+        let viewController = MyPageViewController(viewModel: viewModel)
+        navigator.push(viewController, animated: true)
     }
     
     override func navigate(to step: MyPageStep) {
@@ -46,6 +56,13 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
             showArtistProfile(userId: id)
         case let .exhibitionDetail(id):
             showExhibitionDetailScene(exhibitionId: id)
+        case let .block(user):
+            showBlockSheet(user: user)
+        case let .report(userId):
+            showReportSheet(userId: userId)
+        case let .ask(userId):
+            showAskSheet(userId: userId)
+            
         }
     }
     
@@ -99,6 +116,9 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     @MainActor
     private func close() {
         navigator.pop(animated: true)
+        if !(navigator.rootViewController.topViewController is MyPageViewController) {
+            end()
+        }
     }
     
     @MainActor
@@ -128,6 +148,42 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         add(coordinators: exhibitionDetailCoordinator)
         
         exhibitionDetailCoordinator.start()
+    }
+    
+    @MainActor
+    private func showBlockSheet(user: PlainUser) {
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = 390
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let coordinator = BlockCoordinator(navigator: stackNavigator)
+        coordinator.user = user
+
+        add(coordinators: coordinator)
+        coordinator.start()
+    }
+    
+    @MainActor
+    private func showReportSheet(userId: Int64) {
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = 390
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let coordinator = ReportCoordinator(navigator: stackNavigator)
+        coordinator.userId = userId
+        
+        add(coordinators: coordinator)
+        coordinator.start()
+    }
+    
+    @MainActor
+    private func showAskSheet(userId: Int64) {
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = 248
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let coordinator = AskCoordinator(navigator: stackNavigator)
+        coordinator.userId = userId
+
+        add(coordinators: coordinator)
+        coordinator.start()
     }
 }
 
