@@ -15,8 +15,8 @@ final class HomeViewModel {
     var feedDataSubject: PassthroughSubject<[FeedItemViewModel], Never> = .init()
     var selectedCategory: CategoryType = .all
     
-    private var isLast: Bool?
-    private var isFetched: [Int64 : Bool] = [:]
+    private var isPaginationFinished: Bool?
+    private var isFeedFetched: [Int64 : Bool] = [:]
     
     private var feedData: [FeedItemViewModel] = [] {
         didSet {
@@ -59,12 +59,12 @@ extension HomeViewModel {
     }
 
     func fetchFeedItems(category: CategoryType, lastId: Int64?) {
-        if let lastId { isFetched[lastId] = true }
+        if let lastId { isFeedFetched[lastId] = true }
         Task {
             do {
                 let items = try await downloadInteractor.fetchFeedItems(category: category, lastId: lastId)
                 feedData = items.map { FeedItemViewModel($0) }
-                isLast = items.count == 0
+                isPaginationFinished = items.count == 0
             } catch {
                 print(error)
             }
@@ -76,7 +76,7 @@ extension HomeViewModel {
             do {
                 let items = try await downloadInteractor.fetchFeedItems(category: selectedCategory, lastId: feedData.last?.id)
                 feedData.append(contentsOf: items.map { FeedItemViewModel($0) })
-                isLast = items.count == 0
+                isPaginationFinished = items.count == 0
             } catch {
                 print(error)
             }
@@ -98,10 +98,10 @@ extension HomeViewModel {
     }
     
     func scrollViewDidReachBottom() {
-        guard let isLast, !isLast, let lastId = feedData.last?.id else { return }
-        let fetched = isFetched[lastId] ?? false
+        guard let isPaginationFinished, !isPaginationFinished, let lastId = feedData.last?.id else { return }
+        let fetched = isFeedFetched[lastId] ?? false
         if fetched { return }
-        isFetched[lastId] = true
+        isFeedFetched[lastId] = true
         loadMoreItems()
     }
 }
