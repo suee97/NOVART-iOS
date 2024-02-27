@@ -21,7 +21,7 @@ enum MyPageStep: Step {
     case exhibitionDetail(id: Int64)
     case block(user: PlainUser)
     case report(userId: Int64)
-    case ask(userId: Int64)
+    case ask(user: PlainUser)
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

@@ -61,7 +61,8 @@ final class AskViewController: BaseViewController {
             
             enum Label {
                 static let text = "카카오톡으로 문의"
-                static let textColor = UIColor.Common.black
+                static let availableTextColor = UIColor.Common.black
+                static let unavailableTextColor = UIColor.Common.grey01
                 static let font = UIFont.systemFont(ofSize: 16, weight: .semibold)
                 static let leftMargin: CGFloat = 12
             }
@@ -80,11 +81,26 @@ final class AskViewController: BaseViewController {
             
             enum Label {
                 static let text = "이메일로 문의"
-                static let textColor = UIColor.Common.black
+                static let availableTextColor = UIColor.Common.black
+                static let unavailableTextColor = UIColor.Common.grey01
                 static let font = UIFont.systemFont(ofSize: 16, weight: .semibold)
                 static let leftMargin: CGFloat = 12
             }
         }
+    }
+    
+    // MARK: - Properties
+    var user: PlainUser
+    
+    
+    // MARK: - Lifecycle
+    init(user: PlainUser) {
+        self.user = user
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     
@@ -120,6 +136,7 @@ final class AskViewController: BaseViewController {
         let imageView = UIImageView(image: UIImage(named: Constants.KakaoAskView.ImageView.imagePath))
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
+        imageView.alpha = user.openChatUrl == nil ? 0.25 : 1
         view.addSubview(imageView)
         imageView.snp.makeConstraints({ m in
             m.width.height.equalTo(Constants.KakaoAskView.ImageView.diameter)
@@ -129,7 +146,7 @@ final class AskViewController: BaseViewController {
         
         let label = UILabel()
         label.text = Constants.KakaoAskView.Label.text
-        label.textColor = Constants.KakaoAskView.Label.textColor
+        label.textColor = user.openChatUrl == nil ? Constants.KakaoAskView.Label.unavailableTextColor : Constants.KakaoAskView.Label.availableTextColor
         label.font = Constants.KakaoAskView.Label.font
         view.addSubview(label)
         label.snp.makeConstraints({ m in
@@ -154,6 +171,7 @@ final class AskViewController: BaseViewController {
         let imageView = UIImageView(image: UIImage(named: Constants.EmailAskView.ImageView.imagePath))
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
+        imageView.alpha = user.email == nil ? 0.25 : 1
         view.addSubview(imageView)
         imageView.snp.makeConstraints({ m in
             m.width.height.equalTo(Constants.EmailAskView.ImageView.diameter)
@@ -163,7 +181,7 @@ final class AskViewController: BaseViewController {
         
         let label = UILabel()
         label.text = Constants.EmailAskView.Label.text
-        label.textColor = Constants.EmailAskView.Label.textColor
+        label.textColor = user.email == nil ? Constants.EmailAskView.Label.unavailableTextColor : Constants.EmailAskView.Label.availableTextColor
         label.font = Constants.EmailAskView.Label.font
         view.addSubview(label)
         label.snp.makeConstraints({ m in
@@ -239,10 +257,14 @@ final class AskViewController: BaseViewController {
     }
     
     @objc private func onTapKakaoAskButton() {
-        print("onTapKakaoAskButton")
+        if let url = user.openChatUrl {
+            print("onTapKakaoAskButton")
+        }
     }
     
     @objc private func onTapEmailAskButton() {
-        print("onTapEmailAskButton")
+        if let email = user.email {
+            print("onTapEmailAskButton")
+        }
     }
 }
