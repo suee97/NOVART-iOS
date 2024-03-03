@@ -8,9 +8,7 @@
 import Foundation
 
 final class HomeDownloadInteractor {
-    
     func fetchFeedItems(category: CategoryType, lastId: Int64?) async throws -> [FeedItem] {
-        let feedData = try await APIClient.fetchFeed(category: category, lastId: lastId)
-        return feedData.content
+        try await APIClient.fetchFeed(category: category, lastId: lastId)
     }
 }
