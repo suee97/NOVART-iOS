@@ -208,6 +208,15 @@ extension HomeViewController: UICollectionViewDelegate {
     }
 }
 
+// MARK: - ScrollViewDelegate
+extension HomeViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y + scrollView.bounds.height >= scrollView.contentSize.height) {
+            viewModel.scrollViewDidReachBottom()
+        }
+    }
+}
+
 // MARK: - FilterButton
 extension HomeViewController: FilterMenuViewDelegate {
     func didTapRowAt(menuView: FilterMenuView, category: CategoryType) {
