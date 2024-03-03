@@ -257,14 +257,14 @@ final class AskViewController: BaseViewController {
     }
     
     @objc private func onTapKakaoAskButton() {
-        if let url = user.openChatUrl {
-            print("onTapKakaoAskButton")
+        if let urlString = user.openChatUrl, let url = URL(string: urlString) {
+            UIApplication.shared.open(url)
         }
     }
     
     @objc private func onTapEmailAskButton() {
-        if let email = user.email {
-            print("onTapEmailAskButton")
+        if let email = user.email, let url = URL(string: "mailto:\(email)") {
+            UIApplication.shared.open(url)
         }
     }
 }
