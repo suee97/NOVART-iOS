@@ -206,13 +206,17 @@ final class ProductInfoView: UIView {
         if viewModel.forSale {
             priceStackView.isHidden = false
             displayOnlyLabel.isHidden = true
-            let priceText = Int(viewModel.price).toFormattedString() ?? "0"
+            let priceText = Int(viewModel.price).toDecimalString() ?? "0"
             priceLabel.text = "\(priceText)원"
         } else {
             priceStackView.isHidden = true
             displayOnlyLabel.isHidden = false
         }
-        dateLabel.text = viewModel.createdAt.toDateFormattedString()
+        if let createdAt = viewModel.createdAt.toDateFormattedString() {
+            dateLabel.text = createdAt
+        } else {
+            dateLabel.text = viewModel.createdAt
+        }
         let tagItems = viewModel.artTagList.map { TagItem(tag: $0) }
         tagView.applyItems(tagItems)
     }

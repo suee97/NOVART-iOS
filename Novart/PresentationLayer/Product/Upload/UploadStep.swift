@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum UploadImageType {
-    case cover
-    case detail
+enum UploadStep {
+    case coverImage
+    case detailImage
 }

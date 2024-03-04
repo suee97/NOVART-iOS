@@ -28,6 +28,9 @@ final class ProductCoverCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    var retrieveHandler: ((RetrieveImageData) -> Void)?
+    var index: Int?
+    
     private func setupView() {
         self.clipsToBounds = true
         contentView.addSubview(imageView)
@@ -41,11 +44,24 @@ final class ProductCoverCell: UICollectionViewCell {
     
     func update(with item: String) {
         let url = URL(string: item)
-        imageView.kf.setImage(with: url)
+        imageView.kf.setImage(with: url) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case let .success(imageData):
+                let retrieveData = RetrieveImageData(image: imageData.image, index: self.index ?? -1)
+                self.retrieveHandler?(retrieveData)
+            case let .failure(error):
+                print(error.localizedDescription)
+            }
+        }
     }
     
     func update(image: UIImage) {
         imageView.image = image
+    }
+    
+    func update(mediaItem: UploadMediaItem) {
+        imageView.image = mediaItem.image
     }
 }
 

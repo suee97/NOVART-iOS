@@ -407,7 +407,7 @@ final class ProductDetailViewController: BaseViewController {
     // MARK: - Properties
     
     private var viewModel: ProductDetailViewModel
-    private lazy var productCoverDataSource: ProductCoverImageDataSource = ProductCoverImageDataSource(collectionView: coverCollectionView)
+    private lazy var productCoverDataSource: ProductCoverImageDataSource = ProductCoverImageDataSource(collectionView: coverCollectionView, retrieveHandler: viewModel.imageRetrieveHandler(image:))
     private lazy var recommendationDataSource: RecommendationDataSource = RecommendationDataSource(collectionView: recommendationCollectionView)
     private var floatingButtonStackViewTopContraint: NSLayoutConstraint?
     private var cancellables: Set<AnyCancellable> = .init()
@@ -430,6 +430,7 @@ final class ProductDetailViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        viewModel.viewWillAppear()
     }
     
     override func setupNavigationBar() {
@@ -606,7 +607,6 @@ final class ProductDetailViewController: BaseViewController {
     private func setupData(data: ProductDetailModel) {
         let thumbnailUrls = data.thumbnailImageUrls
         pageController.totalCount = thumbnailUrls.count
-        productCoverDataSource = ProductCoverImageDataSource(collectionView: coverCollectionView)
         productCoverDataSource.apply(thumbnailUrls)
         
         barTitleLabel.text = data.name

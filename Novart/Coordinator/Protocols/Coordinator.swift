@@ -55,6 +55,11 @@ extension Coordinator {
         end()
     }
     
+    func closeToRoot() {
+        navigator.popToRoot(animated: true)
+        end()
+    }
+    
     func close(completion: (() -> Void)? = nil) {
         if let dismissible = navigator as? Dismissible {
             dismissible.dismiss(animated: true)
