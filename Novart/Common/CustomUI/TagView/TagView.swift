@@ -12,11 +12,15 @@ protocol TagViewDelegate: AnyObject {
     func tagView(_ tagView: TagView, didSelectItemAt indexPath: IndexPath)
     func tagView(_ tagView: TagView, didDeselectItemAt indexPath: IndexPath)
     func invalidateLayout(_ tagView: TagView, contentHeight: CGFloat)
+    func tagView(_ tagView: TagView, shouldSelectItemAt indexPath: IndexPath) -> Bool
+    func tagView(_ tagView: TagView, shouldDeselectItemAt indexPath: IndexPath) -> Bool
 }
 
 extension TagViewDelegate {
     func tagView(_ tagView: TagView, didSelectItemAt indexPath: IndexPath) {}
     func tagView(_ tagView: TagView, didDeselectItemAt indexPath: IndexPath) {}
+    func tagView(_ tagView: TagView, shouldSelectItemAt indexPath: IndexPath) -> Bool { return true }
+    func tagView(_ tagView: TagView, shouldDeselectItemAt indexPath: IndexPath) -> Bool { return true }
 }
 
 final class TagView: UIView {
@@ -47,6 +51,12 @@ final class TagView: UIView {
     
     func contentHeight() -> CGFloat {
         collectionView.contentSize.height
+    }
+    
+    func selectItems(indexes: [Int]) {
+        for index in indexes {
+            collectionView.selectItem(at: .init(row: index, section: 0), animated: false, scrollPosition: .centeredVertically)
+        }
     }
     
     init() {
@@ -89,7 +99,7 @@ extension TagView {
         return dataSource
     }
     
-    func applyItems(_ items: [TagItem]) {
+    func applyItems(_ items: [TagItem], completion: (() -> Void)? = nil) {
         viewModel.setTagItems(items)
         var prevSnapshot = dataSource.snapshot()
         prevSnapshot.deleteAllItems()
@@ -100,6 +110,7 @@ extension TagView {
         snaphot.appendItems(viewModel.tagIDs())
         dataSource.apply(snaphot, animatingDifferences: false) { [weak self] in
             self?.reloadCollectionLayout()
+            completion?()
         }
     }
     
@@ -125,5 +136,15 @@ extension TagView: UICollectionViewDelegate {
         
         viewModel.update(updatedItem)
         delegate?.tagView(self, didDeselectItemAt: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        guard let delegate else { return true }
+        return delegate.tagView(self, shouldSelectItemAt: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        guard let delegate else { return true }
+        return delegate.tagView(self, shouldDeselectItemAt: indexPath)
     }
 }

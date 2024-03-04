@@ -24,6 +24,8 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep> {
             showCommentViewController(productId: productId)
         case let .artist(userId):
             closeAndStartMyPageCoordinator(userId: userId)
+        case let .edit(product):
+            showProductEditScene(product: product)
         default:
             break
         }
@@ -50,5 +52,13 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep> {
             parentCoordinator.add(coordinators: myPageCoordinator)
             myPageCoordinator.startAsPush()
         }
+    }
+    
+    @MainActor
+    private func showProductEditScene(product: ProductUploadModel) {
+        let productUploadCoordinator = ProductUploadCoordinator(navigator: navigator)
+        productUploadCoordinator.productModel = product
+        add(coordinators: productUploadCoordinator)
+        productUploadCoordinator.startAsPush()
     }
 }

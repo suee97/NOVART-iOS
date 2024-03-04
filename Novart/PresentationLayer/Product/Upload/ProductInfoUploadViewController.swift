@@ -1,5 +1,5 @@
 //
-//  ProductDetailUploadViewController.swift
+//  ProductInfoUploadViewController.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/12/24.
@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class ProductDetailUploadViewController: BaseViewController {
+final class ProductInfoUploadViewController: BaseViewController {
     
     // MARK: - Constants
     
@@ -234,7 +234,7 @@ final class ProductDetailUploadViewController: BaseViewController {
         return label
     }()
     
-    private lazy var tagCountLabel: UILabel = {
+    private lazy var recommendTagCountLabel: UILabel = {
         let label = UILabel()
         label.font = Constants.CountLabel.font
         label.textColor = Constants.CountLabel.tintColor
@@ -328,14 +328,14 @@ final class ProductDetailUploadViewController: BaseViewController {
     
     // MARK: - Properties
 
-    private var viewModel: ProductDetailUploadViewModel
+    private var viewModel: ProductInfoUploadViewModel
     private var cancellables: Set<AnyCancellable> = .init()
     private var recommendTagViewHeightConstraint: NSLayoutConstraint?
     private var recommendTagCalculatedHeight: CGFloat = 0
     
     // MARK: - Init
     
-    init(viewModel: ProductDetailUploadViewModel) {
+    init(viewModel: ProductInfoUploadViewModel) {
         self.viewModel = viewModel
         super.init()
     }
@@ -370,7 +370,7 @@ final class ProductDetailUploadViewController: BaseViewController {
         
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
-        title = "작품 등록"
+        title = viewModel.isEditScene ? "작품 편집" : "작품 등록"
         previewButton.isEnabled = true
     }
     
@@ -453,7 +453,7 @@ final class ProductDetailUploadViewController: BaseViewController {
         ])
         
         contentView.addSubview(tagLabel)
-        contentView.addSubview(tagCountLabel)
+        contentView.addSubview(recommendTagCountLabel)
         contentView.addSubview(tagMaxCountLabel)
         contentView.addSubview(tagTextField)
         contentView.addSubview(tagRecommendStackView)
@@ -464,8 +464,8 @@ final class ProductDetailUploadViewController: BaseViewController {
             tagLabel.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: Constants.Title.topMargin),
             tagMaxCountLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin),
             tagMaxCountLabel.bottomAnchor.constraint(equalTo: tagLabel.bottomAnchor),
-            tagCountLabel.bottomAnchor.constraint(equalTo: tagMaxCountLabel.bottomAnchor),
-            tagCountLabel.trailingAnchor.constraint(equalTo: tagMaxCountLabel.leadingAnchor),
+            recommendTagCountLabel.bottomAnchor.constraint(equalTo: tagMaxCountLabel.bottomAnchor),
+            recommendTagCountLabel.trailingAnchor.constraint(equalTo: tagMaxCountLabel.leadingAnchor),
             tagTextField.topAnchor.constraint(equalTo: tagLabel.bottomAnchor, constant: Constants.TextField.topMargin),
             tagTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
             tagTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin),
@@ -510,37 +510,99 @@ final class ProductDetailUploadViewController: BaseViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.$title
+        viewModel.uploadModel.objectWillChange
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] title in
-                self?.titleCountLabel.text = "\(title.count)"
+            .sink { [weak self] _ in
+                guard let self else { return }
+                let productModel = self.viewModel.uploadModel
+
+                self.titleTextField.text = productModel.name
+                self.titleCountLabel.text = "\(productModel.name?.count ?? 0)"
+                self.descriptionTextView.text = productModel.description
+                self.descriptionCountLabel.text = "\(productModel.description?.count ?? 0)"
+                self.recommendTagCountLabel.text = "\(productModel.artTagList.count)"
+                updateDescriptionPlaceholder()
+
             }
             .store(in: &cancellables)
         
-        viewModel.$description
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] description in
-                self?.descriptionCountLabel.text = "\(description.count)"
-            }
-            .store(in: &cancellables)
+        if viewModel.isEditScene {
+            Publishers.CombineLatest3(viewModel.$initialCategoryViewApplyFinished, viewModel.$initialRecommendViewApplyFinished, viewModel.$initialPriceViewApplyFinished)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] categoryFinished, recommendFinished, priceFinished in
+                    
+                    guard let self else { return }
+                    let editModel = viewModel.uploadModel
+                    if categoryFinished,
+                       recommendFinished,
+                       priceFinished {
+                        self.titleTextField.text = editModel.name
+                        self.descriptionTextView.text = editModel.description
+                        if editModel.forSale {
+                            self.priceTextField.text = Int(editModel.price ?? 0).toDecimalString()
+                        }
+                        self.viewModel.price = Int(editModel.price ?? 0)
+                        self.syncRecomendTagData(editModel: editModel)
+                        self.syncCategoryTagData(editModel: editModel)
+                        self.syncPriceTagData(editModel: editModel)
+                    }
+                }
+                .store(in: &cancellables)
+        }
     }
     
     private func setupData() {
-        categoryTagView.applyItems(viewModel.categories)
-        priceTagView.applyItems(viewModel.priceTags)
-        recommendTagView.applyItems(viewModel.recommendTags)
+        categoryTagView.applyItems(viewModel.categories) { [weak self] in
+            guard let self else { return }
+            self.viewModel.initialCategoryViewApplyFinished = true
+        }
+        priceTagView.applyItems(viewModel.priceTags) { [weak self] in
+            guard let self else { return }
+            self.viewModel.initialPriceViewApplyFinished = true
+        }
+        recommendTagView.applyItems(viewModel.recommendTags) { [weak self] in
+            guard let self else { return }
+            self.viewModel.initialRecommendViewApplyFinished = true
+        }
+    }
+    
+    private func syncRecomendTagData(editModel: ProductUploadModel) {
+        var selectedRecomendaryTagIndexes: [Int] = []
+        for (idx, category) in self.viewModel.recommendTags.enumerated() {
+            let tagName = category.tag ?? ""
+            if editModel.artTagList.contains(where: { $0 == tagName }) {
+                selectedRecomendaryTagIndexes.append(idx)
+                self.viewModel.selectRecommendTag(index: idx, isSelected: true)
+            }
+        }
+        
+        self.recommendTagView.selectItems(indexes: selectedRecomendaryTagIndexes)
+        self.viewModel.recommendTagFieldString = editModel.artTagList.joined(separator: ", ")
+    }
+    
+    private func syncCategoryTagData(editModel: ProductUploadModel) {
+        guard let selectedIdx = viewModel.categories.firstIndex(where: { $0.tag == editModel.category.rawValue }) else { return }
+        self.viewModel.selectCategory(index: selectedIdx)
+        self.categoryTagView.selectItems(indexes: [selectedIdx])
+        self.categoryCountLabel.text = "1"
+    }
+    
+    private func syncPriceTagData(editModel: ProductUploadModel) {
+        let idx = editModel.forSale ? 1 : 0
+        self.viewModel.selectPriceTag(index: idx)
+        self.priceTagView.selectItems(indexes: [idx])
     }
 }
 
 // MARK: - ScrollViewDelegate
-extension ProductDetailUploadViewController: UIScrollViewDelegate {
+extension ProductInfoUploadViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
     }
 }
 
 // MARK: - TagView
-extension ProductDetailUploadViewController: TagViewDelegate {
+extension ProductInfoUploadViewController: TagViewDelegate {
     func tagView(_ tagView: TagView, didSelectItemAt indexPath: IndexPath) {
         
         switch tagView {
@@ -549,12 +611,12 @@ extension ProductDetailUploadViewController: TagViewDelegate {
             tagView.applyItems(viewModel.categories)
             categoryCountLabel.text = "1"
         case recommendTagView:
-            viewModel.selectTag(index: indexPath.row, isSelected: true)
+            viewModel.selectRecommendTag(index: indexPath.row, isSelected: true)
             tagView.applyItems(viewModel.recommendTags)
         case priceTagView:
             viewModel.selectPriceTag(index: indexPath.row)
             tagView.applyItems(viewModel.priceTags)
-            viewModel.forSale = indexPath.row == 0 ? false : true
+            viewModel.uploadModel.forSale = indexPath.row == 0 ? false : true
         default:
             break
         }
@@ -562,9 +624,16 @@ extension ProductDetailUploadViewController: TagViewDelegate {
     
     func tagView(_ tagView: TagView, didDeselectItemAt indexPath: IndexPath) {
         if tagView == recommendTagView {
-            viewModel.selectTag(index: indexPath.row, isSelected: false)
+            viewModel.selectRecommendTag(index: indexPath.row, isSelected: false)
             tagView.applyItems(viewModel.recommendTags)
         }
+    }
+    
+    func tagView(_ tagView: TagView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        if tagView == recommendTagView {
+            return viewModel.uploadModel.artTagList.count < 5
+        }
+        return true
     }
     
     func invalidateLayout(_ tagView: TagView, contentHeight: CGFloat) {
@@ -575,26 +644,57 @@ extension ProductDetailUploadViewController: TagViewDelegate {
             view.layoutIfNeeded()
         }
     }
+    
 }
 
 // MARK: - TextView
-extension ProductDetailUploadViewController: UITextViewDelegate {
+extension ProductInfoUploadViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        textViewPlaceHolder.isHidden = !textView.text.isEmpty
-        viewModel.description = textView.text
+        updateDescriptionPlaceholder()
+    }
+    
+    private func updateDescriptionPlaceholder() {
+        textViewPlaceHolder.isHidden = !descriptionTextView.text.isEmpty
+        viewModel.uploadModel.description = descriptionTextView.text
     }
 }
 
 // MARK: - TextField
-extension ProductDetailUploadViewController: UITextFieldDelegate {
+extension ProductInfoUploadViewController: UITextFieldDelegate {
 
     func textFieldDidChangeSelection(_ textField: UITextField) {
         
         if textField == titleTextField {
-            viewModel.title = textField.text ?? ""
+            viewModel.uploadModel.name = textField.text
         } else if textField == priceTextField {
-            viewModel.price = Int(textField.text ?? "") ?? 0
+            guard let price = textField.text?.replacingOccurrences(of: ",", with: "") else { return }
+            viewModel.uploadModel.price = Int64(price) ?? 0
         }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        guard textField == priceTextField else { return true }
+        guard string.containsOnlyDigits else { return false }
+        
+        // Combine the new text with the existing text
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+
+        // Use NumberFormatter to format the text with commas
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0  // Adjust if you want decimal places
+
+        if let number = formatter.number(from: updatedText.replacingOccurrences(of: formatter.groupingSeparator, with: "")),
+           let formattedText = formatter.string(from: number) {
+            textField.text = formattedText
+            return false
+        }
+
+        // Return true for non-numeric inputs to allow backspace to work
+        return string.isEmpty
     }
     
     @objc private func tagFieldDidChanged(_ textField: UITextField) {

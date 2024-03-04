@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import Lottie
 
 final class ProductPreviewViewController: BaseViewController {
     
@@ -34,6 +35,13 @@ final class ProductPreviewViewController: BaseViewController {
             static let font: UIFont = .systemFont(ofSize: 14, weight: .regular)
             static let textColor: UIColor = UIColor.Common.warmGrey04
             static let imageSize: CGFloat = 24
+        }
+        
+        enum ArtistViewShadow {
+            static let color: CGColor = UIColor.black.withAlphaComponent(0.1).cgColor
+            static let radius: CGFloat = 6
+            static let offset: CGSize = CGSize(width: 0, height: 0)
+            static let opacity: Float = 1
         }
         
         enum CoverImage {
@@ -77,24 +85,18 @@ final class ProductPreviewViewController: BaseViewController {
         enum ProductInfo {
             static let topMargin: CGFloat = 40
             static let trailingMargin: CGFloat = 80
-        }
-        
-        enum Recommendation {
-            static let topMargin: CGFloat = 40
-            static let itemSpacing: CGFloat = 12
-            static let productItemWidth: CGFloat = (screenWidth - horizontalMargin * 2 - itemSpacing) / 2
-            static let productItemHeight: CGFloat = productItemWidth * 1.34
-            static let exhibitionItemWidth: CGFloat = (screenWidth - horizontalMargin * 2)
-            static let exthibitionItemHeight: CGFloat = exhibitionItemWidth * 1.23
-            static let headerHeight: CGFloat = 34
-            static let sectionBottomInset: CGFloat = 40
-            static let collectionViewBottomInset: CGFloat = 16
+            static let bottomInset: CGFloat = 56
         }
         
         enum FloatingButton {
             static let bottomMargin: CGFloat = 42
             static let spacing: CGFloat = 10
             static let buttonSize: CGFloat = 40
+        }
+        
+        enum Loading {
+            static let color: UIColor = UIColor.Common.black.withAlphaComponent(0.4)
+            static let size: CGFloat = 24
         }
     }
 
@@ -116,13 +118,14 @@ final class ProductPreviewViewController: BaseViewController {
     private lazy var uploadButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = Constants.UploadButton.font
-        button.setTitle("등록", for: .normal)
+        let buttonTitle: String = viewModel.isEditScene ? "수정" : "등록"
+        button.setTitle(buttonTitle, for: .normal)
         button.setTitleColor(Constants.UploadButton.textColor, for: .normal)
         button.setTitleColor(Constants.UploadButton.disabledColor, for: .disabled)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         button.addAction(UIAction(handler: { [weak self] _ in
-            self?.viewModel.startUploadScene()
+            self?.viewModel.didTapUploadButton()
         }), for: .touchUpInside)
         
         return button
@@ -193,15 +196,14 @@ final class ProductPreviewViewController: BaseViewController {
         return button
     }()
     
-    private lazy var artistImageView: UIImageView = {
-        let imageView = UIImageView()
+    private lazy var artistImageView: PlainProfileImageView = {
+        let imageView = PlainProfileImageView()
         imageView.contentMode = .scaleToFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: Constants.ArtistInfo.imageSize),
             imageView.heightAnchor.constraint(equalToConstant: Constants.ArtistInfo.imageSize)
         ])
-        imageView.layer.cornerRadius = Constants.ArtistInfo.imageSize / 2
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -218,7 +220,6 @@ final class ProductPreviewViewController: BaseViewController {
         let view = UIView()
         view.backgroundColor = Constants.ArtistInfo.backgroundColor
         view.layer.cornerRadius = Constants.ArtistInfo.cornerRadius
-        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(artistImageView)
@@ -232,9 +233,15 @@ final class ProductPreviewViewController: BaseViewController {
             artistNameLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             followButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.ArtistInfo.horizontalMargin),
             followButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            contactButton.trailingAnchor.constraint(equalTo: followButton.leadingAnchor, constant: -Constants.ArtistInfo.spacing),
-            contactButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            artistNameLabel.trailingAnchor.constraint(equalTo: contactButton.leadingAnchor, constant: Constants.ArtistInfo.spacing),
+            contactButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            contactButton.trailingAnchor.constraint(equalTo: followButton.leadingAnchor, constant: -Constants.ArtistInfo.spacing)
         ])
+
+        view.layer.shadowColor = Constants.ArtistViewShadow.color
+        view.layer.shadowOffset = Constants.ArtistViewShadow.offset
+        view.layer.shadowRadius = Constants.ArtistViewShadow.radius
+        view.layer.shadowOpacity = Constants.ArtistViewShadow.opacity
         return view
     }()
     
@@ -244,21 +251,24 @@ final class ProductPreviewViewController: BaseViewController {
         return view
     }()
     
-    private let recommendationCollectionView: AutoResizableCollectionView = {
-        let collectionView = AutoResizableCollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.backgroundColor = .clear
-        collectionView.isScrollEnabled = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        return collectionView
+    private lazy var dimView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.Loading.color
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
+    private lazy var loadingAnimationView: LottieAnimationView = {
+        let view = LottieAnimationView(name: "loading_indicator")
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.loopMode = .loop
+        return view
+    }()
     
     // MARK: - Properties
     
     private var viewModel: ProductPreviewViewModel
     private lazy var productPreviewCoverDataSource: ProductPreviewImageDataSource = ProductPreviewImageDataSource(collectionView: coverCollectionView)
-    private lazy var recommendationDataSource: RecommendationDataSource = RecommendationDataSource(collectionView: recommendationCollectionView)
     private var floatingButtonStackViewTopContraint: NSLayoutConstraint?
     private var cancellables: Set<AnyCancellable> = .init()
     
@@ -276,7 +286,6 @@ final class ProductPreviewViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupData(data: viewModel.productPreviewData)
-        setupDetailImageViews(with: viewModel.productPreviewData.detailImages)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -304,17 +313,19 @@ final class ProductPreviewViewController: BaseViewController {
         
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
-        title = "작품 등록"
+        title = "미리보기"
         uploadButton.isEnabled = true
     }
     
     override func setupView() {
         view.backgroundColor = UIColor.Common.white
         
+        let safeArea = view.safeAreaLayoutGuide
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -327,7 +338,7 @@ final class ProductPreviewViewController: BaseViewController {
         
         contentView.addSubview(coverCollectionView)
         NSLayoutConstraint.activate([
-            coverCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topMargin),
+            coverCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
             coverCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             coverCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             coverCollectionView.heightAnchor.constraint(equalTo: contentView.widthAnchor)
@@ -367,28 +378,52 @@ final class ProductPreviewViewController: BaseViewController {
         NSLayoutConstraint.activate([
             productInfoView.topAnchor.constraint(equalTo: artistInfoView.bottomAnchor, constant: Constants.ProductInfo.topMargin),
             productInfoView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
-            productInfoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.ProductInfo.trailingMargin)
+            productInfoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.ProductInfo.trailingMargin),
+            productInfoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.ProductInfo.bottomInset)
         ])
         
-        
-        contentView.addSubview(recommendationCollectionView)
+        view.addSubview(dimView)
+        view.addSubview(loadingAnimationView)
         NSLayoutConstraint.activate([
-            recommendationCollectionView.topAnchor.constraint(equalTo: productInfoView.bottomAnchor, constant: Constants.Recommendation.topMargin),
-            recommendationCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            recommendationCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            recommendationCollectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: 1),
-            recommendationCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.Recommendation.collectionViewBottomInset)
+            dimView.topAnchor.constraint(equalTo: view.topAnchor),
+            dimView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            dimView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dimView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         
-        recommendationCollectionView.setCollectionViewLayout(recommendationLayout, animated: false)
+        NSLayoutConstraint.activate([
+            loadingAnimationView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingAnimationView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            loadingAnimationView.widthAnchor.constraint(equalToConstant: Constants.Loading.size),
+            loadingAnimationView.heightAnchor.constraint(equalToConstant: Constants.Loading.size)
+        ])
+        dimView.isHidden = true
+        loadingAnimationView.isHidden = true
 
     }
     
     override func setupBindings() {
+        viewModel.isUploadingSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] uploading in
+                if uploading {
+                    self?.showLoadingIndicator()
+                } else {
+                    self?.hideLoadingIndicator()
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.uploadingSuccessSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] success in
+                self?.showUpdatedProductDetail()
+            }
+            .store(in: &cancellables)
     }
     
-    private func setupDetailImageViews(with images: [UIImage]) {
-        for image in images {
+    private func setupDetailImageViews(with items: [UIImage]) {
+        for image in items {
             let imageView = UIImageView()
             imageView.contentMode = .scaleToFill
             imageView.image = image
@@ -408,45 +443,39 @@ final class ProductPreviewViewController: BaseViewController {
         pageController.totalCount = coverImages.count
         productPreviewCoverDataSource = ProductPreviewImageDataSource(collectionView: coverCollectionView)
         productPreviewCoverDataSource.apply(coverImages)
-        
+        setupDetailImageViews(with: data.detailImages.map { $0.image})
         if let artistImageUrl = data.artist.profileImageUrl {
             let url = URL(string: artistImageUrl)
-            artistImageView.kf.setImage(with: url)
+            artistImageView.setImage(with: url)
         }
         
         productDescriptionLabel.text = data.description
         artistNameLabel.text = data.artist.nickname
         
-        let artistProducts = [
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil)
-            ]
-        
-        var artistExhibitions = [ExhibitionModel]()
-        for i in 0..<4 {
-            artistExhibitions.append(ExhibitionModel(id: Int64(i), posterImageUrl: "https://t3.ftcdn.net/jpg/02/30/40/74/240_F_230407433_uF2iM6tUs1Sge24999FWdo241t8FMBi7.jpg", description: "description", likesCount: 1, commentCount: 1, likes: true))
-
-        }
-        
-        let similarProducts = [
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil)
-            ]
-        
-        let recommendationDic: [RecommendationDataSource.Section: [PlainItem]] = [.artistProduct: artistProducts,
-                                                                                .artistExhibition: artistExhibitions,
-                                                                                .similarProduct: similarProducts]
-        recommendationDataSource.apply(recommendationDic)
     }
     
     private func setupInfoView(data: ProductPreviewModel) {
         let productDetailModel = ProductDetailModel(previewData: data)
         productInfoView.viewModel = productDetailModel
     }
+    
+    private func showLoadingIndicator() {
+        dimView.isHidden = false
+        loadingAnimationView.isHidden = false
+        loadingAnimationView.play()
+    }
+    
+    private func hideLoadingIndicator() {
+        dimView.isHidden = true
+        loadingAnimationView.isHidden = true
+        loadingAnimationView.play()
+    }
+    
+    @MainActor
+    private func showUpdatedProductDetail() {
+        viewModel.returnToProductDetail()
+    }
+    
 }
 
 // MARK: - CollectionViewLayout
@@ -479,60 +508,6 @@ private extension ProductPreviewViewController {
             guard let self else { return nil }
             return self.coverSectionLayout
         }
-        return layout
-    }
-    
-    // recommendationLayout
-    
-    func productSectionLayout() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(Constants.Recommendation.productItemWidth), heightDimension: .absolute(Constants.Recommendation.productItemHeight))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(Constants.Recommendation.productItemWidth), heightDimension: .absolute(Constants.Recommendation.productItemHeight))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(Constants.Recommendation.headerHeight))
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: RecommendationDataSource.sectionHeaderElementKind, alignment: .top)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
-        section.interGroupSpacing = Constants.Recommendation.itemSpacing
-        section.boundarySupplementaryItems = [sectionHeader]
-        section.contentInsets = .init(top: 0, leading: Constants.horizontalMargin, bottom: Constants.Recommendation.sectionBottomInset, trailing: Constants.horizontalMargin)
-        return section
-    }
-    
-    func exhibitionSectionLayout() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(Constants.Recommendation.exhibitionItemWidth), heightDimension: .absolute(Constants.Recommendation.exthibitionItemHeight))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(Constants.Recommendation.exhibitionItemWidth), heightDimension: .absolute(Constants.Recommendation.exthibitionItemHeight))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(Constants.Recommendation.headerHeight))
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: RecommendationDataSource.sectionHeaderElementKind, alignment: .top)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
-        section.interGroupSpacing = Constants.Recommendation.itemSpacing
-        section.boundarySupplementaryItems = [sectionHeader]
-        section.contentInsets = .init(top: 0, leading: Constants.horizontalMargin, bottom: Constants.Recommendation.sectionBottomInset, trailing: Constants.horizontalMargin)
-        return section
-    }
-    
-    var recommendationLayout: UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex: Int, layoutEnv: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
-            
-            guard let self else { return nil }
-            let section = self.recommendationDataSource.snapshot().sectionIdentifiers[sectionIndex]
-            
-            switch section {
-            case .artistProduct: return self.productSectionLayout()
-            case .artistExhibition: return self.exhibitionSectionLayout()
-            case .similarProduct: return self.productSectionLayout()
-            }
-        }
-        
         return layout
     }
 }

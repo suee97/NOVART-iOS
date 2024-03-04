@@ -29,8 +29,8 @@
 		0E3ECC712AE5135800790CB9 /* AutoResizeableCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3ECC702AE5135800790CB9 /* AutoResizeableCollectionView.swift */; };
 		0E41737F2B25A2FB0017AAD9 /* ProductUploadCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E41737E2B25A2FB0017AAD9 /* ProductUploadCoordinator.swift */; };
 		0E4173812B25A3590017AAD9 /* ProductUploadStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4173802B25A3590017AAD9 /* ProductUploadStep.swift */; };
-		0E4173832B25A3FC0017AAD9 /* ProductUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4173822B25A3FC0017AAD9 /* ProductUploadViewController.swift */; };
-		0E4173852B25A4460017AAD9 /* ProductUploadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4173842B25A4460017AAD9 /* ProductUploadViewModel.swift */; };
+		0E4173832B25A3FC0017AAD9 /* ProductImageUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4173822B25A3FC0017AAD9 /* ProductImageUploadViewController.swift */; };
+		0E4173852B25A4460017AAD9 /* ProductImageUploadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4173842B25A4460017AAD9 /* ProductImageUploadViewModel.swift */; };
 		0E4173882B25DEB80017AAD9 /* MediaPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4173872B25DEB80017AAD9 /* MediaPickerController.swift */; };
 		0E41738A2B25DF3C0017AAD9 /* MediaPickerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4173892B25DF3C0017AAD9 /* MediaPickerProtocols.swift */; };
 		0E41738C2B25DF610017AAD9 /* MediaPickerTypeAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E41738B2B25DF610017AAD9 /* MediaPickerTypeAlias.swift */; };
@@ -58,11 +58,11 @@
 		0E6018F02B79DECC00E8AFFD /* NotificationTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6018EE2B79DECC00E8AFFD /* NotificationTarget.swift */; };
 		0E6C65862B35EDCB005E269E /* UploadMediaCoverCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65852B35EDCB005E269E /* UploadMediaCoverCell.swift */; };
 		0E6C65892B36B3C7005E269E /* UploadCellActionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65882B36B3C7005E269E /* UploadCellActionDelegate.swift */; };
-		0E6C658B2B36B923005E269E /* UploadImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C658A2B36B923005E269E /* UploadImageType.swift */; };
+		0E6C658B2B36B923005E269E /* UploadStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C658A2B36B923005E269E /* UploadStep.swift */; };
 		0E6C658D2B36C9B7005E269E /* UploadMediaDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C658C2B36C9B7005E269E /* UploadMediaDetailCell.swift */; };
 		0E6C658F2B36CA82005E269E /* UploadMediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C658E2B36CA82005E269E /* UploadMediaItem.swift */; };
-		0E6C65912B373612005E269E /* ProductDetailUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65902B373612005E269E /* ProductDetailUploadViewController.swift */; };
-		0E6C65932B37368B005E269E /* ProductDetailUploadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65922B37368B005E269E /* ProductDetailUploadViewModel.swift */; };
+		0E6C65912B373612005E269E /* ProductInfoUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65902B373612005E269E /* ProductInfoUploadViewController.swift */; };
+		0E6C65932B37368B005E269E /* ProductInfoUploadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65922B37368B005E269E /* ProductInfoUploadViewModel.swift */; };
 		0E6C65952B414C2E005E269E /* ProductPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65942B414C2E005E269E /* ProductPreviewViewController.swift */; };
 		0E6C65972B414C69005E269E /* ProductPreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65962B414C69005E269E /* ProductPreviewViewModel.swift */; };
 		0E6C659A2B417721005E269E /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C65992B417721005E269E /* Date+String.swift */; };
@@ -99,6 +99,9 @@
 		0E7FAD4D2B81EFA6003C100D /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7FAD462B81EFA6003C100D /* AlertController.swift */; };
 		0E7FAD4E2B81EFA6003C100D /* AlertWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7FAD472B81EFA6003C100D /* AlertWindow.swift */; };
 		0E7FAD4F2B81EFA6003C100D /* AlertController+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7FAD482B81EFA6003C100D /* AlertController+Helper.swift */; };
+		0E7FAD512B89D4F9003C100D /* ProductUploadModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7FAD502B89D4F9003C100D /* ProductUploadModel.swift */; };
+		0E7FAD532B89DE9D003C100D /* RetrieveImageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7FAD522B89DE9D003C100D /* RetrieveImageData.swift */; };
+		0E7FAD592B944D49003C100D /* String+Number.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7FAD582B944D49003C100D /* String+Number.swift */; };
 		0E9892982B527DA5003F6DF9 /* CropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 0E9892972B527DA5003F6DF9 /* CropViewController */; };
 		0E98929A2B527F46003F6DF9 /* ImageEditManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9892992B527F46003F6DF9 /* ImageEditManager.swift */; };
 		0E9892A12B5287B5003F6DF9 /* ImageEditorPresentableCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9892A02B5287B5003F6DF9 /* ImageEditorPresentableCoordinator.swift */; };
@@ -329,8 +332,8 @@
 		0E3ECC702AE5135800790CB9 /* AutoResizeableCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoResizeableCollectionView.swift; sourceTree = "<group>"; };
 		0E41737E2B25A2FB0017AAD9 /* ProductUploadCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductUploadCoordinator.swift; sourceTree = "<group>"; };
 		0E4173802B25A3590017AAD9 /* ProductUploadStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductUploadStep.swift; sourceTree = "<group>"; };
-		0E4173822B25A3FC0017AAD9 /* ProductUploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductUploadViewController.swift; sourceTree = "<group>"; };
-		0E4173842B25A4460017AAD9 /* ProductUploadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductUploadViewModel.swift; sourceTree = "<group>"; };
+		0E4173822B25A3FC0017AAD9 /* ProductImageUploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductImageUploadViewController.swift; sourceTree = "<group>"; };
+		0E4173842B25A4460017AAD9 /* ProductImageUploadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductImageUploadViewModel.swift; sourceTree = "<group>"; };
 		0E4173872B25DEB80017AAD9 /* MediaPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPickerController.swift; sourceTree = "<group>"; };
 		0E4173892B25DF3C0017AAD9 /* MediaPickerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPickerProtocols.swift; sourceTree = "<group>"; };
 		0E41738B2B25DF610017AAD9 /* MediaPickerTypeAlias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPickerTypeAlias.swift; sourceTree = "<group>"; };
@@ -358,11 +361,11 @@
 		0E6018EE2B79DECC00E8AFFD /* NotificationTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTarget.swift; sourceTree = "<group>"; };
 		0E6C65852B35EDCB005E269E /* UploadMediaCoverCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadMediaCoverCell.swift; sourceTree = "<group>"; };
 		0E6C65882B36B3C7005E269E /* UploadCellActionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadCellActionDelegate.swift; sourceTree = "<group>"; };
-		0E6C658A2B36B923005E269E /* UploadImageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadImageType.swift; sourceTree = "<group>"; };
+		0E6C658A2B36B923005E269E /* UploadStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadStep.swift; sourceTree = "<group>"; };
 		0E6C658C2B36C9B7005E269E /* UploadMediaDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadMediaDetailCell.swift; sourceTree = "<group>"; };
 		0E6C658E2B36CA82005E269E /* UploadMediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadMediaItem.swift; sourceTree = "<group>"; };
-		0E6C65902B373612005E269E /* ProductDetailUploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailUploadViewController.swift; sourceTree = "<group>"; };
-		0E6C65922B37368B005E269E /* ProductDetailUploadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailUploadViewModel.swift; sourceTree = "<group>"; };
+		0E6C65902B373612005E269E /* ProductInfoUploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductInfoUploadViewController.swift; sourceTree = "<group>"; };
+		0E6C65922B37368B005E269E /* ProductInfoUploadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductInfoUploadViewModel.swift; sourceTree = "<group>"; };
 		0E6C65942B414C2E005E269E /* ProductPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductPreviewViewController.swift; sourceTree = "<group>"; };
 		0E6C65962B414C69005E269E /* ProductPreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductPreviewViewModel.swift; sourceTree = "<group>"; };
 		0E6C65992B417721005E269E /* Date+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+String.swift"; sourceTree = "<group>"; };
@@ -399,6 +402,9 @@
 		0E7FAD462B81EFA6003C100D /* AlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		0E7FAD472B81EFA6003C100D /* AlertWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertWindow.swift; sourceTree = "<group>"; };
 		0E7FAD482B81EFA6003C100D /* AlertController+Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlertController+Helper.swift"; sourceTree = "<group>"; };
+		0E7FAD502B89D4F9003C100D /* ProductUploadModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductUploadModel.swift; sourceTree = "<group>"; };
+		0E7FAD522B89DE9D003C100D /* RetrieveImageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveImageData.swift; sourceTree = "<group>"; };
+		0E7FAD582B944D49003C100D /* String+Number.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Number.swift"; sourceTree = "<group>"; };
 		0E9892992B527F46003F6DF9 /* ImageEditManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditManager.swift; sourceTree = "<group>"; };
 		0E9892A02B5287B5003F6DF9 /* ImageEditorPresentableCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditorPresentableCoordinator.swift; sourceTree = "<group>"; };
 		0E9BB0802AD12DC50002A76D /* ProductDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailViewController.swift; sourceTree = "<group>"; };
@@ -677,11 +683,11 @@
 			isa = PBXGroup;
 			children = (
 				0E6C65872B36B39A005E269E /* Protocol */,
-				0E4173822B25A3FC0017AAD9 /* ProductUploadViewController.swift */,
-				0E4173842B25A4460017AAD9 /* ProductUploadViewModel.swift */,
-				0E6C65902B373612005E269E /* ProductDetailUploadViewController.swift */,
-				0E6C65922B37368B005E269E /* ProductDetailUploadViewModel.swift */,
-				0E6C658A2B36B923005E269E /* UploadImageType.swift */,
+				0E4173822B25A3FC0017AAD9 /* ProductImageUploadViewController.swift */,
+				0E4173842B25A4460017AAD9 /* ProductImageUploadViewModel.swift */,
+				0E6C65902B373612005E269E /* ProductInfoUploadViewController.swift */,
+				0E6C65922B37368B005E269E /* ProductInfoUploadViewModel.swift */,
+				0E6C658A2B36B923005E269E /* UploadStep.swift */,
 				0E6C65942B414C2E005E269E /* ProductPreviewViewController.swift */,
 				0E6C65962B414C69005E269E /* ProductPreviewViewModel.swift */,
 				0E6C659D2B417F96005E269E /* ProductPreviewImageDataSource.swift */,
@@ -1133,10 +1139,12 @@
 			isa = PBXGroup;
 			children = (
 				0E1E21182AE52E1600F15009 /* ProductDetailModel.swift */,
+				0E7FAD502B89D4F9003C100D /* ProductUploadModel.swift */,
 				0EE2558F2AC013A1008CE0D1 /* ProductModel.swift */,
 				0E6C658E2B36CA82005E269E /* UploadMediaItem.swift */,
 				0E6C659B2B417849005E269E /* ProductPreviewModel.swift */,
 				0E6C65B22B4A7A07005E269E /* ProductUploadRequestModel.swift */,
+				0E7FAD522B89DE9D003C100D /* RetrieveImageData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1265,6 +1273,7 @@
 				0EE019382A514C6700389A95 /* UIApplication+AppSharable.swift */,
 				0E4173992B25E3180017AAD9 /* AVAsset */,
 				0E43AB412B6687510087922A /* Int+Decimal.swift */,
+				0E7FAD582B944D49003C100D /* String+Number.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1771,7 +1780,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E6C65912B373612005E269E /* ProductDetailUploadViewController.swift in Sources */,
+				0E6C65912B373612005E269E /* ProductInfoUploadViewController.swift in Sources */,
 				0E6C658F2B36CA82005E269E /* UploadMediaItem.swift in Sources */,
 				5BB933F42AF3A8BA000185D1 /* UIColor+HSB.swift in Sources */,
 				0EE1F6C92B80D46700756891 /* PassThroughView.swift in Sources */,
@@ -1788,7 +1797,7 @@
 				0E6C65AB2B4A71F0005E269E /* APIClient+Media.swift in Sources */,
 				0E6C65862B35EDCB005E269E /* UploadMediaCoverCell.swift in Sources */,
 				0ECDFC152B12022D00F63921 /* CommentModel.swift in Sources */,
-				0E4173852B25A4460017AAD9 /* ProductUploadViewModel.swift in Sources */,
+				0E4173852B25A4460017AAD9 /* ProductImageUploadViewModel.swift in Sources */,
 				5BB933F02AF3A876000185D1 /* ExhibitionButtonsView.swift in Sources */,
 				5BB933F12AF3A876000185D1 /* ExhibitionViewController.swift in Sources */,
 				5BB933F22AF3A876000185D1 /* ExhibitonViewModel.swift in Sources */,
@@ -1832,6 +1841,7 @@
 				5BF6243A2B6FDF0F00F502FE /* MyPageAskModalPresentaionController.swift in Sources */,
 				0EE255942AC018B4008CE0D1 /* ProductSearchDataSource.swift in Sources */,
 				0EA8F8372A90970300ADFBFB /* FeedItem.swift in Sources */,
+				0E7FAD592B944D49003C100D /* String+Number.swift in Sources */,
 				0ED3356F2AF93AFF00DCC40A /* TagViewModel.swift in Sources */,
 				0EE019052A481F2E00389A95 /* BaseViewController.swift in Sources */,
 				0EA8F82E2A6D0DB400ADFBFB /* HomeTarget.swift in Sources */,
@@ -1855,9 +1865,11 @@
 				0E41739E2B25E4E40017AAD9 /* MediaPickerPresentable.swift in Sources */,
 				0EA8F83B2A90AA9100ADFBFB /* FeedImageDataSource.swift in Sources */,
 				0EE019CA2A6BCCF200389A95 /* SignUpRequestBody.swift in Sources */,
+				0E7FAD512B89D4F9003C100D /* ProductUploadModel.swift in Sources */,
 				0E6C65A22B42B392005E269E /* ProductUploadingViewModel.swift in Sources */,
 				0EE019922A6BAFFA00389A95 /* ServiceError.swift in Sources */,
 				0E760E862B1B111F0051CB6C /* ParticipantCell.swift in Sources */,
+				0E7FAD532B89DE9D003C100D /* RetrieveImageData.swift in Sources */,
 				5BDD4A4A2AD6BE1F00937352 /* PlainEditTextField.swift in Sources */,
 				0EE1F6B72B7A1DDB00756891 /* CleanTarget.swift in Sources */,
 				0EE019452A56EEF300389A95 /* SearchViewController.swift in Sources */,
@@ -1874,7 +1886,7 @@
 				0EF59AB52AAB0DC300FD39E3 /* AutoResizableTableView.swift in Sources */,
 				0E43AB522B78E3620087922A /* BottomSheetNavigationController.swift in Sources */,
 				0EE018F52A48175600389A95 /* AppCoordinator.swift in Sources */,
-				0E4173832B25A3FC0017AAD9 /* ProductUploadViewController.swift in Sources */,
+				0E4173832B25A3FC0017AAD9 /* ProductImageUploadViewController.swift in Sources */,
 				5BB9F16C2ADCFF7E00C347F3 /* TextNavigationButton.swift in Sources */,
 				0E7FAD4A2B81EFA6003C100D /* AlertViewController.swift in Sources */,
 				0EE019D52A6BF22B00389A95 /* PrivacyPolicyViewModel.swift in Sources */,
@@ -1959,7 +1971,7 @@
 				0E9BB0812AD12DC50002A76D /* ProductDetailViewController.swift in Sources */,
 				0EAF1F242ADAFDDD00E9A10C /* ProductSearchViewController.swift in Sources */,
 				0E41739B2B25E3230017AAD9 /* AVAsset+.swift in Sources */,
-				0E6C658B2B36B923005E269E /* UploadImageType.swift in Sources */,
+				0E6C658B2B36B923005E269E /* UploadStep.swift in Sources */,
 				0E3ECC672AE4EEC700790CB9 /* RecommendationDataSource.swift in Sources */,
 				0EE019672A5EF2BD00389A95 /* HomeDataSource.swift in Sources */,
 				0E6018EF2B79DECC00E8AFFD /* APIClient+Notification.swift in Sources */,
@@ -2026,7 +2038,7 @@
 				0EE0192E2A5146EF00389A95 /* UIColor+.swift in Sources */,
 				0EE019472A56EEFE00389A95 /* MyPageViewController.swift in Sources */,
 				0EAF1F2E2ADBC0E200E9A10C /* ArtistSearchDataSource.swift in Sources */,
-				0E6C65932B37368B005E269E /* ProductDetailUploadViewModel.swift in Sources */,
+				0E6C65932B37368B005E269E /* ProductInfoUploadViewModel.swift in Sources */,
 				5BC2244D2B188E410032D3CE /* MyPageNotificationViewController.swift in Sources */,
 				0E4173982B25E2A40017AAD9 /* PickingMediaInfo.swift in Sources */,
 				0EAF1F342ADBDE4600E9A10C /* SearchResultModel.swift in Sources */,
