@@ -64,5 +64,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else { return }
+        print("🔴🔴 앱이 실행중일 때 🔴🔴")
+        print("url: \(url)")
+        if let components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+            let path = components.path
+            print("path: \(path)")
+            let pathManager = SharePathManager(applicationCoordinator: applicationCoordinator, pathString: path)
+            pathManager.navigate()
+        }
+    }
 }
