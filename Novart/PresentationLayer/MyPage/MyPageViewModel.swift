@@ -202,9 +202,8 @@ extension MyPageViewModel {
     
     @MainActor
     func showAskSheet() {
-        guard let userId,
-        userState == .other else { return }
-        coordinator?.navigate(to: .ask(userId: userId))
+        guard userState == .other, let user = otherUser else { return }
+        coordinator?.navigate(to: .ask(user: user))
     }
 }
 
