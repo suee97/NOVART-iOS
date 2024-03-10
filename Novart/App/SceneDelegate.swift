@@ -18,13 +18,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        
+                
         if let windowScene = scene as? UIWindowScene {
             let window = AppWindow(windowScene: windowScene)
             let windowNavigator = WindowNavigator(window: window)
             applicationCoordinator = applicationCoordinator ?? AppCoordinator(windowNavigator: windowNavigator)
-            
+
             applicationCoordinator?.start()
+            if connectionOptions.urlContexts.count > 0 {
+                process(openURLContexts: connectionOptions.urlContexts)
+            }
+
         }
     }
     
@@ -32,6 +36,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let url = URLContexts.first?.url {
             if (AuthApi.isKakaoTalkLoginUrl(url)) {
                 _ = AuthController.handleOpenUrl(url: url)
+            } else {
+                print("yahwee")
             }
         }
     }
@@ -68,11 +74,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL else { return }
         print("🔴🔴 앱이 실행중일 때 🔴🔴")
         print("url: \(url)")
-        if let components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
-            let path = components.path
-            print("path: \(path)")
-            let pathManager = SharePathManager(applicationCoordinator: applicationCoordinator, pathString: path)
-            pathManager.navigate()
-        }
+        applicationCoordinator?.handleScheme(url)
+//        if let components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+//            let path = components.path
+//            print("path: \(path)")
+//            let pathManager = SharePathManager(applicationCoordinator: applicationCoordinator, pathString: path)
+//            pathManager.navigate()
+//        }
+    }
+}
+
+extension SceneDelegate {
+    private func process(openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        guard let urlContext = URLContexts.first else { return }
+        let url = urlContext.url
+        
+        // handle SNS Login
+        
+        applicationCoordinator?.handleScheme(url)
     }
 }
