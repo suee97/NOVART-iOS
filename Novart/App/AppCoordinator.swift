@@ -41,8 +41,16 @@ final class AppCoordinator: BaseWindowCoordinator<AppStep> {
         UIView.transition(with: navigator.window, duration: 0.3, options: .transitionCrossDissolve, animations: {}, completion: { _ in })
     }
     
+    @MainActor
     private func showMain() {
+        guard let window = UIApplication.shared.keyWindowScene else { return }
+        let windowNavigator = WindowNavigator(window: window)
+        let mainCoordinator = MainCoordinator(windowNavigator: windowNavigator)
+        add(coordinators: mainCoordinator)
         
+        mainCoordinator.start()
+        
+        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {}, completion: { _ in})
     }
 }
 
