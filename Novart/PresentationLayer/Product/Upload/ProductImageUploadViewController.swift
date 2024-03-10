@@ -177,6 +177,13 @@ final class ProductImageUploadViewController: BaseViewController, MediaPickerPre
         super.viewDidAppear(animated)
         viewModel.setAsMediaPresenter(viewController: self)
         updateNavButtonState()
+        if viewModel.isRentry {
+            setupBindings()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        cancellables.removeAll()
     }
     
     override func setupNavigationBar() {
