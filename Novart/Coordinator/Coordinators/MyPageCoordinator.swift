@@ -62,6 +62,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
             showReportSheet(userId: userId)
         case let .ask(user):
             showAskSheet(user: user)
+        case .logout:
+            logout()
         }
     }
     
@@ -183,6 +185,16 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
 
         add(coordinators: coordinator)
         coordinator.start()
+    }
+    
+    @MainActor
+    private func logout() {
+        Authentication.shared.logoutUser()
+        guard let appCoordinator = UIApplication.shared.appCoordinator else { return }
+        for childCoordinator in appCoordinator.childCoordinators {
+            childCoordinator.end()
+        }
+        appCoordinator.navigate(to: .login)
     }
 }
 
