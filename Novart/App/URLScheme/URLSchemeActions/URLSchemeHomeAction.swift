@@ -13,10 +13,12 @@ struct URLSchemeHomeAction: URLSchemeExecutable {
     
     @MainActor
     func execute(to coordinator: (any Coordinator)?) -> Bool {
-        guard let url = self.url,
+        guard url != nil,
               let appCoordinator = coordinator as? AppCoordinator
         else { return false }
-        
+        for childCoordinator in appCoordinator.childCoordinators {
+            childCoordinator.end()
+        }
         appCoordinator.navigate(to: .main)
         return true
     }

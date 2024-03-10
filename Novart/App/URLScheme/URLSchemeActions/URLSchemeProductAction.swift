@@ -18,14 +18,13 @@ struct URLSchemeProductAction: URLSchemeExecutable {
               let appCoordinator = coordinator as? AppCoordinator
         else { return false }
         
-        var mainCoordinator: MainCoordinator?
-        mainCoordinator = appCoordinator.childCoordinators.first(where: { $0 is MainCoordinator }) as? MainCoordinator
+        for childCoordinator in appCoordinator.childCoordinators {
+            childCoordinator.end()
+        }
+        appCoordinator.navigate(to: .main)
+        guard let mainCoordinator = appCoordinator.childCoordinators.first(where: { $0 is MainCoordinator }) as? MainCoordinator else { return false }
         
-        if let mainCoordinator {
-            showProductDetail(mainCoordinator: mainCoordinator, productId: productId)
-        } else {
-            appCoordinator.navigate(to: .main)
-            guard let mainCoordinator = appCoordinator.childCoordinators.first(where: { $0 is MainCoordinator }) as? MainCoordinator else { return false }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             showProductDetail(mainCoordinator: mainCoordinator, productId: productId)
         }
         return true
