@@ -39,8 +39,8 @@ final class PlainURLSchemeFactory {
             return URLSchemeProductAction(url: url)
         case .profile:
             return URLSchemeProfileAction(url: url)
-        default:
-            return nil
+        case .exhibition:
+            return URLSchemeExhibitionAction(url: url)
         }
     }
     
