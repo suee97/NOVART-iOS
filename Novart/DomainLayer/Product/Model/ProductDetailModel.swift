@@ -19,6 +19,7 @@ struct ProductDetailModel: Decodable {
     let createdAt: String
     let likes: Bool
     let forSale: Bool
+    let category: CategoryType
     
     enum CodingKeys: CodingKey {
         case id
@@ -32,6 +33,7 @@ struct ProductDetailModel: Decodable {
         case createdAt
         case likes
         case forSale
+        case category
     }
     
     init(from decoder: Decoder) throws {
@@ -47,6 +49,7 @@ struct ProductDetailModel: Decodable {
         self.createdAt = try container.decode(String.self, forKey: .createdAt)
         self.likes = try container.decode(Bool.self, forKey: .likes)
         self.forSale = try container.decode(Bool.self, forKey: .forSale)
+        self.category = try container.decodeIfPresent(CategoryType.self, forKey: .category) ?? .all
     }
     
     init(previewData: ProductPreviewModel) {
@@ -62,6 +65,11 @@ struct ProductDetailModel: Decodable {
         self.createdAt = previewData.createdAt
         self.likes = false
         self.forSale = previewData.forSale
+        self.category = previewData.selectedCategory
+    }
+    
+    func convertToEditModel() {
+//        let editModel = ProductUploadModel(id: id, name: name, description: description, price: price, coverImages: [], detailImages: [], artTagList: artTagList, forSale: forSale, category: .all)
     }
 }
 

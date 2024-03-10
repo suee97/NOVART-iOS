@@ -21,6 +21,11 @@ final class ProductDetailViewModel {
     let productImages: PassthroughSubject<[UIImage?], Never> = .init()
     let isLikedSubject: CurrentValueSubject<Bool, Never> = .init(false)
     let isFollowingSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var coverImageData: [RetrieveImageData] = []
+    var detailImageData: [UIImage] = []
+    let imageRetrieveQueue = DispatchQueue(label: "imageQueue", qos: .utility)
+    
+    var didEnterEdit: Bool = false
     
     var isFollowingArtist: Bool {
         productDetailSubject.value?.artist.following ?? false
@@ -39,6 +44,13 @@ final class ProductDetailViewModel {
     @MainActor
     func closeCoordinator() {
         coordinator?.close()
+    }
+    
+    func viewWillAppear() {
+        if didEnterEdit {
+            didEnterEdit = false
+            loadData()
+        }
     }
 }
 
@@ -69,6 +81,7 @@ extension ProductDetailViewModel {
                 self.isFollowingSubject.send(productDetail.artist.following)
                 
                 let images = try await downloadImages(from: productDetail.artImageUrls)
+                self.detailImageData = images.compactMap { $0 }
                 self.productImages.send(images)
             } catch {
                 print(error.localizedDescription)
@@ -164,6 +177,35 @@ extension ProductDetailViewModel {
     func showMyProfile() {
         coordinator?.navigate(to: .artist(userId: nil))
     }
+    
+    @MainActor
+    func showProductEditScene() {
+        guard let productModel = productDetailSubject.value else { return }
+        let sortedCoverImages = coverImageData.sorted { $0.index < $1.index }
+        var coverImages: [UploadMediaItem] = []
+        for (idx, image) in sortedCoverImages.enumerated() {
+            coverImages.append(UploadMediaItem(image: image.image, identifier: productDetailSubject.value?.thumbnailImageUrls[idx] ?? "\(Date.now)_\(idx)", width: image.image.size.width, height: image.image.size.height))
+        }
+        var detailImages: [UploadMediaItem] = []
+        for (idx, image) in detailImageData.enumerated() {
+            detailImages.append(UploadMediaItem(image: image, identifier: productDetailSubject.value?.artImageUrls[idx] ?? "\(Date.now)_\(idx)", width: image.size.width, height: image.size.height))
+        }
+
+        let productEditModel = ProductUploadModel(
+            id: productModel.id,
+            name: productModel.name,
+            description: productModel.description,
+            price: productModel.price,
+            coverImages: coverImages,
+            detailImages: detailImages,
+            artTagList: productModel.artTagList,
+            forSale: productModel.forSale,
+            category: productModel.category
+        )
+        
+        didEnterEdit = true
+        coordinator?.navigate(to: .edit(product: productEditModel))
+    }
 }
 
 extension ProductDetailViewModel {
@@ -230,8 +272,10 @@ extension ProductDetailViewModel {
         let alertController = AlertController(title: nil, attributedMessage: nil, preferredStyle: .actionSheet)
 
         if isMine {
-            let editAction = AlertAction(title: "작품 편집", style: .default) { _ in
-                print("작품 편집")
+            let editAction = AlertAction(title: "작품 편집", style: .default) { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.showProductEditScene()
+                }
             }
             let deleteAction = AlertAction(title: "작품 삭제", style: .destructive) { _ in
                 print("작품 삭제")
@@ -249,5 +293,13 @@ extension ProductDetailViewModel {
         
         alertController.addCancelAction()
         alertController.show()
+    }
+}
+
+extension ProductDetailViewModel {
+    func imageRetrieveHandler(image: RetrieveImageData) {
+        imageRetrieveQueue.async { [weak self] in
+            self?.coverImageData.append(image)
+        }
     }
 }

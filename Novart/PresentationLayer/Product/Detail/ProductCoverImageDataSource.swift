@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 typealias ProductCoverImageDataSourceType = UICollectionViewDiffableDataSource<ProductCoverImageDataSource.Section, String>
 
@@ -19,8 +20,10 @@ final class ProductCoverImageDataSource: ProductCoverImageDataSourceType {
         case cover
     }
     
-    init(collectionView: UICollectionView) {
-        let productCoverImageCellRegistration = ProductCoverImageCellRegistration { cell, _, item in
+    init(collectionView: UICollectionView, retrieveHandler: ((RetrieveImageData) -> Void)?) {
+        let productCoverImageCellRegistration = ProductCoverImageCellRegistration { cell, indexPath, item in
+            cell.retrieveHandler = retrieveHandler
+            cell.index = indexPath.row
             cell.update(with: item)
         }
         

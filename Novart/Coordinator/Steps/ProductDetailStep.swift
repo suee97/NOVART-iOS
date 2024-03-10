@@ -12,6 +12,7 @@ enum ProductDetailStep: Step {
     case artist(userId: Int64?)
     case product
     case exhibition
+    case edit(product: ProductUploadModel)
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

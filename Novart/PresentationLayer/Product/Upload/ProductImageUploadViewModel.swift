@@ -1,5 +1,5 @@
 //
-//  ProductUploadViewModel.swift
+//  ProductImageUploadViewModel.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/12/10.
@@ -8,60 +8,74 @@
 import UIKit
 import Combine
 
-final class ProductUploadViewModel {
+final class ProductImageUploadViewModel {
     private weak var coordinator: ProductUploadCoordinator?
     
-    let step: UploadImageType
+    let step: UploadStep
     
-    @Published var selectedCoverImages: [UploadMediaItem] = []
     private var selectedCoverIdentifiers: [String] = []
-    @Published var selectedDetailImages: [UploadMediaItem] = []
     private var selectedDetailIdentifiers: [String] = []
     @Published var isNextEnabled: Bool = false
+    var selectedImagesSubject: PassthroughSubject<[UploadMediaItem], Never> = .init()
     
-    init(coordinator: ProductUploadCoordinator?, coverImages: [UploadMediaItem]? = nil) {
-        self.coordinator = coordinator
-        if let coverImages {
-            self.step = .detail
-            selectedCoverImages = coverImages
-        } else {
-            self.step = .cover
-        }
+    var previousCoverImages: [UploadMediaItem] = []
+    var previousDetailImages: [UploadMediaItem] = []
+    var additionalCoverImages: [UploadMediaItem] = []
+    var additionalDetailImages: [UploadMediaItem] = []
+    @Published var uploadModel: ProductUploadModel
+    var isEditScene: Bool {
+        uploadModel.id != nil
     }
     
+    init(coordinator: ProductUploadCoordinator?, step: UploadStep, uploadModel: ProductUploadModel? = nil) {
+        self.coordinator = coordinator
+        self.step = step
+        if let uploadModel {
+            self.uploadModel = uploadModel
+            isNextEnabled = true
+        } else {
+            self.uploadModel = .init()
+        }
+    }
+
     @MainActor
-    func setAsMediaPresenter(viewController: ProductUploadViewController) {
+    func setAsMediaPresenter(viewController: ProductImageUploadViewController) {
         coordinator?.setAsMediaPickerPresenter(viewController: viewController)
     }
     
     @MainActor
     func closeCoordinator() {
-        coordinator?.close()
+        if isEditScene {
+            coordinator?.closeAsPop()
+        } else {
+            coordinator?.close()
+        }
     }
     
     @MainActor
     func moveToDetailImageUpload() {
-        coordinator?.navigate(to: .detailImage(coverImages: selectedCoverImages))
+        coordinator?.navigate(to: .detailImage(productEditModel: uploadModel))
     }
     
     @MainActor
     func moveToDetailInfoUpload() {
-        coordinator?.navigate(to: .detailInfo(coverImages: selectedCoverImages, detailImage: selectedDetailImages))
+        coordinator?.navigate(to: .detailInfo(productEditModel: uploadModel))
     }
     
     @MainActor
     func showImageEditScene(identifier: String) {
-        guard step == .cover else { return }
-        guard let image = selectedCoverImages.first(where: { $0.identifier == identifier }) else { return }
+        guard step == .coverImage else { return }
+        guard let image = uploadModel.getImage(step: step, identifier: identifier)
+        else { return }
         coordinator?.navigate(to: .imageEdit(image: image))
     }
     
     func showMediaPicker() {
-        let preselectedIdentifiers: [String] = step == .cover ? selectedCoverIdentifiers : selectedDetailIdentifiers
+        let preselectedIdentifiers: [String] = step == .coverImage ? selectedCoverIdentifiers : selectedDetailIdentifiers
         coordinator?.showMediaPicker(preselectedIdentifiers: preselectedIdentifiers, mediaPickerSelectionBlock: { [weak self] medias in
             guard let self else { return }
             switch self.step {
-            case .cover:
+            case .coverImage:
                 if medias.identifiers.count <= 3 {
                     let prevSelectedCount = selectedCoverIdentifiers.count
                     selectedCoverIdentifiers = medias.identifiers
@@ -73,10 +87,11 @@ final class ProductUploadViewModel {
                                                          height: info.loadImage.size.height)
                         coverItems.append(uploadItem)
                     }
-                    self.selectedCoverImages.append(contentsOf: coverItems)
+                    self.uploadModel.addImages(step: .coverImage, images: coverItems)
+                    self.selectedImagesSubject.send(uploadModel.coverImages)
                     self.isNextEnabled = true
                 }
-            case .detail:
+            case .detailImage:
                 if !medias.identifiers.isEmpty {
                     let prevSelectedCount = selectedDetailIdentifiers.count
                     selectedDetailIdentifiers = medias.identifiers
@@ -88,7 +103,9 @@ final class ProductUploadViewModel {
                                                          height: info.loadImage.size.height)
                         detailItems.append(uploadItem)
                     }
-                    self.selectedDetailImages.append(contentsOf: detailItems)
+                    self.uploadModel.addImages(step: .detailImage, images: detailItems)
+                    self.selectedImagesSubject.send(uploadModel.detailImages)
+
                     self.isNextEnabled = true
                 }
             }
@@ -97,21 +114,22 @@ final class ProductUploadViewModel {
     
     func removeItem(identifier: String) {
         switch step {
-        case .cover:
-            selectedCoverImages.removeAll { $0.identifier == identifier }
-            selectedCoverIdentifiers.removeAll { $0 == identifier }
-        case .detail:
-            selectedDetailImages.removeAll { $0.identifier == identifier }
-            selectedDetailIdentifiers.removeAll { $0 == identifier }
+        case .coverImage:
+            uploadModel.coverImages.removeAll(where: { $0.identifier == identifier })
+            self.selectedImagesSubject.send(uploadModel.coverImages)
+        case .detailImage:
+            uploadModel.detailImages.removeAll(where: { $0.identifier == identifier })
+            self.selectedImagesSubject.send(uploadModel.detailImages)
         }
     }
 }
 
-extension ProductUploadViewModel {
+extension ProductImageUploadViewModel {
     func didFinishImageCrop(image: UIImage, identifier: String) {
-        guard let idx = selectedCoverImages.firstIndex(where: { $0.identifier == identifier }) else { return }
-        selectedCoverImages.remove(at: idx)
         let croppedItem = UploadMediaItem(image: image, identifier: identifier, width: image.size.width, height: image.size.height)
-        selectedCoverImages.insert(croppedItem, at: idx)
+        uploadModel.updateImage(step: .coverImage, identifier: identifier, item: croppedItem)
+        selectedImagesSubject.send(uploadModel.coverImages)
     }
 }
+
+
