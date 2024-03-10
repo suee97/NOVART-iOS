@@ -8,6 +8,13 @@
 import UIKit
 
 final class MainCoordinator: BaseWindowCoordinator<MainStep> {
+    
+    private weak var tabBarViewController: MainTabBarViewController?
+    
+    func selectTab(index: Int) {
+        tabBarViewController?.selectedIndex = index
+    }
+    
     override func start() {
         
         let homeNavigationController = BaseNavigationController()
@@ -38,6 +45,7 @@ final class MainCoordinator: BaseWindowCoordinator<MainStep> {
             myPageNavigationController
         ]
         
+        tabBarViewController = mainTabBarViewController
         navigator.start(mainTabBarViewController)
     }
 }
