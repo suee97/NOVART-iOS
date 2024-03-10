@@ -17,6 +17,13 @@ final class Authentication {
     var isFirstLogin: Bool = false
     
     let userInteractor: UserInteractor = .init()
+    
+    func logoutUser() {
+        signInProvider = nil
+        providerAccessToken = nil
+        user = nil
+        KeychainService.shared.removeToken()
+    }
 }
 
 
