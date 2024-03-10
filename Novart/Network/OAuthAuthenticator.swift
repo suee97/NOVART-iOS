@@ -54,6 +54,7 @@ class OAuthAuthenticator: Authenticator {
                     completion(.failure(error))
                 }
                 completion(.failure(APIError.init(message: "Unknown Error", code: .TokenRefreshFail)))
+                NotificationCenter.default.post(name: .init(NotificationKeys.navigateToLoginKey), object: nil)
                 return
             }
 
@@ -61,6 +62,7 @@ class OAuthAuthenticator: Authenticator {
             let decodedData = try? decoder.decode(TokenRefreshResponse.self, from: data)
             guard let token = decodedData else {
                 completion(.failure(APIError(message: "refresh token decoding fail", code: .TokenRefreshFail)))
+                NotificationCenter.default.post(name: .init(NotificationKeys.navigateToLoginKey), object: nil)
                 return
             }
             KeychainService.shared.saveAccessToken(token.accessToken)

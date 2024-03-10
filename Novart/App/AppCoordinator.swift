@@ -19,6 +19,9 @@ final class AppCoordinator: BaseWindowCoordinator<AppStep> {
         Task {
             await Authentication.shared.login()
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(navigateToLogin), name: .init("NavigateToLogin"), object: nil)
+
     }
     
     override func navigate(to step: AppStep) {
@@ -51,6 +54,16 @@ final class AppCoordinator: BaseWindowCoordinator<AppStep> {
         mainCoordinator.start()
         
         UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {}, completion: { _ in})
+    }
+    
+    @objc func navigateToLogin() {
+        for childCoordinator in self.childCoordinators {
+            childCoordinator.end()
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.showLogin()
+        }
     }
 }
 
