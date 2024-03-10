@@ -17,7 +17,7 @@ final class AppCoordinator: BaseWindowCoordinator<AppStep> {
         
         //authentication
         Task {
-            await Authentication.shared.showLoginScene()
+            await Authentication.shared.login()
         }
     }
     
