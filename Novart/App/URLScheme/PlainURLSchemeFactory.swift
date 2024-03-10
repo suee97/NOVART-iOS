@@ -35,6 +35,8 @@ final class PlainURLSchemeFactory {
         switch host {
         case .home:
             return URLSchemeHomeAction(url: url)
+        case .art:
+            return URLSchemeProductAction(url: url)
         default:
             return nil
         }
