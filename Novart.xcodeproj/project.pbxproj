@@ -95,6 +95,7 @@
 		0E79A3BC2B9D770100140774 /* PlainURLSchemeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79A3BB2B9D770100140774 /* PlainURLSchemeFactory.swift */; };
 		0E79A3BF2B9D7A4700140774 /* URLSchemeHomeAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79A3BE2B9D7A4700140774 /* URLSchemeHomeAction.swift */; };
 		0E79A3C22B9D80E000140774 /* URLSchemeProductAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79A3C12B9D80E000140774 /* URLSchemeProductAction.swift */; };
+		0E79A3C42B9D88B300140774 /* URLSchemeProfileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79A3C32B9D88B300140774 /* URLSchemeProfileAction.swift */; };
 		0E7FAD392B81C50B003C100D /* PlainProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7FAD382B81C50B003C100D /* PlainProfileImageView.swift */; };
 		0E7FAD3C2B81DDEB003C100D /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7FAD3B2B81DDEB003C100D /* ActivityViewController.swift */; };
 		0E7FAD3E2B81DE26003C100D /* ActivityWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7FAD3D2B81DE26003C100D /* ActivityWindow.swift */; };
@@ -406,6 +407,7 @@
 		0E79A3BB2B9D770100140774 /* PlainURLSchemeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainURLSchemeFactory.swift; sourceTree = "<group>"; };
 		0E79A3BE2B9D7A4700140774 /* URLSchemeHomeAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSchemeHomeAction.swift; sourceTree = "<group>"; };
 		0E79A3C12B9D80E000140774 /* URLSchemeProductAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSchemeProductAction.swift; sourceTree = "<group>"; };
+		0E79A3C32B9D88B300140774 /* URLSchemeProfileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSchemeProfileAction.swift; sourceTree = "<group>"; };
 		0E7FAD382B81C50B003C100D /* PlainProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainProfileImageView.swift; sourceTree = "<group>"; };
 		0E7FAD3B2B81DDEB003C100D /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		0E7FAD3D2B81DE26003C100D /* ActivityWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityWindow.swift; sourceTree = "<group>"; };
@@ -864,6 +866,7 @@
 			children = (
 				0E79A3BE2B9D7A4700140774 /* URLSchemeHomeAction.swift */,
 				0E79A3C12B9D80E000140774 /* URLSchemeProductAction.swift */,
+				0E79A3C32B9D88B300140774 /* URLSchemeProfileAction.swift */,
 			);
 			path = URLSchemeActions;
 			sourceTree = "<group>";
@@ -2084,6 +2087,7 @@
 				0E6C65A92B4A70D2005E269E /* MediaTarget.swift in Sources */,
 				0EE019242A51445900389A95 /* Authentication.swift in Sources */,
 				0E6C659C2B417849005E269E /* ProductPreviewModel.swift in Sources */,
+				0E79A3C42B9D88B300140774 /* URLSchemeProfileAction.swift in Sources */,
 				0EE0195F2A56F1F600389A95 /* MyPageCoordinator.swift in Sources */,
 				0E9BB08B2AD18CDA0002A76D /* CustomPageController.swift in Sources */,
 				0E79A3BF2B9D7A4700140774 /* URLSchemeHomeAction.swift in Sources */,

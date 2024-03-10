@@ -53,4 +53,5 @@ final class HomeCoordinator: BaseStackCoordinator<HomeStep> {
         
         productDetailCoordinator.start()
     }
+    
 }
