@@ -23,3 +23,10 @@ final class MyPageSettingViewModel {
         coordinator.navigate(to: .LoginModal)
     }
 }
+
+extension MyPageSettingViewModel {
+    @MainActor
+    func didTapLogoutButton() {
+        coordinator.navigate(to: .logout)
+    }
+}

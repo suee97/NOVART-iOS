@@ -52,6 +52,7 @@ final class LoginInteractor {
         })
     }
     
+    @discardableResult
     func login(accessToken: String, provider: SignInProvider) async throws -> Bool {
         let loginResponse = try await APIClient.login(accessToken: accessToken, provider: provider.rawValue)
         let isFirst = loginResponse.isFirstLogin
@@ -61,6 +62,7 @@ final class LoginInteractor {
             guard let accessToken = loginResponse.accessToken, let refreshToken = loginResponse.refreshToken else { return true }
             KeychainService.shared.saveAccessToken(accessToken)
             KeychainService.shared.saveRefreshToken(refreshToken)
+            KeychainService.shared.saveSignInProvider(provider)
             _ = try await userInteractor.getUserInfo()
             return false
         }
