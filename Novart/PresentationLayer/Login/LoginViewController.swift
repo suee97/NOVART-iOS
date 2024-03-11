@@ -68,7 +68,7 @@ final class LoginViewController: BaseViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
 
         button.addAction(UIAction(handler: { _ in
-            print("apple")
+            self.viewModel.login(with: .apple)
         }), for: .touchUpInside)
         return button
     }()
