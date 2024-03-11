@@ -27,6 +27,8 @@ final class ProductImageUploadViewModel {
         uploadModel.id != nil
     }
     
+    var isRentry: Bool = false
+    
     init(coordinator: ProductUploadCoordinator?, step: UploadStep, uploadModel: ProductUploadModel? = nil) {
         self.coordinator = coordinator
         self.step = step
@@ -54,11 +56,13 @@ final class ProductImageUploadViewModel {
     
     @MainActor
     func moveToDetailImageUpload() {
+        isRentry = true
         coordinator?.navigate(to: .detailImage(productEditModel: uploadModel))
     }
     
     @MainActor
     func moveToDetailInfoUpload() {
+        isRentry = true
         coordinator?.navigate(to: .detailInfo(productEditModel: uploadModel))
     }
     

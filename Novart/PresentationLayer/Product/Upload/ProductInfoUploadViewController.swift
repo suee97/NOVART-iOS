@@ -521,12 +521,12 @@ final class ProductInfoUploadViewController: BaseViewController {
                 self.descriptionTextView.text = productModel.description
                 self.descriptionCountLabel.text = "\(productModel.description?.count ?? 0)"
                 self.recommendTagCountLabel.text = "\(productModel.artTagList.count)"
-                updateDescriptionPlaceholder()
 
             }
             .store(in: &cancellables)
         
         if viewModel.isEditScene {
+            updateDescriptionPlaceholder()
             Publishers.CombineLatest3(viewModel.$initialCategoryViewApplyFinished, viewModel.$initialRecommendViewApplyFinished, viewModel.$initialPriceViewApplyFinished)
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] categoryFinished, recommendFinished, priceFinished in
