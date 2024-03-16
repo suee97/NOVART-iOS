@@ -19,6 +19,7 @@ final class ProductDetailViewModel {
     
     let productDetailSubject: CurrentValueSubject<ProductDetailModel?, Never> = .init(nil)
     let productImages: PassthroughSubject<[UIImage?], Never> = .init()
+    let recommendDataSubject: PassthroughSubject<ProductDetailRecommendData, Never> = .init()
     let isLikedSubject: CurrentValueSubject<Bool, Never> = .init(false)
     let isFollowingSubject: CurrentValueSubject<Bool, Never> = .init(false)
     var coverImageData: [RetrieveImageData] = []
@@ -75,14 +76,29 @@ extension ProductDetailViewModel {
         Task { [weak self] in
             do {
                 guard let self else { return }
+                
                 let productDetail = try await interactor.fetchProductDetail(id: self.productId)
+                
+                async let downloadImages = downloadImages(from: productDetail.artImageUrls)
+                async let fetchRelatedProducts = interactor.fetchRelatedProducts(id: self.productId)
+                async let fetchOtherProducts = interactor.fetchOtherProductsFromArtist(productId: productId, artistId: productDetail.artist.userId)
+                async let fetchExhibitions = interactor.fetchExhibitions(artistId: productDetail.artist.userId)
+                
                 self.productDetailSubject.send(productDetail)
                 self.isLikedSubject.send(productDetail.likes)
                 self.isFollowingSubject.send(productDetail.artist.following)
                 
-                let images = try await downloadImages(from: productDetail.artImageUrls)
+                let images = try await downloadImages
                 self.detailImageData = images.compactMap { $0 }
                 self.productImages.send(images)
+                
+                let relatedProducts = try await fetchRelatedProducts
+                let otherProducts = try await fetchOtherProducts
+                let exhibitions = try await fetchExhibitions
+                
+                let recommendData = ProductDetailRecommendData(relatedProducts: relatedProducts, otherProducts: otherProducts, exhibitions: exhibitions)
+                self.recommendDataSubject.send(recommendData)
+                
             } catch {
                 print(error.localizedDescription)
             }
