@@ -28,7 +28,6 @@ enum MyPageNotificationType: String {
     case Comment = "COMMENT"
     case Welcome = "WELCOME"
     case Register = "REGISTER"
-    case None
 }
 
 enum MyPageNotificationStatus: String {

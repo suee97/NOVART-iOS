@@ -145,6 +145,18 @@ extension MyPageNotificationViewController: UICollectionViewDelegate, UICollecti
         }
         
         // todo: 화면 이동
+        switch viewModel.notifications[indexPath.row].type {
+        case .Follow:
+            print("follow")
+        case .Comment:
+            print("comment")
+        case .Likes:
+            print("likes")
+        case .Register:
+            print("register")
+        case .Welcome:
+            print("welcome")
+        }
     }
 }
 

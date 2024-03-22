@@ -8,16 +8,23 @@
 import UIKit
 import GoogleSignIn
 import KakaoSDKCommon
+import Firebase
+import FirebaseMessaging
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
         // Override point for customization after application launch.
+        FirebaseApp.configure()
         configureGoogleSignIn()
         configureKakaoSignIn()
+        registerNotification()
+        
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        
         return true
     }
 
@@ -49,3 +56,44 @@ private extension AppDelegate {
     }
 }
 
+
+// MARK: - Push Notification
+extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
+    func registerNotification() {
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, _ in
+            print("🔔🔔🔔 Push Notification granted: \(granted)")
+        }
+        UIApplication.shared.registerForRemoteNotifications()
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound, .badge])
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        
+        // Firebase Token
+        print("🔔🔔🔔 FCM Token: \(fcmToken)")
+        
+        // 서버에 토큰 보내기
+        Task {
+            do {
+                let res = try await APIClient.putDeviceToken(deviceToken: fcmToken ?? "")
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Swift.Void) -> Bool {
+        // 이곳에서 userActivity.activityType 과 userActivity.webpageURL 을 이용하여 필요한 ViewController 를 띄우는 처리를 하면 됩니다.
+        
+        return true
+    }
+}
