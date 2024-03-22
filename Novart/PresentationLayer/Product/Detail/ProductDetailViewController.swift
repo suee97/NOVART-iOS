@@ -584,6 +584,14 @@ final class ProductDetailViewController: BaseViewController {
                 self.updateFollowButton(isFollowing: isFollowing)
             }
             .store(in: &cancellables)
+        
+        viewModel.recommendDataSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                guard let self else { return }
+                self.setupRecommendData(data: data)
+            }
+            .store(in: &cancellables)
     }
     
     private func setupDetailImageViews(with images: [UIImage?]) {
@@ -633,30 +641,12 @@ final class ProductDetailViewController: BaseViewController {
         }
         
         productInfoView.viewModel = data
-        
-        let artistProducts = [
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil)
-            ]
-        
-        var artistExhibitions = [ExhibitionModel]()
-        for i in 0..<4 {
-            artistExhibitions.append(ExhibitionModel(id: Int64(i), posterImageUrl: "https://t3.ftcdn.net/jpg/02/30/40/74/240_F_230407433_uF2iM6tUs1Sge24999FWdo241t8FMBi7.jpg", description: "description", likesCount: 1, commentCount: 1, likes: true))
-
-        }
-        
-        let similarProducts = [
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil),
-            ProductModel(id: 1, name: "작품이름", nickname: "작가이름", thumbnailImageUrl: nil)
-            ]
-        
-        let recommendationDic: [RecommendationDataSource.Section: [PlainItem]] = [.artistProduct: artistProducts,
-                                                                                .artistExhibition: artistExhibitions,
-                                                                                .similarProduct: similarProducts]
+    }
+    
+    private func setupRecommendData(data: ProductDetailRecommendData) {
+        let recommendationDic: [RecommendationDataSource.Section: [PlainItem]] = [.artistProduct: data.otherProducts,
+                                                                                  .artistExhibition: data.exhibitions,
+                                                                                  .similarProduct: data.relatedProducts]
         recommendationDataSource.apply(recommendationDic)
     }
     
