@@ -98,8 +98,8 @@ final class SetNicknameViewController: BaseViewController {
         return label
     }()
     
-    private lazy var textField: NicknameTextField = {
-        let textField = NicknameTextField(frame: .zero)
+    private lazy var textField: InputBarTextField = {
+        let textField = InputBarTextField(frame: .zero)
         textField.layer.cornerRadius = Constants.TextField.cornerRadius
         textField.layer.borderWidth = Constants.TextField.borderWidth
         textField.layer.borderColor = Constants.TextField.borderColor

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 final class FeedItemViewModel: Identifiable, Hashable {
     static func == (lhs: FeedItemViewModel, rhs: FeedItemViewModel) -> Bool {
@@ -22,11 +23,57 @@ final class FeedItemViewModel: Identifiable, Hashable {
     let name: String
     let artist: String
     let imageUrls: [String]
+    var loopedImageUrls: [String]
+    let category: CategoryType
+    @Published var liked: Bool = false
+    
+    let productInteractor: ProductInteractor = .init()
+    
+    func dataProvider(index: Int) -> String {
+        return loopedImageUrls[index]
+    }
     
     init(_ item: FeedItem) {
         self.id = item.id
         self.name = item.name
         self.artist = item.nickname
         self.imageUrls = item.thumbnailImageUrl.map { $0.url }
+        if self.imageUrls.count > 1 {
+            self.loopedImageUrls = self.imageUrls + self.imageUrls + self.imageUrls
+        } else {
+            self.loopedImageUrls = self.imageUrls
+        }
+        self.category = item.category
+        self.liked = item.likes
+    }
+    
+    func didTapLikeButton() {
+        if liked {
+            liked = false
+            makeCancelLikeRequest()
+        } else {
+            liked = true
+            makeLikeRequest()
+        }
+    }
+    
+    func makeLikeRequest() {
+        Task {
+            do {
+                try await productInteractor.likeProduct(id: id)
+            } catch {
+                liked = false
+            }
+        }
+    }
+    
+    func makeCancelLikeRequest() {
+        Task {
+            do {
+                try await productInteractor.cancelLikeProduct(id: id)
+            } catch {
+                liked = true
+            }
+        }
     }
 }

@@ -70,8 +70,8 @@ final class CommentViewController: BaseViewController {
         return tableView
     }()
     
-    private lazy var inputTextField: NicknameTextField = {
-        let textField = NicknameTextField(frame: .zero)
+    private lazy var inputTextField: InputBarTextField = {
+        let textField = InputBarTextField(frame: .zero)
         textField.layer.cornerRadius = Constants.InputBar.cornerRadius
         textField.font = Constants.InputBar.font
         textField.placeholder = Constants.InputBar.placeholderText
@@ -82,18 +82,14 @@ final class CommentViewController: BaseViewController {
         return textField
     }()
     
-    private lazy var inputBarProfileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+    private lazy var inputBarProfileImageView: PlainProfileImageView = {
+        let imageView = PlainProfileImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: Constants.InputBar.profileImageSize),
             imageView.heightAnchor.constraint(equalToConstant: Constants.InputBar.profileImageSize)
         ])
-        imageView.layer.cornerRadius = Constants.InputBar.profileImageSize / 2
-        imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "mock_artist")
         return imageView
     }()
     
@@ -171,6 +167,7 @@ final class CommentViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupData()
         viewModel.fetchComments()
     }
     
@@ -232,6 +229,12 @@ final class CommentViewController: BaseViewController {
             selector: #selector(keyboardWillHide(notification:)),
             name: UIResponder.keyboardWillHideNotification, object: nil)
         
+    }
+    
+    func setupData() {
+        if let profileImageUrl = viewModel.userProfileImageUrl {
+            inputBarProfileImageView.setImage(with: URL(string: profileImageUrl))
+        }
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {

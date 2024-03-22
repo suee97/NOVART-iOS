@@ -14,18 +14,17 @@ final class LoginViewController: BaseViewController {
     
     private enum Constants {
         enum Logo {
-            static let topMargin: CGFloat = 303
+            static let verticalConstant: CGFloat = 52
         }
         
         enum LoginStackView {
-            static let spacing: CGFloat = 12
             static let bottomMargin: CGFloat = 24
         }
         
         enum SkipLoginButton {
             static let bottomMargin: CGFloat = 54
             static let font: UIFont = UIFont.systemFont(ofSize: 14, weight: .regular)
-            static let color: UIColor = .white
+            static let color: UIColor = UIColor.Common.grey04
         }
     }
 
@@ -69,7 +68,7 @@ final class LoginViewController: BaseViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
 
         button.addAction(UIAction(handler: { _ in
-            print("apple")
+            self.viewModel.login(with: .apple)
         }), for: .touchUpInside)
         return button
     }()
@@ -78,7 +77,7 @@ final class LoginViewController: BaseViewController {
     private lazy var loginButtonStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = Constants.LoginStackView.spacing
+        stackView.spacing = 0
         
         stackView.addArrangedSubview(kakaoButton)
         stackView.addArrangedSubview(googleButton)
@@ -132,14 +131,14 @@ final class LoginViewController: BaseViewController {
     }
     
     override func setupView() {
-        view.backgroundColor = UIColor.Common.main
+        view.backgroundColor = UIColor.Common.white
         
         let safeArea = view.safeAreaLayoutGuide
         
         view.addSubview(mainLogoImageView)
         NSLayoutConstraint.activate([
             mainLogoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            mainLogoImageView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: Constants.Logo.topMargin)
+            mainLogoImageView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor, constant: -Constants.Logo.verticalConstant)
         ])
         
         view.addSubview(skipLoginButton)

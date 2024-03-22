@@ -183,13 +183,13 @@ final class MyPageSettingViewController: BaseViewController {
         return view
     }()
     
-    private let logoutButton: UIButton = {
+    private lazy var logoutButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(Constants.primaryColor, for: .normal)
         button.setTitle(Constants.Account.logoutTitle, for: .normal)
         button.titleLabel?.font = Constants.primaryFont
-        button.addAction(UIAction(handler: { _ in
-            print("logout button")
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.viewModel.didTapLogoutButton()
         }), for: .touchUpInside)
         return button
     }()

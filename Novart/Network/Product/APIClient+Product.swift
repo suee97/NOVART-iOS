@@ -16,4 +16,16 @@ extension APIClient {
     static func uploadProduct(product: ProductUploadRequestModel) async throws -> ProductModel {
         try await APIClient.request(target: ProductTarget.uploadProduct(product: product), type: ProductModel.self)
     }
+    
+    static func updateProduct(product: ProductUploadRequestModel, productId: Int64) async throws -> ProductModel {
+        try await APIClient.request(target: ProductTarget.updateProduct(product: product, id: productId), type: ProductModel.self)
+    }
+    
+    static func likeProduct(id: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: ProductTarget.like(id: id), type: EmptyResponseModel.self)
+    }
+    
+    static func cancelLikeProdcut(id: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: ProductTarget.cancelLike(id: id), type: EmptyResponseModel.self)
+    }
 }

@@ -43,10 +43,15 @@ final class HomeCoordinator: BaseStackCoordinator<HomeStep> {
         }
     }
     
+    @MainActor
     private func presentProductDetailVC(productId: Int64) {
-//        let viewModel = ProductDetailViewModel(productId: productId)
-//        let viewController = ProductDetailViewController(viewModel: viewModel)
-//        viewController.modalPresentationStyle = .fullScreen
-//        navigator.rootViewController.present(viewController, animated: true)
+        let root = BaseNavigationController()
+        let productDetailStackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
+        let productDetailCoordinator = ProductDetailCoordinator(navigator: productDetailStackNavigator)
+        productDetailCoordinator.productId = productId
+        add(coordinators: productDetailCoordinator)
+        
+        productDetailCoordinator.start()
     }
+    
 }

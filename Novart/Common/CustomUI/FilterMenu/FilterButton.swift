@@ -14,8 +14,9 @@ final class FilterButton: UIView {
     enum Constants {
         static let size: CGFloat = 50
         static let menuMargin: CGFloat = 8
-        static let color = UIColor.Common.white.withAlphaComponent(0.9)
-        
+        static let color = UIColor.Common.white
+        static let iconColor: UIColor = UIColor.Common.grey04
+
         enum Shadow {
             static let color: CGColor = UIColor.black.withAlphaComponent(0.25).cgColor
             static let radius: CGFloat = 4
@@ -28,7 +29,7 @@ final class FilterButton: UIView {
     
     private lazy var iconImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "icon_filter")
+        imageView.image = UIImage(named: "icon_filter")?.withTintColor(Constants.iconColor)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -36,6 +37,8 @@ final class FilterButton: UIView {
     // MARK: - Properties
     var filterTypes: [CategoryType]
     weak var delegate: FilterMenuViewDelegate?
+    var isMenuExpanded: Bool = false
+    private var filterMenuView: FilterMenuView?
     
     // MARK: - Initialization
     
@@ -78,20 +81,34 @@ final class FilterButton: UIView {
     }
     
     private func showFilterMenu() {
-        guard let window = UIApplication.shared.keyWindowScene, let buttonOrigin = superview?.convert(frame.origin, to: nil) else { return }
+        guard let window = UIApplication.shared.keyWindowScene else { return }
         
-        let xPos = buttonOrigin.x
-        let yPos = buttonOrigin.y - Constants.menuMargin
-        let anchorPosition = CGPoint(x: xPos, y: yPos)
-        
-        let menuView = FilterMenuView(filterTypes: filterTypes, anchorPosition: anchorPosition)
-        menuView.delegate = delegate
-        menuView.frame = CGRect(x: 0, y: 0, width: window.frame.width, height: window.frame.height)
-        window.addSubview(menuView)
+        if let filterMenuView {
+            window.addSubview(filterMenuView)
+        } else {
+            guard let buttonOrigin = superview?.convert(frame.origin, to: nil) else { return }
+            let xPos = buttonOrigin.x
+            let yPos = buttonOrigin.y - Constants.menuMargin
+            let anchorPosition = CGPoint(x: xPos, y: yPos)
+            
+            let menuView = FilterMenuView(filterTypes: filterTypes, anchorPosition: anchorPosition)
+            menuView.delegate = delegate
+            menuView.frame = CGRect(x: 0, y: 0, width: window.frame.width, height: window.frame.height)
+            menuView.senderDelegate = self
+            window.addSubview(menuView)
+            filterMenuView = menuView
+        }
     }
     
     @objc
     private func didTapButton() {
+        iconImageView.image = UIImage(named: "icon_close")?.withTintColor(Constants.iconColor)
         showFilterMenu()
+    }
+}
+
+extension FilterButton: FilterMenuViewSendable {
+    func didHideMenu() {
+        iconImageView.image = UIImage(named: "icon_filter")?.withTintColor(Constants.iconColor)
     }
 }

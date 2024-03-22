@@ -22,6 +22,10 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep> {
         switch step {
         case let .comment(productId):
             showCommentViewController(productId: productId)
+        case let .artist(userId):
+            closeAndStartMyPageCoordinator(userId: userId)
+        case let .edit(product):
+            showProductEditScene(product: product)
         default:
             break
         }
@@ -37,5 +41,24 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep> {
             sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
         }
         navigator.rootViewController.present(viewController, animated: true)
+    }
+    
+    @MainActor
+    private func closeAndStartMyPageCoordinator(userId: Int64?) {
+        self.close { [weak self] in
+            guard let self, let parentCoordinator = self.parentCoordinator , let navigator = parentCoordinator.navigator as? StackNavigator else { return }
+            let myPageCoordinator = MyPageCoordinator(navigator: navigator)
+            myPageCoordinator.userId = userId
+            parentCoordinator.add(coordinators: myPageCoordinator)
+            myPageCoordinator.startAsPush()
+        }
+    }
+    
+    @MainActor
+    private func showProductEditScene(product: ProductUploadModel) {
+        let productUploadCoordinator = ProductUploadCoordinator(navigator: navigator)
+        productUploadCoordinator.productModel = product
+        add(coordinators: productUploadCoordinator)
+        productUploadCoordinator.startAsPush()
     }
 }

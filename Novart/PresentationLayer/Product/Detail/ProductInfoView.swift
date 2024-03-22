@@ -22,7 +22,13 @@ final class ProductInfoView: UIView {
             static let font: UIFont = .systemFont(ofSize: 20, weight: .semibold)
             static let textColor: UIColor = UIColor.Common.black
             static let iconSpacing: CGFloat = 8
-            static let bottomMagin: CGFloat = 32
+            static let bottomMagin: CGFloat = 24
+        }
+        
+        enum DisplayOnlyLabel {
+            static let font: UIFont = .systemFont(ofSize: 16, weight: .regular)
+            static let textColor: UIColor = UIColor.Common.black
+            static let bottomMagin: CGFloat = 24
         }
         
         enum Tag {
@@ -38,6 +44,7 @@ final class ProductInfoView: UIView {
             static let textColor: UIColor = UIColor.Common.black
             static let topMargin: CGFloat = 24
             static let spacing: CGFloat = 8
+            static let bottomMargin: CGFloat = 24
         }
     }
     
@@ -64,6 +71,31 @@ final class ProductInfoView: UIView {
         label.font = Constants.PriceLabel.font
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private lazy var priceStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [priceIconView, priceLabel])
+        stackView.spacing = Constants.PriceLabel.iconSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var displayOnlyLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = Constants.DisplayOnlyLabel.textColor
+        label.font = Constants.DisplayOnlyLabel.font
+        label.text = "DISPLAY ONLY"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var leftStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, priceStackView, displayOnlyLabel])
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = Constants.PriceLabel.iconSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
     
     private lazy var tagLabel: UILabel = {
@@ -99,6 +131,14 @@ final class ProductInfoView: UIView {
         return tagView
     }()
     
+    private lazy var copyrightImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleToFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "product_detail_copyright")
+        return imageView
+    }()
+    
     var viewModel: ProductDetailModel? {
         didSet {
             if let viewModel {
@@ -120,26 +160,16 @@ final class ProductInfoView: UIView {
     }
     
     private func setupView() {
-        addSubview(titleLabel)
+        addSubview(leftStackView)
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: self.topAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor)
-        ])
-        
-        addSubview(priceIconView)
-        addSubview(priceLabel)
-        NSLayoutConstraint.activate([
-            priceIconView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.TitleLabel.bottomMargin),
-            priceIconView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            priceLabel.centerYAnchor.constraint(equalTo: priceIconView.centerYAnchor),
-            priceLabel.leadingAnchor.constraint(equalTo: priceIconView.trailingAnchor, constant: Constants.PriceLabel.iconSpacing),
-            priceLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor)
+            leftStackView.topAnchor.constraint(equalTo: self.topAnchor),
+            leftStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            leftStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor)
         ])
         
         addSubview(tagLabel)
         NSLayoutConstraint.activate([
-            tagLabel.topAnchor.constraint(equalTo: priceIconView.bottomAnchor, constant: Constants.PriceLabel.bottomMagin),
+            tagLabel.topAnchor.constraint(equalTo: leftStackView.bottomAnchor, constant: Constants.PriceLabel.bottomMagin),
             tagLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         ])
         
@@ -160,15 +190,33 @@ final class ProductInfoView: UIView {
             dateTitleLabel.topAnchor.constraint(equalTo: tagView.bottomAnchor, constant: Constants.Date.topMargin),
             dateTitleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             dateLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            dateLabel.topAnchor.constraint(equalTo: dateTitleLabel.bottomAnchor, constant: Constants.Date.spacing),
-            dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            dateLabel.topAnchor.constraint(equalTo: dateTitleLabel.bottomAnchor, constant: Constants.Date.spacing)
+        ])
+        
+        addSubview(copyrightImageView)
+        NSLayoutConstraint.activate([
+            copyrightImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            copyrightImageView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: Constants.Date.bottomMargin),
+            copyrightImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
     
     private func setupData(viewModel: ProductDetailModel) {
         titleLabel.text = viewModel.name
-        priceLabel.text = "\(viewModel.price)원"
-        dateLabel.text = viewModel.createdAt
+        if viewModel.forSale {
+            priceStackView.isHidden = false
+            displayOnlyLabel.isHidden = true
+            let priceText = Int(viewModel.price).toDecimalString() ?? "0"
+            priceLabel.text = "\(priceText)원"
+        } else {
+            priceStackView.isHidden = true
+            displayOnlyLabel.isHidden = false
+        }
+        if let createdAt = viewModel.createdAt.toDateFormattedString() {
+            dateLabel.text = createdAt
+        } else {
+            dateLabel.text = viewModel.createdAt
+        }
         let tagItems = viewModel.artTagList.map { TagItem(tag: $0) }
         tagView.applyItems(tagItems)
     }

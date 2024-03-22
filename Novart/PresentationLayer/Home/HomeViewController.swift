@@ -35,9 +35,9 @@ class HomeViewController: BaseViewController {
             let itemSpace = Constants.Feed.itemHeight + Constants.Feed.spacing
             var currentItemIdx = round(collectionView.contentOffset.y / itemSpace)
             
-            if velocity.y > 0.3 {
+            if velocity.y > 0.5 {
                 currentItemIdx += 1
-            } else if velocity.y < -0.3 {
+            } else if velocity.y < -0.5 {
                 currentItemIdx -= 1
             }
             
@@ -148,7 +148,7 @@ class HomeViewController: BaseViewController {
         ])
         collectionView.setCollectionViewLayout(homeCollectionViewLayout, animated: false)
         collectionView.delegate = self
-        collectionView.contentInset = UIEdgeInsets(top: verticalContentInset(), left: 0, bottom: verticalContentInset(), right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
         view.addSubview(filterButton)
         NSLayoutConstraint.activate([
@@ -204,6 +204,16 @@ private extension HomeViewController {
 // MARK: - CollectionViewDelegate
 extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel.didSelectProductAt(index: indexPath.row)
+    }
+}
+
+// MARK: - ScrollViewDelegate
+extension HomeViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y + scrollView.bounds.height >= scrollView.contentSize.height) {
+            viewModel.scrollViewDidReachBottom()
+        }
     }
 }
 

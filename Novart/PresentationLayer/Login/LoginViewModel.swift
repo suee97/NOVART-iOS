@@ -64,7 +64,21 @@ final class LoginViewModel {
                     print(error.localizedDescription)
                 }
             }
+            
+        case .apple:
+            Task {
+                do {
+                    let identityToken = try await interactor.performAppleLogin()
+                    let isFirst = try await interactor.login(accessToken: identityToken, provider: .apple)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.isFirstLogin.send(isFirst)
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
         }
+        
     }
     
     @MainActor

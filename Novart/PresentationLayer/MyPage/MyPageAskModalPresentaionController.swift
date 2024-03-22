@@ -31,12 +31,12 @@ final class MyPageAskModalPresentaionController: UIPresentationController {
         let containerSize = containerView.bounds.size
         let preferredSize = presentedViewController.preferredContentSize
         
-        if presentedViewController.isKind(of: MyPageAskModalViewController.self) {
+        if presentedViewController.isKind(of: AskViewController.self) {
             containerView.frame = CGRect(x: 0, y: containerSize.height - preferredSize.height,
                                          width: containerSize.width, height: preferredSize.height)
         }
         
-        if presentedViewController.isKind(of: MyPageReportModalViewController.self) || presentedViewController.isKind(of: MyPageUserBlockViewController.self) {
+        if presentedViewController.isKind(of: ReportViewController.self) || presentedViewController.isKind(of: MyPageUserBlockViewController.self) {
             containerView.insertSubview(dimmingView, at: 0)
             dimmingView.snp.makeConstraints({ m in
                 m.edges.equalToSuperview()

@@ -22,6 +22,14 @@ final class CommentViewModel {
     
     @Published var comments: [CommentModel] = []
     
+    var user: PlainUser? {
+        Authentication.shared.user
+    }
+    
+    var userProfileImageUrl: String? {
+        user?.profileImageUrl
+    }
+    
     init(contentId: Int64, contentType: ContentType) {
         self.contentId = contentId
         self.contentType = contentType

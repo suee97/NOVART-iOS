@@ -10,3 +10,7 @@ import Foundation
 protocol FilterMenuViewDelegate: AnyObject {
     func didTapRowAt(menuView: FilterMenuView, category: CategoryType)
 }
+
+protocol FilterMenuViewSendable: AnyObject {
+    func didHideMenu()
+}

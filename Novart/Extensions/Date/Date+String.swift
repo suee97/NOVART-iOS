@@ -14,3 +14,17 @@ extension Date {
         return dateFormatter.string(from: self)
     }
 }
+
+extension String {
+    func toDateFormattedString() -> String? {
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        inputFormatter.locale = Locale(identifier: "ko_KR")
+        
+        if let date = inputFormatter.date(from: self) {
+            return date.toString()
+        } else {
+            return nil
+        }
+    }
+}

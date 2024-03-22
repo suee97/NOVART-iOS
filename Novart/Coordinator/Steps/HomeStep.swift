@@ -9,7 +9,7 @@ import UIKit
 
 enum HomeStep: Step {
     case productDetail(id: Int64)
-    case nickiname
+    case nickname
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

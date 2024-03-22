@@ -9,9 +9,10 @@ import UIKit
 
 enum ProductDetailStep: Step {
     case comment(productId: Int64)
-    case artist
+    case artist(userId: Int64?)
     case product
     case exhibition
+    case edit(product: ProductUploadModel)
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }
