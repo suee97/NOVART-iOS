@@ -20,8 +20,6 @@ struct NotificationNavigationFactory {
             return nil
         case .Register:
             return NotificationProductAction(notification: notification)
-        case .None:
-            return nil
         }
     }
 }
