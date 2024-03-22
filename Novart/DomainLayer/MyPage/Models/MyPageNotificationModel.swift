@@ -1,9 +1,9 @@
 import UIKit
 
-struct MyPageNotificationResponseModel: Codable {
+struct NotificationModel: Decodable {
     let id: Int64
-    let type: String?
-    var status: String
+    let type: NotificationType
+    var status: NotificationStatus
     let imgUrl: String?
     let senderId: Int?
     let artId: Int?
@@ -11,18 +11,7 @@ struct MyPageNotificationResponseModel: Codable {
     let createdAt: String
 }
 
-struct MyPageNotificationModel {
-    let id: Int64
-    let type: MyPageNotificationType
-    var status: MyPageNotificationStatus
-    let imgUrl: String?
-    let senderId: Int?
-    let artId: Int?
-    let message: String?
-    let createdAt: String
-}
-
-enum MyPageNotificationType: String {
+enum NotificationType: String, Decodable {
     case Follow = "FOLLOW"
     case Likes = "LIKES"
     case Comment = "COMMENT"
@@ -30,7 +19,7 @@ enum MyPageNotificationType: String {
     case Register = "REGISTER"
 }
 
-enum MyPageNotificationStatus: String {
+enum NotificationStatus: String, Decodable {
     case Read = "READ"
     case UnRead = "UNREAD"
 }

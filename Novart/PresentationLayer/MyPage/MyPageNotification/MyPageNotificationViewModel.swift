@@ -4,7 +4,7 @@ import Combine
 final class MyPageNotificationViewModel {
     private weak var coordinator: MyPageCoordinator?
     private var downloadInteractor = NotificationDownloadInteractor()
-    @Published var notifications = [MyPageNotificationModel]()
+    @Published var notifications = [NotificationModel]()
     
     // ifFetched[notificationId] = notificationId를 통해 데이터를 불러온 적이 있는지를 나타내는 배열
     var isFetched: [Int64: Bool] = [:]
@@ -33,10 +33,7 @@ extension MyPageNotificationViewModel {
         Task {
             do {
                 let items = try await downloadInteractor.fetchNotifications(notificationId: notificationId)
-                let notificationTemp = items.map {
-                    MyPageNotificationModel(id: $0.id, type: MyPageNotificationType(rawValue: $0.type ?? "") ?? MyPageNotificationType.Welcome, status: MyPageNotificationStatus(rawValue: $0.status) ?? MyPageNotificationStatus.UnRead, imgUrl: $0.imgUrl, senderId: $0.senderId, artId: $0.artId, message: $0.message, createdAt: $0.createdAt)
-                }
-                notifications.append(contentsOf: notificationTemp)
+                notifications.append(contentsOf: items)
             } catch {
                 print(error.localizedDescription)
             }
