@@ -29,8 +29,7 @@ final class Authentication {
 
 extension Authentication {
     func login() async {
-        if let refreshToken = KeychainService.shared.refreshToken,
-           let signInProvider = SignInProvider(rawValue: KeychainService.shared.signInProvider ?? "") {
+        if let refreshToken = KeychainService.shared.refreshToken {
             do {
                 let (accessToken, refreshToken) = try await loginWithRefreshToken(refreshToken: refreshToken)
                 KeychainService.shared.saveAccessToken(accessToken)
@@ -42,6 +41,7 @@ extension Authentication {
                 await showLoginScene()
             }
         } else {
+            KeychainService.shared.removeToken()
             await showLoginScene()
         }
     }

@@ -28,4 +28,12 @@ extension APIClient {
     static func cancelLikeProdcut(id: Int64) async throws -> EmptyResponseModel {
         try await APIClient.request(target: ProductTarget.cancelLike(id: id), type: EmptyResponseModel.self)
     }
+    
+    static func getRelatedProducts(id: Int64) async throws -> [ProductModel] {
+        try await APIClient.request(target: ProductTarget.relatedProducts(productId: id), type: [ProductModel].self)
+    }
+    
+    static func getOtherProdcutFromArtist(productId: Int64, artistId: Int64) async throws -> [ProductModel] {
+        try await APIClient.request(target: ProductTarget.otherProductFromArtist(productId: productId, artistId: artistId), type: [ProductModel].self)
+    }
 }
