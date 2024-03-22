@@ -136,7 +136,7 @@ final class MyPageNotificationCell: UICollectionViewCell {
     
     
     // MARK: - Functions
-    func update(notification: MyPageNotificationModel) {
+    func update(notification: NotificationModel) {
         guard let imgUrl = notification.imgUrl, let url = URL(string: imgUrl) else { return }
         profileImageView.kf.setImage(with: url)
         notificationLabel.text = notification.message
@@ -152,11 +152,11 @@ final class MyPageNotificationCell: UICollectionViewCell {
         }
     }
     
-    func didHighlight(notification: MyPageNotificationModel) {
+    func didHighlight(notification: NotificationModel) {
         selectionView.backgroundColor = Constants.SelectionView.selectedColor
     }
     
-    func didUnHighlight(notification: MyPageNotificationModel) {
+    func didUnHighlight(notification: NotificationModel) {
         if notification.status == .Read {
             contentView.backgroundColor = Constants.ContentView.readColor
             selectionView.backgroundColor = Constants.SelectionView.unSelectedColor
@@ -165,7 +165,7 @@ final class MyPageNotificationCell: UICollectionViewCell {
         }
     }
     
-    func didSelect(notification: MyPageNotificationModel) {
+    func didSelect(notification: NotificationModel) {
         if notification.status == .UnRead {
             contentView.backgroundColor = Constants.ContentView.readColor
         }
