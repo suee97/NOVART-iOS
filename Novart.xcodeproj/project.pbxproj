@@ -273,6 +273,7 @@
 		5B97D4BD2B1312DC009CEA05 /* APIClient+Exhibition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B97D4BC2B1312DC009CEA05 /* APIClient+Exhibition.swift */; };
 		5B97D4BF2B131573009CEA05 /* ExhibitionDownloadInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B97D4BE2B131573009CEA05 /* ExhibitionDownloadInteractor.swift */; };
 		5BAE07EF2B4AC06F007E5CF5 /* MyPageCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAE07EE2B4AC06F007E5CF5 /* MyPageCategory.swift */; };
+		5BB4A8CE2B79EA7C00F06959 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 5BB4A8CD2B79EA7C00F06959 /* FirebaseMessaging */; };
 		5BB4A8DD2B848C8200F06959 /* SharePathManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB4A8DC2B848C8200F06959 /* SharePathManager.swift */; };
 		5BB933E02AF3A3AB000185D1 /* ColorThiefSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5BB9F19D2AEE6E4C00C347F3 /* ColorThiefSwift */; };
 		5BB933E12AF3A40D000185D1 /* ProductDetailExhibitionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3ECC6C2AE4F87E00790CB9 /* ProductDetailExhibitionCell.swift */; };
@@ -313,6 +314,7 @@
 		5BF624412B78F10200F502FE /* MyPageUserBlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624402B78F10200F502FE /* MyPageUserBlockViewController.swift */; };
 		5BFC07CF2B317CA10063EF89 /* NotificationDownloadInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07CE2B317CA10063EF89 /* NotificationDownloadInteractor.swift */; };
 		5BFC07D52B343EEB0063EF89 /* MyPagePutNotificationReadStatusResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07D42B343EEB0063EF89 /* MyPagePutNotificationReadStatusResponseModel.swift */; };
+		5BFC07D82B3A871C0063EF89 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5BFC07D72B3A871C0063EF89 /* GoogleService-Info.plist */; };
 		5BFC08552B3FEDE80063EF89 /* MyPageTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC08542B3FEDE80063EF89 /* MyPageTarget.swift */; };
 		5BFC08572B3FEEA80063EF89 /* APIClient+MyPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC08562B3FEEA80063EF89 /* APIClient+MyPage.swift */; };
 		5BFC08592B3FEF5F0063EF89 /* MyPageDownloadInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC08582B3FEF5F0063EF89 /* MyPageDownloadInteractor.swift */; };
@@ -581,7 +583,6 @@
 		5B97D4BC2B1312DC009CEA05 /* APIClient+Exhibition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIClient+Exhibition.swift"; sourceTree = "<group>"; };
 		5B97D4BE2B131573009CEA05 /* ExhibitionDownloadInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionDownloadInteractor.swift; sourceTree = "<group>"; };
 		5BAE07EE2B4AC06F007E5CF5 /* MyPageCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageCategory.swift; sourceTree = "<group>"; };
-		5BB4A8D92B81A70F00F06959 /* Novart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Novart.entitlements; sourceTree = "<group>"; };
 		5BB4A8DC2B848C8200F06959 /* SharePathManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePathManager.swift; sourceTree = "<group>"; };
 		5BB933E42AF3A472000185D1 /* ExhibitionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionCell.swift; sourceTree = "<group>"; };
 		5BB933E62AF3A472000185D1 /* ExhibitionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionCoordinator.swift; sourceTree = "<group>"; };
@@ -621,6 +622,8 @@
 		5BFC07CC2B317BFD0063EF89 /* APIClient+Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIClient+Notification.swift"; sourceTree = "<group>"; };
 		5BFC07CE2B317CA10063EF89 /* NotificationDownloadInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDownloadInteractor.swift; sourceTree = "<group>"; };
 		5BFC07D42B343EEB0063EF89 /* MyPagePutNotificationReadStatusResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPagePutNotificationReadStatusResponseModel.swift; sourceTree = "<group>"; };
+		5BFC07D62B3A7F830063EF89 /* Novart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Novart.entitlements; sourceTree = "<group>"; };
+		5BFC07D72B3A871C0063EF89 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5BFC08542B3FEDE80063EF89 /* MyPageTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageTarget.swift; sourceTree = "<group>"; };
 		5BFC08562B3FEEA80063EF89 /* APIClient+MyPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIClient+MyPage.swift"; sourceTree = "<group>"; };
 		5BFC08582B3FEF5F0063EF89 /* MyPageDownloadInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageDownloadInteractor.swift; sourceTree = "<group>"; };
@@ -644,6 +647,7 @@
 				0EE0199B2A6BB4E000389A95 /* KakaoSDKTalk in Frameworks */,
 				5BDD4A292AC9561000937352 /* SnapKit in Frameworks */,
 				0EE019952A6BB4E000389A95 /* KakaoSDK in Frameworks */,
+				5BB4A8CE2B79EA7C00F06959 /* FirebaseMessaging in Frameworks */,
 				0EE019972A6BB4E000389A95 /* KakaoSDKAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1219,8 +1223,9 @@
 		0EE018DF2A48156C00389A95 /* Novart */ = {
 			isa = PBXGroup;
 			children = (
-				5BB4A8D92B81A70F00F06959 /* Novart.entitlements */,
 				0E6C65B72B4AB8D8005E269E /* Resource */,
+				5BFC07D72B3A871C0063EF89 /* GoogleService-Info.plist */,
+				5BFC07D62B3A7F830063EF89 /* Novart.entitlements */,
 				0ED9F0402B11ED4D00EDCD3C /* Common */,
 				0E9ED86A2A938AAE001E1C51 /* Keychain */,
 				0EE0199E2A6BC3DC00389A95 /* Network */,
@@ -1783,6 +1788,7 @@
 				5BB9F19D2AEE6E4C00C347F3 /* ColorThiefSwift */,
 				0E9892972B527DA5003F6DF9 /* CropViewController */,
 				5B8BE23A2B4E63DE0068C3AB /* Lottie */,
+				5BB4A8CD2B79EA7C00F06959 /* FirebaseMessaging */,
 			);
 			productName = Novart;
 			productReference = 0EE018DD2A48156C00389A95 /* Novart.app */;
@@ -1821,6 +1827,7 @@
 				5BB9F19C2AEE6E4C00C347F3 /* XCRemoteSwiftPackageReference "ColorThiefSwift" */,
 				0E9892962B527DA5003F6DF9 /* XCRemoteSwiftPackageReference "TOCropViewController" */,
 				5B8BE2392B4E63DE0068C3AB /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				5BB4A8A22B79EA7C00F06959 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 0EE018DE2A48156C00389A95 /* Products */;
 			projectDirPath = "";
@@ -1838,6 +1845,7 @@
 			files = (
 				0E6C65BA2B4AB92C005E269E /* loading_indicator.json in Resources */,
 				0EE018ED2A48156D00389A95 /* LaunchScreen.storyboard in Resources */,
+				5BFC07D82B3A871C0063EF89 /* GoogleService-Info.plist in Resources */,
 				0EE018EA2A48156D00389A95 /* Assets.xcassets in Resources */,
 				0EE019292A5145E000389A95 /* Colors.xcassets in Resources */,
 			);
@@ -2410,6 +2418,14 @@
 				minimumVersion = 4.3.4;
 			};
 		};
+		5BB4A8A22B79EA7C00F06959 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.21.0;
+			};
+		};
 		5BB9F19C2AEE6E4C00C347F3 /* XCRemoteSwiftPackageReference "ColorThiefSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/yamoridon/ColorThiefSwift";
@@ -2478,6 +2494,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5B8BE2392B4E63DE0068C3AB /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
+		};
+		5BB4A8CD2B79EA7C00F06959 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5BB4A8A22B79EA7C00F06959 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		5BB9F19D2AEE6E4C00C347F3 /* ColorThiefSwift */ = {
 			isa = XCSwiftPackageProductDependency;
