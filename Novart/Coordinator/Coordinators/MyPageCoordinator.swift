@@ -115,7 +115,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     }
     
     @MainActor
-    private func close() {
+    func close() {
         navigator.pop(animated: true)
         if !(navigator.rootViewController.topViewController is MyPageViewController) {
             end()

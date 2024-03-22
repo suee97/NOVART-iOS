@@ -21,7 +21,7 @@ final class BlockViewModel {
 
     @MainActor
     func closeCoordinator() {
-        coordinator?.close()
+        coordinator?.closeWithProfilepPop()
     }
 }
 
