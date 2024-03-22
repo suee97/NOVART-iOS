@@ -75,6 +75,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         completionHandler([.banner, .sound, .badge])
     }
     
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+
+        // noti handling
+        
+        completionHandler()
+    }
+    
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         
         // Firebase Token

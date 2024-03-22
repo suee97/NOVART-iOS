@@ -50,3 +50,11 @@ extension MyPageNotificationViewModel {
         }
     }
 }
+
+extension MyPageNotificationViewModel {
+    @MainActor
+    func didTapNotification(at indexPath: IndexPath) {
+        let notification = notifications[indexPath.row]
+        NotificationNavigationHandler(coordinator: coordinator).execute(notification: notification)
+    }
+}

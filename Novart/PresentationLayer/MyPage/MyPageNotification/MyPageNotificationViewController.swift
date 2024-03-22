@@ -144,19 +144,7 @@ extension MyPageNotificationViewController: UICollectionViewDelegate, UICollecti
             viewModel.putNotificationReadStatus(notificationId: viewModel.notifications[indexPath.row].id)
         }
         
-        // todo: 화면 이동
-        switch viewModel.notifications[indexPath.row].type {
-        case .Follow:
-            print("follow")
-        case .Comment:
-            print("comment")
-        case .Likes:
-            print("likes")
-        case .Register:
-            print("register")
-        case .Welcome:
-            print("welcome")
-        }
+        viewModel.didTapNotification(at: indexPath)
     }
 }
 
