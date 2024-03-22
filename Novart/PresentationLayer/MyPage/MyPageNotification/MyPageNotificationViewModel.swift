@@ -34,7 +34,7 @@ extension MyPageNotificationViewModel {
             do {
                 let items = try await downloadInteractor.fetchNotifications(notificationId: notificationId)
                 let notificationTemp = items.map {
-                    MyPageNotificationModel(id: $0.id, type: MyPageNotificationType(rawValue: $0.type ?? "") ?? MyPageNotificationType.None, status: MyPageNotificationStatus(rawValue: $0.status) ?? MyPageNotificationStatus.UnRead, imgUrl: $0.imgUrl, senderId: $0.senderId, artId: $0.artId, message: $0.message, createdAt: $0.createdAt)
+                    MyPageNotificationModel(id: $0.id, type: MyPageNotificationType(rawValue: $0.type ?? "") ?? MyPageNotificationType.Welcome, status: MyPageNotificationStatus(rawValue: $0.status) ?? MyPageNotificationStatus.UnRead, imgUrl: $0.imgUrl, senderId: $0.senderId, artId: $0.artId, message: $0.message, createdAt: $0.createdAt)
                 }
                 notifications.append(contentsOf: notificationTemp)
             } catch {

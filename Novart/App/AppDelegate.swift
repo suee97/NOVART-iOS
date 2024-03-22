@@ -14,8 +14,6 @@ import FirebaseMessaging
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // Override point for customization after application launch.
@@ -82,7 +80,20 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         // Firebase Token
         print("🔔🔔🔔 FCM Token: \(fcmToken)")
         
-        // todo: 서버에 보내기
+        // 서버에 토큰 보내기
+        Task {
+            do {
+                let res = try await APIClient.putDeviceToken(deviceToken: fcmToken ?? "")
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Swift.Void) -> Bool {
+        // 이곳에서 userActivity.activityType 과 userActivity.webpageURL 을 이용하여 필요한 ViewController 를 띄우는 처리를 하면 됩니다.
         
+        return true
     }
 }
