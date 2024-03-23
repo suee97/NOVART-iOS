@@ -47,6 +47,7 @@ final class ExhibitionDetailViewController: BaseViewController {
     private lazy var dataSource: DataSource = createDataSource()
     private var cancellables: Set<AnyCancellable> = .init()
     private weak var detailInfoCell: ExhibitionDetailInfoCell?
+    private var isShortcutScrolling: Bool = false
     
     // MARK: - Init
     
@@ -261,7 +262,6 @@ private extension ExhibitionDetailViewController {
 extension ExhibitionDetailViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let detailInfoCell else { return }
-        let scrollViewContentBottomOffset = scrollView.contentOffset.y + UIScreen.main.bounds.height
         collectionView.convert(detailInfoCell.frame, to: self.view)
         let shortcutViewBottomOffset = collectionView.convert(detailInfoCell.frame, to: self.view).maxY
         let fixedShortcutViewBottomOffset = shortcutView.frame.maxY
@@ -277,6 +277,22 @@ extension ExhibitionDetailViewController: UICollectionViewDelegate {
                 shortcutView.isHidden = true
             }
         }
+        
+        guard !isShortcutScrolling else { return }
+        
+        let visibleRect = CGRect(origin: collectionView.contentOffset, size: collectionView.bounds.size)
+        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.minY + shortcutView.bounds.height)
+        guard let indexPath = collectionView.indexPathForItem(at: visiblePoint),
+              indexPath.section == 1 else { return }
+        
+        shortcutView.setSelected(at: indexPath.row)
+        
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if isShortcutScrolling {
+            isShortcutScrolling = false
+        }
     }
 }
 
@@ -287,6 +303,7 @@ extension ExhibitionDetailViewController: ExhibitionShortcutViewDelegate {
     }
     
     func exhibitionShortcutViewDidSelectIndexAt(index: Int) {
+        isShortcutScrolling = true
         scrollToExhibition(idx: index)
     }
 }
