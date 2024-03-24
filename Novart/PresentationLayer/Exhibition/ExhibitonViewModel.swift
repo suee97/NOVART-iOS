@@ -25,7 +25,8 @@ final class ExhibitionViewModel {
                 self.exhibitions = items
                 self.currentLikeStates = exhibitions.map { $0.likes }
                 self.currentLikeCounts = exhibitions.map { $0.likesCount }
-                await self.processExhibitions()
+                await processExhibitions()
+                
             } catch {
                 print(error)
             }
@@ -33,22 +34,30 @@ final class ExhibitionViewModel {
     }
     
     @MainActor
-    private func processExhibitions() {
+    private func processExhibitions() async {
         processedExhibitions.removeAll()
         for e in exhibitions {
             guard let posterUrl = e.posterImageUrl,
                   let url = URL(string: posterUrl) else { return }
             
             let imageView = UIImageView()
-            imageView.kf.setImage(with: url, completionHandler: { _ in
-                if let dominant = ColorThief.getColor(from: imageView.image ?? UIImage())?.makeUIColor() {
-                    let hueValue = dominant.getHsb().0
-                    let hsbColor = UIColor(hue: hueValue / 360, saturation: 0.08, brightness: 0.95, alpha: 1.0)
-                    
-                    // 처리 후 데이터
-                    self.processedExhibitions.append(ProcessedExhibition(id: Int(e.id), imageView: imageView, description: e.description, likesCount: e.likesCount, commentCount: e.commentCount, likes: e.likes, backgroundColor: hsbColor))
-                }
-            })
+            
+            let processedExhibition: ProcessedExhibition? = await withCheckedContinuation { continuation in
+                imageView.kf.setImage(with: url, completionHandler: { _ in
+                    if let dominant = ColorThief.getColor(from: imageView.image ?? UIImage())?.makeUIColor() {
+                        let hueValue = dominant.getHsb().0
+                        let hsbColor = UIColor(hue: hueValue / 360, saturation: 0.08, brightness: 0.95, alpha: 1.0)
+                        
+                        continuation.resume(returning: ProcessedExhibition(id: Int(e.id), imageView: imageView, description: e.description, likesCount: e.likesCount, commentCount: e.commentCount, likes: e.likes, backgroundColor: hsbColor))
+                    } else {
+                        continuation.resume(returning: nil)
+                    }
+                })
+            }
+            
+            if let processedExhibition {
+                processedExhibitions.append(processedExhibition)
+            }
         }
     }
     
