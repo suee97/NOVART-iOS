@@ -144,6 +144,7 @@ final class ExhibitionViewController: BaseViewController {
             m.top.equalTo(pageControl.snp.bottom).offset(Constants.ButtonsView.topMargin)
             m.height.equalTo(Constants.ButtonsView.height)
         })
+        buttonsView.delegate = self
     }
 }
 
@@ -216,3 +217,20 @@ extension ExhibitionViewController: UICollectionViewDelegate, UICollectionViewDa
     }
 }
 
+extension ExhibitionViewController: ExhibitionButtonsViewDelegate {
+    func didTapLikeButton(shouldLike: Bool) {
+        viewModel.didTapLikeButton(shouldLike: shouldLike)
+    }
+    
+    func didTapCommentButton() {
+        print("comment")
+    }
+    
+    func didTapShareButton() {
+        print("share")
+    }
+    
+    func didTapInfoButton() {
+        print("info")
+    }
+}
