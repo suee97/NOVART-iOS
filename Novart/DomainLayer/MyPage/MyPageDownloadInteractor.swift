@@ -57,4 +57,12 @@ final class MyPageDownloadInteractor {
     func fetchUserInfo() async throws -> PlainUser {
         try await APIClient.getUser()
     }
+    
+    func fetchSetting() async throws -> MyPageSettingResponseModel {
+        try await APIClient.fetchSetting()
+    }
+    
+    func putSetting(setting: MyPageSettingRequestModel) async throws -> MyPageSettingResponseModel {
+        try await APIClient.putSetting(setting: setting)
+    }
 }

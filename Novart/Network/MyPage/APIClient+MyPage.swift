@@ -49,4 +49,12 @@ extension APIClient {
     static func profileEdit(profileEditRequestBodyModel: ProfileEditRequestBodyModel) async throws -> ProfileEditRequestBodyModel {
         try await APIClient.request(target: MyPageTarget.profileEdit(profileEditRequestBodyModel: profileEditRequestBodyModel), type: ProfileEditRequestBodyModel.self)
     }
+    
+    static func fetchSetting() async throws -> MyPageSettingResponseModel {
+        try await APIClient.request(target: MyPageTarget.fetchSetting, type: MyPageSettingResponseModel.self)
+    }
+    
+    static func putSetting(setting: MyPageSettingRequestModel) async throws -> MyPageSettingResponseModel {
+        try await APIClient.request(target: MyPageTarget.putSetting(setting: setting), type: MyPageSettingResponseModel.self)
+    }
 }
