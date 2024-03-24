@@ -10,9 +10,11 @@ import Foundation
 final class ExhibitionEndItem: ExhibitionDetailItem {
     let likeCount: Int
     let commentCount: Int
+    let likes: Bool
     
-    init(likeCount: Int, commentCount: Int) {
+    init(likeCount: Int, commentCount: Int, likes: Bool) {
         self.likeCount = likeCount
         self.commentCount = commentCount
+        self.likes = likes
     }
 }
