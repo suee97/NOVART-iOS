@@ -8,6 +8,8 @@ final class ExhibitionViewModel {
     private let coordinator: ExhibitionCoordinator
     private var downloadInteractor: ExhibitionInteractor = ExhibitionInteractor()
     private var exhibitions = [ExhibitionModel]()
+    var currentLikeStates: [Bool] = .init()
+    var currentLikeCounts: [Int] = .init()
     
     @Published var processedExhibitions = [ProcessedExhibition]() // 후처리 된 전시 객체 배열
     @Published var cellIndex: Int? // 전시 인덱스
@@ -21,6 +23,8 @@ final class ExhibitionViewModel {
             do {
                 let items = try await downloadInteractor.fetchExhibitions()
                 self.exhibitions = items
+                self.currentLikeStates = exhibitions.map { $0.likes }
+                self.currentLikeCounts = exhibitions.map { $0.likesCount }
                 await self.processExhibitions()
             } catch {
                 print(error)
@@ -51,5 +55,39 @@ final class ExhibitionViewModel {
     @MainActor
     func showExhibitionDetail(exhibitionId: Int64) {
         coordinator.navigate(to: .exhibitionDetail(id: exhibitionId))
+    }
+    
+    func didTapLikeButton(shouldLike: Bool) {
+        if shouldLike {
+            makeLikeRequest()
+        } else {
+            makeUnlikeRequest()
+        }
+    }
+}
+
+private extension ExhibitionViewModel {
+    func makeLikeRequest() {
+        guard let cellIndex else { return }
+        let exhibitionId = exhibitions[cellIndex].id
+        Task {
+            do {
+                try await downloadInteractor.makeLikeRequest(id: exhibitionId)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func makeUnlikeRequest() {
+        guard let cellIndex else { return }
+        let exhibitionId = exhibitions[cellIndex].id
+        Task {
+            do {
+                try await downloadInteractor.makeUnlikeRequest(id: exhibitionId)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
