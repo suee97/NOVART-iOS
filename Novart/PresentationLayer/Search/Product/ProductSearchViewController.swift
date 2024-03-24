@@ -124,3 +124,12 @@ extension ProductSearchViewController: UICollectionViewDelegate {
         }
     }
 }
+
+// MARK: - ScrollViewDelegate
+extension ProductSearchViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y + scrollView.bounds.height >= scrollView.contentSize.height) {
+            viewModel.scrollViewDidReachBottom()
+        }
+    }
+}
