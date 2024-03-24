@@ -144,7 +144,7 @@ extension MyPageNotificationViewController: UICollectionViewDelegate, UICollecti
             viewModel.putNotificationReadStatus(notificationId: viewModel.notifications[indexPath.row].id)
         }
         
-        // todo: 화면 이동
+        viewModel.didTapNotification(at: indexPath)
     }
 }
 

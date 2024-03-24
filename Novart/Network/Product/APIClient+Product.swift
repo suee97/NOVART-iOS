@@ -17,11 +17,23 @@ extension APIClient {
         try await APIClient.request(target: ProductTarget.uploadProduct(product: product), type: ProductModel.self)
     }
     
+    static func updateProduct(product: ProductUploadRequestModel, productId: Int64) async throws -> ProductModel {
+        try await APIClient.request(target: ProductTarget.updateProduct(product: product, id: productId), type: ProductModel.self)
+    }
+    
     static func likeProduct(id: Int64) async throws -> EmptyResponseModel {
         try await APIClient.request(target: ProductTarget.like(id: id), type: EmptyResponseModel.self)
     }
     
     static func cancelLikeProdcut(id: Int64) async throws -> EmptyResponseModel {
         try await APIClient.request(target: ProductTarget.cancelLike(id: id), type: EmptyResponseModel.self)
+    }
+    
+    static func getRelatedProducts(id: Int64) async throws -> [ProductModel] {
+        try await APIClient.request(target: ProductTarget.relatedProducts(productId: id), type: [ProductModel].self)
+    }
+    
+    static func getOtherProdcutFromArtist(productId: Int64, artistId: Int64) async throws -> [ProductModel] {
+        try await APIClient.request(target: ProductTarget.otherProductFromArtist(productId: productId, artistId: artistId), type: [ProductModel].self)
     }
 }

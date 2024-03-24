@@ -10,12 +10,12 @@ import UIKit
 final class AskCoordinator: BaseStackCoordinator<AskStep> {
     
     @LateInit
-    var userId: Int64
+    var user: PlainUser
     
     override func start() {
         super.start()
         
-        let viewController = AskViewController()
+        let viewController = AskViewController(user: user)
         navigator.start(viewController)
     }
 }

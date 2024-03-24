@@ -7,10 +7,10 @@
 
 import UIKit
 
-typealias ProductPreviewImageDataSourceType = UICollectionViewDiffableDataSource<ProductPreviewImageDataSource.Section, UIImage>
+typealias ProductPreviewImageDataSourceType = UICollectionViewDiffableDataSource<ProductPreviewImageDataSource.Section, UploadMediaItem>
 
-private typealias ProductPreviewImageDataSourceSnapshot = NSDiffableDataSourceSnapshot<ProductPreviewImageDataSource.Section, UIImage>
-private typealias ProductPreviewImageCellRegistration = UICollectionView.CellRegistration<ProductCoverCell, UIImage>
+private typealias ProductPreviewImageDataSourceSnapshot = NSDiffableDataSourceSnapshot<ProductPreviewImageDataSource.Section, UploadMediaItem>
+private typealias ProductPreviewImageCellRegistration = UICollectionView.CellRegistration<ProductCoverCell, UploadMediaItem>
 
 final class ProductPreviewImageDataSource: ProductPreviewImageDataSourceType {
 
@@ -21,7 +21,7 @@ final class ProductPreviewImageDataSource: ProductPreviewImageDataSourceType {
     
     init(collectionView: UICollectionView) {
         let productCoverImageCellRegistration = ProductPreviewImageCellRegistration { cell, _, item in
-            cell.update(image: item)
+            cell.update(mediaItem: item)
         }
         
         super.init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
@@ -29,7 +29,7 @@ final class ProductPreviewImageDataSource: ProductPreviewImageDataSourceType {
         }
     }
     
-    func apply(_ items: [UIImage]) {
+    func apply(_ items: [UploadMediaItem]) {
         var snapshot = snapshot()
         
         snapshot.deleteSections([.cover])

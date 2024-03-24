@@ -12,6 +12,7 @@ final class ExhibitionDetailViewController: BaseViewController {
     
     private enum Constants {
         static let shortcutViewCornerRadius: CGFloat = 12
+        static let endSectionHeight: CGFloat = 552
     }
     
     // MARK: - DataSource
@@ -47,7 +48,16 @@ final class ExhibitionDetailViewController: BaseViewController {
     private lazy var dataSource: DataSource = createDataSource()
     private var cancellables: Set<AnyCancellable> = .init()
     private weak var detailInfoCell: ExhibitionDetailInfoCell?
+    private var isShortcutScrolling: Bool = false
+    private var artCellInputSubject: PassthroughSubject<(ArtCellInput, Int64), Never> = .init()
     
+    enum ArtCellInput {
+        case didTapFollowButton(following: Bool)
+        case didTapLikeButton(like: Bool)
+        case didTapShareButton
+        case didTapCommentButton
+    }
+        
     // MARK: - Init
     
     init(viewModel: ExhibitionDetailViewModel) {
@@ -127,6 +137,22 @@ final class ExhibitionDetailViewController: BaseViewController {
                 self.shortcutView.setThumbnails(urls: urls)
             }
             .store(in: &cancellables)
+        
+        artCellInputSubject
+            .sink { [weak self] input, id in
+                guard let self else { return }
+                switch input {
+                case let .didTapFollowButton(shouldFollow):
+                    self.viewModel.didTapFollowButton(id: id, shouldFollow: shouldFollow)
+                case let .didTapLikeButton(shouldLike):
+                    self.viewModel.didTapLikeButton(shouldLike: shouldLike)
+                case .didTapShareButton:
+                    break
+                case .didTapCommentButton:
+                    self.viewModel.showCommentViewController()
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -154,11 +180,15 @@ private extension ExhibitionDetailViewController {
             cell.update(with: item)
         }
         
-        let artCellRegistration = UICollectionView.CellRegistration<ExhibitionArtCell, ExhibitionArtItem> { cell, _, item in
+        let artCellRegistration = UICollectionView.CellRegistration<ExhibitionArtCell, ExhibitionArtItem> { [weak self] cell, _, item in
+            guard let self else { return }
+            cell.input = self.artCellInputSubject
             cell.update(with: item)
         }
         
-        let endCellRegistration = UICollectionView.CellRegistration<ExhibitionEndCell, ExhibitionEndItem> { cell, _, item in
+        let endCellRegistration = UICollectionView.CellRegistration<ExhibitionEndCell, ExhibitionEndItem> { [weak self] cell, _, item in
+            guard let self else { return }
+            cell.input = self.artCellInputSubject
             cell.update(with: item)
         }
         
@@ -180,9 +210,6 @@ private extension ExhibitionDetailViewController {
     
     func apply(_ items: [Section: [ExhibitionDetailItem]]) {
         var snapshot = dataSource.snapshot()
-        snapshot.deleteSections(Section.allCases)
-        dataSource.apply(snapshot, animatingDifferences: false)
-        
         snapshot.appendSections([.info])
         snapshot.appendItems(items[.info] ?? [], toSection: .info)
         snapshot.appendSections([.art])
@@ -224,10 +251,10 @@ private extension ExhibitionDetailViewController {
     }
     
     var endSectionLayout: NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(1.0))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(Constants.endSectionHeight))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(1.0))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(Constants.endSectionHeight))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
@@ -261,7 +288,6 @@ private extension ExhibitionDetailViewController {
 extension ExhibitionDetailViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let detailInfoCell else { return }
-        let scrollViewContentBottomOffset = scrollView.contentOffset.y + UIScreen.main.bounds.height
         collectionView.convert(detailInfoCell.frame, to: self.view)
         let shortcutViewBottomOffset = collectionView.convert(detailInfoCell.frame, to: self.view).maxY
         let fixedShortcutViewBottomOffset = shortcutView.frame.maxY
@@ -277,6 +303,22 @@ extension ExhibitionDetailViewController: UICollectionViewDelegate {
                 shortcutView.isHidden = true
             }
         }
+        
+        guard !isShortcutScrolling else { return }
+        
+        let visibleRect = CGRect(origin: collectionView.contentOffset, size: collectionView.bounds.size)
+        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.minY + shortcutView.bounds.height)
+        guard let indexPath = collectionView.indexPathForItem(at: visiblePoint),
+              indexPath.section == 1 else { return }
+        
+        shortcutView.setSelected(at: indexPath.row)
+        
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if isShortcutScrolling {
+            isShortcutScrolling = false
+        }
     }
 }
 
@@ -287,6 +329,7 @@ extension ExhibitionDetailViewController: ExhibitionShortcutViewDelegate {
     }
     
     func exhibitionShortcutViewDidSelectIndexAt(index: Int) {
+        isShortcutScrolling = true
         scrollToExhibition(idx: index)
     }
 }

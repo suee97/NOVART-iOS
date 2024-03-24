@@ -60,9 +60,10 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
             showBlockSheet(user: user)
         case let .report(userId):
             showReportSheet(userId: userId)
-        case let .ask(userId):
-            showAskSheet(userId: userId)
-            
+        case let .ask(user):
+            showAskSheet(user: user)
+        case .logout:
+            logout()
         }
     }
     
@@ -114,7 +115,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     }
     
     @MainActor
-    private func close() {
+    func close() {
         navigator.pop(animated: true)
         if !(navigator.rootViewController.topViewController is MyPageViewController) {
             end()
@@ -175,15 +176,25 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     }
     
     @MainActor
-    private func showAskSheet(userId: Int64) {
+    private func showAskSheet(user: PlainUser) {
         let bottomSheetRoot = BottomSheetNavigationController()
         bottomSheetRoot.bottomSheetConfiguration.customHeight = 248
         let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
         let coordinator = AskCoordinator(navigator: stackNavigator)
-        coordinator.userId = userId
+        coordinator.user = user
 
         add(coordinators: coordinator)
         coordinator.start()
+    }
+    
+    @MainActor
+    private func logout() {
+        Authentication.shared.logoutUser()
+        guard let appCoordinator = UIApplication.shared.appCoordinator else { return }
+        for childCoordinator in appCoordinator.childCoordinators {
+            childCoordinator.end()
+        }
+        appCoordinator.navigate(to: .login)
     }
 }
 

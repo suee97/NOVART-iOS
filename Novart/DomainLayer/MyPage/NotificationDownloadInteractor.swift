@@ -1,7 +1,7 @@
 import Foundation
 
 final class NotificationDownloadInteractor {
-    func fetchNotifications(notificationId: Int64) async throws -> [MyPageNotificationResponseModel] {
+    func fetchNotifications(notificationId: Int64) async throws -> [NotificationModel] {
         try await APIClient.fetchNotifications(notificationId: notificationId)
     }
     

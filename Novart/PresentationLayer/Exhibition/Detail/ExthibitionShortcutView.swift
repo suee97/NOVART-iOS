@@ -108,6 +108,14 @@ final class ExhibitionShortcutView: UIView {
             stackView.addArrangedSubview(view)
         }
     }
+    
+    func setSelected(at index: Int) {
+        for (idx, itemView) in stackView.arrangedSubviews.enumerated() {
+            guard let itemView = itemView as? ExhibitionShortcutItemView else { return }
+            itemView.isSelected = idx == index ? true : false
+        }
+    
+    }
 }
 
 extension ExhibitionShortcutView: UIScrollViewDelegate {
