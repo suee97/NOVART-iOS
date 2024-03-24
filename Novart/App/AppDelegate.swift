@@ -77,7 +77,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-
+        print("this is the noti!! \(userInfo)")
         // noti handling
         
         completionHandler()

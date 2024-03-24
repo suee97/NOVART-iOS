@@ -15,6 +15,7 @@ final class MyPageViewModel {
     @Published var exhibitions = [MyPageExhibition]()
     var isInterestsEmpty = false
     var isFollowingsEmpty = false
+    var isStartAsPush = false
     
     let userId: Int64?
     @Published var otherUser: PlainUser?

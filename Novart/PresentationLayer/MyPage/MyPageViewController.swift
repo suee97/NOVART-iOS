@@ -397,6 +397,9 @@ final class MyPageViewController: BaseViewController {
         if viewModel.userState == .other {
             self.navigationItem.rightBarButtonItems = [meatballsItem]
             self.navigationItem.leftBarButtonItem = backItem
+        } else if viewModel.isStartAsPush {
+            self.navigationItem.rightBarButtonItems = [meatballsItem, spacer, notificationItem]
+            self.navigationItem.leftBarButtonItem = backItem
         } else {
             self.navigationItem.rightBarButtonItems = [meatballsItem, spacer, notificationItem]
             self.navigationItem.leftBarButtonItem = settingItem
