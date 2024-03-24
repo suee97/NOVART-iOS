@@ -84,12 +84,30 @@ final class MyPageSettingViewController: BaseViewController {
     
     // MARK: - Properties
     private let viewModel: MyPageSettingViewModel
+    private var cancellables = Set<AnyCancellable>()
+    
+    
+    // MARK: - Bindings
+    override func setupBindings() {
+        Publishers
+            .CombineLatest4(self.viewModel.$activityState, self.viewModel.$registerState, self.viewModel.$serviceState, self.viewModel.$inquireState)
+            .sink { activity, register, service, inquire in
+                DispatchQueue.main.async {
+                    self.activityToggleView.isOn = activity
+                    self.registerToggleView.isOn = register
+                    self.serviceToggleView.isOn = service
+                    self.inquireToggleView.isOn = inquire
+                }
+            }
+            .store(in: &cancellables)
+    }
     
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.delegate = self
+        viewModel.fetchSetting()
     }
     
     init(viewModel: MyPageSettingViewModel) {
@@ -138,20 +156,24 @@ final class MyPageSettingViewController: BaseViewController {
     
     private let etcSectionLabel = SectionTitleLabel(title: Constants.Etc.sectionTitle)
     
-    private let activityToggleView = ToggleSwitchView(title: Constants.Notification.activityTitle, desc: Constants.Notification.activityDesc, isOn: true, onSwitch: {
-        print("activityToggleView: \($0)")
+    private lazy var activityToggleView = ToggleSwitchView(title: Constants.Notification.activityTitle, desc: Constants.Notification.activityDesc, isOn: false, onSwitch: {
+        self.viewModel.activityState = $0
+        self.viewModel.putSetting(setting: MyPageSettingRequestModel(category: .activicy, setting: $0))
     })
     
-    private let registerToggleView = ToggleSwitchView(title: Constants.Notification.registerTitle, desc: Constants.Notification.registerDesc, isOn: false, onSwitch: {
-        print("registerToggleView: \($0)")
+    private lazy var registerToggleView = ToggleSwitchView(title: Constants.Notification.registerTitle, desc: Constants.Notification.registerDesc, isOn: false, onSwitch: {
+        self.viewModel.registerState = $0
+        self.viewModel.putSetting(setting: MyPageSettingRequestModel(category: .register, setting: $0))
     })
     
-    private let serviceToggleView = ToggleSwitchView(title: Constants.Notification.serviceTitle, desc: Constants.Notification.serviceDesc, isOn: true, onSwitch: {
-        print("serviceToggleView: \($0)")
+    private lazy var serviceToggleView = ToggleSwitchView(title: Constants.Notification.serviceTitle, desc: Constants.Notification.serviceDesc, isOn: false, onSwitch: {
+        self.viewModel.serviceState = $0
+        self.viewModel.putSetting(setting: MyPageSettingRequestModel(category: .service, setting: $0))
     })
     
-    private let inquireToggleView = ToggleSwitchView(title: Constants.Notification.inquireTitle, desc: Constants.Notification.inquireDesc, isOn: false, onSwitch: {
-        print("inquireToggleView: \($0)")
+    private lazy var inquireToggleView = ToggleSwitchView(title: Constants.Notification.inquireTitle, desc: Constants.Notification.inquireDesc, isOn: false, onSwitch: {
+        self.viewModel.inquireState = $0
+        self.viewModel.putSetting(setting: MyPageSettingRequestModel(category: .inquire, setting: $0))
     })
     
     private let usagePolicyButton = TextNavigationButton(title: Constants.UsageInfo.usagePolicyTitle, onTap: {
