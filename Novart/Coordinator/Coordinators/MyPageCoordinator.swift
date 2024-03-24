@@ -30,6 +30,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     func startAsPush() {
         let viewModel = MyPageViewModel(coordinator: self, userId: userId)
         let viewController = MyPageViewController(viewModel: viewModel)
+        viewModel.isStartAsPush = true
         navigator.push(viewController, animated: true)
     }
     
@@ -136,6 +137,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     @MainActor
     private func showArtistProfile(userId: Int64) {
         let viewModel = MyPageViewModel(coordinator: self, userId: userId)
+        viewModel.isStartAsPush = true
         let viewController = MyPageViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }
