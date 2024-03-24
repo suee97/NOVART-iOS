@@ -111,7 +111,9 @@ final class MyPageViewController: BaseViewController {
     private let viewModel: MyPageViewModel
     private var cancellables = Set<AnyCancellable>()
     private var cellSize = Constants.CellSize.InterestCellSize
-    private var cellCount = 0
+    private var cellCount: Int {
+        return self.viewModel.getItemCount()
+    }
     private var cellId = ProductCell.reuseIdentifier
     private var cellType: UICollectionViewCell.Type = ProductCell.self
     private var isHeaderSticky = false
@@ -205,22 +207,22 @@ final class MyPageViewController: BaseViewController {
             switch value {
             case .Interest:
                 self.cellSize = Constants.CellSize.InterestCellSize
-                self.cellCount = self.viewModel.interests.count
+//                self.cellCount = self.viewModel.interests.count
                 self.cellId = ProductCell.reuseIdentifier
                 self.cellType = ProductCell.self
             case .Following:
                 self.cellSize = Constants.CellSize.FollowingCellSize
-                self.cellCount = self.viewModel.followings.count
+//                self.cellCount = self.viewModel.followings.count
                 self.cellId = SearchArtistCell.reuseIdentifier
                 self.cellType = SearchArtistCell.self
             case .Work:
                 self.cellSize = Constants.CellSize.WorkCellSize
-                self.cellCount = self.viewModel.works.count
+//                self.cellCount = self.viewModel.works.count
                 self.cellId = MyPageWorkCell.reuseIdentifier
                 self.cellType = MyPageWorkCell.self
             case .Exhibition:
                 self.cellSize = Constants.CellSize.ExhibitionCellSize
-                self.cellCount = self.viewModel.exhibitions.count
+//                self.cellCount = self.viewModel.exhibitions.count
                 self.cellId = MyPageExhibitionCell.reuseIdentifier
                 self.cellType = MyPageExhibitionCell.self
             }
