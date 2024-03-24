@@ -84,12 +84,15 @@ extension MyPageViewModel {
                 if interests.isEmpty && userState == .me {
                     isInterestsEmpty = true
                     interests = try await interactor.fetchRecommendInterests()
-                    print("recomment interest count \(self.interests.count)")
+                } else {
+                    isInterestsEmpty = false
                 }
                 
                 if followings.isEmpty && userState == .me {
                     isFollowingsEmpty = true
                     followings = try await interactor.fetchRecommendFollowings()
+                } else {
+                    isFollowingsEmpty = false
                 }
                 
                 self.interests = interests
@@ -128,6 +131,19 @@ extension MyPageViewModel {
     
     func unFollow(userId: Int64) async throws -> EmptyResponseModel {
         try await interactor.unFollow(userId: userId)
+    }
+    
+    func getItemCount() -> Int {
+        switch selectedCategory {
+        case .Interest:
+            return interests.count
+        case .Following:
+            return followings.count
+        case .Work:
+            return works.count
+        case .Exhibition:
+            return exhibitions.count
+        }
     }
 }
 
