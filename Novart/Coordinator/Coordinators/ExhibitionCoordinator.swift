@@ -21,6 +21,8 @@ final class ExhibitionCoordinator: BaseStackCoordinator<ExhibitionStep> {
         switch step {
         case let .exhibitionDetail(id):
             showExhibitionDetailScene(exhibitionId: id)
+        case let .comment(id):
+            showCommentViewController(exhibitionId: id)
         }
     }
     
@@ -33,5 +35,20 @@ final class ExhibitionCoordinator: BaseStackCoordinator<ExhibitionStep> {
         add(coordinators: exhibitionDetailCoordinator)
         
         exhibitionDetailCoordinator.start()
+    }
+    
+    @MainActor
+    private func showCommentViewController(exhibitionId: Int64) {
+        let viewModel = CommentViewModel(contentId: exhibitionId, contentType: .exhibition)
+        let viewController = CommentViewController(viewModel: viewModel)
+        let bottomSheetNavigationController = BottomSheetNavigationController()
+        bottomSheetNavigationController.pushViewController(viewController, animated: false)
+        let height = UIScreen.main.bounds.height - 55
+//        var configuration = BottomSheetConfiguration()
+//        configuration.customHeight = height
+        bottomSheetNavigationController.bottomSheetConfiguration.customHeight = height
+        bottomSheetNavigationController.bottomSheetConfiguration.isModalInPresentation = false
+        bottomSheetNavigationController.modalPresentationStyle = .pageSheet
+        navigator.rootViewController.presentSheet(bottomSheetNavigationController, with: bottomSheetNavigationController.bottomSheetConfiguration)
     }
 }

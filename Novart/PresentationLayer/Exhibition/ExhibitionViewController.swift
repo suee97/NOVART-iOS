@@ -223,7 +223,7 @@ extension ExhibitionViewController: ExhibitionButtonsViewDelegate {
     }
     
     func didTapCommentButton() {
-        print("comment")
+        viewModel.didTapCommentButton()
     }
     
     func didTapShareButton() {
