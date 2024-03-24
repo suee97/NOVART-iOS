@@ -375,6 +375,8 @@ class SearchViewController: BaseViewController {
     }
 }
 
+
+// MARK: - SearchBarDelegate
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchQuery = searchBar.text else { return }
