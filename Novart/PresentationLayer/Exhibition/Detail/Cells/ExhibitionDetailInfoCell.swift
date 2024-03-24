@@ -189,6 +189,10 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
         }
     }
     
+    func setSelected(at index: Int) {
+        shortcutView.setSelected(at: index)
+    }
+    
     var exhibitionShortcutViewXOffsetSubject: PassthroughSubject<CGFloat, Never> = .init()
     var selectedShorcutIndexSubject: PassthroughSubject<Int, Never> = .init()
     // MARK: - Initialization

@@ -19,4 +19,12 @@ final class BlockCoordinator: BaseStackCoordinator<BlockStep> {
         let viewController = BlockViewController(viewModel: viewModel)
         navigator.start(viewController)
     }
+    
+    @MainActor
+    func closeWithProfilepPop() {
+        guard let myPageCoordinator = parentCoordinator as? MyPageCoordinator else { return }
+        close {
+            myPageCoordinator.close()
+        }
+    }
 }

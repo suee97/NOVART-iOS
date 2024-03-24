@@ -20,5 +20,8 @@ extension APIClient {
     static func checkValidNickname(nickname: String) async throws -> Bool {
         try await APIClient.request(target: UserTarget.checkValidNickname(nickname: nickname), type: Bool.self)
     }
+    
+    static func putDeviceToken(deviceToken: String) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: UserTarget.putDeviceToken(deviceToken: deviceToken), type: EmptyResponseModel.self)
+    }
 }
-
