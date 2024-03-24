@@ -64,6 +64,11 @@ final class ExhibitionViewModel {
             makeUnlikeRequest()
         }
     }
+    
+    @MainActor
+    func didTapCommentButton() {
+        showCommentViewController()
+    }
 }
 
 private extension ExhibitionViewModel {
@@ -89,5 +94,12 @@ private extension ExhibitionViewModel {
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    @MainActor
+    func showCommentViewController() {
+        guard let cellIndex else { return }
+        let exhibitionId = exhibitions[cellIndex].id
+        coordinator.navigate(to: .comment(id: exhibitionId))
     }
 }
