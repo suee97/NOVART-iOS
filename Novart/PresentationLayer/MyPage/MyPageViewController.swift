@@ -168,6 +168,10 @@ final class MyPageViewController: BaseViewController {
                 
                 tab.view.addSubview(backgroundView)
             }
+        } else if viewModel.userState == .me,
+                  !viewModel.isStartAsPush,
+                  viewModel.isInitialLoadFinished {
+            viewModel.getAllItems()
         }
     }
     

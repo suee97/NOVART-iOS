@@ -16,6 +16,7 @@ final class MyPageViewModel {
     var isInterestsEmpty = false
     var isFollowingsEmpty = false
     var isStartAsPush = false
+    var isInitialLoadFinished = false
     
     let userId: Int64?
     @Published var otherUser: PlainUser?
@@ -89,30 +90,39 @@ extension MyPageViewModel {
                 async let worksTask = interactor.fetchMyPageWorks(userId: uid)
                 async let exhibitionsTask = interactor.fetchMyPageExhibitions(userId: uid)
                 
-                (self.interests, self.followings, self.works, self.exhibitions) = try await (interestsTask, followingsTask, worksTask, exhibitionsTask)
+                var interests = [ProductModel]()
+                var followings = [ArtistModel]()
+                var works = [MyPageWork]()
+                var exhibitions = [MyPageExhibition]()
+                
+                (interests, followings, works, exhibitions) = try await (interestsTask, followingsTask, worksTask, exhibitionsTask)
                 
                 
-                if self.interests.isEmpty && userState == .me {
+                if interests.isEmpty && userState == .me {
                     isInterestsEmpty = true
-                    self.interests = try await interactor.fetchRecommendInterests()
+                    interests = try await interactor.fetchRecommendInterests()
+                    print("recomment interest count \(self.interests.count)")
                 }
                 
-                if self.followings.isEmpty && userState == .me {
+                if followings.isEmpty && userState == .me {
                     isFollowingsEmpty = true
-                    self.followings = try await interactor.fetchRecommendFollowings()
+                    followings = try await interactor.fetchRecommendFollowings()
                 }
+                
+                self.interests = interests
+                self.followings = followings
+                self.works = works
+                self.exhibitions = exhibitions
                 
                 if self.userState == .other {
                     setCategory(.Work)
                 } else {
                     setCategory(.Interest)
                 }
-//                for _ in 1...20 {
-//                    works.append(MyPageWork(id: 2, name: "ㅎㅎㅎ", thumbnailImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647", nickname: "safdsfd"))
-//                }
-//                for _ in 1...20 {
-//                    exhibitions.append(MyPageExhibition(id: 1, name: "000---", thumbnailImgUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647", artistName: "me"))
-//                }
+                
+                if !isInitialLoadFinished {
+                    isInitialLoadFinished = true
+                }
             } catch {
                 print(error.localizedDescription)
             }
