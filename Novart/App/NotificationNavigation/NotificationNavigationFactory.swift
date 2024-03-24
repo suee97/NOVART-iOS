@@ -13,7 +13,7 @@ struct NotificationNavigationFactory {
         case .Follow:
             return NotificationProfileAction(notification: notification)
         case .Likes:
-            return NotificationProductAction(notification: notification)
+            return NotificationProfileAction(notification: notification)
         case .Comment:
             return NotificationProductAction(notification: notification)
         case .Welcome:
