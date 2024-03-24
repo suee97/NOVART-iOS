@@ -20,6 +20,10 @@ enum MyPageTarget: TargetType {
     case putImageData(data: Data, presignedUrl: String)
     case profileEdit(profileEditRequestBodyModel: ProfileEditRequestBodyModel)
     
+    // MyPageSetting
+    case fetchSetting
+    case putSetting(setting: MyPageSettingRequestModel)
+    
     var baseURL: String {
         switch self {
         case let .putImageData(_, presignedUrl):
@@ -57,18 +61,18 @@ enum MyPageTarget: TargetType {
             return "users/me/info"
         case .putImageData:
             return ""
+        case .fetchSetting, .putSetting:
+            return "users/me/setting"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchRecommenInterests, .fetchRecommenFollowings, .fetchMyPageUserInfo, .checkDuplicateNickname:
+        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchRecommenInterests, .fetchRecommenFollowings, .fetchMyPageUserInfo, .checkDuplicateNickname, .fetchSetting:
             return .get
         case .follow, .requestPresignedUrl:
             return .post
-        case .profileEdit:
-            return .put
-        case .putImageData:
+        case .profileEdit, .putSetting, .putImageData:
             return .put
         case .unFollow:
             return .delete
@@ -77,7 +81,7 @@ enum MyPageTarget: TargetType {
     
     var parameters: RequestParams {
         switch self {
-        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchRecommenInterests, .fetchRecommenFollowings, .fetchMyPageUserInfo, .follow, .unFollow, .checkDuplicateNickname:
+        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchRecommenInterests, .fetchRecommenFollowings, .fetchMyPageUserInfo, .follow, .unFollow, .checkDuplicateNickname, .fetchSetting:
             return .query(nil)
         case let .requestPresignedUrl(filename, category):
             return .body(["filename": filename, "category": category])
@@ -85,6 +89,8 @@ enum MyPageTarget: TargetType {
             return .body(profileEditRequestBodyModel)
         case let .putImageData(data, _):
             return .body(data)
+        case let .putSetting(setting):
+            return .body(setting)
         }
     }
 }
