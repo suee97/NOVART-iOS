@@ -17,8 +17,11 @@ final class AppCoordinator: BaseWindowCoordinator<AppStep> {
         
         //authentication
         Task {
-            await Authentication.shared.showLoginScene()
+            await Authentication.shared.login()
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(navigateToLogin), name: .init("NavigateToLogin"), object: nil)
+
     }
     
     override func navigate(to step: AppStep) {
@@ -41,8 +44,26 @@ final class AppCoordinator: BaseWindowCoordinator<AppStep> {
         UIView.transition(with: navigator.window, duration: 0.3, options: .transitionCrossDissolve, animations: {}, completion: { _ in })
     }
     
+    @MainActor
     private func showMain() {
+        guard let window = UIApplication.shared.keyWindowScene else { return }
+        let windowNavigator = WindowNavigator(window: window)
+        let mainCoordinator = MainCoordinator(windowNavigator: windowNavigator)
+        add(coordinators: mainCoordinator)
         
+        mainCoordinator.start()
+        
+        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {}, completion: { _ in})
+    }
+    
+    @objc func navigateToLogin() {
+        for childCoordinator in self.childCoordinators {
+            childCoordinator.end()
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.showLogin()
+        }
     }
 }
 

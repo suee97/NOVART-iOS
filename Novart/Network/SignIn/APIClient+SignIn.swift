@@ -9,7 +9,7 @@ import Alamofire
 import Foundation
 
 extension APIClient {
-    static func signUp(accessToken: String, provider: String, isMarketingAgree: Bool) async throws ->AccessTokenResponse {
+    static func signUp(accessToken: String, provider: String, isMarketingAgree: Bool) async throws -> AccessTokenResponse {
         let oAuthAccessToken = OAuthAccessTokenInfo(provider: provider, accessToken: accessToken)
         let policyAgreementInfo = PolicyAgreementInfo(termsOfService: true, useOfPersonalInfo: true, receiveMarketingInfo: isMarketingAgree)
         return try await APIClient.request(target: AuthTarget.signUp(signUpInfo: SignUpRequestBody(oauthAccessToken: oAuthAccessToken, policies: policyAgreementInfo)), type: AccessTokenResponse.self)

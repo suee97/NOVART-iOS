@@ -39,37 +39,20 @@ final class ProductUploadingViewModel {
         self.coordinator = coordinator
         self.productPreviewData = data
     }
+    
+    @MainActor
+    func close() {
+        coordinator?.close()
+    }
 }
 
 extension ProductUploadingViewModel {
     func uploadProduct() {
         Task {
             do {
-                
-                let imageData = (productPreviewData.coverImages + productPreviewData.detailImages).compactMap {
-                    $0.jpegData(compressionQuality: 0.9)
-                }
-                
-                var thumbnailFilenames: [String] = []
-                var artFilenames: [String] = []
-                
-                let date = Date().toString().replacingOccurrences(of: " ", with: "")
-                for idx in 0..<productPreviewData.coverImages.count {
-                    let filename = "thumbnail_\(date)_\(String(format: "%02d", idx)).jpeg"
-                    thumbnailFilenames.append(filename)
-                }
-                
-                for idx in 0..<productPreviewData.detailImages.count {
-                    let filename = "art_\(date)_\(String(format: "%02d", idx)).jpeg"
-                    artFilenames.append(filename)
-                }
-                
-                let presignedThumbnailUrls = try await interactor.getPresignedUrls(filenames: thumbnailFilenames)
-                let presignedArtUrls = try await interactor.getPresignedUrls(filenames: artFilenames)
-                let joinedUrls = presignedThumbnailUrls + presignedArtUrls
-                
-                try await interactor.uploadToS3(presignedUrls: joinedUrls.map { $0.presignedUrl }, images: imageData)
-                let uploadModel = createProductUploadData(thumbnailImageUrls: presignedThumbnailUrls.map { $0.imageUrl }, artImageUrls: presignedArtUrls.map { $0.imageUrl })
+                let (uploadedThumbmnailUrls, uploadedArtUrls) = try await uploadImages()
+
+                let uploadModel = createProductUploadData(thumbnailImageUrls: uploadedThumbmnailUrls, artImageUrls: uploadedArtUrls)
                 let product = try await interactor.uploadProductToServer(product: uploadModel)
                 uploadedProduct.send(product)
                 state = .complete
@@ -82,5 +65,33 @@ extension ProductUploadingViewModel {
     func createProductUploadData(thumbnailImageUrls: [String], artImageUrls: [String]) -> ProductUploadRequestModel {
         let data = productPreviewData
         return ProductUploadRequestModel(name: data.name, price: data.price, category: data.selectedCategory.rawValue, description: data.description, forSale: data.forSale, thumbnailImageUrls: thumbnailImageUrls, artImageUrls: artImageUrls, artTagList: data.artTagList)
+    }
+    
+    func uploadImages() async throws -> ([String], [String]) {
+        let imageData = (productPreviewData.coverImages + productPreviewData.detailImages).compactMap {
+            $0.image.jpegData(compressionQuality: 0.9)
+        }
+        
+        var coverFilenames: [String] = []
+        var detailFilenames: [String] = []
+        
+        let date = Date().toString().replacingOccurrences(of: " ", with: "")
+        for idx in 0..<productPreviewData.coverImages.count {
+            let filename = "thumbnail_\(date)_\(String(format: "%02d", idx)).jpeg"
+            coverFilenames.append(filename)
+        }
+        
+        for idx in 0..<productPreviewData.detailImages.count {
+            let filename = "art_\(date)_\(String(format: "%02d", idx)).jpeg"
+            detailFilenames.append(filename)
+        }
+        
+        let presignedThumbnailUrls = try await interactor.getPresignedUrls(filenames: coverFilenames)
+        let presignedArtUrls = try await interactor.getPresignedUrls(filenames: detailFilenames)
+        let joinedUrls = presignedThumbnailUrls + presignedArtUrls
+        
+        try await interactor.uploadToS3(presignedUrls: joinedUrls.map { $0.presignedUrl }, images: imageData)
+        
+        return (presignedThumbnailUrls.map { $0.imageUrl }, presignedArtUrls.map { $0.imageUrl })
     }
 }

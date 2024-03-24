@@ -22,7 +22,11 @@ final class ToggleSwitchView: UIView {
     
     
     // MARK: - Properties
-    var isOn: Bool
+    var isOn: Bool {
+        didSet {
+            self.toggle.isOn = isOn
+        }
+    }
     
     
     // MARK: - Initialize

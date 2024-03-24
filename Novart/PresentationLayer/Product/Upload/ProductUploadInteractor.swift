@@ -39,4 +39,8 @@ final class ProductUploadInteractor {
     func uploadProductToServer(product: ProductUploadRequestModel) async throws -> ProductModel {
         return try await APIClient.uploadProduct(product: product)
     }
+    
+    func updateProdcutToServer(product: ProductUploadRequestModel, productId: Int64) async throws -> ProductModel {
+        return try await APIClient.updateProduct(product: product, productId: productId)
+    }
 }

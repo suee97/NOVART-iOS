@@ -2,6 +2,13 @@ import UIKit
 import SnapKit
 import Combine
 
+protocol ExhibitionButtonsViewDelegate: AnyObject {
+    func didTapLikeButton(shouldLike: Bool)
+    func didTapCommentButton()
+    func didTapShareButton()
+    func didTapInfoButton()
+}
+
 final class ExhibitionButtonsView: UIView {
     
     // MARK: - Constants
@@ -62,6 +69,7 @@ final class ExhibitionButtonsView: UIView {
     private var viewModel: ExhibitionViewModel
     private var cancellables = Set<AnyCancellable>()
     
+    weak var delegate: ExhibitionButtonsViewDelegate?
     
     // MARK: - LifeCycle
     init(viewModel: ExhibitionViewModel) {
@@ -77,11 +85,11 @@ final class ExhibitionButtonsView: UIView {
     }
     
     private func setUpBindings() {
-        viewModel.$cellIndex.sink(receiveValue: { value in
-            guard let value = value else { return }
+        viewModel.$cellIndex.sink(receiveValue: { [weak self] value in
+            guard let self, let value = value else { return }
             
             // LikeView
-            self.likeCountLabel.text = self.convertCountToString(count: self.viewModel.processedExhibitions[value].likesCount)
+            self.likeCountLabel.text = self.convertCountToString(count: self.viewModel.currentLikeCounts[value])
             self.likeView.snp.removeConstraints()
             let likeViewWidth = self.likeCountLabel.bounds.width + 52
             self.likeView.snp.makeConstraints({ m in
@@ -89,7 +97,7 @@ final class ExhibitionButtonsView: UIView {
             })
             
             // LikeHeart
-            self.likeHeartImageView.image = self.viewModel.processedExhibitions[value].likes ? UIImage(named: "icon_exhibition_heart") : UIImage(named: "icon_exhibition_heart_fill")
+            self.likeHeartImageView.image = self.viewModel.currentLikeStates[value] ? UIImage(named: "icon_exhibition_heart_fill") : UIImage(named: "icon_exhibition_heart")
             
             // CommentView
             self.commentCountLabel.text = self.convertCountToString(count: self.viewModel.processedExhibitions[value].commentCount)
@@ -127,6 +135,7 @@ final class ExhibitionButtonsView: UIView {
     
     private var likeHeartImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
@@ -143,7 +152,8 @@ final class ExhibitionButtonsView: UIView {
         view.layer.cornerRadius = Constants.Common.cornerRadius
 
         let imageView = UIImageView(image: UIImage(named: "icon_exhibition_comment"))
-
+        imageView.contentMode = .scaleAspectFit
+        
         view.addSubview(imageView)
         view.addSubview(commentCountLabel)
 
@@ -168,12 +178,13 @@ final class ExhibitionButtonsView: UIView {
         return label
     }()
     
-    private let shareView: UIView = {
+    private lazy var shareView: UIView = {
         let view = UIView()
         view.backgroundColor = Constants.backgroundColor
         view.layer.cornerRadius = Constants.Common.cornerRadius
         
         let imageView = UIImageView(image: UIImage(named: "icon_exhibition_share"))
+        imageView.contentMode = .scaleAspectFit
         let label = UILabel()
         label.text = Constants.ShareView.Label.text
         label.font = Constants.Common.font
@@ -197,7 +208,7 @@ final class ExhibitionButtonsView: UIView {
         return view
     }()
     
-    private let guideView: UIView = {
+    private lazy var infoView: UIView = {
         let view = UIView()
         view.backgroundColor = Constants.backgroundColor
         view.layer.cornerRadius = Constants.Common.cornerRadius
@@ -216,13 +227,13 @@ final class ExhibitionButtonsView: UIView {
     }()
     
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [likeView, commentView, shareView, guideView])
+        let stackView = UIStackView(arrangedSubviews: [likeView, commentView, shareView, infoView])
         
         shareView.snp.makeConstraints({ m in
             m.width.equalTo(Constants.ShareView.width)
         })
         
-        guideView.snp.makeConstraints({ m in
+        infoView.snp.makeConstraints({ m in
             m.width.equalTo(Constants.GuideView.width)
         })
         
@@ -275,15 +286,21 @@ final class ExhibitionButtonsView: UIView {
         likeView.addGestureRecognizer(likeGesture)
         commentView.addGestureRecognizer(commentGesture)
         shareView.addGestureRecognizer(shareGesture)
-        guideView.addGestureRecognizer(guideGesture)
+        infoView.addGestureRecognizer(guideGesture)
     }
     
     @objc private func onTapLikeView(_ sender: UIGestureRecognizer) {
+        guard let cellIndex = viewModel.cellIndex else { return }
         if sender.state == .began {
             setDimEffect(view: likeView, isPressed: true)
         } else if sender.state == .ended {
             setDimEffect(view: likeView, isPressed: false)
-            print("onTapLikeView")
+            let updatedState = !viewModel.currentLikeStates[cellIndex]
+            let updatedCount = updatedState ? (viewModel.currentLikeCounts[cellIndex] + 1) :  (viewModel.currentLikeCounts[cellIndex] - 1)
+            updateLikeButton(likes: updatedState, newCount: updatedCount)
+            delegate?.didTapLikeButton(shouldLike: updatedState)
+            viewModel.currentLikeStates[cellIndex] = updatedState
+            viewModel.currentLikeCounts[cellIndex] = updatedCount
         }
     }
     
@@ -292,7 +309,7 @@ final class ExhibitionButtonsView: UIView {
             setDimEffect(view: commentView, isPressed: true)
         } else if sender.state == .ended {
             setDimEffect(view: commentView, isPressed: false)
-            print("onTapCommentView")
+            delegate?.didTapCommentButton()
         }
     }
     
@@ -301,16 +318,16 @@ final class ExhibitionButtonsView: UIView {
             setDimEffect(view: shareView, isPressed: true)
         } else if sender.state == .ended {
             setDimEffect(view: shareView, isPressed: false)
-            print("onTapShareView")
+            delegate?.didTapShareButton()
         }
     }
     
     @objc private func onTapGuideView(_ sender: UIGestureRecognizer) {
         if sender.state == .began {
-            setDimEffect(view: guideView, isPressed: true)
+            setDimEffect(view: infoView, isPressed: true)
         } else if sender.state == .ended {
-            setDimEffect(view: guideView, isPressed: false)
-            print("onTapGuideView")
+            setDimEffect(view: infoView, isPressed: false)
+            delegate?.didTapInfoButton()
         }
     }
     
@@ -320,5 +337,10 @@ final class ExhibitionButtonsView: UIView {
         } else {
             view.backgroundColor = Constants.backgroundColor
         }
+    }
+    
+    private func updateLikeButton(likes: Bool, newCount: Int) {
+        likeHeartImageView.image = likes ? UIImage(named: "icon_exhibition_heart_fill") : UIImage(named: "icon_exhibition_heart")
+        likeCountLabel.text = convertCountToString(count: newCount)
     }
 }

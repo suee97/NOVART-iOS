@@ -181,6 +181,17 @@ final class ProductUploadingViewController: BaseViewController {
         return view
     }()
     
+    private lazy var closeButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "icon_close"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.close()
+        }), for: .touchUpInside)
+        return button
+    }()
+    
     // MARK: - Properties
     
     private var viewModel: ProductUploadingViewModel
@@ -204,7 +215,11 @@ final class ProductUploadingViewController: BaseViewController {
     }
     
     override func setupNavigationBar() {
-        navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isHidden = false
+        let closeItem = UIBarButtonItem(customView: closeButton)
+        navigationItem.leftBarButtonItem = closeItem
+        closeButton.isHidden = true
+        title = ""
     }
     
     override func setupView() {
@@ -245,11 +260,12 @@ final class ProductUploadingViewController: BaseViewController {
         viewModel.$state
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                guard let self else { return }
+                guard let self, state == .complete else { return }
                 self.descriptionLabel.text = viewModel.completeDesription
                 self.stateLabel.text = viewModel.stateText
                 self.loadingAnimationView.stop()
                 self.loadingAnimationView.isHidden = true
+                self.closeButton.isHidden = false
             }
             .store(in: &cancellables)
         

@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import Combine
 
 final class ExhibitionArtCell: UICollectionViewCell {
     
@@ -50,6 +51,7 @@ final class ExhibitionArtCell: UICollectionViewCell {
             static let followButtonWidth: CGFloat = 74
             static let contactButtonColor: UIColor = UIColor.Common.grey04
             static let followButtonColor: UIColor = UIColor.Common.main
+            static let followingButtonColor: UIColor = UIColor.Common.grey04
             static let horizontalMargin: CGFloat = 10
             static let imageSize: CGFloat = 40
             static let artistNameFont: UIFont = .systemFont(ofSize: 20, weight: .semibold)
@@ -144,6 +146,12 @@ final class ExhibitionArtCell: UICollectionViewCell {
             button.widthAnchor.constraint(equalToConstant: Constants.ArtistInfo.followButtonWidth),
             button.heightAnchor.constraint(equalToConstant: Constants.ArtistInfo.buttonHeight)
         ])
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self, let artistId = self.viewModel?.artistInfo.userId else { return }
+            self.updateFollowButton(isFollowing: !self.currentFollowingState)
+            self.input?.send((.didTapFollowButton(following: !self.currentFollowingState), artistId))
+            self.currentFollowingState.toggle()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -194,6 +202,10 @@ final class ExhibitionArtCell: UICollectionViewCell {
     }()
     
     // MARK: - Properties
+    
+    var input: PassthroughSubject<(ExhibitionDetailViewController.ArtCellInput, Int64), Never>?
+    
+    var currentFollowingState: Bool = false
     
     private var viewModel: ExhibitionArtItem? {
         didSet {
@@ -282,7 +294,8 @@ final class ExhibitionArtCell: UICollectionViewCell {
         }
         coverCollectionView.reloadData()
         setupDetailImageViews(with: viewModel.detailImages)
-        
+        currentFollowingState = viewModel.artistInfo.following
+        updateFollowButton(isFollowing: currentFollowingState)
     }
     
     private func setupDetailImageViews(with images: [ExhibitionDetailImageInfoModel]) {
@@ -314,6 +327,13 @@ final class ExhibitionArtCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         detailImageStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    }
+    
+    private func updateFollowButton(isFollowing: Bool) {
+        let title: String = isFollowing ? "팔로잉" : "팔로우"
+        let buttonColor: UIColor = isFollowing ? Constants.ArtistInfo.followingButtonColor : Constants.ArtistInfo.followButtonColor
+        followButton.setTitle(title, for: .normal)
+        followButton.backgroundColor = buttonColor
     }
 }
 

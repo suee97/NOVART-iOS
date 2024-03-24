@@ -1,5 +1,5 @@
 //
-//  ProductUploadViewController.swift
+//  ProductImageUploadViewController.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/12/10.
@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class ProductUploadViewController: BaseViewController, MediaPickerPresentable {
+final class ProductImageUploadViewController: BaseViewController, MediaPickerPresentable {
     
     // MARK: - DataSource
     
@@ -78,9 +78,9 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             switch self.viewModel.step {
-            case .cover:
+            case .coverImage:
                 self.viewModel.moveToDetailImageUpload()
-            case .detail:
+            case .detailImage:
                 self.viewModel.moveToDetailInfoUpload()
             }
         }), for: .touchUpInside)
@@ -92,7 +92,7 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
         let label = UILabel()
         label.font = Constants.Title.font
         label.textColor = Constants.Title.textColor
-        label.text = viewModel.step == .cover ? Constants.AddImage.coverTitle : Constants.AddImage.detailTitle
+        label.text = viewModel.step == .coverImage ? Constants.AddImage.coverTitle : Constants.AddImage.detailTitle
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -102,7 +102,7 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
         label.font = Constants.Title.subtitleFont
         label.textColor = Constants.Title.subtitleColor
         label.numberOfLines = 2
-        label.text = viewModel.step == .cover ? Constants.AddImage.coverDescription : Constants.AddImage.detailDescription
+        label.text = viewModel.step == .coverImage ? Constants.AddImage.coverDescription : Constants.AddImage.detailDescription
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -118,7 +118,7 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
     
     private lazy var addImageButton: UIButton = {
         let button = UIButton()
-        let title = viewModel.step == .cover ? Constants.AddImage.coverText : Constants.AddImage.detailText
+        let title = viewModel.step == .coverImage ? Constants.AddImage.coverText : Constants.AddImage.detailText
         button.setTitle(title, for: .normal)
         button.setTitleColor(Constants.AddImage.textColor, for: .normal)
         button.titleLabel?.font = Constants.AddImage.font
@@ -152,7 +152,7 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
     
     // MARK: - Properties
 
-    private var viewModel: ProductUploadViewModel
+    private var viewModel: ProductImageUploadViewModel
     private lazy var coverDataSource: CoverDataSource = createCoverDataSource()
     private lazy var detailDataSource: DetailDataSource = createDetailDataSource()
     var mediaPicker: MediaPickerController = MediaPickerController()
@@ -160,7 +160,7 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
     
     // MARK: - Init
     
-    init(viewModel: ProductUploadViewModel) {
+    init(viewModel: ProductImageUploadViewModel) {
         self.viewModel = viewModel
         super.init()
     }
@@ -177,18 +177,26 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
         super.viewDidAppear(animated)
         viewModel.setAsMediaPresenter(viewController: self)
         updateNavButtonState()
+        if viewModel.isRentry {
+            setupBindings()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        cancellables.removeAll()
     }
     
     override func setupNavigationBar() {
-        
+        navigationController?.navigationBar.isHidden = false
+                
         let closeButton = UIButton()
         closeButton.setBackgroundImage(UIImage(named: "icon_nav_chevron_left"), for: .normal)
         closeButton.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             switch self.viewModel.step {
-            case .cover:
+            case .coverImage:
                 self.viewModel.closeCoordinator()
-            case .detail:
+            case .detailImage:
                 self.navigationController?.popViewController(animated: true)
             }
         }), for: .touchUpInside)
@@ -200,7 +208,7 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
         
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
-        title = "작품 등록"
+        title = viewModel.isEditScene ? "작품 편집" : "작품 등록"
         nextButton.isEnabled = false
     }
     
@@ -221,7 +229,7 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
             descriptionLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: Constants.horizontalMargin)
         ])
         
-        imageCountLabel.isHidden = viewModel.step == .detail
+        imageCountLabel.isHidden = viewModel.step == .detailImage
         
         view.addSubview(addImageButton)
         NSLayoutConstraint.activate([
@@ -231,7 +239,7 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
             addImageButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -Constants.horizontalMargin)
         ])
         
-        if viewModel.step == .cover {
+        if viewModel.step == .coverImage {
             view.addSubview(coverCollectionView)
             coverCollectionView.setCollectionViewLayout(coverImageLayout, animated: false)
             NSLayoutConstraint.activate([
@@ -253,28 +261,25 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
     }
     
     override func setupBindings() {
-        switch viewModel.step {
-        case .cover:
-            viewModel.$selectedCoverImages
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] media in
-                    guard let self else { return }
-                    self.imageCountLabel.text = "\(media.count)/3"
-                    self.nextButton.isEnabled = !media.isEmpty
-                    self.applyCoverDataSource(media)
-                }
-                .store(in: &cancellables)
-            
-        case .detail:
-            viewModel.$selectedDetailImages
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] images in
-                    guard let self else { return }
-                    self.applyDetailDataSource(images)
-                    self.nextButton.isEnabled = !images.isEmpty
-                }
-                .store(in: &cancellables)
-        }
+        
+        viewModel.uploadModel.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                let uploadModel = viewModel.uploadModel
+                self.setData(uploadModel: uploadModel)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$uploadModel
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                let uploadModel = viewModel.uploadModel
+                self.setData(uploadModel: uploadModel)
+            }
+            .store(in: &cancellables)
+
         viewModel.$isNextEnabled
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isEnabled in
@@ -284,13 +289,27 @@ final class ProductUploadViewController: BaseViewController, MediaPickerPresenta
             .store(in: &cancellables)
     }
     
+    private func setData(uploadModel: ProductUploadModel) {
+        switch self.viewModel.step {
+        case .coverImage:
+            let imageItems = uploadModel.coverImages
+            self.imageCountLabel.text = "\(imageItems.count)/3"
+            self.nextButton.isEnabled = !imageItems.isEmpty
+            self.applyCoverDataSource(imageItems)
+        case .detailImage:
+            let imageItems = uploadModel.detailImages
+            self.applyDetailDataSource(imageItems)
+            self.nextButton.isEnabled = !imageItems.isEmpty
+        }
+    }
+    
     private func updateNavButtonState() {
         nextButton.isEnabled = viewModel.isNextEnabled
     }
 }
 
 // MARK: - CollectionView
-private extension ProductUploadViewController {
+private extension ProductImageUploadViewController {
     private func createCoverDataSource() -> CoverDataSource {
         
         let uploadMediaCoverCellRegistration = UICollectionView.CellRegistration<UploadMediaCoverCell, UploadMediaItem> { [weak self] cell, _, item in
@@ -311,6 +330,7 @@ private extension ProductUploadViewController {
         
         snapshot.appendSections([.image])
         snapshot.appendItems(items, toSection: .image)
+        snapshot.reloadItems(items)
         coverDataSource.apply(snapshot, animatingDifferences: false)
     }
     
@@ -377,7 +397,7 @@ private extension ProductUploadViewController {
 }
 
 // MARK: - Cell Action
-extension ProductUploadViewController: UploadCellActionDelegate {
+extension ProductImageUploadViewController: UploadCellActionDelegate {
     func didTapDeleteButton(identifier: String) {
         viewModel.removeItem(identifier: identifier)
     }
@@ -387,7 +407,7 @@ extension ProductUploadViewController: UploadCellActionDelegate {
     }
 }
 
-extension ProductUploadViewController {
+extension ProductImageUploadViewController {
     func didFinishImageCrop(image: UIImage, identifier: String) {
         viewModel.didFinishImageCrop(image: image, identifier: identifier)
     }

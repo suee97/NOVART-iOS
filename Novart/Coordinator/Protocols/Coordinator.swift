@@ -47,11 +47,19 @@ extension Coordinator {
     }
     
     func end() {
+        for coordinator in self.childCoordinators {
+            coordinator.end()
+        }
         parentCoordinator?.remove(coordinators: self)
     }
     
     func closeAsPop() {
         navigator.pop(animated: true)
+        end()
+    }
+    
+    func closeToRoot() {
+        navigator.popToRoot(animated: true)
         end()
     }
     
