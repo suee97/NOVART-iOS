@@ -38,22 +38,6 @@ final class MyPageViewModel {
     init(coordinator: MyPageCoordinator, userId: Int64? = nil) {
         self.coordinator = coordinator
         self.userId = userId
-//        for i in 1...20 {
-//            if i == 1 || i == 2 {
-//                interests.append(ProductModel(id: 0, name: "---?????---", artistNickname: "승언", thumbnailImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647"))
-//            } else {
-//                interests.append(ProductModel(id: 0, name: "abcde", artistNickname: "승언", thumbnailImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647"))
-//            }
-//        }
-//        for _ in 1...20 {
-//            followings.append(ArtistModel(id: 1, nickname: "dd", backgroundImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647", profileImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647"))
-//        }
-//        for _ in 1...20 {
-//            works.append(MyPageWork(id: 0, name: "??", thumbnailImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647", nickname: "safdsfd"))
-//        }
-//        for _ in 1...20 {
-//            exhibitions.append(MyPageExhibition(id: 0, name: "000---", thumbnailImgUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647", artistName: "me"))
-//        }
     }
     
     func setCategory(_ category: MyPageCategory) {
@@ -97,7 +81,6 @@ extension MyPageViewModel {
                 
                 (interests, followings, works, exhibitions) = try await (interestsTask, followingsTask, worksTask, exhibitionsTask)
                 
-                
                 if interests.isEmpty && userState == .me {
                     isInterestsEmpty = true
                     interests = try await interactor.fetchRecommendInterests()
@@ -114,14 +97,13 @@ extension MyPageViewModel {
                 self.works = works
                 self.exhibitions = exhibitions
                 
-                if self.userState == .other {
-                    setCategory(.Work)
-                } else {
-                    setCategory(.Interest)
-                }
-                
                 if !isInitialLoadFinished {
                     isInitialLoadFinished = true
+                    if self.userState == .other {
+                        setCategory(.Work)
+                    } else {
+                        setCategory(.Interest)
+                    }
                 }
             } catch {
                 print(error.localizedDescription)
