@@ -53,7 +53,6 @@ final class ArtistSearchViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        viewModel.fetchData()
     }
     
     override func setupView() {
@@ -110,5 +109,15 @@ private extension ArtistSearchViewController {
             return self?.verticalSectionLayout()
         }
         return layout
+    }
+}
+
+
+// MARK: - ScrollViewDelegate
+extension ArtistSearchViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y + scrollView.bounds.height >= scrollView.contentSize.height) {
+            viewModel.scrollViewDidReachBottom()
+        }
     }
 }

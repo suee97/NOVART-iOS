@@ -12,4 +12,5 @@ struct SearchResultModel {
     let products: [ProductModel]
     let artists: [ArtistModel]
     let category: CategoryType
+    let isLastPage: (products: Bool, artists: Bool)
 }
