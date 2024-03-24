@@ -16,7 +16,7 @@ struct NotificationProfileAction: NotificationNavigationExecutable {
     
     @MainActor
     func execute(to coordinator: (any Coordinator)?, asPush: Bool) -> Bool {
-        guard let profileId = notification.artId else {
+        guard let profileId = notification.senderId else {
             return false
         }
         
