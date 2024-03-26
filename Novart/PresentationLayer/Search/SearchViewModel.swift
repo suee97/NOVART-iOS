@@ -15,7 +15,7 @@ final class SearchViewModel {
     var categoryItems: [CategoryType] = CategoryType.allCases
     var productViewModel: ProductSearchViewModel
     var artistViewModel: ArtistSearchViewModel
-    var searchResult: SearchResultModel?
+    @Published var searchResult: SearchResultModel?
     var currentCategory: CategoryType
     var currentQuery: String
     
@@ -64,6 +64,7 @@ extension SearchViewModel {
                     artistViewModel.searchResultData = SearchResultModel(query: "", products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
                     artistViewModel.isLastPage = artistResult.last
                     
+                    searchResult = SearchResultModel(query: "", products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
                 } catch {
                     print(error.localizedDescription)
                 }
