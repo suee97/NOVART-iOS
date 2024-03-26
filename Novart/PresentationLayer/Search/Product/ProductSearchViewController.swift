@@ -11,8 +11,7 @@ import Combine
 final class ProductSearchViewController: BaseViewController {
     
     // MARK: - Constants
-    
-    enum Constants {
+    private enum Constants {
         static let topMargin: CGFloat = 16
         static let screenWidth: CGFloat = UIScreen.main.bounds.width
         static let leadingMargin: CGFloat = 24
@@ -21,11 +20,14 @@ final class ProductSearchViewController: BaseViewController {
         static let itemSpacing: CGFloat = 12
         static let itemWidth: CGFloat = (screenWidth - horizontalInsets * 2 - itemSpacing) / 2
         static let itemHeight: CGFloat = itemWidth * 1.34
+        
+        enum NoResultView {
+            static let width: CGFloat = 120
+            static let topMargin: CGFloat = 24
+        }
     }
     
     // MARK: - UI
-
-    
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
         collectionView.contentInset = UIEdgeInsets(top: Constants.topMargin, left: 0, bottom: 0, right: 0)
@@ -33,6 +35,7 @@ final class ProductSearchViewController: BaseViewController {
         return collectionView
     }()
     
+    private let noResultView = SearchNoResultView()
     
     private var viewModel: ProductSearchViewModel
     private var dataSource: ProductSearchDataSource
@@ -53,21 +56,25 @@ final class ProductSearchViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        viewModel.fetchData()
     }
     
     override func setupView() {
         view.addSubview(collectionView)
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        view.addSubview(noResultView)
+        
+        collectionView.snp.makeConstraints({ m in
+            m.edges.equalToSuperview()
+        })
+        
+        noResultView.snp.makeConstraints({ m in
+            m.width.equalTo(Constants.NoResultView.width)
+            m.center.equalToSuperview()
+            m.top.equalToSuperview().inset(Constants.NoResultView.topMargin)
+        })
         
         collectionView.setCollectionViewLayout(searchCollectionViewLayout, animated: false)
         collectionView.delegate = self
-        
+        noResultView.isHidden = true
     }
     
     override func setupBindings() {
@@ -75,6 +82,13 @@ final class ProductSearchViewController: BaseViewController {
             .receive(on: DispatchQueue.main)
             .sink { items in
                 self.dataSource.apply(items)
+                if items.isEmpty {
+                    self.noResultView.isHidden = false
+                    self.collectionView.isHidden = true
+                } else {
+                    self.noResultView.isHidden = true
+                    self.collectionView.isHidden = false
+                }
             }
             .store(in: &subscriptions)
     }
