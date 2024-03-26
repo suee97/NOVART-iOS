@@ -67,8 +67,8 @@ final class LoginViewController: BaseViewController {
         button.setImage(UIImage(named: "login_apple"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
 
-        button.addAction(UIAction(handler: { _ in
-            self.viewModel.login(with: .apple)
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.viewModel.login(with: .apple)
         }), for: .touchUpInside)
         return button
     }()
