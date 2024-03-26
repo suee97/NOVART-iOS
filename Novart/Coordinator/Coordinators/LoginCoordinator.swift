@@ -8,8 +8,21 @@
 import UIKit
 
 final class LoginCoordinator: BaseStackCoordinator<LoginStep> {
+    
+    private var isPresentedAsModal: Bool = false
+    
     override func start() {
+        super.start()
         let viewModel = LoginViewModel(coordinator: self)
+        let loginViewController = LoginViewController(viewModel: viewModel)
+        navigator.start(loginViewController)
+    }
+    
+    @MainActor
+    func startAsModal() {
+        super.start()
+        let viewModel = LoginViewModel(coordinator: self)
+        isPresentedAsModal = true
         let loginViewController = LoginViewController(viewModel: viewModel)
         navigator.start(loginViewController)
     }
@@ -23,16 +36,33 @@ final class LoginCoordinator: BaseStackCoordinator<LoginStep> {
         }
     }
     
+    @MainActor
     private func showMain() {
-        guard let window = UIApplication.shared.keyWindowScene else { return }
-        let windowNavigator = WindowNavigator(window: window)
-        let mainCoordinator = MainCoordinator(windowNavigator: windowNavigator)
-        parentCoordinator?.add(coordinators: mainCoordinator)
-        
-        mainCoordinator.start()
-        
-        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {}, completion: { _ in})
-        end()
+        if isPresentedAsModal {
+            close {
+                guard let appCoordinator = UIApplication.shared.appCoordinator else {
+                    return
+                }
+                
+                for childCoordinator in appCoordinator.childCoordinators {
+                    childCoordinator.end()
+                }
+                
+                DispatchQueue.main.async {
+                    appCoordinator.navigate(to: .main)
+                }
+            }
+        } else {
+            guard let window = UIApplication.shared.keyWindowScene else { return }
+            let windowNavigator = WindowNavigator(window: window)
+            let mainCoordinator = MainCoordinator(windowNavigator: windowNavigator)
+            parentCoordinator?.add(coordinators: mainCoordinator)
+            
+            mainCoordinator.start()
+            
+            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {}, completion: { _ in})
+            end()
+        }
     }
     
     @MainActor

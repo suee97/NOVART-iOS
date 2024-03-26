@@ -105,14 +105,16 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         productUploadCoordinator.start()
     }
     
+    @MainActor
     private func showLoginModal() {
-        let viewController = LoginModalViewController()
-//        if let sheet = viewController.sheetPresentationController {
-//            sheet.detents = [.large()]
-//            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-//            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
-//        }
-        navigator.rootViewController.present(viewController, animated: true)
+        guard let window = UIApplication.shared.keyWindowScene else { return }
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = UIScreen.main.bounds.height - 132
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let loginCoordinator = LoginCoordinator(navigator: stackNavigator)
+        add(coordinators: loginCoordinator)
+        loginCoordinator.startAsModal()
+        
     }
     
     @MainActor
