@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class HomeViewController: BaseViewController {
+final class HomeViewController: BaseViewController, PullToRefreshProtocol {
     
     // MARK: - SnappingLayout
     
@@ -101,12 +101,13 @@ class HomeViewController: BaseViewController {
     
     private var viewModel: HomeViewModel
     private var dataSource: HomeDataSource
-    
+    var refreshControl: PlainRefreshControl
     private var subscriptions: Set<AnyCancellable> = .init()
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
         self.dataSource = HomeDataSource(collectionView: collectionView)
+        self.refreshControl = PlainRefreshControl()
         super.init()
     }
     
@@ -118,6 +119,7 @@ class HomeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.loadInitialData()
+        setupRefreshControl()
     }
     
     // MARK: - Setup
@@ -172,6 +174,20 @@ class HomeViewController: BaseViewController {
                 self?.dataSource.apply(items)
             }
             .store(in: &subscriptions)
+    }
+    
+    func setupRefreshControl() {
+        collectionView.refreshControl = refreshControl
+        collectionView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+    }
+    
+    @objc func onRefresh() {
+        Task {
+            await viewModel.onRefresh()
+            await MainActor.run {
+                self.collectionView.refreshControl?.endRefreshing()
+            }
+        }
     }
 }
 

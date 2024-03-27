@@ -16,7 +16,8 @@ final class HomeViewModel {
     var selectedCategory: CategoryType = .all
     
     private var isPaginationFinished: Bool?
-    private var isFeedFetched: [Int64 : Bool] = [:]
+    private var fetchedPages = [Int64]()
+    private var isFetching = false
     
     private var feedData: [FeedItemViewModel] = [] {
         didSet {
@@ -59,28 +60,33 @@ extension HomeViewModel {
     }
 
     func fetchFeedItems(category: CategoryType, lastId: Int64?) {
-        if let lastId { isFeedFetched[lastId] = true }
+        guard !isFetching else { return }
+        if let lastId { fetchedPages.append(lastId) }
         Task {
+            isFetching = true
             do {
                 let items = try await downloadInteractor.fetchFeedItems(category: category, lastId: lastId)
                 feedData = items.map { FeedItemViewModel($0) }
-                isPaginationFinished = items.count == 0
+                isPaginationFinished = (items.isEmpty)
             } catch {
                 print(error)
             }
+            isFetching = false
         }
     }
     
     func loadMoreItems() {
+        isFetching = true
         Task {
             do {
                 let items = try await downloadInteractor.fetchFeedItems(category: selectedCategory, lastId: feedData.last?.id)
                 feedData.append(contentsOf: items.map { FeedItemViewModel($0) })
-                isPaginationFinished = items.count == 0
+                isPaginationFinished = (items.isEmpty)
             } catch {
                 print(error)
             }
         }
+        isFetching = false
     }
     
     @MainActor
@@ -99,9 +105,23 @@ extension HomeViewModel {
     
     func scrollViewDidReachBottom() {
         guard let isPaginationFinished, !isPaginationFinished, let lastId = feedData.last?.id else { return }
-        let fetched = isFeedFetched[lastId] ?? false
+        let fetched = fetchedPages.contains(lastId)
         if fetched { return }
-        isFeedFetched[lastId] = true
+        fetchedPages.append(lastId)
         loadMoreItems()
+    }
+    
+    func onRefresh() async {
+        do {
+            isFetching = true
+            try await Task.sleep(seconds: 1) // Test
+            let items = try await downloadInteractor.fetchFeedItems(category: selectedCategory, lastId: nil)
+            feedData = items.map { FeedItemViewModel($0) }
+            isPaginationFinished = (items.isEmpty)
+            fetchedPages.removeAll()
+            isFetching = false
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }
