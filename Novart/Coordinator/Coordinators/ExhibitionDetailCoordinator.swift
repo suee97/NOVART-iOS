@@ -27,6 +27,7 @@ final class ExhibitionDetailCoordinator: BaseStackCoordinator<ExhibitionDetailSt
         }
     }
     
+    @MainActor
     private func showCommentViewController(exhibitionId: Int64) {
         let viewModel = CommentViewModel(contentId: exhibitionId, contentType: .exhibition)
         let viewController = CommentViewController(viewModel: viewModel)

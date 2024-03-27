@@ -30,6 +30,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     func startAsPush() {
         let viewModel = MyPageViewModel(coordinator: self, userId: userId)
         let viewController = MyPageViewController(viewModel: viewModel)
+        viewModel.isStartAsPush = true
         navigator.push(viewController, animated: true)
     }
     
@@ -104,14 +105,16 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         productUploadCoordinator.start()
     }
     
+    @MainActor
     private func showLoginModal() {
-        let viewController = LoginModalViewController()
-//        if let sheet = viewController.sheetPresentationController {
-//            sheet.detents = [.large()]
-//            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-//            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
-//        }
-        navigator.rootViewController.present(viewController, animated: true)
+        guard let window = UIApplication.shared.keyWindowScene else { return }
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = UIScreen.main.bounds.height - 132
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let loginCoordinator = LoginCoordinator(navigator: stackNavigator)
+        add(coordinators: loginCoordinator)
+        loginCoordinator.startAsModal()
+        
     }
     
     @MainActor
@@ -136,6 +139,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
     @MainActor
     private func showArtistProfile(userId: Int64) {
         let viewModel = MyPageViewModel(coordinator: self, userId: userId)
+        viewModel.isStartAsPush = true
         let viewController = MyPageViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }

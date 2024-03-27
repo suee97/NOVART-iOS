@@ -13,6 +13,7 @@ enum UserTarget: TargetType {
     case setNickname(nickname: String)
     case checkValidNickname(nickname: String)
     case putDeviceToken(deviceToken: String)
+    case deviceTokenTest(deviceToken: String)
     
     var baseURL: String {
         API.baseURL
@@ -28,6 +29,8 @@ enum UserTarget: TargetType {
             return "users/check-duplicate-nickname/\(nickname)"
         case .putDeviceToken:
             return "users/me/fcm-device-token"
+        case let .deviceTokenTest(deviceToken):
+            return "fcm/\(deviceToken)"
         }
     }
     
@@ -41,6 +44,8 @@ enum UserTarget: TargetType {
             return .get
         case .putDeviceToken:
             return .put
+        case .deviceTokenTest:
+            return .post
         }
     }
     
@@ -54,6 +59,8 @@ enum UserTarget: TargetType {
             return .query(nil)
         case let .putDeviceToken(deviceToken):
             return .body(["deviceToken": deviceToken])
+        case .deviceTokenTest:
+            return .body(nil)
         }
     }
 }

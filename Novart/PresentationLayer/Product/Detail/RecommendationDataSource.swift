@@ -8,7 +8,7 @@
 import UIKit
 
 typealias RecommendationDataSourceType = UICollectionViewDiffableDataSource<RecommendationDataSource.Section, PlainItem>
-private typealias RecommendationDataSourceeSnapshot = NSDiffableDataSourceSnapshot<RecommendationDataSource.Section, PlainItem>
+private typealias RecommendationDataSourceSnapshot = NSDiffableDataSourceSnapshot<RecommendationDataSource.Section, PlainItem>
 
 private typealias ProductCellRegistration = UICollectionView.CellRegistration<ProductCell, ProductModel>
 private typealias ExhibitionCellRegistration = UICollectionView.CellRegistration<ProductDetailExhibitionCell, ExhibitionModel>
@@ -62,19 +62,27 @@ final class RecommendationDataSource: RecommendationDataSourceType {
     }
     
     func apply(_ items: [RecommendationDataSource.Section: [PlainItem]]) {
-        var snapshot = snapshot()
+        var snapshot = RecommendationDataSourceSnapshot()
         
-        snapshot.deleteSections([.artistProduct])
-        snapshot.deleteSections([.artistExhibition])
-        snapshot.deleteSections([.similarProduct])
+        let productItems = items[.artistProduct] ?? []
+        let exhibitionItems = items[.artistExhibition] ?? []
+        let similarItems = items[.similarProduct] ?? []
         
-        snapshot.appendSections([.artistProduct])
-        snapshot.appendSections([.artistExhibition])
-        snapshot.appendSections([.similarProduct])
+        if !productItems.isEmpty {
+            snapshot.appendSections([.artistProduct])
+            snapshot.appendItems(productItems, toSection: .artistProduct)
+        }
         
-        snapshot.appendItems(items[.artistProduct] ?? [], toSection: .artistProduct)
-        snapshot.appendItems(items[.artistExhibition] ?? [], toSection: .artistExhibition)
-        snapshot.appendItems(items[.similarProduct] ?? [], toSection: .similarProduct)
+        if !exhibitionItems.isEmpty {
+            snapshot.appendSections([.artistExhibition])
+            snapshot.appendItems(exhibitionItems, toSection: .artistExhibition)
+        }
+        
+        if !similarItems.isEmpty {
+            snapshot.appendSections([.similarProduct])
+            snapshot.appendItems(similarItems, toSection: .similarProduct)
+        }
+    
         apply(snapshot, animatingDifferences: false)
     }
 }

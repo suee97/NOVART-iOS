@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import SnapKit
 
 class SearchViewController: BaseViewController {
 
@@ -57,9 +58,31 @@ class SearchViewController: BaseViewController {
             static let itemWidth: CGFloat = (screenWidth - horizontalInsets * 2 - itemSpacing) / 2
             static let itemHeight: CGFloat = itemWidth * 1.34
         }
+        
+        enum OrangeCircle {
+            static let diameter: CGFloat = 4
+            static let color = UIColor.init(hexString: "#FF7337")
+            static let leftMargin: CGFloat = 2
+            static let topMargin: CGFloat = 4
+            static let centerDistanceFromButtonLabel: CGFloat = 6
+        }
     }
     
     // MARK: - UI
+    final class OrangeCircle: UIView {
+        init() {
+            super.init(frame: .zero)
+            backgroundColor = Constants.OrangeCircle.color
+            self.snp.makeConstraints({ m in
+                m.width.height.equalTo(Constants.OrangeCircle.diameter)
+            })
+            layer.cornerRadius = Constants.OrangeCircle.diameter / 2
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+    }
 
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
@@ -121,6 +144,9 @@ class SearchViewController: BaseViewController {
         return collectionView
     }()
     
+    private let productOrangeCircle = OrangeCircle()
+    private let artistOrangeCircle = OrangeCircle()
+    
     private lazy var productButton: UIButton = {
         let button = UIButton()
         button.setTitle("작품", for: .normal)
@@ -131,6 +157,13 @@ class SearchViewController: BaseViewController {
             button.widthAnchor.constraint(equalToConstant: Constants.PageTab.buttonWidth),
             button.heightAnchor.constraint(equalToConstant: Constants.PageTab.buttonHeight)
         ])
+        if let titleLabel = button.titleLabel {
+            button.addSubview(productOrangeCircle)
+            productOrangeCircle.snp.makeConstraints({ m in
+                m.left.equalTo(titleLabel.snp.right).offset(Constants.OrangeCircle.leftMargin)
+                m.centerY.equalTo(titleLabel.snp.centerY).offset(-Constants.OrangeCircle.centerDistanceFromButtonLabel)
+            })
+        }
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             if self.currentViewController == self.artistSearchViewController {
@@ -155,6 +188,13 @@ class SearchViewController: BaseViewController {
             button.widthAnchor.constraint(equalToConstant: Constants.PageTab.buttonWidth),
             button.heightAnchor.constraint(equalToConstant: Constants.PageTab.buttonHeight)
         ])
+        if let titleLabel = button.titleLabel {
+            button.addSubview(artistOrangeCircle)
+            artistOrangeCircle.snp.makeConstraints({ m in
+                m.left.equalTo(titleLabel.snp.right).offset(Constants.OrangeCircle.leftMargin)
+                m.centerY.equalTo(titleLabel.snp.centerY).offset(-Constants.OrangeCircle.centerDistanceFromButtonLabel)
+            })
+        }
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             if self.currentViewController == self.productSearchViewController {
@@ -258,6 +298,13 @@ class SearchViewController: BaseViewController {
     }
     
     // MARK: - Setup
+    override func setupBindings() {
+        viewModel.$searchResult.sink(receiveValue: { data in
+            guard let data else { return }
+            self.productOrangeCircle.isHidden = data.products.isEmpty
+            self.artistOrangeCircle.isHidden = data.artists.isEmpty
+        }).store(in: &subscriptions)
+    }
 
     override func setupNavigationBar() {
         navigationController?.isNavigationBarHidden = true
@@ -375,6 +422,8 @@ class SearchViewController: BaseViewController {
     }
 }
 
+
+// MARK: - SearchBarDelegate
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchQuery = searchBar.text else { return }

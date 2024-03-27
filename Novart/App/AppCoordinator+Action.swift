@@ -16,4 +16,12 @@ extension AppCoordinator {
         guard let coordinator = UIApplication.shared.appCoordinator else { return }
         URLSchemeHandler(coordinator: coordinator).execute(url: url)
     }
+    
+    // MARK: - Notification
+    
+    @MainActor
+    func handleNotification(_ notification: NotificationModel) {
+        guard let coordinator = UIApplication.shared.appCoordinator else { return }
+        NotificationNavigationHandler(coordinator: coordinator).execute(notification: notification)
+    }
 }

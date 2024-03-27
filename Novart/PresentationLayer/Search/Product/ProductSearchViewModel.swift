@@ -13,9 +13,16 @@ final class ProductSearchViewModel {
     var downloadInteractor: SearchDownloadInteractor = SearchDownloadInteractor()
     
     @Published var products: [ProductModel]
-        
-    init(data: [ProductModel], coordinator: SearchCoordinator?) {
-        self.products = data
+    var searchResultData: SearchResultModel?
+    var curPageNum: Int32 = 0
+    var isLastPage: Bool
+    var fetchedPages: [Int32] = [0]
+    var isPageLoading = false
+    
+    init(data: SearchResultModel?, coordinator: SearchCoordinator?) {
+        self.products = data?.products ?? []
+        self.searchResultData = data
+        self.isLastPage = data?.isLastPage.products ?? true
         self.coordinator = coordinator
     }
     
@@ -25,11 +32,27 @@ final class ProductSearchViewModel {
     }
 }
 
+
+// MARK: - Pagination
 extension ProductSearchViewModel {
-//    func fetchData() {
-//        Task {
-//            let items = try await downloadInteractor.fetchProductItems()
-//            searchResultSubject.send(items)
-//        }
-//    }
+    func loadMoreItems() {
+        Task {
+            do {
+                guard let searchResultData else { return }
+                isPageLoading = true
+                let response = try await downloadInteractor.searchProducts(query: searchResultData.query, pageNo: curPageNum + 1, category: searchResultData.category)
+                isLastPage = response.last
+                products.append(contentsOf: response.content)
+                curPageNum = Int32(response.pageable.pageNumber) + 1
+            } catch {
+                print(error.localizedDescription)
+            }
+            isPageLoading = false
+        }
+    }
+    
+    func scrollViewDidReachBottom() {
+        guard !isLastPage, !isPageLoading else { return }
+        loadMoreItems()
+    }
 }

@@ -15,6 +15,8 @@ final class MyPageViewModel {
     @Published var exhibitions = [MyPageExhibition]()
     var isInterestsEmpty = false
     var isFollowingsEmpty = false
+    var isStartAsPush = false
+    var isInitialLoadFinished = false
     
     let userId: Int64?
     @Published var otherUser: PlainUser?
@@ -36,22 +38,6 @@ final class MyPageViewModel {
     init(coordinator: MyPageCoordinator, userId: Int64? = nil) {
         self.coordinator = coordinator
         self.userId = userId
-//        for i in 1...20 {
-//            if i == 1 || i == 2 {
-//                interests.append(ProductModel(id: 0, name: "---?????---", artistNickname: "승언", thumbnailImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647"))
-//            } else {
-//                interests.append(ProductModel(id: 0, name: "abcde", artistNickname: "승언", thumbnailImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647"))
-//            }
-//        }
-//        for _ in 1...20 {
-//            followings.append(ArtistModel(id: 1, nickname: "dd", backgroundImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647", profileImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647"))
-//        }
-//        for _ in 1...20 {
-//            works.append(MyPageWork(id: 0, name: "??", thumbnailImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647", nickname: "safdsfd"))
-//        }
-//        for _ in 1...20 {
-//            exhibitions.append(MyPageExhibition(id: 0, name: "000---", thumbnailImgUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647", artistName: "me"))
-//        }
     }
     
     func setCategory(_ category: MyPageCategory) {
@@ -88,30 +74,40 @@ extension MyPageViewModel {
                 async let worksTask = interactor.fetchMyPageWorks(userId: uid)
                 async let exhibitionsTask = interactor.fetchMyPageExhibitions(userId: uid)
                 
-                (self.interests, self.followings, self.works, self.exhibitions) = try await (interestsTask, followingsTask, worksTask, exhibitionsTask)
+                var interests = [ProductModel]()
+                var followings = [ArtistModel]()
+                var works = [MyPageWork]()
+                var exhibitions = [MyPageExhibition]()
                 
+                (interests, followings, works, exhibitions) = try await (interestsTask, followingsTask, worksTask, exhibitionsTask)
                 
-                if self.interests.isEmpty && userState == .me {
+                if interests.isEmpty && userState == .me {
                     isInterestsEmpty = true
-                    self.interests = try await interactor.fetchRecommendInterests()
-                }
-                
-                if self.followings.isEmpty && userState == .me {
-                    isFollowingsEmpty = true
-                    self.followings = try await interactor.fetchRecommendFollowings()
-                }
-                
-                if self.userState == .other {
-                    setCategory(.Work)
+                    interests = try await interactor.fetchRecommendInterests()
                 } else {
-                    setCategory(.Interest)
+                    isInterestsEmpty = false
                 }
-//                for _ in 1...20 {
-//                    works.append(MyPageWork(id: 2, name: "ㅎㅎㅎ", thumbnailImageUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647", nickname: "safdsfd"))
-//                }
-//                for _ in 1...20 {
-//                    exhibitions.append(MyPageExhibition(id: 1, name: "000---", thumbnailImgUrl: "https://imgnews.pstatic.net/image/311/2024/01/10/0001679824_001_20240110120004024.png?type=w647", artistName: "me"))
-//                }
+                
+                if followings.isEmpty && userState == .me {
+                    isFollowingsEmpty = true
+                    followings = try await interactor.fetchRecommendFollowings()
+                } else {
+                    isFollowingsEmpty = false
+                }
+                
+                self.interests = interests
+                self.followings = followings
+                self.works = works
+                self.exhibitions = exhibitions
+                
+                if !isInitialLoadFinished {
+                    isInitialLoadFinished = true
+                    if self.userState == .other {
+                        setCategory(.Work)
+                    } else {
+                        setCategory(.Interest)
+                    }
+                }
             } catch {
                 print(error.localizedDescription)
             }
@@ -135,6 +131,19 @@ extension MyPageViewModel {
     
     func unFollow(userId: Int64) async throws -> EmptyResponseModel {
         try await interactor.unFollow(userId: userId)
+    }
+    
+    func getItemCount() -> Int {
+        switch selectedCategory {
+        case .Interest:
+            return interests.count
+        case .Following:
+            return followings.count
+        case .Work:
+            return works.count
+        case .Exhibition:
+            return exhibitions.count
+        }
     }
 }
 

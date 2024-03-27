@@ -24,4 +24,8 @@ extension APIClient {
     static func putDeviceToken(deviceToken: String) async throws -> EmptyResponseModel {
         try await APIClient.request(target: UserTarget.putDeviceToken(deviceToken: deviceToken), type: EmptyResponseModel.self)
     }
+    
+    static func testNotification() async throws -> EmptyResponseModel {
+        try await APIClient.request(target: UserTarget.deviceTokenTest(deviceToken: "cMckIXTlVkePlX54pfzADd:APA91bFnqk0--7OoyBVEMqqFVYNhQmn9XS9bMBkpY4jDFBSaei2N9eGdBded-e6OXEdQ961_iIokM8cbtUD3LCx2wtr_7VdR0bTylIrUp2Telf3RrcbTSQbNiaR6_hGtou4H4HM8yjJV"), type: EmptyResponseModel.self)
+    }
 }

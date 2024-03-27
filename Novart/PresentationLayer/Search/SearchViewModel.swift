@@ -15,14 +15,14 @@ final class SearchViewModel {
     var categoryItems: [CategoryType] = CategoryType.allCases
     var productViewModel: ProductSearchViewModel
     var artistViewModel: ArtistSearchViewModel
-    var searchResult: SearchResultModel?
+    @Published var searchResult: SearchResultModel?
     var currentCategory: CategoryType
     var currentQuery: String
     
     init(data: SearchResultModel?, coordinator: SearchCoordinator) {
         self.coordinator = coordinator
-        self.productViewModel = ProductSearchViewModel(data: data?.products ?? [], coordinator: coordinator)
-        self.artistViewModel = ArtistSearchViewModel(data: data?.artists ?? [], coordinator: coordinator)
+        self.productViewModel = ProductSearchViewModel(data: data, coordinator: coordinator)
+        self.artistViewModel = ArtistSearchViewModel(data: data, coordinator: coordinator)
         self.currentCategory = data?.category ?? .all
         self.currentQuery = data?.query ?? ""
         self.searchResult = data
@@ -57,6 +57,14 @@ extension SearchViewModel {
                     
                     productViewModel.products = productResult.content
                     artistViewModel.artists = artistResult.content
+
+                    productViewModel.searchResultData = SearchResultModel(query: "", products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
+                    productViewModel.isLastPage = productResult.last
+                    
+                    artistViewModel.searchResultData = SearchResultModel(query: "", products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
+                    artistViewModel.isLastPage = artistResult.last
+                    
+                    searchResult = SearchResultModel(query: "", products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -104,6 +112,6 @@ extension SearchViewModel {
         let productResult = try await productData
         let artistResult = try await artistData
         
-        return SearchResultModel(query: query, products: productResult.content, artists: artistResult.content, category: currentCategory)
+        return SearchResultModel(query: query, products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
     }
 }

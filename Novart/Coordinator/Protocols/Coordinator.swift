@@ -47,6 +47,9 @@ extension Coordinator {
     }
     
     func end() {
+        for coordinator in self.childCoordinators {
+            coordinator.end()
+        }
         parentCoordinator?.remove(coordinators: self)
     }
     

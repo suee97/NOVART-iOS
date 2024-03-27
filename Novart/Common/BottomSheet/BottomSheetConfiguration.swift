@@ -33,7 +33,7 @@ public struct BottomSheetConfiguration {
     
     public var widthFollowsPreferredContentSizeWhenEdgeAttached: Bool = true
     
-    private let customMaxHeight = UIScreen.main.bounds.height * 0.8
+    private let customMaxHeight = UIScreen.main.bounds.height
     
     public init() {}
     
