@@ -76,17 +76,18 @@ extension HomeViewModel {
     }
     
     func loadMoreItems() {
-        isFetching = true
+        guard !isFetching else { return }
         Task {
             do {
+                isFetching = true
                 let items = try await downloadInteractor.fetchFeedItems(category: selectedCategory, lastId: feedData.last?.id)
                 feedData.append(contentsOf: items.map { FeedItemViewModel($0) })
                 isPaginationFinished = (items.isEmpty)
             } catch {
                 print(error)
             }
+            isFetching = false
         }
-        isFetching = false
     }
     
     @MainActor
@@ -112,6 +113,7 @@ extension HomeViewModel {
     }
     
     func onRefresh() async {
+        guard !isFetching else { return }
         do {
             isFetching = true
             try await Task.sleep(seconds: 1) // Test

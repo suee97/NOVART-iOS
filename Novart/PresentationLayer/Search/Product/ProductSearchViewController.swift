@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class ProductSearchViewController: BaseViewController {
+final class ProductSearchViewController: BaseViewController, PullToRefreshProtocol {
     
     // MARK: - Constants
     private enum Constants {
@@ -27,6 +27,14 @@ final class ProductSearchViewController: BaseViewController {
         }
     }
     
+    
+    // MARK: - Properties
+    var refreshControl: PlainRefreshControl
+    private var viewModel: ProductSearchViewModel
+    private var dataSource: ProductSearchDataSource
+    private var subscriptions: Set<AnyCancellable> = .init()
+    
+    
     // MARK: - UI
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
@@ -37,16 +45,12 @@ final class ProductSearchViewController: BaseViewController {
     
     private let noResultView = SearchNoResultView()
     
-    private var viewModel: ProductSearchViewModel
-    private var dataSource: ProductSearchDataSource
-    
-    private var subscriptions: Set<AnyCancellable> = .init()
     
     // MARK: - Initialization
-
     init(viewModel: ProductSearchViewModel) {
         self.viewModel = viewModel
         self.dataSource = ProductSearchDataSource(collectionView: collectionView)
+        self.refreshControl = PlainRefreshControl()
         super.init()
     }
     
@@ -56,6 +60,7 @@ final class ProductSearchViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupRefreshControl()
     }
     
     override func setupView() {
@@ -91,6 +96,20 @@ final class ProductSearchViewController: BaseViewController {
                 }
             }
             .store(in: &subscriptions)
+    }
+    
+    func setupRefreshControl() {
+        collectionView.refreshControl = refreshControl
+        collectionView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+    }
+    
+    @objc func onRefresh() {
+        Task {
+            await viewModel.onRefresh()
+            await MainActor.run {
+                self.collectionView.refreshControl?.endRefreshing()
+            }
+        }
     }
 }
 
