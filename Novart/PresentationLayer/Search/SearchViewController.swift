@@ -301,8 +301,10 @@ class SearchViewController: BaseViewController {
     override func setupBindings() {
         viewModel.$searchResult.sink(receiveValue: { data in
             guard let data else { return }
-            self.productOrangeCircle.isHidden = data.products.isEmpty
-            self.artistOrangeCircle.isHidden = data.artists.isEmpty
+            DispatchQueue.main.async {
+                self.productOrangeCircle.isHidden = data.products.isEmpty
+                self.artistOrangeCircle.isHidden = data.artists.isEmpty
+            }
         }).store(in: &subscriptions)
     }
 
