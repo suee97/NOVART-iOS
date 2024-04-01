@@ -36,6 +36,7 @@ final class MyPageViewController: BaseViewController {
         enum CollectionView {
             static let itemSpacing: CGFloat = getRelativeWidth(from: 12)
             static let lineSpacing: CGFloat = getRelativeHeight(from: 12)
+            static let bottomMargin: CGFloat = 24
         }
         
         enum CellSize {
@@ -207,22 +208,18 @@ final class MyPageViewController: BaseViewController {
             switch value {
             case .Interest:
                 self.cellSize = Constants.CellSize.InterestCellSize
-//                self.cellCount = self.viewModel.interests.count
                 self.cellId = ProductCell.reuseIdentifier
                 self.cellType = ProductCell.self
             case .Following:
                 self.cellSize = Constants.CellSize.FollowingCellSize
-//                self.cellCount = self.viewModel.followings.count
                 self.cellId = SearchArtistCell.reuseIdentifier
                 self.cellType = SearchArtistCell.self
             case .Work:
                 self.cellSize = Constants.CellSize.WorkCellSize
-//                self.cellCount = self.viewModel.works.count
                 self.cellId = MyPageWorkCell.reuseIdentifier
                 self.cellType = MyPageWorkCell.self
             case .Exhibition:
                 self.cellSize = Constants.CellSize.ExhibitionCellSize
-//                self.cellCount = self.viewModel.exhibitions.count
                 self.cellId = MyPageExhibitionCell.reuseIdentifier
                 self.cellType = MyPageExhibitionCell.self
             }
@@ -290,6 +287,7 @@ final class MyPageViewController: BaseViewController {
         collectionView.bounces = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.delaysContentTouches = false
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: Constants.CollectionView.bottomMargin, right: 0)
         if viewModel.userState == .loggedOut { collectionView.isScrollEnabled = false }
         return collectionView
     }()
