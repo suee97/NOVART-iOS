@@ -187,17 +187,6 @@ final class CommentViewController: BaseViewController {
             closeButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
         ])
         
-        view.addSubview(tableView)
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.Title.bottomMargin),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.horizontalInsets),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalInsets),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        
         view.addSubview(inputBar)
         NSLayoutConstraint.activate([
             inputBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -205,6 +194,17 @@ final class CommentViewController: BaseViewController {
         ])
         inputBarBottomConstraint = inputBar.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         inputBarBottomConstraint?.isActive = true
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        view.addSubview(tableView)
+
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.Title.bottomMargin),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.horizontalInsets),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalInsets),
+            tableView.bottomAnchor.constraint(equalTo: inputBar.topAnchor)
+        ])
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
