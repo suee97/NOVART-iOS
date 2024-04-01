@@ -97,10 +97,13 @@ final class ProductInfoUploadViewController: BaseViewController {
         return view
     }()
     
-    private let scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        scrollView.addGestureRecognizer(tapGesture)
         return scrollView
     }()
     
@@ -332,6 +335,7 @@ final class ProductInfoUploadViewController: BaseViewController {
     private var cancellables: Set<AnyCancellable> = .init()
     private var recommendTagViewHeightConstraint: NSLayoutConstraint?
     private var recommendTagCalculatedHeight: CGFloat = 0
+    private var isKeyboardShowing = false
     
     // MARK: - Init
     
@@ -549,6 +553,16 @@ final class ProductInfoUploadViewController: BaseViewController {
                 }
                 .store(in: &cancellables)
         }
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(notification:)),
+            name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(notification:)),
+            name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func setupData() {
@@ -591,6 +605,41 @@ final class ProductInfoUploadViewController: BaseViewController {
         let idx = editModel.forSale ? 1 : 0
         self.viewModel.selectPriceTag(index: idx)
         self.priceTagView.selectItems(indexes: [idx])
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard !isKeyboardShowing else { return }
+        
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let keyboardHeight = keyboardSize.height
+            let currentOffset = scrollView.contentOffset
+            
+            if (tagTextField.isFirstResponder && currentOffset.y + keyboardHeight < tagLabel.frame.minY) || (priceTextField.isFirstResponder) {
+                let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+                self.scrollView.contentInset = contentInset
+                self.scrollView.scrollIndicatorInsets = contentInset
+                let newOffset = CGPoint(x: 0, y: currentOffset.y + keyboardSize.height)
+                self.scrollView.setContentOffset(newOffset, animated: true)
+            }
+        }
+        isKeyboardShowing = true
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        UIView.animate(withDuration: 0.3) {
+            self.scrollView.contentInset = .zero
+            self.scrollView.scrollIndicatorInsets = .zero
+        }
+        isKeyboardShowing = false
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        dismissKeyboard()
+        return true
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
 

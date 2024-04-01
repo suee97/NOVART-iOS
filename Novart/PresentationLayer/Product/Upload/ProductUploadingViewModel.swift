@@ -21,7 +21,7 @@ final class ProductUploadingViewModel {
     
     @Published var state: State = .uploading
     
-    let uploadingDesription: String = "앱을 종료하면 등록이 최소되니 잠시 기다려주세요"
+    let uploadingDesription: String = "앱을 종료하면 등록이 취소되니 잠시 기다려주세요"
     let completeDesription: String = "지금 바로 작가님의 작품을 확인해보세요"
     
     var stateText: String {
