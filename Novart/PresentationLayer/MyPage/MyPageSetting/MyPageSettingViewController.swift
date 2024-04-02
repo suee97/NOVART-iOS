@@ -121,9 +121,10 @@ final class MyPageSettingViewController: BaseViewController {
     
     
     // MARK: - UI
-    private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
+    private let scrollView: MyPageSettingScrollView = {
+        let scrollView = MyPageSettingScrollView()
         scrollView.delaysContentTouches = false
+        scrollView.canCancelContentTouches = true
         return scrollView
     }()
     
@@ -435,3 +436,14 @@ fileprivate final class SectionTitleLabel: UILabel {
     }
 }
 
+
+fileprivate class MyPageSettingScrollView: UIScrollView {
+
+    override func touchesShouldCancel(in view: UIView) -> Bool {
+        if view.isKind(of: UIButton.self) {
+          return true
+        }
+
+        return super.touchesShouldCancel(in: view)
+    }
+}
