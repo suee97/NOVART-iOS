@@ -123,7 +123,6 @@ final class MyPageSettingViewController: BaseViewController {
     // MARK: - UI
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.bounces = false
         scrollView.delaysContentTouches = false
         return scrollView
     }()
