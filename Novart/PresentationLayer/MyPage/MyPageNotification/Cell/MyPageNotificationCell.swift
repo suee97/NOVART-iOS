@@ -137,8 +137,6 @@ final class MyPageNotificationCell: UICollectionViewCell {
     
     // MARK: - Functions
     func update(notification: NotificationModel) {
-        guard let imgUrl = notification.imgUrl, let url = URL(string: imgUrl) else { return }
-        profileImageView.kf.setImage(with: url)
         notificationLabel.text = notification.message
         timeLabel.text = getTimeText(from: notification.createdAt)
         notificationId = notification.id
@@ -150,6 +148,12 @@ final class MyPageNotificationCell: UICollectionViewCell {
             contentView.backgroundColor = Constants.ContentView.unreadColor
             selectionView.backgroundColor = Constants.SelectionView.selectedColor
         }
+        
+        guard let imgUrl = notification.imageUrl, let url = URL(string: imgUrl) else {
+            profileImageView.image = UIImage(named: "default_profile_image")
+            return
+        }
+        profileImageView.kf.setImage(with: url)
     }
     
     func didHighlight(notification: NotificationModel) {

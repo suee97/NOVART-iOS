@@ -114,16 +114,16 @@ extension HomeViewModel {
     
     func onRefresh() async {
         guard !isFetching else { return }
+        isFetching = true
         do {
-            isFetching = true
             try await Task.sleep(seconds: 1) // Test
             let items = try await downloadInteractor.fetchFeedItems(category: selectedCategory, lastId: nil)
             feedData = items.map { FeedItemViewModel($0) }
             isPaginationFinished = (items.isEmpty)
             fetchedPages.removeAll()
-            isFetching = false
         } catch {
             print(error.localizedDescription)
         }
+        isFetching = false
     }
 }
