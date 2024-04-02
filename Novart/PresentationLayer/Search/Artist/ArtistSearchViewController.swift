@@ -14,6 +14,7 @@ final class ArtistSearchViewController: BaseViewController, PullToRefreshProtoco
     // MARK: - Constants
     private enum Constants {
         static let topMargin: CGFloat = 16
+        static let bottomMargin: CGFloat = 24
         static let screenWidth: CGFloat = UIScreen.main.bounds.width
         static let leadingMargin: CGFloat = 24
         static let trailingMargin: CGFloat = 24
@@ -38,7 +39,7 @@ final class ArtistSearchViewController: BaseViewController, PullToRefreshProtoco
     // MARK: - UI
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
-        collectionView.contentInset = UIEdgeInsets(top: Constants.topMargin, left: 0, bottom: 0, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: Constants.topMargin, left: 0, bottom: Constants.bottomMargin, right: 0)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
