@@ -284,8 +284,6 @@ final class MyPageViewController: BaseViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.backgroundColor = .clear
         collectionView.contentInsetAdjustmentBehavior = .never
-        collectionView.bounces = false
-        collectionView.showsVerticalScrollIndicator = false
         collectionView.delaysContentTouches = false
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: Constants.CollectionView.bottomMargin, right: 0)
         if viewModel.userState == .loggedOut { collectionView.isScrollEnabled = false }
@@ -771,6 +769,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        scrollView.bounces = (scrollView.contentOffset.y > 10)
         viewModel.setScrollHeight(collectionView.bounds.minY)
     }
 }

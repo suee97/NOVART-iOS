@@ -283,6 +283,8 @@
 		5BB4A8CE2B79EA7C00F06959 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 5BB4A8CD2B79EA7C00F06959 /* FirebaseMessaging */; };
 		5BB4A8DD2B848C8200F06959 /* SharePathManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB4A8DC2B848C8200F06959 /* SharePathManager.swift */; };
 		5BB4A8DF2B9D9B9C00F06959 /* MyPageSettingResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB4A8DE2B9D9B9C00F06959 /* MyPageSettingResponseModel.swift */; };
+		5BB4A8E22BAC97CC00F06959 /* PullToRefreshProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB4A8E12BAC97CC00F06959 /* PullToRefreshProtocol.swift */; };
+		5BB4A8E42BACB0A300F06959 /* PlainRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB4A8E32BACB0A300F06959 /* PlainRefreshControl.swift */; };
 		5BB933E02AF3A3AB000185D1 /* ColorThiefSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5BB9F19D2AEE6E4C00C347F3 /* ColorThiefSwift */; };
 		5BB933E12AF3A40D000185D1 /* ProductDetailExhibitionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3ECC6C2AE4F87E00790CB9 /* ProductDetailExhibitionCell.swift */; };
 		5BB933EC2AF3A876000185D1 /* ExhibitionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB933E42AF3A472000185D1 /* ExhibitionCell.swift */; };
@@ -600,6 +602,8 @@
 		5BAE07EE2B4AC06F007E5CF5 /* MyPageCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageCategory.swift; sourceTree = "<group>"; };
 		5BB4A8DC2B848C8200F06959 /* SharePathManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePathManager.swift; sourceTree = "<group>"; };
 		5BB4A8DE2B9D9B9C00F06959 /* MyPageSettingResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageSettingResponseModel.swift; sourceTree = "<group>"; };
+		5BB4A8E12BAC97CC00F06959 /* PullToRefreshProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullToRefreshProtocol.swift; sourceTree = "<group>"; };
+		5BB4A8E32BACB0A300F06959 /* PlainRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainRefreshControl.swift; sourceTree = "<group>"; };
 		5BB933E42AF3A472000185D1 /* ExhibitionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionCell.swift; sourceTree = "<group>"; };
 		5BB933E62AF3A472000185D1 /* ExhibitionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionCoordinator.swift; sourceTree = "<group>"; };
 		5BB933E72AF3A472000185D1 /* ExhibitionStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionStep.swift; sourceTree = "<group>"; };
@@ -1086,6 +1090,7 @@
 		0ED9F0402B11ED4D00EDCD3C /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				5BB4A8E02BAC97AC00F06959 /* PullToRefresh */,
 				0E7FAD412B81EF98003C100D /* AlertController */,
 				0EE1F6C72B80D45A00756891 /* PassThroughView */,
 				0EE1F6C02B80D33C00756891 /* Snackbar */,
@@ -1692,6 +1697,15 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		5BB4A8E02BAC97AC00F06959 /* PullToRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				5BB4A8E12BAC97CC00F06959 /* PullToRefreshProtocol.swift */,
+				5BB4A8E32BACB0A300F06959 /* PlainRefreshControl.swift */,
+			);
+			path = PullToRefresh;
+			sourceTree = "<group>";
+		};
 		5BB933E22AF3A472000185D1 /* Exhibition */ = {
 			isa = PBXGroup;
 			children = (
@@ -2062,6 +2076,7 @@
 				0ED3356D2AF93A1A00DCC40A /* TagCollectionLayout.swift in Sources */,
 				0EE019152A482F0C00389A95 /* AppWindow.swift in Sources */,
 				5BFC07CF2B317CA10063EF89 /* NotificationDownloadInteractor.swift in Sources */,
+				5BB4A8E42BACB0A300F06959 /* PlainRefreshControl.swift in Sources */,
 				0E6C65B12B4A7870005E269E /* ProductUploadInteractor.swift in Sources */,
 				0EE019032A481DC600389A95 /* StackNavigator.swift in Sources */,
 				0EE255882ABC6662008CE0D1 /* CategoryTabButton.swift in Sources */,
@@ -2146,6 +2161,7 @@
 				5BDD4A222AC955C100937352 /* MyPageExhibitionCell.swift in Sources */,
 				0E9ED86C2A938AC4001E1C51 /* KeychainKey.swift in Sources */,
 				0E6C65A02B42AFBC005E269E /* ProductUploadingViewController.swift in Sources */,
+				5BB4A8E22BAC97CC00F06959 /* PullToRefreshProtocol.swift in Sources */,
 				5BDD4A252AC955C100937352 /* MyPageInterest.swift in Sources */,
 				0E79A3B82B9C20DF00140774 /* URLSchemeFactory.swift in Sources */,
 				0ED3356B2AF938A200DCC40A /* TagCell.swift in Sources */,

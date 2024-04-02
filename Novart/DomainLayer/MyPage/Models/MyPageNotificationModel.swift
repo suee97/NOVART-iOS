@@ -4,7 +4,7 @@ struct NotificationModel: Decodable {
     let id: Int64
     let type: NotificationType
     var status: NotificationStatus
-    let imgUrl: String?
+    let imageUrl: String?
     let senderId: Int64?
     let artId: Int64?
     let message: String?
@@ -47,7 +47,7 @@ extension NotificationModel {
         self.id = id
         self.type = type
         self.status = status
-        self.imgUrl = nil
+        self.imageUrl = nil
         self.senderId = Int64(senderId)
         self.artId = Int64(artId)
         self.message = message
