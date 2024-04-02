@@ -2,8 +2,8 @@ import UIKit
 import SnapKit
 import Combine
 
-final class MyPageNotificationViewController: BaseViewController {
-
+final class MyPageNotificationViewController: BaseViewController, PullToRefreshProtocol {
+    
     // MARK: - Constants
     private enum Constants {
         static let screenWidth: CGFloat = UIScreen.main.bounds.width
@@ -26,11 +26,13 @@ final class MyPageNotificationViewController: BaseViewController {
     // MARK: - Properties
     private var viewModel: MyPageNotificationViewModel
     private var cancellables = Set<AnyCancellable>()
+    var refreshControl: PlainRefreshControl
     
     
     // MARK: - LifeCycle
     init(viewModel: MyPageNotificationViewModel) {
         self.viewModel = viewModel
+        self.refreshControl = PlainRefreshControl()
         super.init()
     }
     
@@ -39,16 +41,17 @@ final class MyPageNotificationViewController: BaseViewController {
     }
     
     override func setupBindings() {
-        viewModel.$notifications.sink(receiveValue: { value in
-            print("📣 notification 개수: \(value.count)")
-            self.collectionView.reloadData()
-        }).store(in: &cancellables)
+        viewModel.$notifications
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { value in
+                self.collectionView.reloadData()
+            }).store(in: &cancellables)
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        viewModel.initNotifications()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         viewModel.fetchNotifications(notificationId: 0)
+        setupRefreshControl()
     }
     
     // MARK: - UI
@@ -82,9 +85,7 @@ final class MyPageNotificationViewController: BaseViewController {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(MyPageNotificationCell.self, forCellWithReuseIdentifier: MyPageNotificationCell.reuseIdentifier)
-        collectionView.bounces = false
         collectionView.delaysContentTouches = false
-        collectionView.showsVerticalScrollIndicator = false
         return collectionView
     }()
     
@@ -103,6 +104,20 @@ final class MyPageNotificationViewController: BaseViewController {
     private func setUpDelegate() {
         collectionView.delegate = self
         collectionView.dataSource = self
+    }
+    
+    func setupRefreshControl() {
+        collectionView.refreshControl = refreshControl
+        collectionView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+    }
+    
+    @objc func onRefresh() {
+        Task {
+            await viewModel.onRefresh()
+            await MainActor.run {
+                self.collectionView.refreshControl?.endRefreshing()
+            }
+        }
     }
 }
 
@@ -152,16 +167,8 @@ extension MyPageNotificationViewController: UICollectionViewDelegate, UICollecti
 // MARK: - UIScrollViewDelegate
 extension MyPageNotificationViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if viewModel.notifications.isEmpty { return }
-        
         guard let visibleCells = collectionView.visibleCells as? [MyPageNotificationCell] else { return }
-        let ids = visibleCells.map{ $0.notificationId }
-        
-        if let lastId = viewModel.notifications.last?.id {
-            let isFetched = viewModel.isFetched[lastId] ?? false
-            if !isFetched && ids.contains(lastId) {
-                viewModel.fetchNotifications(notificationId: lastId)
-            }
-        }
+        let cellIds = visibleCells.compactMap{$0.notificationId}
+        viewModel.scrollViewDidReachBottom(cellIds: cellIds)
     }
 }

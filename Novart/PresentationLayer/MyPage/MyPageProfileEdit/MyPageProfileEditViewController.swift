@@ -270,8 +270,6 @@ final class MyPageProfileEditViewController: BaseViewController {
     // MARK: - UI
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.bounces = false
-        scrollView.showsVerticalScrollIndicator = false
         let gesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         gesture.cancelsTouchesInView = false
         scrollView.addGestureRecognizer(gesture)
