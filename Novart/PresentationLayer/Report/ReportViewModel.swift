@@ -8,11 +8,17 @@
 import Foundation
 import Combine
 
+enum ReportDomain {
+    case user
+    case product
+}
+
 final class ReportViewModel {
     private weak var coordinator: ReportCoordinator?
     let cleanInteractor: CleanInteractor = .init()
     
-    let userId: Int64
+    let id: Int64
+    let domain: ReportDomain
     
     var reportButtonEnableSubject: CurrentValueSubject<Bool, Never> = .init(false)
     var reportTypeUpdated: PassthroughSubject<ReportType?, Never> = .init()
@@ -25,8 +31,9 @@ final class ReportViewModel {
         }
     }
     
-    init(userId: Int64, coordinator: ReportCoordinator?) {
-        self.userId = userId
+    init(id: Int64, domain: ReportDomain, coordinator: ReportCoordinator?) {
+        self.id = id
+        self.domain = domain
         self.coordinator = coordinator
     }
     
@@ -67,7 +74,7 @@ extension ReportViewModel {
         Task {
             do {
                 if let selectedReportType {
-                    try await cleanInteractor.sendReport(userId: userId, reportType: selectedReportType)
+                    try await cleanInteractor.sendReport(id: id, reportType: selectedReportType)
                     reportDoneSubject.send(true)
                 }
             } catch {

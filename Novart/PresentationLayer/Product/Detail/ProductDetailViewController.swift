@@ -74,6 +74,7 @@ final class ProductDetailViewController: BaseViewController {
             static let followButtonWidth: CGFloat = 74
             static let profileButtonWidth: CGFloat = 106
             static let contactButtonColor: UIColor = UIColor.Common.grey04
+            static let contactButtonDisabledColor: UIColor = UIColor.Common.warmGrey02
             static let followButtonColor: UIColor = UIColor.Common.main
             static let followingButtonColor: UIColor = UIColor.Common.grey04
             static let profileButtonColor: UIColor = UIColor.Common.white
@@ -207,6 +208,11 @@ final class ProductDetailViewController: BaseViewController {
             button.widthAnchor.constraint(equalToConstant: Constants.ArtistInfo.contactButtonWidth),
             button.heightAnchor.constraint(equalToConstant: Constants.ArtistInfo.buttonHeight)
         ])
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.didTapContactButton()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -641,6 +647,7 @@ final class ProductDetailViewController: BaseViewController {
         }
         
         productInfoView.viewModel = data
+        contactButton.backgroundColor = viewModel.isContactEnabled ? Constants.ArtistInfo.contactButtonColor : Constants.ArtistInfo.contactButtonDisabledColor
     }
     
     private func setupRecommendData(data: ProductDetailRecommendData) {

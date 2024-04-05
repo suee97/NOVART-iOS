@@ -7,8 +7,20 @@
 
 import Foundation
 
-enum ReportType: String {
+enum ReportType {
+    case user(UserReportType)
+    case product(ProductReportType)
+}
+
+enum UserReportType: String {
+    
     case hateSpeech = "HATE_SPEECH"
     case transactionProblem = "TRANSACTION_PROBLEM"
     case fraud = "FRAUD"
+}
+
+enum ProductReportType: String {
+    case plagiarism = "PLAGIARISM"
+    case sexualAbuse = "SEXUAL"
+    case violence = "VIOLENT"
 }

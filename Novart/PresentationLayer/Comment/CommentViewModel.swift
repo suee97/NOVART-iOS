@@ -15,6 +15,8 @@ final class CommentViewModel {
         case exhibition
     }
     
+    private weak var coordinator: (any Coordinator)?
+    
     private let commentInteractor: CommentInteractor = .init()
     
     let contentId: Int64
@@ -30,9 +32,48 @@ final class CommentViewModel {
         user?.profileImageUrl
     }
     
-    init(contentId: Int64, contentType: ContentType) {
+    init(contentId: Int64, contentType: ContentType, coordinator: (any Coordinator)? = nil) {
         self.contentId = contentId
         self.contentType = contentType
+        self.coordinator = coordinator
+    }
+    
+    @MainActor
+    func showLoginModal() {
+        switch coordinator {
+        case let coordinator as ProductDetailCoordinator:
+            coordinator.navigate(to: .login)
+            coordinator.commentViewModel = nil
+        case let coordinator as ExhibitionDetailCoordinator:
+            coordinator.navigate(to: .login)
+            coordinator.commentViewModel = nil
+            
+        case let coordinator as ExhibitionCoordinator:
+            coordinator.navigate(to: .login)
+            coordinator.commentViewModel = nil
+
+        default:
+            break
+        }
+    }
+    
+    @MainActor
+    func showProfileViewController(userId: Int64) {
+        switch coordinator {
+        case let coordinator as ProductDetailCoordinator:
+            coordinator.navigate(to: .artist(userId: userId))
+            coordinator.commentViewModel = nil
+            
+        case let coordinator as ExhibitionDetailCoordinator:
+            coordinator.navigate(to: .artist(userId: userId))
+            coordinator.commentViewModel = nil
+            
+        case let coordinator as ExhibitionCoordinator:
+            coordinator.navigate(to: .artist(userId: userId))
+            coordinator.commentViewModel = nil
+        default:
+            break
+        }
     }
     
 }

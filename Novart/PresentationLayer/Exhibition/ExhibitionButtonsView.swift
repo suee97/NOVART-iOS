@@ -7,6 +7,7 @@ protocol ExhibitionButtonsViewDelegate: AnyObject {
     func didTapCommentButton()
     func didTapShareButton()
     func didTapInfoButton()
+    func shouldShowLogin()
 }
 
 final class ExhibitionButtonsView: UIView {
@@ -295,12 +296,17 @@ final class ExhibitionButtonsView: UIView {
             setDimEffect(view: likeView, isPressed: true)
         } else if sender.state == .ended {
             setDimEffect(view: likeView, isPressed: false)
-            let updatedState = !viewModel.currentLikeStates[cellIndex]
-            let updatedCount = updatedState ? (viewModel.currentLikeCounts[cellIndex] + 1) :  (viewModel.currentLikeCounts[cellIndex] - 1)
-            updateLikeButton(likes: updatedState, newCount: updatedCount)
-            delegate?.didTapLikeButton(shouldLike: updatedState)
-            viewModel.currentLikeStates[cellIndex] = updatedState
-            viewModel.currentLikeCounts[cellIndex] = updatedCount
+            
+            if !Authentication.shared.isLoggedIn {
+                delegate?.shouldShowLogin()
+            } else {
+                let updatedState = !viewModel.currentLikeStates[cellIndex]
+                let updatedCount = updatedState ? (viewModel.currentLikeCounts[cellIndex] + 1) :  (viewModel.currentLikeCounts[cellIndex] - 1)
+                updateLikeButton(likes: updatedState, newCount: updatedCount)
+                delegate?.didTapLikeButton(shouldLike: updatedState)
+                viewModel.currentLikeStates[cellIndex] = updatedState
+                viewModel.currentLikeCounts[cellIndex] = updatedCount
+            }
         }
     }
     

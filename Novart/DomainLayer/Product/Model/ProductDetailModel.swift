@@ -61,15 +61,11 @@ struct ProductDetailModel: Decodable {
         self.artImageUrls = []
         self.artTagList = previewData.artTagList
         let user = Authentication.shared.user
-        self.artist = ProductDetailArtist(userId: user?.id ?? 0, nickname: user?.nickname ?? "", profileImageUrl: user?.profileImageUrl, following: false)
+        self.artist = ProductDetailArtist(userId: user?.id ?? 0, nickname: user?.nickname ?? "", profileImageUrl: user?.profileImageUrl, following: false, email: nil, openChatUrl: nil)
         self.createdAt = previewData.createdAt
         self.likes = false
         self.forSale = previewData.forSale
         self.category = previewData.selectedCategory
-    }
-    
-    func convertToEditModel() {
-//        let editModel = ProductUploadModel(id: id, name: name, description: description, price: price, coverImages: [], detailImages: [], artTagList: artTagList, forSale: forSale, category: .all)
     }
 }
 
@@ -78,4 +74,6 @@ struct ProductDetailArtist: Decodable {
     let nickname: String
     let profileImageUrl: String?
     let following: Bool
+    let email: String?
+    let openChatUrl: String?
 }

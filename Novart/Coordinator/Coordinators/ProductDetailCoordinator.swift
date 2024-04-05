@@ -7,7 +7,9 @@
 
 import UIKit
 
-final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep> {
+final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep>, LoginModalPresentableCoordinator {
+    
+    var commentViewModel: CommentViewModel?
     
     @LateInit
     var productId: Int64
@@ -26,13 +28,20 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep> {
             closeAndStartMyPageCoordinator(userId: userId)
         case let .edit(product):
             showProductEditScene(product: product)
+        case .login:
+            presentLoginModal()
+        case let .ask(user):
+            showAskSheet(user: user)
+        case .report:
+            showReportSheet(productId: productId)
         default:
             break
         }
     }
     
     private func showCommentViewController(productId: Int64) {
-        let viewModel = CommentViewModel(contentId: productId, contentType: .product)
+        let viewModel = CommentViewModel(contentId: productId, contentType: .product, coordinator: self)
+        commentViewModel = viewModel
         let viewController = CommentViewController(viewModel: viewModel)
         
         if let sheet = viewController.sheetPresentationController {
@@ -60,5 +69,30 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep> {
         productUploadCoordinator.productModel = product
         add(coordinators: productUploadCoordinator)
         productUploadCoordinator.startAsPush()
+    }
+    
+    @MainActor
+    private func showAskSheet(user: PlainUser) {
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = 248
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let coordinator = AskCoordinator(navigator: stackNavigator)
+        coordinator.user = user
+
+        add(coordinators: coordinator)
+        coordinator.start()
+    }
+    
+    @MainActor
+    private func showReportSheet(productId: Int64) {
+        let bottomSheetRoot = BottomSheetNavigationController()
+        bottomSheetRoot.bottomSheetConfiguration.customHeight = 390
+        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+        let coordinator = ReportCoordinator(navigator: stackNavigator)
+        coordinator.id = productId
+        coordinator.reportDomain = .product
+        
+        add(coordinators: coordinator)
+        coordinator.start()
     }
 }

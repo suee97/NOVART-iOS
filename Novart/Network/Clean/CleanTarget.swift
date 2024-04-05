@@ -10,12 +10,18 @@ import Alamofire
 
 enum CleanTarget: TargetType {
     
-    struct ReportRequestBody: Encodable {
+    struct UserReportRequestBody: Encodable {
         let userId: Int64
         let reportProblem: String
     }
     
-    case sendReport(userId: Int64, report: ReportType)
+    struct ProductReportRequestBody: Encodable {
+        let artId: Int64
+        let artReportProblem: String
+    }
+    
+    case sendUserReport(userId: Int64, report: UserReportType)
+    case sendProductReport(productId: Int64, report: ProductReportType)
     case requestBlock(userId: Int64)
     
     var baseURL: String {
@@ -24,8 +30,10 @@ enum CleanTarget: TargetType {
     
     var path: String {
         switch self {
-        case .sendReport:
+        case .sendUserReport:
             return "report"
+        case .sendProductReport:
+            return "report/arts"
         case let .requestBlock(userId):
             return "block/\(userId)"
         }
@@ -33,7 +41,7 @@ enum CleanTarget: TargetType {
     
     var method: HTTPMethod {
         switch self {
-        case .sendReport:
+        case .sendUserReport, .sendProductReport:
             return .post
         case .requestBlock:
             return .post
@@ -42,8 +50,10 @@ enum CleanTarget: TargetType {
     
     var parameters: RequestParams {
         switch self {
-        case let .sendReport(userId, report):
-            return .body(ReportRequestBody(userId: userId, reportProblem: report.rawValue))
+        case let .sendUserReport(userId, report):
+            return .body(UserReportRequestBody(userId: userId, reportProblem: report.rawValue))
+        case let .sendProductReport(productId, report):
+            return .body(ProductReportRequestBody(artId: productId, artReportProblem: report.rawValue))
         case .requestBlock:
             return .body(nil)
         }
