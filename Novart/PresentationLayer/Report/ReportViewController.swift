@@ -29,7 +29,8 @@ final class ReportViewController: BaseViewController {
         }
         
         enum TitleLabel {
-            static let text = "사용자 신고"
+            static let userReportText = "사용자 신고"
+            static let productReportText = "작품 신고"
             static let textColor = UIColor.Common.black
             static let font = UIFont.systemFont(ofSize: 16, weight: .semibold)
             static let topMargin: CGFloat = 8
@@ -48,6 +49,13 @@ final class ReportViewController: BaseViewController {
             static let topMargin: CGFloat = 34
         }
         
+        enum PlagiarismCheckRowView {
+            static let text = "표절한 작품 같아요 "
+            static let horizontalMargin: CGFloat = 24
+            static let height: CGFloat = 24
+            static let topMargin: CGFloat = 34
+        }
+        
         enum Divider1 {
             static let horizontalMargin: CGFloat = 24
             static let topMargin: CGFloat = 24
@@ -60,6 +68,13 @@ final class ReportViewController: BaseViewController {
             static let topMargin: CGFloat = 24
         }
         
+        enum SexualAbuseCheckRowView {
+            static let text = "성적인 컨텐츠가 포함되어 있어요"
+            static let horizontalMargin: CGFloat = 24
+            static let height: CGFloat = 24
+            static let topMargin: CGFloat = 24
+        }
+        
         enum Divider2 {
             static let horizontalMargin: CGFloat = 24
             static let topMargin: CGFloat = 24
@@ -67,6 +82,13 @@ final class ReportViewController: BaseViewController {
         
         enum FraudCheckRowView {
             static let text = "사기인 것 같아요"
+            static let horizontalMargin: CGFloat = 24
+            static let height: CGFloat = 24
+            static let topMargin: CGFloat = 24
+        }
+        
+        enum ViolenceCheckRowView {
+            static let text = "폭력, 혐오 및 위험한 콘텐츠가 포함되어 있어요"
             static let horizontalMargin: CGFloat = 24
             static let height: CGFloat = 24
             static let topMargin: CGFloat = 24
@@ -133,7 +155,7 @@ final class ReportViewController: BaseViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.TitleLabel.text
+        label.text = Constants.TitleLabel.userReportText
         label.textColor = Constants.TitleLabel.textColor
         label.font = Constants.TitleLabel.font
         return label
@@ -151,19 +173,37 @@ final class ReportViewController: BaseViewController {
     
     private lazy var abuseCheckRowView: CheckRowView = {
         let view = CheckRowView(text: Constants.AbuseCheckRowView.text)
-        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .hateSpeech) }
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .user(.hateSpeech)) }
         return view
     }()
     
     private lazy var issueCheckRowView: CheckRowView = {
         let view = CheckRowView(text: Constants.IssueCheckRowView.text)
-        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .transactionProblem) }
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .user(.transactionProblem)) }
         return view
     }()
     
     private lazy var fraudCheckRowView: CheckRowView = {
         let view = CheckRowView(text: Constants.FraudCheckRowView.text)
-        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .fraud) }
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .user(.fraud)) }
+        return view
+    }()
+    
+    private lazy var plagiarismCheckRowView: CheckRowView = {
+        let view = CheckRowView(text: Constants.PlagiarismCheckRowView.text)
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .product(.plagiarism)) }
+        return view
+    }()
+    
+    private lazy var sexualAbuseCheckRowView: CheckRowView = {
+        let view = CheckRowView(text: Constants.SexualAbuseCheckRowView.text)
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .product(.sexualAbuse)) }
+        return view
+    }()
+    
+    private lazy var violenceCheckRowView: CheckRowView = {
+        let view = CheckRowView(text: Constants.ViolenceCheckRowView.text)
+        view.onTapCheckBoxButton = { self.validateReportButton(checked: $0, reportType: .product(.violence)) }
         return view
     }()
     
@@ -243,12 +283,6 @@ final class ReportViewController: BaseViewController {
         view.addSubview(topBar)
         view.addSubview(titleLabel)
         view.addSubview(cancelButton)
-        view.addSubview(abuseCheckRowView)
-        view.addSubview(divider1)
-        view.addSubview(issueCheckRowView)
-        view.addSubview(divider2)
-        view.addSubview(fraudCheckRowView)
-        view.addSubview(reportButton)
         
         topBar.snp.makeConstraints({ m in
             m.centerX.equalToSuperview()
@@ -268,33 +302,80 @@ final class ReportViewController: BaseViewController {
             m.right.equalToSuperview().inset(Constants.CancelButton.rightMargin)
         })
         
-        abuseCheckRowView.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.AbuseCheckRowView.horizontalMargin)
-            m.height.equalTo(Constants.AbuseCheckRowView.height)
-            m.top.equalTo(titleLabel.snp.bottom).offset(Constants.AbuseCheckRowView.topMargin)
-        })
         
-        divider1.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.Divider1.horizontalMargin)
-            m.top.equalTo(abuseCheckRowView.snp.bottom).offset(Constants.Divider1.topMargin)
-        })
-        
-        issueCheckRowView.snp.makeConstraints({ m in
-            m.top.equalTo(divider1.snp.bottom).offset(Constants.IssueCheckRowView.topMargin)
-            m.height.equalTo(Constants.IssueCheckRowView.height)
-            m.left.right.equalToSuperview().inset(Constants.IssueCheckRowView.horizontalMargin)
-        })
-        
-        divider2.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.Divider2.horizontalMargin)
-            m.top.equalTo(issueCheckRowView.snp.bottom).offset(Constants.Divider2.topMargin)
-        })
-        
-        fraudCheckRowView.snp.makeConstraints({ m in
-            m.top.equalTo(divider2.snp.bottom).offset(Constants.FraudCheckRowView.topMargin)
-            m.height.equalTo(Constants.FraudCheckRowView.height)
-            m.left.right.equalToSuperview().inset(Constants.FraudCheckRowView.horizontalMargin)
-        })
+        switch viewModel.domain {
+        case .user:
+            
+            view.addSubview(abuseCheckRowView)
+            view.addSubview(divider1)
+            view.addSubview(issueCheckRowView)
+            view.addSubview(divider2)
+            view.addSubview(fraudCheckRowView)
+            view.addSubview(reportButton)
+            
+            abuseCheckRowView.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.AbuseCheckRowView.horizontalMargin)
+                m.height.equalTo(Constants.AbuseCheckRowView.height)
+                m.top.equalTo(titleLabel.snp.bottom).offset(Constants.AbuseCheckRowView.topMargin)
+            })
+            
+            divider1.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.Divider1.horizontalMargin)
+                m.top.equalTo(abuseCheckRowView.snp.bottom).offset(Constants.Divider1.topMargin)
+            })
+            
+            issueCheckRowView.snp.makeConstraints({ m in
+                m.top.equalTo(divider1.snp.bottom).offset(Constants.IssueCheckRowView.topMargin)
+                m.height.equalTo(Constants.IssueCheckRowView.height)
+                m.left.right.equalToSuperview().inset(Constants.IssueCheckRowView.horizontalMargin)
+            })
+            
+            divider2.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.Divider2.horizontalMargin)
+                m.top.equalTo(issueCheckRowView.snp.bottom).offset(Constants.Divider2.topMargin)
+            })
+            
+            fraudCheckRowView.snp.makeConstraints({ m in
+                m.top.equalTo(divider2.snp.bottom).offset(Constants.FraudCheckRowView.topMargin)
+                m.height.equalTo(Constants.FraudCheckRowView.height)
+                m.left.right.equalToSuperview().inset(Constants.FraudCheckRowView.horizontalMargin)
+            })
+        case .product:
+            view.addSubview(plagiarismCheckRowView)
+            view.addSubview(divider1)
+            view.addSubview(sexualAbuseCheckRowView)
+            view.addSubview(divider2)
+            view.addSubview(violenceCheckRowView)
+            view.addSubview(reportButton)
+            
+            plagiarismCheckRowView.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.PlagiarismCheckRowView.horizontalMargin)
+                m.height.equalTo(Constants.AbuseCheckRowView.height)
+                m.top.equalTo(titleLabel.snp.bottom).offset(Constants.PlagiarismCheckRowView.topMargin)
+            })
+            
+            divider1.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.Divider1.horizontalMargin)
+                m.top.equalTo(plagiarismCheckRowView.snp.bottom).offset(Constants.Divider1.topMargin)
+            })
+            
+            sexualAbuseCheckRowView.snp.makeConstraints({ m in
+                m.top.equalTo(divider1.snp.bottom).offset(Constants.SexualAbuseCheckRowView.topMargin)
+                m.height.equalTo(Constants.IssueCheckRowView.height)
+                m.left.right.equalToSuperview().inset(Constants.SexualAbuseCheckRowView.horizontalMargin)
+            })
+            
+            divider2.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.Divider2.horizontalMargin)
+                m.top.equalTo(sexualAbuseCheckRowView.snp.bottom).offset(Constants.Divider2.topMargin)
+            })
+            
+            violenceCheckRowView.snp.makeConstraints({ m in
+                m.top.equalTo(divider2.snp.bottom).offset(Constants.ViolenceCheckRowView.topMargin)
+                m.height.equalTo(Constants.FraudCheckRowView.height)
+                m.left.right.equalToSuperview().inset(Constants.ViolenceCheckRowView.horizontalMargin)
+            })
+        }
         
         reportButton.snp.makeConstraints({ m in
             m.left.right.equalToSuperview().inset(Constants.ReportButton.horizontalMargin)
@@ -324,22 +405,41 @@ final class ReportViewController: BaseViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] type in
                 guard let self else { return }
+                
                 if let type {
                     switch type {
-                    case.fraud:
-                        self.abuseCheckRowView.isChecked = false
-                        self.issueCheckRowView.isChecked = false
-                    case .hateSpeech:
-                        self.fraudCheckRowView.isChecked = false
-                        self.issueCheckRowView.isChecked = false
-                    case .transactionProblem:
-                        self.fraudCheckRowView.isChecked = false
-                        self.abuseCheckRowView.isChecked = false
+                    case let .user(reportType):
+                        switch reportType {
+                        case .fraud:
+                            self.abuseCheckRowView.isChecked = false
+                            self.issueCheckRowView.isChecked = false
+                        case .hateSpeech:
+                            self.fraudCheckRowView.isChecked = false
+                            self.issueCheckRowView.isChecked = false
+                        case .transactionProblem:
+                            self.fraudCheckRowView.isChecked = false
+                            self.abuseCheckRowView.isChecked = false
+                        }
+                    case let .product(reportType):
+                        switch reportType {
+                        case .plagiarism:
+                            self.sexualAbuseCheckRowView.isChecked = false
+                            self.violenceCheckRowView.isChecked = false
+                        case .sexualAbuse:
+                            self.plagiarismCheckRowView.isChecked = false
+                            self.violenceCheckRowView.isChecked = false
+                        case .violence:
+                            self.plagiarismCheckRowView.isChecked = false
+                            self.sexualAbuseCheckRowView.isChecked = false
+                        }
                     }
                 } else {
                     self.issueCheckRowView.isChecked = false
                     self.fraudCheckRowView.isChecked = false
                     self.abuseCheckRowView.isChecked = false
+                    self.plagiarismCheckRowView.isChecked = false
+                    self.sexualAbuseCheckRowView.isChecked = false
+                    self.violenceCheckRowView.isChecked = false
                 }
             }
             .store(in: &cancellables)

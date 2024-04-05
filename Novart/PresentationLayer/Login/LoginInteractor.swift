@@ -20,7 +20,9 @@ final class LoginInteractor: NSObject, ASAuthorizationControllerDelegate {
     
     @MainActor
     func performGoogleSignIn() async throws -> String {
-        guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else { throw ServiceError.rootViewControllerNotFound }
+        guard let presentingViewController = UIApplication.getTopViewController() else {
+            throw ServiceError.rootViewControllerNotFound
+        }
         let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController)
         let accessToken = result.user.accessToken.tokenString
         Authentication.shared.signInProvider = .google

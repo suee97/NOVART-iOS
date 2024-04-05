@@ -150,12 +150,16 @@ final class ExhibitionEndCell: UICollectionViewCell {
     
     @objc
     private func didTapLikeButton() {
-        let updatedLikeCount = currentLikeState ? (currentLikeCount - 1) : (currentLikeCount + 1)
-        self.updateLikeButton(like: !currentLikeState)
-        self.likeButton.setTitle(convertNumToString(updatedLikeCount))
-        self.input?.send((.didTapLikeButton(like: !currentLikeState), 0))
-        self.currentLikeState.toggle()
-        self.currentLikeCount = updatedLikeCount
+        if !Authentication.shared.isLoggedIn {
+            self.input?.send((.shouldShowLogin, 0))
+        } else {
+            let updatedLikeCount = currentLikeState ? (currentLikeCount - 1) : (currentLikeCount + 1)
+            self.updateLikeButton(like: !currentLikeState)
+            self.likeButton.setTitle(convertNumToString(updatedLikeCount))
+            self.input?.send((.didTapLikeButton(like: !currentLikeState), 0))
+            self.currentLikeState.toggle()
+            self.currentLikeCount = updatedLikeCount
+        }
     }
     
     private lazy var commentButton: DetailButton = {

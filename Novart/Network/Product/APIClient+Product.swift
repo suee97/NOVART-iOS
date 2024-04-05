@@ -36,4 +36,8 @@ extension APIClient {
     static func getOtherProdcutFromArtist(productId: Int64, artistId: Int64) async throws -> [ProductModel] {
         try await APIClient.request(target: ProductTarget.otherProductFromArtist(productId: productId, artistId: artistId), type: [ProductModel].self)
     }
+    
+    static func deleteProduct(id: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: ProductTarget.delete(id: id), type: EmptyResponseModel.self)
+    }
 }

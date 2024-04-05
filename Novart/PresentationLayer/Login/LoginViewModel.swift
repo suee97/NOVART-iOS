@@ -12,20 +12,24 @@ import Combine
 final class LoginViewModel {
     
     var isFirstLogin: PassthroughSubject<Bool, Never> = PassthroughSubject<Bool, Never>()
+    var isPresentedAsModal: Bool
     
     private weak var coordinator: LoginCoordinator?
     private let interactor: LoginInteractor
     
     convenience init(
+        isPresentedAsModal: Bool,
         coordinator: LoginCoordinator
     ) {
-        self.init(coordinator: coordinator, interactor: LoginInteractor())
+        self.init(isPresentedAsModal: isPresentedAsModal, coordinator: coordinator, interactor: LoginInteractor())
     }
     
     private init(
+        isPresentedAsModal: Bool,
         coordinator: LoginCoordinator,
         interactor: LoginInteractor
     ) {
+        self.isPresentedAsModal = isPresentedAsModal
         self.coordinator = coordinator
         self.interactor = interactor
     }

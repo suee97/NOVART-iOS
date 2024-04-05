@@ -164,6 +164,7 @@
 		0ECDFC152B12022D00F63921 /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDFC122B12022D00F63921 /* CommentModel.swift */; };
 		0ECDFC192B1202EB00F63921 /* APIClient+Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDFC172B1202EB00F63921 /* APIClient+Comment.swift */; };
 		0ECDFC1A2B1202EB00F63921 /* CommentTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDFC182B1202EB00F63921 /* CommentTarget.swift */; };
+		0ECE93E42BB2C32E00625BFB /* LoginModalPresentableCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECE93E32BB2C32E00625BFB /* LoginModalPresentableCoordinator.swift */; };
 		0ED335672AF9302000DCC40A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED335662AF9302000DCC40A /* TagView.swift */; };
 		0ED335692AF9310900DCC40A /* TagItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED335682AF9310900DCC40A /* TagItem.swift */; };
 		0ED3356B2AF938A200DCC40A /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED3356A2AF938A200DCC40A /* TagCell.swift */; };
@@ -489,6 +490,7 @@
 		0ECDFC122B12022D00F63921 /* CommentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		0ECDFC172B1202EB00F63921 /* APIClient+Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "APIClient+Comment.swift"; sourceTree = "<group>"; };
 		0ECDFC182B1202EB00F63921 /* CommentTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentTarget.swift; sourceTree = "<group>"; };
+		0ECE93E32BB2C32E00625BFB /* LoginModalPresentableCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModalPresentableCoordinator.swift; sourceTree = "<group>"; };
 		0ED335662AF9302000DCC40A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 		0ED335682AF9310900DCC40A /* TagItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagItem.swift; sourceTree = "<group>"; };
 		0ED3356A2AF938A200DCC40A /* TagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
@@ -1314,6 +1316,7 @@
 				0EE018F82A4817CA00389A95 /* Coordinator.swift */,
 				0EE019002A481C4300389A95 /* Dismissible.swift */,
 				0EE018FA2A4818D800389A95 /* Step.swift */,
+				0ECE93E32BB2C32E00625BFB /* LoginModalPresentableCoordinator.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -2057,6 +2060,7 @@
 				0E111B532B18CC5800A6BB95 /* FilterMenuCell.swift in Sources */,
 				0EE019A22A6BC59B00389A95 /* APIEventMonitor.swift in Sources */,
 				0E1E21282AECDDF900F15009 /* ProductDetailStep.swift in Sources */,
+				0ECE93E42BB2C32E00625BFB /* LoginModalPresentableCoordinator.swift in Sources */,
 				0EE019CD2A6BCD2B00389A95 /* UserTarget.swift in Sources */,
 				0E1E211C2AE531C900F15009 /* APIClient+Product.swift in Sources */,
 				0E6C659A2B417721005E269E /* Date+String.swift in Sources */,

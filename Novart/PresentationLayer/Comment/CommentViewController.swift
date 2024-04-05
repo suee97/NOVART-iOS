@@ -278,17 +278,38 @@ extension CommentViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentCell.reuseIdentifier, for: indexPath) as? CommentCell else { return UITableViewCell() }
+        cell.delegate = self
         cell.update(with: viewModel.comments[indexPath.row])
         return cell
     }
 }
 
 extension CommentViewController: UITextFieldDelegate {
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if Authentication.shared.isLoggedIn {
+            return true
+        } else {
+            dismiss(animated: true) { [weak self] in
+                self?.viewModel.showLoginModal()
+            }
+            return false
+        }
+    }
+    
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if let text = textField.text, !text.isEmpty {
             sendButton.isEnabled = true
         } else {
             sendButton.isEnabled = false
+        }
+    }
+}
+
+extension CommentViewController: CommentCellDelegate {
+    func didTapUserProfile(userId: Int64) {
+        dismiss(animated: true) { [weak self] in
+            self?.viewModel.showProfileViewController(userId: userId)
         }
     }
 }

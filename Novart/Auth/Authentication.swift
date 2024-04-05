@@ -18,6 +18,10 @@ final class Authentication {
     
     let userInteractor: UserInteractor = .init()
     
+    var isLoggedIn: Bool {
+        user != nil
+    }
+    
     func logoutUser() {
         signInProvider = nil
         providerAccessToken = nil

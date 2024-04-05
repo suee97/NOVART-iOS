@@ -1,6 +1,9 @@
 import UIKit
 
-final class ExhibitionCoordinator: BaseStackCoordinator<ExhibitionStep> {
+final class ExhibitionCoordinator: BaseStackCoordinator<ExhibitionStep>, LoginModalPresentableCoordinator {
+    
+    var commentViewModel: CommentViewModel?
+
     override func start() {
         super.start()
         let viewModel = ExhibitionViewModel(coordinator: self)
@@ -23,6 +26,10 @@ final class ExhibitionCoordinator: BaseStackCoordinator<ExhibitionStep> {
             showExhibitionDetailScene(exhibitionId: id)
         case let .comment(id):
             showCommentViewController(exhibitionId: id)
+        case .login:
+            presentLoginModal()
+        case let .artist(userId):
+            showUserProfile(userId: userId)
         }
     }
     
@@ -39,16 +46,22 @@ final class ExhibitionCoordinator: BaseStackCoordinator<ExhibitionStep> {
     
     @MainActor
     private func showCommentViewController(exhibitionId: Int64) {
-        let viewModel = CommentViewModel(contentId: exhibitionId, contentType: .exhibition)
+        let viewModel = CommentViewModel(contentId: exhibitionId, contentType: .exhibition, coordinator: self)
+        commentViewModel = viewModel
         let viewController = CommentViewController(viewModel: viewModel)
         let bottomSheetNavigationController = BottomSheetNavigationController()
         bottomSheetNavigationController.pushViewController(viewController, animated: false)
-        let height = UIScreen.main.bounds.height - 55
-//        var configuration = BottomSheetConfiguration()
-//        configuration.customHeight = height
+        let height = UIScreen.main.bounds.height - 132
         bottomSheetNavigationController.bottomSheetConfiguration.customHeight = height
-        bottomSheetNavigationController.bottomSheetConfiguration.isModalInPresentation = false
         bottomSheetNavigationController.modalPresentationStyle = .pageSheet
         navigator.rootViewController.presentSheet(bottomSheetNavigationController, with: bottomSheetNavigationController.bottomSheetConfiguration)
+    }
+    
+    @MainActor
+    private func showUserProfile(userId: Int64) {
+        let myPageCoordinator = MyPageCoordinator(navigator: navigator)
+        myPageCoordinator.userId = userId
+        add(coordinators: myPageCoordinator)
+        myPageCoordinator.startAsPush()
     }
 }

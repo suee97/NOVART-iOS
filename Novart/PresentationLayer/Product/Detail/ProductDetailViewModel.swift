@@ -37,6 +37,15 @@ final class ProductDetailViewModel {
         return Authentication.shared.user?.id == artistId
     }
     
+    var isContactEnabled: Bool {
+        guard let productModel = productDetailSubject.value else { return false }
+        if (productModel.artist.email != nil) || (productModel.artist.openChatUrl != nil) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     init(productId: Int64, coordinator: ProductDetailCoordinator) {
         self.coordinator = coordinator
         self.productId = productId
@@ -141,23 +150,47 @@ extension ProductDetailViewModel {
         return images
     }
     
+    @MainActor
     func didTapFollowButton() {
-        if isFollowingSubject.value {
-            isFollowingSubject.send(false)
-            makeCancelFollowRequest()
+        if !Authentication.shared.isLoggedIn {
+            coordinator?.navigate(to: .login)
         } else {
-            isFollowingSubject.send(true)
-            makeFollowRequest()
+            if isFollowingSubject.value {
+                isFollowingSubject.send(false)
+                makeCancelFollowRequest()
+            } else {
+                isFollowingSubject.send(true)
+                makeFollowRequest()
+            }
         }
     }
     
-    func didTapLikeButton() {
-        if isLikedSubject.value {
-            isLikedSubject.send(false)
-            makeCancelLikeRequest()
+    @MainActor
+    func didTapContactButton() {
+        
+        guard isContactEnabled else { return }
+        
+        if !Authentication.shared.isLoggedIn {
+            coordinator?.navigate(to: .login)
         } else {
-            isLikedSubject.send(true)
-            makeLikeRequest()
+            guard let product = productDetailSubject.value else { return }
+            let user = convertArtistToUserModel(prouctModel: product)
+            coordinator?.navigate(to: .ask(user: user))
+        }
+    }
+    
+    @MainActor
+    func didTapLikeButton() {
+        if !Authentication.shared.isLoggedIn {
+            coordinator?.navigate(to: .login)
+        } else {
+            if isLikedSubject.value {
+                isLikedSubject.send(false)
+                makeCancelLikeRequest()
+            } else {
+                isLikedSubject.send(true)
+                makeLikeRequest()
+            }
         }
     }
     
@@ -170,8 +203,13 @@ extension ProductDetailViewModel {
         showCommentViewController()
     }
     
+    @MainActor
     func didTapMoreButton() {
-        showMoreActionSheet()
+        if !Authentication.shared.isLoggedIn {
+            coordinator?.navigate(to: .login)
+        } else {
+            showMoreActionSheet()
+        }
     }
     
     @MainActor
@@ -222,6 +260,11 @@ extension ProductDetailViewModel {
         didEnterEdit = true
         coordinator?.navigate(to: .edit(product: productEditModel))
     }
+    
+    @MainActor
+    func showReportSheet() {
+        coordinator?.navigate(to: .report)
+    }
 }
 
 extension ProductDetailViewModel {
@@ -269,6 +312,17 @@ extension ProductDetailViewModel {
             }
         }
     }
+    
+    func deleteProduct() {
+        Task {
+            do {
+                try await productInteractor.deleteProduct(id: productId)
+                await closeCoordinator()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
 
 extension ProductDetailViewModel {
@@ -293,16 +347,18 @@ extension ProductDetailViewModel {
                     self?.showProductEditScene()
                 }
             }
-            let deleteAction = AlertAction(title: "작품 삭제", style: .destructive) { _ in
-                print("작품 삭제")
+            let deleteAction = AlertAction(title: "작품 삭제", style: .destructive) { [weak self] _ in
+                self?.deleteProduct()
             }
             
             alertController.addAction(editAction)
             alertController.addAction(deleteAction)
             
         } else {
-            let reportAction = AlertAction(title: "신고하기", style: .destructive) { _ in
-                print("신고하기")
+            let reportAction = AlertAction(title: "신고하기", style: .destructive) { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.showReportSheet()
+                }
             }
             alertController.addAction(reportAction)
         }
@@ -317,5 +373,22 @@ extension ProductDetailViewModel {
         imageRetrieveQueue.async { [weak self] in
             self?.coverImageData.append(image)
         }
+    }
+}
+
+extension ProductDetailViewModel {
+    private func convertArtistToUserModel(prouctModel: ProductDetailModel) -> PlainUser {
+        let artist = prouctModel.artist
+        return PlainUser(
+            id: artist.userId,
+            nickname: artist.nickname,
+            profileImageUrl: artist.profileImageUrl,
+            backgroundImageUrl: nil,
+            tags: [],
+            jobs: [],
+            email: prouctModel.artist.email,
+            openChatUrl: prouctModel.artist.openChatUrl,
+            following: artist.following
+        )
     }
 }
