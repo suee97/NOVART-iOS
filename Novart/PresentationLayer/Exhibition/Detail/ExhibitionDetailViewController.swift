@@ -55,7 +55,10 @@ final class ExhibitionDetailViewController: BaseViewController {
         case didTapFollowButton(following: Bool)
         case didTapLikeButton(like: Bool)
         case didTapShareButton
+        case didTapContactButton
         case didTapCommentButton
+        case shouldShowLogin
+        case shouldShowProfile
     }
         
     // MARK: - Init
@@ -150,6 +153,12 @@ final class ExhibitionDetailViewController: BaseViewController {
                     break
                 case .didTapCommentButton:
                     self.viewModel.showCommentViewController()
+                case .didTapContactButton:
+                    self.viewModel.didTapContactButton(userId: id)
+                case.shouldShowLogin:
+                    self.viewModel.showLoginModal()
+                case .shouldShowProfile:
+                    self.viewModel.showArtistProfile(userId: id)
                 }
             }
             .store(in: &cancellables)

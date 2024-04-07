@@ -8,6 +8,10 @@
 import UIKit
 import Kingfisher
 
+protocol CommentCellDelegate: AnyObject {
+    func didTapUserProfile(userId: Int64)
+}
+
 final class CommentCell: UITableViewCell {
     
     enum Constants {
@@ -22,7 +26,7 @@ final class CommentCell: UITableViewCell {
         }
         
         enum Date {
-            static let font: UIFont = .systemFont(ofSize: 16, weight: .regular)
+            static let font: UIFont = .systemFont(ofSize: 12, weight: .regular)
             static let textColor: UIColor = UIColor.Common.grey02
             static let bottomMargin: CGFloat = 8
         }
@@ -44,6 +48,9 @@ final class CommentCell: UITableViewCell {
         label.textColor = Constants.Name.textColor
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfile))
+        label.addGestureRecognizer(tapGestureRecognizer)
+        label.isUserInteractionEnabled = true
         return label
     }()
     
@@ -74,8 +81,14 @@ final class CommentCell: UITableViewCell {
             imageView.heightAnchor.constraint(equalToConstant: Constants.Profile.size),
             imageView.widthAnchor.constraint(equalToConstant: Constants.Profile.size)
         ])
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfile))
+        imageView.addGestureRecognizer(tapGestureRecognizer)
         return imageView
     }()
+    
+    weak var delegate: CommentCellDelegate?
+    private var data: CommentModel?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -97,7 +110,7 @@ final class CommentCell: UITableViewCell {
             profileImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nameLabel.topAnchor.constraint(equalTo: profileImageView.topAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: Constants.Profile.trailingMargin),
-            dateLabel.topAnchor.constraint(equalTo: nameLabel.topAnchor),
+            dateLabel.bottomAnchor.constraint(equalTo: nameLabel.bottomAnchor),
             dateLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: Constants.Name.trailingMargin)
         ])
         
@@ -110,14 +123,34 @@ final class CommentCell: UITableViewCell {
         ])
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        data = nil
+        dateLabel.text = nil
+        nameLabel.text = nil
+        contentLabel.text = nil
+        profileImageView.removeImage()
+        delegate = nil
+    }
+    
 }
 
 extension CommentCell {
     func update(with data: CommentModel) {
+        self.data = data
         let url = URL(string: data.profileImageUrl ?? "")
         profileImageView.setImage(with: url)
         nameLabel.text = data.nickname
         dateLabel.text = data.createdAt.toDateFormattedString()
         contentLabel.text = data.content
+    }
+}
+
+extension CommentCell {
+    @objc
+    private func didTapUserProfile() {
+        guard let data else { return }
+        let userId = data.userId
+        delegate?.didTapUserProfile(userId: userId)
     }
 }

@@ -18,6 +18,10 @@ final class ExhibitionArtItem: ExhibitionDetailItem {
     let detailImages: [ExhibitionDetailImageInfoModel]
     let artistInfo: ExhibitionArtistFollowInfoModel
     
+    var isContactEnabled: Bool {
+        artistInfo.email != nil || artistInfo.openChatUrl != nil 
+    }
+    
     init(artId: Int64, description: String, title: String, subtitle: String, thumbnailImageUrls: [String], detailImages: [ExhibitionDetailImageInfoModel], artistInfo: ExhibitionArtistFollowInfoModel) {
         self.artId = artId
         self.description = description

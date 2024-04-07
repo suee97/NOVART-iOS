@@ -29,7 +29,7 @@ struct ProductPreviewModel {
         self.detailImages = uploadModel.detailImages
         self.selectedCategory = uploadModel.category
         let user = Authentication.shared.user
-        self.artist = ProductDetailArtist(userId: user?.id ?? 0, nickname: user?.nickname ?? "", profileImageUrl: user?.profileImageUrl, following: false)
+        self.artist = ProductDetailArtist(userId: user?.id ?? 0, nickname: user?.nickname ?? "", profileImageUrl: user?.profileImageUrl, following: false, email: nil, openChatUrl: nil)
         self.forSale = uploadModel.forSale
     }
 }

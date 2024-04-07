@@ -66,17 +66,27 @@ final class ExhibitionViewModel {
         coordinator.navigate(to: .exhibitionDetail(id: exhibitionId))
     }
     
+    @MainActor
     func didTapLikeButton(shouldLike: Bool) {
-        if shouldLike {
-            makeLikeRequest()
+        if !Authentication.shared.isLoggedIn {
+            coordinator.navigate(to: .login)
         } else {
-            makeUnlikeRequest()
+            if shouldLike {
+                makeLikeRequest()
+            } else {
+                makeUnlikeRequest()
+            }
         }
     }
     
     @MainActor
     func didTapCommentButton() {
         showCommentViewController()
+    }
+    
+    @MainActor
+    func presentLoginModal() {
+        coordinator.navigate(to: .login)
     }
 }
 

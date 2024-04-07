@@ -13,7 +13,7 @@ final class LoginCoordinator: BaseStackCoordinator<LoginStep> {
     
     override func start() {
         super.start()
-        let viewModel = LoginViewModel(coordinator: self)
+        let viewModel = LoginViewModel(isPresentedAsModal: false, coordinator: self)
         let loginViewController = LoginViewController(viewModel: viewModel)
         navigator.start(loginViewController)
     }
@@ -21,7 +21,7 @@ final class LoginCoordinator: BaseStackCoordinator<LoginStep> {
     @MainActor
     func startAsModal() {
         super.start()
-        let viewModel = LoginViewModel(coordinator: self)
+        let viewModel = LoginViewModel(isPresentedAsModal: true, coordinator: self)
         isPresentedAsModal = true
         let loginViewController = LoginViewController(viewModel: viewModel)
         navigator.start(loginViewController)

@@ -13,6 +13,14 @@ final class LoginViewController: BaseViewController {
     // MARK: - Constant
     
     private enum Constants {
+        
+        enum Handle {
+            static let color: UIColor = UIColor.Common.warmGrey02
+            static let width: CGFloat = 40
+            static let height: CGFloat = 4
+            static let topMargin: CGFloat = 12
+        }
+        
         enum Logo {
             static let verticalConstant: CGFloat = 52
         }
@@ -30,6 +38,20 @@ final class LoginViewController: BaseViewController {
 
     
     // MARK: - UI
+    
+    private lazy var handleView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.Handle.color
+        view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            view.widthAnchor.constraint(equalToConstant: Constants.Handle.width),
+            view.heightAnchor.constraint(equalToConstant: Constants.Handle.height)
+        ])
+        
+        view.clipsToBounds = true
+        view.layer.cornerRadius = Constants.Handle.height / 2
+        return view
+    }()
     
     private lazy var mainLogoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -132,6 +154,14 @@ final class LoginViewController: BaseViewController {
     
     override func setupView() {
         view.backgroundColor = UIColor.Common.white
+        
+        if viewModel.isPresentedAsModal {
+            view.addSubview(handleView)
+            NSLayoutConstraint.activate([
+                handleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                handleView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.Handle.topMargin)
+            ])
+        }
         
         let safeArea = view.safeAreaLayoutGuide
         

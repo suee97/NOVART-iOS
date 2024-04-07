@@ -50,6 +50,8 @@ struct ExhibitionArtistFollowInfoModel: Decodable {
     let nickname: String
     let profileImageUrl: String?
     let following: Bool
+    let email: String?
+    let openChatUrl: String?
 }
 
 struct ExhibitionParticipantModel: Decodable {

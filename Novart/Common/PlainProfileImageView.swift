@@ -66,4 +66,8 @@ extension PlainProfileImageView {
         let retryStrategy = DelayRetryStrategy(maxRetryCount: 3, retryInterval: .seconds(1))
         profileImageView.kf.setImage(with: url, options: [.retryStrategy(retryStrategy)])
     }
+    
+    func removeImage() {
+        profileImageView.image = nil
+    }
 }

@@ -226,6 +226,10 @@ extension ExhibitionViewController: ExhibitionButtonsViewDelegate {
         viewModel.didTapCommentButton()
     }
     
+    func shouldShowLogin() {
+        viewModel.presentLoginModal()
+    }
+    
     func didTapShareButton() {
         print("share")
     }

@@ -13,6 +13,9 @@ enum ProductDetailStep: Step {
     case product
     case exhibition
     case edit(product: ProductUploadModel)
+    case login
+    case ask(user: PlainUser)
+    case report
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

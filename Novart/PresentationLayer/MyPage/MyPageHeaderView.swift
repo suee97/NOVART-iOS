@@ -454,6 +454,9 @@ final class MyPageHeaderView: UICollectionReusableView {
                     $0.isHidden = true
                 }
                 
+                // MARK: 일단 태그 숨기고 나중에 UI 변경
+                tagStackView.isHidden = true
+                
                 stickyBackgroundView.snp.makeConstraints({ m in
                     m.left.right.top.equalToSuperview()
                     m.height.equalTo(Constants.Sticky.backgroundHeight)

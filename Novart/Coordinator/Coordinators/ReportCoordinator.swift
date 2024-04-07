@@ -10,12 +10,15 @@ import UIKit
 final class ReportCoordinator: BaseStackCoordinator<ReportStep> {
     
     @LateInit
-    var userId: Int64
+    var id: Int64
+    
+    @LateInit
+    var reportDomain: ReportDomain
         
     override func start() {
         super.start()
         
-        let viewModel = ReportViewModel(userId: userId, coordinator: self)
+        let viewModel = ReportViewModel(id: id, domain: reportDomain, coordinator: self)
         let viewController = ReportViewController(viewModel: viewModel)
         navigator.start(viewController)
     }

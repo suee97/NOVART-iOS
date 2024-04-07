@@ -50,6 +50,7 @@ final class ExhibitionArtCell: UICollectionViewCell {
             static let contactButtonWidth: CGFloat = 60
             static let followButtonWidth: CGFloat = 74
             static let contactButtonColor: UIColor = UIColor.Common.grey04
+            static let contactButtonDisabledColor: UIColor = UIColor.Common.warmGrey02
             static let followButtonColor: UIColor = UIColor.Common.main
             static let followingButtonColor: UIColor = UIColor.Common.grey04
             static let horizontalMargin: CGFloat = 10
@@ -131,6 +132,15 @@ final class ExhibitionArtCell: UICollectionViewCell {
             button.widthAnchor.constraint(equalToConstant: Constants.ArtistInfo.contactButtonWidth),
             button.heightAnchor.constraint(equalToConstant: Constants.ArtistInfo.buttonHeight)
         ])
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self, self.viewModel?.isContactEnabled ?? false, let artistId = self.viewModel?.artistInfo.userId else { return }
+            
+            if !Authentication.shared.isLoggedIn {
+                self.input?.send((.shouldShowLogin, 0))
+            } else {
+                self.input?.send((.didTapContactButton, artistId))
+            }
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -148,9 +158,14 @@ final class ExhibitionArtCell: UICollectionViewCell {
         ])
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self, let artistId = self.viewModel?.artistInfo.userId else { return }
-            self.updateFollowButton(isFollowing: !self.currentFollowingState)
-            self.input?.send((.didTapFollowButton(following: !self.currentFollowingState), artistId))
-            self.currentFollowingState.toggle()
+            
+            if !Authentication.shared.isLoggedIn {
+                self.input?.send((.shouldShowLogin, 0))
+            } else {
+                self.updateFollowButton(isFollowing: !self.currentFollowingState)
+                self.input?.send((.didTapFollowButton(following: !self.currentFollowingState), artistId))
+                self.currentFollowingState.toggle()
+            }
         }), for: .touchUpInside)
         return button
     }()
@@ -198,6 +213,10 @@ final class ExhibitionArtCell: UICollectionViewCell {
             contactButton.trailingAnchor.constraint(equalTo: followButton.leadingAnchor, constant: -Constants.ArtistInfo.spacing),
             contactButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapArtistInfoView))
+        view.addGestureRecognizer(tapGestureRecognizer)
+        
         return view
     }()
     
@@ -296,6 +315,8 @@ final class ExhibitionArtCell: UICollectionViewCell {
         setupDetailImageViews(with: viewModel.detailImages)
         currentFollowingState = viewModel.artistInfo.following
         updateFollowButton(isFollowing: currentFollowingState)
+        contactButton.backgroundColor = viewModel.isContactEnabled ? Constants.ArtistInfo.contactButtonColor : Constants.ArtistInfo.contactButtonDisabledColor
+
     }
     
     private func setupDetailImageViews(with images: [ExhibitionDetailImageInfoModel]) {
@@ -391,5 +412,14 @@ extension ExhibitionArtCell: UICollectionViewDataSource {
         let imageUrl = viewModel.thumbnailImageUrls[indexPath.row]
         cell.update(with: imageUrl)
         return cell
+    }
+}
+
+// MARK: - Tap
+private extension ExhibitionArtCell {
+    @objc
+    private func didTapArtistInfoView() {
+        guard let artistId = viewModel?.artistInfo.userId else { return }
+        self.input?.send((.shouldShowProfile, artistId))
     }
 }

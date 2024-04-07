@@ -16,6 +16,7 @@ enum ProductTarget: TargetType {
     case cancelLike(id: Int64)
     case otherProductFromArtist(productId: Int64, artistId: Int64)
     case relatedProducts(productId: Int64)
+    case delete(id: Int64)
     
     var baseURL: String {
         API.baseURL
@@ -37,6 +38,8 @@ enum ProductTarget: TargetType {
             return "arts/\(productId)/artist/\(artistId)/others"
         case let .relatedProducts(productId):
             return "arts/\(productId)/recommends"
+        case let .delete(id):
+            return "arts/\(id)"
         }
     }
     
@@ -56,6 +59,8 @@ enum ProductTarget: TargetType {
             return .get
         case .relatedProducts:
             return .get
+        case .delete:
+            return .delete
         }
     }
     
@@ -74,6 +79,8 @@ enum ProductTarget: TargetType {
         case .otherProductFromArtist:
             return .query(nil)
         case .relatedProducts:
+            return .query(nil)
+        case .delete:
             return .query(nil)
         }
     }

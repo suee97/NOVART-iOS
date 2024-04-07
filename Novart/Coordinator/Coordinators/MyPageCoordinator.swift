@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
+final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPresentableCoordinator {
     
     var userId: Int64?
     
@@ -47,7 +47,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         case .productUpload:
             showProductUploadScene()
         case .LoginModal:
-            showLoginModal()
+            presentLoginModal()
         case .Close:
             close()
             
@@ -105,17 +105,15 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         productUploadCoordinator.start()
     }
     
-    @MainActor
-    private func showLoginModal() {
-        guard let window = UIApplication.shared.keyWindowScene else { return }
-        let bottomSheetRoot = BottomSheetNavigationController()
-        bottomSheetRoot.bottomSheetConfiguration.customHeight = UIScreen.main.bounds.height - 132
-        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
-        let loginCoordinator = LoginCoordinator(navigator: stackNavigator)
-        add(coordinators: loginCoordinator)
-        loginCoordinator.startAsModal()
-        
-    }
+//    @MainActor
+//    private func showLoginModal() {
+//        let bottomSheetRoot = BottomSheetNavigationController()
+//        bottomSheetRoot.bottomSheetConfiguration.customHeight = UIScreen.main.bounds.height - 132
+//        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
+//        let loginCoordinator = LoginCoordinator(navigator: stackNavigator)
+//        add(coordinators: loginCoordinator)
+//        loginCoordinator.startAsModal()
+//    }
     
     @MainActor
     func close() {
@@ -173,7 +171,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep> {
         bottomSheetRoot.bottomSheetConfiguration.customHeight = 390
         let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
         let coordinator = ReportCoordinator(navigator: stackNavigator)
-        coordinator.userId = userId
+        coordinator.id = userId
+        coordinator.reportDomain = .user
         
         add(coordinators: coordinator)
         coordinator.start()
