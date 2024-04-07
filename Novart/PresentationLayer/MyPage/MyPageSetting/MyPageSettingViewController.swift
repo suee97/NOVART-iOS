@@ -51,6 +51,9 @@ final class MyPageSettingViewController: BaseViewController {
             static let privacyPolicyTitle: String = "개인정보처리방침"
             static let privacyPolicyTopMargin: CGFloat = 8
             
+            static let communityGuideTitle: String = "커뮤니티 이용 가이드라인"
+            static let communityGuideTopMargin: CGFloat = 8
+            
             static let bottomDividerOffset: CGFloat = 16
         }
         
@@ -184,6 +187,10 @@ final class MyPageSettingViewController: BaseViewController {
         print("privacyPolicyRowView !!")
     })
     
+    private let communityGuideButton = TextNavigationButton(title: Constants.UsageInfo.communityGuideTitle, onTap: {
+        print("communityGuideButton !!")
+    })
+    
     private let noticePolicyButton = TextNavigationButton(title: Constants.Etc.noticeTitle, onTap: {
         print("noticePolicyRowView !!")
     })
@@ -259,6 +266,7 @@ final class MyPageSettingViewController: BaseViewController {
         contentView.addSubview(usageSectionLabel)
         contentView.addSubview(usagePolicyButton)
         contentView.addSubview(privacyPolicyButton)
+        contentView.addSubview(communityGuideButton)
         contentView.addSubview(etcSectionLabel)
         contentView.addSubview(noticePolicyButton)
         contentView.addSubview(updateInfoView)
@@ -333,7 +341,13 @@ final class MyPageSettingViewController: BaseViewController {
             m.height.equalTo(Constants.cellHeight)
         })
         
-        insertDivider(before: privacyPolicyButton, topOffset: Constants.UsageInfo.bottomDividerOffset, after: etcSectionLabel, bottomOffset: Constants.defaultVerticalMargin)
+        communityGuideButton.snp.makeConstraints({ m in
+            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+            m.top.equalTo(privacyPolicyButton.snp.bottom).offset(Constants.UsageInfo.communityGuideTopMargin)
+            m.height.equalTo(Constants.cellHeight)
+        })
+        
+        insertDivider(before: communityGuideButton, topOffset: Constants.UsageInfo.bottomDividerOffset, after: etcSectionLabel, bottomOffset: Constants.defaultVerticalMargin)
         
         etcSectionLabel.snp.makeConstraints({ m in
             m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)

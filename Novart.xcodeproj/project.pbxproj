@@ -717,6 +717,7 @@
 				0ED9F0452B11F85F00EDCD3C /* Nickname */,
 				0EE0192F2A51493E00389A95 /* Login */,
 				0EE0195A2A56F1BD00389A95 /* MyPage */,
+				5B127CD32BC2C5B3003DF39D /* Policy */,
 			);
 			path = PresentationLayer;
 			sourceTree = "<group>";
@@ -1663,6 +1664,13 @@
 				0EF59AB02AAB0ABA00FD39E3 /* ReuseableView.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		5B127CD32BC2C5B3003DF39D /* Policy */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Policy;
 			sourceTree = "<group>";
 		};
 		5B34FA572AF2784C006FF3FC /* Recovered References */ = {
