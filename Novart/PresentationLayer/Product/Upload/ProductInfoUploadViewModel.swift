@@ -53,11 +53,11 @@ final class ProductInfoUploadViewModel {
         self.categories = categories.map { TagItem(tag: $0.rawValue) }
     }
     
-    func selectCategory(index: Int) {
+    func selectCategory(index: Int, isSelected: Bool) {
         var updatedCategories: [TagItem] = []
         for (idx, category) in categories.enumerated() {
             if idx == index {
-                let updated = TagItem(id: category.id, tag: category.tag, isSelected: true)
+                let updated = TagItem(id: category.id, tag: category.tag, isSelected: isSelected)
                 updatedCategories.append(updated)
             } else {
                 let updated = TagItem(id: category.id, tag: category.tag, isSelected: false)
