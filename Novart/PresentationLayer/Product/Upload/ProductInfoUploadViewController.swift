@@ -121,6 +121,7 @@ final class ProductInfoUploadViewController: BaseViewController {
         let textField = PlainEditTextField(placeholder: Constants.TextField.titleTextFieldPlaceholder)
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.addTarget(self, action: #selector(validateCanPreview), for: .editingChanged)
         return textField
     }()
     
@@ -375,7 +376,7 @@ final class ProductInfoUploadViewController: BaseViewController {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         title = viewModel.isEditScene ? "작품 편집" : "작품 등록"
-        previewButton.isEnabled = true
+        previewButton.isEnabled = false
     }
     
     override func setupView() {
@@ -596,9 +597,10 @@ final class ProductInfoUploadViewController: BaseViewController {
     
     private func syncCategoryTagData(editModel: ProductUploadModel) {
         guard let selectedIdx = viewModel.categories.firstIndex(where: { $0.tag == editModel.category.rawValue }) else { return }
-        self.viewModel.selectCategory(index: selectedIdx)
+        self.viewModel.selectCategory(index: selectedIdx, isSelected: true)
         self.categoryTagView.selectItems(indexes: [selectedIdx])
         self.categoryCountLabel.text = "1"
+        self.validateCanPreview()
     }
     
     private func syncPriceTagData(editModel: ProductUploadModel) {
@@ -656,9 +658,10 @@ extension ProductInfoUploadViewController: TagViewDelegate {
         
         switch tagView {
         case categoryTagView:
-            viewModel.selectCategory(index: indexPath.row)
+            viewModel.selectCategory(index: indexPath.row, isSelected: true)
             tagView.applyItems(viewModel.categories)
-            categoryCountLabel.text = "1"
+            categoryCountLabel.text = "\(viewModel.categories.filter{$0.isSelected}.count)"
+            validateCanPreview()
         case recommendTagView:
             viewModel.selectRecommendTag(index: indexPath.row, isSelected: true)
             tagView.applyItems(viewModel.recommendTags)
@@ -672,9 +675,17 @@ extension ProductInfoUploadViewController: TagViewDelegate {
     }
     
     func tagView(_ tagView: TagView, didDeselectItemAt indexPath: IndexPath) {
-        if tagView == recommendTagView {
+        switch tagView {
+        case categoryTagView:
+            viewModel.selectCategory(index: indexPath.row, isSelected: false)
+            tagView.applyItems(viewModel.categories)
+            categoryCountLabel.text = "\(viewModel.categories.filter{$0.isSelected}.count)"
+            validateCanPreview()
+        case recommendTagView:
             viewModel.selectRecommendTag(index: indexPath.row, isSelected: false)
             tagView.applyItems(viewModel.recommendTags)
+        default:
+            break
         }
     }
     
@@ -747,5 +758,10 @@ extension ProductInfoUploadViewController: UITextFieldDelegate {
     }
     
     @objc private func tagFieldDidChanged(_ textField: UITextField) {
+    }
+    
+    @objc private func validateCanPreview() {
+        guard let titleText = titleTextField.text else { return }
+        previewButton.isEnabled =  (titleText.trimmingCharacters(in: [" "]).count > 0 && viewModel.categories.filter({$0.isSelected}).count == 1)
     }
 }
