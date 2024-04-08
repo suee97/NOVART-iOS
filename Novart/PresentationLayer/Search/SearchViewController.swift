@@ -255,8 +255,9 @@ class SearchViewController: BaseViewController {
     }()
     
     private lazy var recentSearchView: RecentSearchView = {
-        let view = RecentSearchView()
+        let view = RecentSearchView(viewModel: viewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.delegate = self
         return view
     }()
     
@@ -295,6 +296,12 @@ class SearchViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.loadIntialData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.searchBar.endEditing(true)
+
     }
     
     // MARK: - Setup
@@ -513,5 +520,12 @@ extension SearchViewController: UIScrollViewDelegate {
                 transitionProgress = progress
             }
         }
+    }
+}
+
+extension SearchViewController: RecentSearchViewDelegate {
+    func didTapCell(at index: Int) {
+        let query = viewModel.recentSearch[index]
+        viewModel.performSearch(query: query)
     }
 }

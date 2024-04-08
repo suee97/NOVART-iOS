@@ -326,7 +326,7 @@ extension ExhibitionDetailInfoCell {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
         section.interGroupSpacing = Constants.Participant.spacing
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: Constants.horizontalMargin, bottom: 0, trailing: -Constants.horizontalMargin)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: Constants.horizontalMargin, bottom: 0, trailing: Constants.horizontalMargin)
         return section
     }
     
