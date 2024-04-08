@@ -23,6 +23,7 @@
 		0E1E212B2AECE34600F15009 /* LateInit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1E212A2AECE34600F15009 /* LateInit.swift */; };
 		0E1E212D2AECE43300F15009 /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1E212C2AECE43300F15009 /* CommentViewController.swift */; };
 		0E1E212F2AECE43C00F15009 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1E212E2AECE43C00F15009 /* CommentViewModel.swift */; };
+		0E2386D42BC13E9B00DF035D /* RecentSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2386D32BC13E9B00DF035D /* RecentSearchCell.swift */; };
 		0E34FD252B9DA22C00B424F1 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E34FD242B9DA22C00B424F1 /* Notification.swift */; };
 		0E3ECC672AE4EEC700790CB9 /* RecommendationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3ECC662AE4EEC700790CB9 /* RecommendationDataSource.swift */; };
 		0E3ECC692AE4F64D00790CB9 /* PlainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3ECC682AE4F64D00790CB9 /* PlainItem.swift */; };
@@ -350,6 +351,7 @@
 		0E1E212A2AECE34600F15009 /* LateInit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LateInit.swift; sourceTree = "<group>"; };
 		0E1E212C2AECE43300F15009 /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
 		0E1E212E2AECE43C00F15009 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
+		0E2386D32BC13E9B00DF035D /* RecentSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCell.swift; sourceTree = "<group>"; };
 		0E34FD242B9DA22C00B424F1 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		0E3ECC662AE4EEC700790CB9 /* RecommendationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationDataSource.swift; sourceTree = "<group>"; };
 		0E3ECC682AE4F64D00790CB9 /* PlainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainItem.swift; sourceTree = "<group>"; };
@@ -1425,6 +1427,7 @@
 				0EE255872ABC6662008CE0D1 /* CategoryTabButton.swift */,
 				0EAF1F3E2ADC0EFF00E9A10C /* RecentSearchView.swift */,
 				5B9863562BB2C0E2008B424B /* SearchNoResultView.swift */,
+				0E2386D32BC13E9B00DF035D /* RecentSearchCell.swift */,
 				0EAF1F282ADBBFC200E9A10C /* Artist */,
 				0EAF1F272ADBBFB500E9A10C /* Product */,
 				0EE2558D2AC0134D008CE0D1 /* Cell */,
@@ -2173,6 +2176,7 @@
 				0EE019242A51445900389A95 /* Authentication.swift in Sources */,
 				5B9863572BB2C0E2008B424B /* SearchNoResultView.swift in Sources */,
 				0E6C659C2B417849005E269E /* ProductPreviewModel.swift in Sources */,
+				0E2386D42BC13E9B00DF035D /* RecentSearchCell.swift in Sources */,
 				0E79A3C42B9D88B300140774 /* URLSchemeProfileAction.swift in Sources */,
 				0EE0195F2A56F1F600389A95 /* MyPageCoordinator.swift in Sources */,
 				0E9BB08B2AD18CDA0002A76D /* CustomPageController.swift in Sources */,
