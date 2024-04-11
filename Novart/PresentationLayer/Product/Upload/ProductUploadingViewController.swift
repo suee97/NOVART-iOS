@@ -18,7 +18,7 @@ final class ProductUploadingViewController: BaseViewController {
         static let horizontalMargin: CGFloat = 24
         
         enum Preview {
-            static let backgroundColor = UIColor.init(hexString: "#F7F9FA")
+            static let backgroundColor = UIColor.Common.grey01_light
             static let width: CGFloat = 165
             static let height: CGFloat = 221
             static let cornerRadius: CGFloat = 12

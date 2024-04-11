@@ -18,6 +18,10 @@ extension UIColor {
             UIColor(named: "grey01") ?? .clear
         }
         
+        static var grey01_light: UIColor {
+            UIColor(named: "grey01_light") ?? .clear
+        }
+        
         static var grey02: UIColor {
             UIColor(named: "grey02") ?? .clear
         }
