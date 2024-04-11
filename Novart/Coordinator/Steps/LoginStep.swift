@@ -9,7 +9,8 @@ import UIKit
 
 enum LoginStep: Step {
     case main
-    case policy
+    case policyAgree
+    case policy(policyType: PolicyType)
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

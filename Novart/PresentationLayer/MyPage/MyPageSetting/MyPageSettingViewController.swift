@@ -51,8 +51,8 @@ final class MyPageSettingViewController: BaseViewController {
             static let privacyPolicyTitle: String = "개인정보처리방침"
             static let privacyPolicyTopMargin: CGFloat = 8
             
-            static let communityGuideTitle: String = "커뮤니티 이용 가이드라인"
-            static let communityGuideTopMargin: CGFloat = 8
+            static let communityPolicyTitle: String = "커뮤니티 이용 가이드라인"
+            static let communityPolicyTopMargin: CGFloat = 8
             
             static let bottomDividerOffset: CGFloat = 16
         }
@@ -179,16 +179,16 @@ final class MyPageSettingViewController: BaseViewController {
         self.viewModel.putSetting(setting: MyPageSettingRequestModel(category: .inquire, setting: $0))
     })
     
-    private let usagePolicyButton = TextNavigationButton(title: Constants.UsageInfo.usagePolicyTitle, onTap: {
-        print("usagePolicyRowView !!")
+    private lazy var usagePolicyButton = TextNavigationButton(title: Constants.UsageInfo.usagePolicyTitle, onTap: {
+        self.viewModel.showPolicy(policyType: .Usage)
     })
     
-    private let privacyPolicyButton = TextNavigationButton(title: Constants.UsageInfo.privacyPolicyTitle, onTap: {
-        print("privacyPolicyRowView !!")
+    private lazy var privacyPolicyButton = TextNavigationButton(title: Constants.UsageInfo.privacyPolicyTitle, onTap: {
+        self.viewModel.showPolicy(policyType: .Privacy)
     })
     
-    private let communityGuideButton = TextNavigationButton(title: Constants.UsageInfo.communityGuideTitle, onTap: {
-        print("communityGuideButton !!")
+    private lazy var communityPolicyButton = TextNavigationButton(title: Constants.UsageInfo.communityPolicyTitle, onTap: {
+        self.viewModel.showPolicy(policyType: .Community)
     })
     
     private let noticePolicyButton = TextNavigationButton(title: Constants.Etc.noticeTitle, onTap: {
@@ -266,7 +266,7 @@ final class MyPageSettingViewController: BaseViewController {
         contentView.addSubview(usageSectionLabel)
         contentView.addSubview(usagePolicyButton)
         contentView.addSubview(privacyPolicyButton)
-        contentView.addSubview(communityGuideButton)
+        contentView.addSubview(communityPolicyButton)
         contentView.addSubview(etcSectionLabel)
         contentView.addSubview(noticePolicyButton)
         contentView.addSubview(updateInfoView)
@@ -341,13 +341,13 @@ final class MyPageSettingViewController: BaseViewController {
             m.height.equalTo(Constants.cellHeight)
         })
         
-        communityGuideButton.snp.makeConstraints({ m in
+        communityPolicyButton.snp.makeConstraints({ m in
             m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-            m.top.equalTo(privacyPolicyButton.snp.bottom).offset(Constants.UsageInfo.communityGuideTopMargin)
+            m.top.equalTo(privacyPolicyButton.snp.bottom).offset(Constants.UsageInfo.communityPolicyTopMargin)
             m.height.equalTo(Constants.cellHeight)
         })
         
-        insertDivider(before: communityGuideButton, topOffset: Constants.UsageInfo.bottomDividerOffset, after: etcSectionLabel, bottomOffset: Constants.defaultVerticalMargin)
+        insertDivider(before: communityPolicyButton, topOffset: Constants.UsageInfo.bottomDividerOffset, after: etcSectionLabel, bottomOffset: Constants.defaultVerticalMargin)
         
         etcSectionLabel.snp.makeConstraints({ m in
             m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)

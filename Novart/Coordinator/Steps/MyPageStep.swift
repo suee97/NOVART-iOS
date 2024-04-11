@@ -23,6 +23,7 @@ enum MyPageStep: Step {
     case block(user: PlainUser)
     case report(userId: Int64)
     case ask(user: PlainUser)
+    case policy(policyType: PolicyType)
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }
