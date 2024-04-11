@@ -16,6 +16,7 @@ final class SearchViewModel {
     var productViewModel: ProductSearchViewModel
     var artistViewModel: ArtistSearchViewModel
     @Published var searchResult: SearchResultModel?
+    @Published var recentSearch: [String] = []
     var currentCategory: CategoryType
     var currentQuery: String
     
@@ -49,11 +50,13 @@ extension SearchViewModel {
             Task { [weak self] in
                 guard let self else { return }
                 do {
+                    async let recentSearch = self.downloadInteractor.getRecentSearch()
                     async let productData = self.downloadInteractor.searchProducts(query: "", pageNo: 0, category: currentCategory)
                     async let artistData = self.downloadInteractor.searchArtists(query: "", pageNo: 0, category: currentCategory)
                     
                     let productResult = try await productData
                     let artistResult = try await artistData
+                    self.recentSearch = try await recentSearch.filter { !$0.isEmpty }
                     
                     productViewModel.products = productResult.content
                     artistViewModel.artists = artistResult.content
@@ -68,6 +71,12 @@ extension SearchViewModel {
                 } catch {
                     print(error.localizedDescription)
                 }
+            }
+        } else {
+            Task { [weak self] in
+                guard let self else { return }
+                let recentSearch = try await self.downloadInteractor.getRecentSearch()
+                self.recentSearch = recentSearch.filter { !$0.isEmpty }
             }
         }
     }
@@ -113,5 +122,29 @@ extension SearchViewModel {
         let artistResult = try await artistData
         
         return SearchResultModel(query: query, products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
+    }
+    
+    func deleteRecent(query: String) {
+        guard let idx = recentSearch.firstIndex(of: query) else { return }
+        recentSearch.remove(at: idx)
+        serverDeleteRecent(query: query)
+    }
+    
+    func deleteAllRecent() {
+        guard !recentSearch.isEmpty else { return }
+        recentSearch = []
+        serverDeleteAll()
+    }
+    
+    private func serverDeleteRecent(query: String) {
+        Task {
+            try await downloadInteractor.deleteRecentQuery(query: query)
+        }
+    }
+    
+    private func serverDeleteAll() {
+        Task {
+            try await downloadInteractor.deleteAllRecentQuery()
+        }
     }
 }
