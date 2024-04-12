@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import SnapKit
 
 final class HomeViewController: BaseViewController, PullToRefreshProtocol {
     
@@ -63,6 +64,17 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
             static let leadingMargin: CGFloat = 28
             static let bottomMargin: CGFloat = 28
         }
+        
+        enum EmptyContentView {
+            static let topMargin: CGFloat = 253
+            static let iconWidth: CGFloat = 60
+            static let iconHeight: CGFloat = 60
+            
+            static let text = "해당 카테고리의 작품이 없어요"
+            static let font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            static let textColor = UIColor.Common.grey03
+            static let textTopMargin: CGFloat = 16
+        }
     }
     
     private func verticalContentInset() -> CGFloat {
@@ -84,6 +96,27 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
         button.delegate = self
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }()
+    
+    private let emptyContentView: UIView = {
+        let view = UIView()
+        let imageView = UIImageView(image: UIImage(named: "icon_plain_warning"))
+        view.addSubview(imageView)
+        imageView.snp.makeConstraints({ m in
+            m.centerX.top.equalToSuperview()
+            m.width.equalTo(Constants.EmptyContentView.iconWidth)
+            m.height.equalTo(Constants.EmptyContentView.iconHeight)
+        })
+        let label = UILabel()
+        label.text = Constants.EmptyContentView.text
+        label.font = Constants.EmptyContentView.font
+        label.textColor = Constants.EmptyContentView.textColor
+        view.addSubview(label)
+        label.snp.makeConstraints({ m in
+            m.centerX.equalToSuperview()
+            m.top.equalTo(imageView.snp.bottom).offset(Constants.EmptyContentView.textTopMargin)
+        })
+        return view
     }()
     
     // MARK: - Properties
@@ -146,6 +179,12 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
             filterButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.FilterButton.leadingMargin),
             filterButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.FilterButton.bottomMargin)
         ])
+        
+        view.addSubview(emptyContentView)
+        emptyContentView.snp.makeConstraints({ m in
+            m.centerX.equalToSuperview()
+            m.top.equalTo(safeAreaLayoutGuide.snp.top).inset(Constants.EmptyContentView.topMargin)
+        })
     }
     
     override func setupBindings() {
@@ -153,6 +192,8 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] items in
                 self?.dataSource.apply(items)
+                self?.collectionView.isHidden = items.isEmpty
+                self?.emptyContentView.isHidden = !items.isEmpty
             }
             .store(in: &subscriptions)
     }
