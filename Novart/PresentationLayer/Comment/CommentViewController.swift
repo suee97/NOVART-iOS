@@ -312,4 +312,8 @@ extension CommentViewController: CommentCellDelegate {
             self?.viewModel.showProfileViewController(userId: userId)
         }
     }
+    
+    func didTapMoreButton(commentId: Int64) {
+        viewModel.showMoreActionSheet(commentId: commentId)
+    }
 }

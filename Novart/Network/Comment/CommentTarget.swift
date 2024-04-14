@@ -13,6 +13,7 @@ enum CommentTarget: TargetType {
     case writeProductComment(productId: Int64, content: String)
     case getExhibitionComments(exhibitionId: Int64)
     case writeExhibitionComment(exhibitionId: Int64, content: String)
+    case deleteProductComment(commentId: Int64)
     
     var baseURL: String {
         API.baseURL
@@ -28,6 +29,8 @@ enum CommentTarget: TargetType {
             return "exhibitions/\(id)/comments"
         case let .writeExhibitionComment(id, _):
             return "exhibitions/\(id)/comments"
+        case let .deleteProductComment(commentId):
+            return "comments/\(commentId)"
         }
     }
     
@@ -37,6 +40,8 @@ enum CommentTarget: TargetType {
             return .get
         case .writeProductComment, .writeExhibitionComment:
             return .post
+        case .deleteProductComment:
+            return .delete
         }
     }
     
@@ -48,6 +53,8 @@ enum CommentTarget: TargetType {
             return .body(["content": content])
         case let .writeExhibitionComment(_, content):
             return .body(["content": content])
+        case .deleteProductComment:
+            return .query(nil)
         }
     }
 }

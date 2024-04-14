@@ -76,6 +76,46 @@ final class CommentViewModel {
         }
     }
     
+    func showMoreActionSheet(commentId: Int64) {
+        let alertController = AlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        guard let comment = comments.first(where: { $0.id == commentId }) else { return }
+        
+        let editAction = AlertAction(title: "의견 수정", style: .default) { [weak self] _ in
+            
+        }
+        
+        let deleteAction = AlertAction(title: "의견 삭제", style: .destructive) { [weak self] _ in
+            self?.showDeleteAlert(commentId: commentId)
+        }
+        
+        alertController.addAction(editAction)
+        alertController.addAction(deleteAction)
+        
+        alertController.addCancelAction()
+        alertController.show()
+    }
+    
+    func showDeleteAlert(commentId: Int64) {
+        let alertController = AlertController(title: nil, message: "의견을 삭제하시겠어요?", preferredStyle: .alert)
+        
+        let deleteAction = AlertAction(title: "삭제", style: .destructive) { [weak self] _ in
+            guard let self else { return }
+            Task {
+                do {
+                    try await self.deleteComment(commentId: commentId)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+        
+        alertController.addAction(deleteAction)
+        
+        alertController.addCancelAction()
+        alertController.show()
+    }
+    
 }
 
 extension CommentViewModel {
@@ -112,5 +152,11 @@ extension CommentViewModel {
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    func deleteComment(commentId: Int64) async throws {
+        guard let idx = comments.firstIndex(where: { $0.id == commentId }) else { return }
+        try await commentInteractor.deleteComment(commentId: commentId)
+        comments.remove(at: idx)
     }
 }

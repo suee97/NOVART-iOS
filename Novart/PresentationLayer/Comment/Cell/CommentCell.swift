@@ -10,6 +10,7 @@ import Kingfisher
 
 protocol CommentCellDelegate: AnyObject {
     func didTapUserProfile(userId: Int64)
+    func didTapMoreButton(commentId: Int64)
 }
 
 final class CommentCell: UITableViewCell {
@@ -91,6 +92,10 @@ final class CommentCell: UITableViewCell {
         let button = UIButton()
         button.setImage(UIImage(named: "icon_comment_more"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self, let data else { return }
+            self.delegate?.didTapMoreButton(commentId: data.id)
+        }), for: .touchUpInside)
         return button
     }()
     

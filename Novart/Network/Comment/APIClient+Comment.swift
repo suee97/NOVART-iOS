@@ -25,4 +25,7 @@ extension APIClient {
         try await APIClient.request(target: CommentTarget.writeExhibitionComment(exhibitionId: exhibitionId, content: content), type: CommentModel.self)
     }
     
+    static func deleteProductComment(commentId: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: CommentTarget.deleteProductComment(commentId: commentId), type: EmptyResponseModel.self)
+    }
 }
