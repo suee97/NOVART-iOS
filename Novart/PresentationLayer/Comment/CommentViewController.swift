@@ -105,7 +105,7 @@ final class CommentViewController: BaseViewController {
             !text.isEmpty
             else { return }
             
-            self.viewModel.writeComment(content: text)
+            self.viewModel.didTapSendButton(content: text)
             self.inputTextField.text = nil
             self.view.endEditing(true)
         }), for: .touchUpInside)
@@ -219,6 +219,15 @@ final class CommentViewController: BaseViewController {
             }
             .store(in: &subscriptions)
         
+        viewModel.shouldEditCommentSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] comment in
+                guard let self else { return }
+                inputTextField.text = comment.content
+                self.inputTextField.becomeFirstResponder()
+            }
+            .store(in: &subscriptions)
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillShow(notification:)),
@@ -311,5 +320,9 @@ extension CommentViewController: CommentCellDelegate {
         dismiss(animated: true) { [weak self] in
             self?.viewModel.showProfileViewController(userId: userId)
         }
+    }
+    
+    func didTapMoreButton(commentId: Int64) {
+        viewModel.showMoreActionSheet(commentId: commentId)
     }
 }

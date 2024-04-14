@@ -339,7 +339,7 @@ extension ProductDetailViewModel {
     
     func showMoreActionSheet() {
         
-        let alertController = AlertController(title: nil, attributedMessage: nil, preferredStyle: .actionSheet)
+        let alertController = AlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         if isMine {
             let editAction = AlertAction(title: "작품 편집", style: .default) { [weak self] _ in
