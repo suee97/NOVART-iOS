@@ -87,6 +87,13 @@ final class CommentCell: UITableViewCell {
         return imageView
     }()
     
+    private lazy var commentMoreButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "icon_comment_more"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     weak var delegate: CommentCellDelegate?
     private var data: CommentModel?
     
@@ -121,6 +128,12 @@ final class CommentCell: UITableViewCell {
             contentLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor),
             contentLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.bottomMargin)
         ])
+        
+        contentView.addSubview(commentMoreButton)
+        NSLayoutConstraint.activate([
+            commentMoreButton.topAnchor.constraint(equalTo: profileImageView.topAnchor),
+            commentMoreButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        ])
     }
     
     override func prepareForReuse() {
@@ -143,6 +156,8 @@ extension CommentCell {
         nameLabel.text = data.nickname
         dateLabel.text = data.createdAt.toDateFormattedString()
         contentLabel.text = data.content
+        
+        commentMoreButton.isHidden = !data.isMine
     }
 }
 
