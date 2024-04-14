@@ -23,4 +23,20 @@ class CommentInteractor {
     func writeExhibitionComment(exhibitionId: Int64, content: String) async throws -> CommentModel {
         try await APIClient.writeExhibitionComment(exhibitionId: exhibitionId, content: content)
     }
+    
+    func deleteProductComment(commentId: Int64) async throws {
+        _ = try await APIClient.deleteProductComment(commentId: commentId)
+    }
+    
+    func deleteExhibitionComment(commentId: Int64) async throws {
+        _ = try await APIClient.deleteExhibitionComment(commentId: commentId)
+    }
+    
+    func editProductComment(commentId: Int64, content: String) async throws -> CommentModel {
+        try await APIClient.editProductComment(commentId: commentId, content: content)
+    }
+    
+    func editExhibitionComment(commentId: Int64, content: String) async throws -> CommentModel {
+        try await APIClient.editExhibitionComment(commentId: commentId, content: content)
+    }
 }
