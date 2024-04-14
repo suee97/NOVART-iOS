@@ -23,6 +23,9 @@ final class CommentViewModel {
     let contentType: ContentType
     
     @Published var comments: [CommentModel] = []
+    let shouldEditCommentSubject: PassthroughSubject<CommentModel, Never> = .init()
+    var isEditing: Bool = false
+    var editingCommentModel: CommentModel?
     
     var user: PlainUser? {
         Authentication.shared.user
@@ -82,7 +85,9 @@ final class CommentViewModel {
         guard let comment = comments.first(where: { $0.id == commentId }) else { return }
         
         let editAction = AlertAction(title: "의견 수정", style: .default) { [weak self] _ in
-            
+            self?.isEditing = true
+            self?.editingCommentModel = comment
+            self?.shouldEditCommentSubject.send(comment)
         }
         
         let deleteAction = AlertAction(title: "의견 삭제", style: .destructive) { [weak self] _ in
@@ -135,7 +140,44 @@ extension CommentViewModel {
         }
     }
     
-    func writeComment(content: String) {
+    func didTapSendButton(content: String) {
+        
+        if isEditing {
+            editComment(content: content)
+        } else {
+            writeComment(content: content)
+        }
+    }
+    
+    private func editComment(content: String) {
+        Task { [weak self] in
+            do {
+                guard let self, let editingCommentModel else { return }
+                
+                switch contentType {
+                case .exhibition:
+                    let newComment = try await commentInteractor.editExhibitionComment(commentId: editingCommentModel.id, content: content)
+                    if let index = comments.firstIndex(of: editingCommentModel) {
+                        comments[index] = newComment
+                    }
+                case .product:
+                    let newComment = try await commentInteractor.editProductComment(commentId: editingCommentModel.id, content: content)
+                    if let index = comments.firstIndex(of: editingCommentModel) {
+                        comments[index] = newComment
+                    }
+                }
+                
+                self.isEditing = false
+                self.editingCommentModel = nil
+            } catch {
+                self?.isEditing = false
+                self?.editingCommentModel = nil
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func writeComment(content: String) {
         Task { [weak self] in
             do {
                 guard let self else { return }
@@ -154,9 +196,17 @@ extension CommentViewModel {
         }
     }
     
+    
     func deleteComment(commentId: Int64) async throws {
         guard let idx = comments.firstIndex(where: { $0.id == commentId }) else { return }
-        try await commentInteractor.deleteComment(commentId: commentId)
+        
+        switch contentType {
+        case .product:
+            try await commentInteractor.deleteProductComment(commentId: commentId)
+        case .exhibition:
+            try await commentInteractor.deleteExhibitionComment(commentId: commentId)
+        }
         comments.remove(at: idx)
+        PlainSnackbar.show(message: "의견을 삭제했어요.", configuration: .init(imageType: .none))
     }
 }

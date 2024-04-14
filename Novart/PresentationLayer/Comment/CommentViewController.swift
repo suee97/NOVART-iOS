@@ -105,7 +105,7 @@ final class CommentViewController: BaseViewController {
             !text.isEmpty
             else { return }
             
-            self.viewModel.writeComment(content: text)
+            self.viewModel.didTapSendButton(content: text)
             self.inputTextField.text = nil
             self.view.endEditing(true)
         }), for: .touchUpInside)
@@ -216,6 +216,15 @@ final class CommentViewController: BaseViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.tableView.reloadData()
+            }
+            .store(in: &subscriptions)
+        
+        viewModel.shouldEditCommentSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] comment in
+                guard let self else { return }
+                inputTextField.text = comment.content
+                self.inputTextField.becomeFirstResponder()
             }
             .store(in: &subscriptions)
         

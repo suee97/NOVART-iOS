@@ -28,4 +28,16 @@ extension APIClient {
     static func deleteProductComment(commentId: Int64) async throws -> EmptyResponseModel {
         try await APIClient.request(target: CommentTarget.deleteProductComment(commentId: commentId), type: EmptyResponseModel.self)
     }
+    
+    static func deleteExhibitionComment(commentId: Int64) async throws -> EmptyResponseModel {
+        try await APIClient.request(target: CommentTarget.deleteProductComment(commentId: commentId), type: EmptyResponseModel.self)
+    }
+    
+    static func editProductComment(commentId: Int64, content: String) async throws -> CommentModel {
+        try await APIClient.request(target: CommentTarget.editProductComment(commentId: commentId, content: content), type: CommentModel.self)
+    }
+    
+    static func editExhibitionComment(commentId: Int64, content: String) async throws -> CommentModel {
+        try await APIClient.request(target: CommentTarget.editExhibitionComment(commentId: commentId, content: content), type: CommentModel.self)
+    }
 }
