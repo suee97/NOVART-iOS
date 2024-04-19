@@ -29,7 +29,8 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
             showSearchResultScene(data: data)
         case let .product(id):
             presentProductDetailVC(productId: id)
-        default: break
+        case let .artist(id):
+            presentArtistInfo(id: id)
         }
     }
     
@@ -49,6 +50,14 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
         add(coordinators: productDetailCoordinator)
         
         productDetailCoordinator.start()
+    }
+    
+    @MainActor
+    private func presentArtistInfo(id: Int64) {
+        let myPageCoordinator = MyPageCoordinator(navigator: navigator)
+        myPageCoordinator.userId = id
+        add(coordinators: myPageCoordinator)
+        myPageCoordinator.startAsPush()
     }
 }
 

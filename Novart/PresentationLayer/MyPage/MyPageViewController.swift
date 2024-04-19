@@ -143,6 +143,8 @@ final class MyPageViewController: BaseViewController {
         navigationController?.navigationBar.compactAppearance = Constants.appearance
         navigationController?.navigationBar.standardAppearance = Constants.appearance
         navigationController?.navigationBar.scrollEdgeAppearance = Constants.appearance
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.isNavigationBarHidden = false
         
         if viewModel.userState == .other {
             if let tab = tabBarController {
