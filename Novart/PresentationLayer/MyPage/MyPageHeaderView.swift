@@ -233,7 +233,7 @@ final class MyPageHeaderView: UICollectionReusableView {
         view.addSubview(barView2)
         view.addSubview(barView3)
         
-        interestButton.snp.makeConstraints({ m in
+        workButton.snp.makeConstraints({ m in
             m.width.equalTo(Constants.CategoryView.buttonWidth)
             m.height.equalTo(Constants.CategoryView.buttonHeight)
             m.left.top.equalTo(view)
@@ -241,7 +241,7 @@ final class MyPageHeaderView: UICollectionReusableView {
         barView1.snp.makeConstraints({ m in
             m.width.equalTo(Constants.CategoryView.barWidth)
             m.height.equalTo(Constants.CategoryView.barHeight)
-            m.left.equalTo(interestButton.snp.right)
+            m.left.equalTo(workButton.snp.right)
             m.centerY.equalTo(view)
         })
         followingButton.snp.makeConstraints({ m in
@@ -256,7 +256,7 @@ final class MyPageHeaderView: UICollectionReusableView {
             m.left.equalTo(followingButton.snp.right)
             m.centerY.equalTo(view)
         })
-        workButton.snp.makeConstraints({ m in
+        interestButton.snp.makeConstraints({ m in
             m.width.equalTo(Constants.CategoryView.buttonWidth)
             m.height.equalTo(Constants.CategoryView.buttonHeight)
             m.top.equalTo(view)
@@ -265,7 +265,7 @@ final class MyPageHeaderView: UICollectionReusableView {
         barView3.snp.makeConstraints({ m in
             m.width.equalTo(Constants.CategoryView.barWidth)
             m.height.equalTo(Constants.CategoryView.barHeight)
-            m.left.equalTo(workButton.snp.right)
+            m.left.equalTo(interestButton.snp.right)
             m.centerY.equalTo(view)
         })
         exhibitionButton.snp.makeConstraints({ m in

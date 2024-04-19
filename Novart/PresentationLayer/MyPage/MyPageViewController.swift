@@ -714,7 +714,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 header.update(user: Authentication.shared.user, userState: .me)
             }
             if isHeaderFirstSetup {
-                header.interestButton.setState(true)
+                header.workButton.setState(true)
             }
         }
         
