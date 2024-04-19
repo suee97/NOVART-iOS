@@ -48,12 +48,16 @@ final class FeedItemViewModel: Identifiable, Hashable {
     }
     
     func didTapLikeButton() {
-        if liked {
-            liked = false
-            makeCancelLikeRequest()
+        if !Authentication.shared.isLoggedIn {
+            NotificationCenter.default.post(name: .init(NotificationKeys.showLoginModalKey), object: nil)
         } else {
-            liked = true
-            makeLikeRequest()
+            if liked {
+                liked = false
+                makeCancelLikeRequest()
+            } else {
+                liked = true
+                makeLikeRequest()
+            }
         }
     }
     

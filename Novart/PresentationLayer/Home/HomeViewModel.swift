@@ -27,6 +27,7 @@ final class HomeViewModel {
     
     init(coordinator: HomeCoordinator) {
         self.coordinator = coordinator
+        setupObservers()
     }
     
     @MainActor
@@ -47,6 +48,23 @@ final class HomeViewModel {
     func didSelectProductAt(index: Int) {
         let productId = feedData[index].id
         presentProductDetailScene(productId: productId)
+    }
+    
+    @MainActor
+    func showLoginModalScene() {
+        coordinator?.navigate(to: .login)
+    }
+    
+    private func setupObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(showLoginModal), name: .init(NotificationKeys.showLoginModalKey), object: nil)
+
+    }
+    
+    @objc
+    private func showLoginModal() {
+        DispatchQueue.main.async { [weak self] in
+            self?.showLoginModalScene()
+        }
     }
 }
 
