@@ -168,8 +168,6 @@ extension ProductDetailViewModel {
     @MainActor
     func didTapContactButton() {
         
-        guard isContactEnabled else { return }
-        
         if !Authentication.shared.isLoggedIn {
             coordinator?.navigate(to: .login)
         } else {
