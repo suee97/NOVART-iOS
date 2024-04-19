@@ -14,4 +14,8 @@ struct CommentModel: Identifiable, Hashable, Decodable {
     let nickname: String
     let content: String
     let createdAt: String
+    
+    var isMine: Bool {
+        userId == Authentication.shared.user?.id
+    }
 }
