@@ -320,10 +320,8 @@
 		5BF6242F2B60CB3200F502FE /* LoginModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF6242E2B60CB3200F502FE /* LoginModalViewController.swift */; };
 		5BF624322B60E43C00F502FE /* LoginModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624312B60E43C00F502FE /* LoginModalViewModel.swift */; };
 		5BF624382B6FDDE500F502FE /* AskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624372B6FDDE500F502FE /* AskViewController.swift */; };
-		5BF6243A2B6FDF0F00F502FE /* MyPageAskModalPresentaionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624392B6FDF0E00F502FE /* MyPageAskModalPresentaionController.swift */; };
 		5BF6243D2B76026300F502FE /* EmptyResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF6243C2B76026300F502FE /* EmptyResponseModel.swift */; };
 		5BF6243F2B78921000F502FE /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF6243E2B78921000F502FE /* ReportViewController.swift */; };
-		5BF624412B78F10200F502FE /* MyPageUserBlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF624402B78F10200F502FE /* MyPageUserBlockViewController.swift */; };
 		5BFC07CF2B317CA10063EF89 /* NotificationDownloadInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07CE2B317CA10063EF89 /* NotificationDownloadInteractor.swift */; };
 		5BFC07D52B343EEB0063EF89 /* MyPagePutNotificationReadStatusResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC07D42B343EEB0063EF89 /* MyPagePutNotificationReadStatusResponseModel.swift */; };
 		5BFC07D82B3A871C0063EF89 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5BFC07D72B3A871C0063EF89 /* GoogleService-Info.plist */; };
@@ -638,10 +636,8 @@
 		5BF6242E2B60CB3200F502FE /* LoginModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModalViewController.swift; sourceTree = "<group>"; };
 		5BF624312B60E43C00F502FE /* LoginModalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModalViewModel.swift; sourceTree = "<group>"; };
 		5BF624372B6FDDE500F502FE /* AskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskViewController.swift; sourceTree = "<group>"; };
-		5BF624392B6FDF0E00F502FE /* MyPageAskModalPresentaionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageAskModalPresentaionController.swift; sourceTree = "<group>"; };
 		5BF6243C2B76026300F502FE /* EmptyResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponseModel.swift; sourceTree = "<group>"; };
 		5BF6243E2B78921000F502FE /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
-		5BF624402B78F10200F502FE /* MyPageUserBlockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageUserBlockViewController.swift; sourceTree = "<group>"; };
 		5BFC07CA2B317B450063EF89 /* NotificationTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTarget.swift; sourceTree = "<group>"; };
 		5BFC07CC2B317BFD0063EF89 /* APIClient+Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIClient+Notification.swift"; sourceTree = "<group>"; };
 		5BFC07CE2B317CA10063EF89 /* NotificationDownloadInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDownloadInteractor.swift; sourceTree = "<group>"; };
@@ -1445,8 +1441,6 @@
 				5BDD4A102AC955A600937352 /* MyPageViewModel.swift */,
 				5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */,
 				5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */,
-				5BF624402B78F10200F502FE /* MyPageUserBlockViewController.swift */,
-				5BF624392B6FDF0E00F502FE /* MyPageAskModalPresentaionController.swift */,
 				5BDD4A152AC955C100937352 /* Cells */,
 			);
 			path = MyPage;
@@ -1978,7 +1972,6 @@
 				0E41738E2B25DFE10017AAD9 /* PHAssetInteractor.swift in Sources */,
 				0EE019352A514A5900389A95 /* LoginCoordinator.swift in Sources */,
 				0EE0193D2A56EA6000389A95 /* LoginStep.swift in Sources */,
-				5BF6243A2B6FDF0F00F502FE /* MyPageAskModalPresentaionController.swift in Sources */,
 				0EE255942AC018B4008CE0D1 /* ProductSearchDataSource.swift in Sources */,
 				0EA8F8372A90970300ADFBFB /* FeedItem.swift in Sources */,
 				0E7FAD592B944D49003C100D /* String+Number.swift in Sources */,
@@ -1994,7 +1987,6 @@
 				0EE019852A63C59300389A95 /* BadgeView.swift in Sources */,
 				0E111B522B18CC5800A6BB95 /* FilterButton.swift in Sources */,
 				0E6C65892B36B3C7005E269E /* UploadCellActionDelegate.swift in Sources */,
-				5BF624412B78F10200F502FE /* MyPageUserBlockViewController.swift in Sources */,
 				5BDD4A122AC955A600937352 /* MyPageHeaderView.swift in Sources */,
 				0EE1F6A42B79F81D00756891 /* ReportCoordinator.swift in Sources */,
 				5BAE07EF2B4AC06F007E5CF5 /* MyPageCategory.swift in Sources */,
