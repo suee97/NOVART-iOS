@@ -77,20 +77,20 @@ final class MyPageHeaderView: UICollectionReusableView {
                 static let topMargin = getRelativeHeight(from: 2)
             }
             
-            enum InterestRecommendLabel {
-                static let text = "관심중인 작품이 없어요\n지금 바로 관람해 보세요!"
+            enum EmptyNoticeLabel {
                 static let textColor = UIColor.Common.grey03
                 static let font = UIFont.systemFont(ofSize: 16, weight: .regular)
                 static let topMargin = getRelativeHeight(from: 26)
                 static let bottomMargin = getRelativeHeight(from: 16)
-            }
-            
-            enum FollowingRecommendLabel {
-                static let text = "팔로잉한 작가가 없어요\n작가를 추천해 드릴게요!"
-                static let textColor = UIColor.Common.grey03
-                static let font = UIFont.systemFont(ofSize: 16, weight: .regular)
-                static let topMargin = getRelativeHeight(from: 26)
-                static let bottomMargin = getRelativeHeight(from: 16)
+                
+                static let myInterestEmptyText = "관심중인 작품이 없어요\n지금 바로 관람해 보세요!"
+                static let myFollowingEmptyText = "팔로잉한 작가가 없어요\n작가를 추천해 드릴게요!"
+                static let myWorkEmptyText = "게시한 작업이 없어요"
+                static let myExhibitionEmptyText = "참여한 전시가 없어요"
+                static let otherInterestEmptyText = "관심중인 작품이 없어요"
+                static let otherFollowingEmptyText = "팔로잉한 작가가 없어요"
+                static let otherWorkEmptyText = "게시한 작업이 없어요"
+                static let otherExhibitionEmptyText = "참여한 전시가 없어요"
             }
         }
         
@@ -319,24 +319,11 @@ final class MyPageHeaderView: UICollectionReusableView {
         return view
     }()
     
-    private let interestRecommendLabel: UILabel = {
+    private let emptyNoticeLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = Constants.NonSticky.InterestRecommendLabel.text
-        label.textColor = Constants.NonSticky.InterestRecommendLabel.textColor
-        label.font = Constants.NonSticky.InterestRecommendLabel.font
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        label.sizeToFit()
-        return label
-    }()
-    
-    private let followingRecommendLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.text = Constants.NonSticky.FollowingRecommendLabel.text
-        label.textColor = Constants.NonSticky.FollowingRecommendLabel.textColor
-        label.font = Constants.NonSticky.FollowingRecommendLabel.font
+        label.textColor = Constants.NonSticky.EmptyNoticeLabel.textColor
+        label.font = Constants.NonSticky.EmptyNoticeLabel.font
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.sizeToFit()
@@ -344,13 +331,9 @@ final class MyPageHeaderView: UICollectionReusableView {
     }()
     
     private lazy var loggedOutViews = [backgroundImageView, profileImageFrame, profileImageView, profileLabel, categoryView, loginInduceView]
-    private lazy var meViews = [backgroundImageView, stickyBackgroundView, profileImageFrame, profileImageView, profileLabel, jobLabel, tagStackView, categoryView, divider, interestRecommendLabel, followingRecommendLabel]
+    private lazy var meViews = [backgroundImageView, stickyBackgroundView, profileImageFrame, profileImageView, profileLabel, jobLabel, tagStackView, categoryView, divider, emptyNoticeLabel]
     
-    func update(user: PlainUser?, userState: MyPageUserState, isInterestsEmpty: Bool = false, isFollowingsEmpty: Bool = false) {
-        setUpView(user: user, userState: userState, isInterestsEmpty: isInterestsEmpty, isFollowingsEmpty: isFollowingsEmpty)
-    }
-    
-    private func setUpView(user: PlainUser?, userState: MyPageUserState, isInterestsEmpty: Bool, isFollowingsEmpty: Bool) {
+    func update(user: PlainUser?, userState: MyPageUserState, category: MyPageCategory, isEmpty: Bool) {
         
         if userState == .loggedOut {
             
@@ -449,7 +432,7 @@ final class MyPageHeaderView: UICollectionReusableView {
                 profileImageView.layer.cornerRadius = Constants.Sticky.profileImageDiameter / 2
                 profileLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
                 
-                let hiddenViews = [backgroundImageView, profileImageFrame, jobLabel, interestRecommendLabel, followingRecommendLabel]
+                let hiddenViews = [backgroundImageView, profileImageFrame, jobLabel, emptyNoticeLabel]
                 hiddenViews.forEach {
                     $0.isHidden = true
                 }
@@ -495,8 +478,7 @@ final class MyPageHeaderView: UICollectionReusableView {
                 backgroundImageView.isHidden = false
                 profileImageFrame.isHidden = false
                 jobLabel.isHidden = false
-                interestRecommendLabel.isHidden = false
-                followingRecommendLabel.isHidden = false
+                emptyNoticeLabel.isHidden = false
                 profileImageView.layer.cornerRadius = Constants.NonSticky.profileImageDiameter / 2
                 profileLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
                 
@@ -554,45 +536,41 @@ final class MyPageHeaderView: UICollectionReusableView {
                     })
                 }
                 
-                if userState == .me && isInterestsEmpty {
-                    followingRecommendLabel.isHidden = true
-                    interestRecommendLabel.snp.makeConstraints({ m in
-                        m.centerX.equalToSuperview()
-                        m.top.equalTo(categoryView.snp.bottom).offset(Constants.NonSticky.InterestRecommendLabel.topMargin)
-                        m.bottom.equalToSuperview().inset(Constants.NonSticky.InterestRecommendLabel.bottomMargin)
-                    })
-                } else if userState == .me && isFollowingsEmpty {
-                    interestRecommendLabel.isHidden = true
-                    followingRecommendLabel.snp.makeConstraints({ m in
-                        m.centerX.equalToSuperview()
-                        m.top.equalTo(categoryView.snp.bottom).offset(Constants.NonSticky.FollowingRecommendLabel.topMargin)
-                        m.bottom.equalToSuperview().inset(Constants.NonSticky.FollowingRecommendLabel.bottomMargin)
-                    })
-                } else {
-                    interestRecommendLabel.isHidden = true
-                    followingRecommendLabel.isHidden = true
+                if !isEmpty {
+                    emptyNoticeLabel.isHidden = true
                     categoryView.snp.makeConstraints({ m in
                         m.bottom.equalToSuperview().inset(Constants.getRelativeHeight(from: 18))
+                    })
+                } else {
+                    switch (userState, category) {
+                    case (.me, .Interest):
+                        emptyNoticeLabel.text = Constants.NonSticky.EmptyNoticeLabel.myInterestEmptyText
+                    case (.me, .Following):
+                        emptyNoticeLabel.text = Constants.NonSticky.EmptyNoticeLabel.myFollowingEmptyText
+                    case (.me, .Work):
+                        emptyNoticeLabel.text = Constants.NonSticky.EmptyNoticeLabel.myWorkEmptyText
+                    case (.me, .Exhibition):
+                        emptyNoticeLabel.text = Constants.NonSticky.EmptyNoticeLabel.myExhibitionEmptyText
+                    case (.other, .Interest):
+                        emptyNoticeLabel.text = Constants.NonSticky.EmptyNoticeLabel.otherInterestEmptyText
+                    case (.other, .Following):
+                        emptyNoticeLabel.text = Constants.NonSticky.EmptyNoticeLabel.otherFollowingEmptyText
+                    case (.other, .Work):
+                        emptyNoticeLabel.text = Constants.NonSticky.EmptyNoticeLabel.otherWorkEmptyText
+                    case (.other, .Exhibition):
+                        emptyNoticeLabel.text = Constants.NonSticky.EmptyNoticeLabel.otherExhibitionEmptyText
+                    default: break
+                    }
+                    
+                    emptyNoticeLabel.snp.makeConstraints({ m in
+                        m.centerX.equalToSuperview()
+                        m.top.equalTo(categoryView.snp.bottom).offset(Constants.NonSticky.EmptyNoticeLabel.topMargin)
+                        m.bottom.equalToSuperview().inset(Constants.NonSticky.EmptyNoticeLabel.bottomMargin)
                     })
                 }
             }
         }
     }
-    
-//    private func addGradient() {
-//        self.backgroundColor = .blue
-//        let gradientLayer = CAGradientLayer()
-//        gradientLayer.frame = self.bounds
-//        let colors: [CGColor] = [UIColor.white.withAlphaComponent(0.0).cgColor, UIColor.white.withAlphaComponent(0.7).cgColor]
-//        gradientLayer.colors = colors
-//
-//        gradientLayer.startPoint = CGPoint(x: 0.5, y: Double(91/844))
-//        gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.0)
-//        gradientLayer.locations = [0.0, 1.0]
-//        self.layer.addSublayer(gradientLayer)
-//        
-//        isGradient = true
-//    }
     
     @objc func onTapProfileImage() {
         delegate?.onTapProfileImage()

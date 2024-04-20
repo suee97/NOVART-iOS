@@ -576,11 +576,6 @@ final class MyPageViewController: BaseViewController {
     }
     
     private func onTapReport() {
-//        let viewController = MyPageReportModalViewController()
-//        reportModalTransitioningDelegate = MyPageAskModalTransitioningDelegate(from: self, to: viewController)
-//        viewController.modalPresentationStyle = .custom
-//        viewController.transitioningDelegate = reportModalTransitioningDelegate
-//        tabBarController?.present(viewController, animated: true, completion: nil)
         viewModel.showReportSheet()
     }
     
@@ -660,24 +655,28 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         switch viewModel.userState {
         case .loggedOut:
-            header.update(user: nil, userState: .loggedOut)
-        case .other:
+            header.update(user: nil, userState: .loggedOut, category: viewModel.selectedCategory, isEmpty: false)
+        case .other, .me:
             header.isHeaderSticky = isHeaderSticky
             if isHeaderSticky == true {
                 return CGSize(width: collectionView.bounds.width, height: Constants.getRelativeHeight(from: 202))
             }
-            header.update(user: viewModel.otherUser, userState: .other)
-        case .me:
-            header.isHeaderSticky = isHeaderSticky
-            if isHeaderSticky == true {
-                return CGSize(width: collectionView.bounds.width, height: Constants.getRelativeHeight(from: 202))
+            
+            var isEmpty: Bool = false
+            switch viewModel.selectedCategory {
+            case .Following:
+                isEmpty = viewModel.isFollowingsEmpty
+            case .Interest:
+                isEmpty = viewModel.isInterestsEmpty
+            case .Exhibition:
+                isEmpty = viewModel.exhibitions.isEmpty
+            case .Work:
+                isEmpty = viewModel.works.isEmpty
             }
-            if viewModel.selectedCategory == .Interest {
-                header.update(user: Authentication.shared.user, userState: .me, isInterestsEmpty: viewModel.isInterestsEmpty)
-            } else if viewModel.selectedCategory == .Following {
-                header.update(user: Authentication.shared.user, userState: .me, isFollowingsEmpty: viewModel.isFollowingsEmpty)
-            } else {
-                header.update(user: Authentication.shared.user, userState: .me)
+            if viewModel.userState == .me {
+                header.update(user: Authentication.shared.user, userState: .me, category: viewModel.selectedCategory, isEmpty: isEmpty)
+            } else if viewModel.userState == .other {
+                header.update(user: viewModel.otherUser, userState: .other, category: viewModel.selectedCategory, isEmpty: isEmpty)
             }
         }
         return header.systemLayoutSizeFitting(.init(width: collectionView.bounds.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
@@ -696,20 +695,26 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         switch viewModel.userState {
         case .loggedOut:
-            header.update(user: nil, userState: .loggedOut)
-        case .other:
-            header.update(user: viewModel.otherUser, userState: .other)
-            if isHeaderFirstSetup {
-                header.workButton.setState(true)
+            header.update(user: nil, userState: .loggedOut, category: viewModel.selectedCategory, isEmpty: false)
+        case .other, .me:
+            var isEmpty: Bool = false
+            switch viewModel.selectedCategory {
+            case .Following:
+                isEmpty = viewModel.isFollowingsEmpty
+            case .Interest:
+                isEmpty = viewModel.isInterestsEmpty
+            case .Exhibition:
+                isEmpty = viewModel.exhibitions.isEmpty
+            case .Work:
+                isEmpty = viewModel.works.isEmpty
             }
-        case .me:
-            if viewModel.selectedCategory == .Interest {
-                header.update(user: Authentication.shared.user, userState: .me, isInterestsEmpty: viewModel.isInterestsEmpty)
-            } else if viewModel.selectedCategory == .Following {
-                header.update(user: Authentication.shared.user, userState: .me, isFollowingsEmpty: viewModel.isFollowingsEmpty)
-            } else {
-                header.update(user: Authentication.shared.user, userState: .me)
+            
+            if viewModel.userState == .me {
+                header.update(user: Authentication.shared.user, userState: .me, category: viewModel.selectedCategory, isEmpty: isEmpty)
+            } else if viewModel.userState == .other {
+                header.update(user: viewModel.otherUser, userState: .other, category: viewModel.selectedCategory, isEmpty: isEmpty)
             }
+            
             if isHeaderFirstSetup {
                 header.workButton.setState(true)
             }
