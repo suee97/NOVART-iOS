@@ -354,6 +354,16 @@ final class ProductInfoUploadViewController: BaseViewController {
         setupData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        setUpKeyboardObserver()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+//        removeKeyboardObserver()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupData()
@@ -526,6 +536,7 @@ final class ProductInfoUploadViewController: BaseViewController {
                 self.descriptionTextView.text = productModel.description
                 self.descriptionCountLabel.text = "\(productModel.description?.count ?? 0)"
                 self.recommendTagCountLabel.text = "\(productModel.artTagList.count)"
+                self.priceTextField.isHidden = !productModel.forSale
 
             }
             .store(in: &cancellables)
@@ -616,9 +627,10 @@ final class ProductInfoUploadViewController: BaseViewController {
             let keyboardHeight = keyboardSize.height
             let currentOffset = scrollView.contentOffset
             
+            let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+            self.scrollView.contentInset = contentInset
+            
             if (tagTextField.isFirstResponder && currentOffset.y + keyboardHeight < tagLabel.frame.minY) || (priceTextField.isFirstResponder) {
-                let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-                self.scrollView.contentInset = contentInset
                 self.scrollView.scrollIndicatorInsets = contentInset
                 let newOffset = CGPoint(x: 0, y: currentOffset.y + keyboardSize.height)
                 self.scrollView.setContentOffset(newOffset, animated: true)
@@ -765,3 +777,45 @@ extension ProductInfoUploadViewController: UITextFieldDelegate {
         previewButton.isEnabled =  (titleText.trimmingCharacters(in: [" "]).count > 0 && viewModel.categories.filter({$0.isSelected}).count == 1)
     }
 }
+
+//// MARK: - Keyboard
+//extension ProductInfoUploadViewController {
+//    private func setUpKeyboardObserver() {
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+//    }
+//    
+//    private func removeKeyboardObserver() {
+//        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+//    }
+//    
+//    @objc private func keyboardWillShow(_ notification: Notification) {
+//        if isKeyboardShowing { return }
+//        
+//        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let tabBarHeight = self.tabBarController?.tabBar.frame.height {
+//            UIView.animate(withDuration: 0.3) {
+//                let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height - tabBarHeight, right: 0)
+//                self.scrollView.contentInset = contentInset
+//                self.scrollView.scrollIndicatorInsets = contentInset
+//                
+//                let currentOffset = self.scrollView.contentOffset
+//                let newOffset = CGPoint(x: currentOffset.x, y: currentOffset.y + keyboardSize.height - tabBarHeight)
+//                self.scrollView.setContentOffset(newOffset, animated: true)
+//            }
+//            isKeyboardShowing = true
+//        }
+//    }
+//    
+//    @objc private func keyboardWillHide(_ notification: Notification) {
+//        UIView.animate(withDuration: 0.3) {
+//            self.scrollView.contentInset = .zero
+//            self.scrollView.scrollIndicatorInsets = .zero
+//            self.isKeyboardShowing = false
+//        }
+//    }
+//    
+//    @objc private func hideKeyboard() {
+//        view.endEditing(true)
+//    }
+//}

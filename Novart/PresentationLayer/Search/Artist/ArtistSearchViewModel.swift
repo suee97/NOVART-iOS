@@ -24,6 +24,11 @@ final class ArtistSearchViewModel {
         self.isLastPage = data?.isLastPage.artists ?? true
         self.coordinator = coordinator
     }
+    
+    @MainActor
+    func presentArtistViewController(artistId: Int64) {
+        coordinator?.navigate(to: .artist(artistId))
+    }
 }
 
 

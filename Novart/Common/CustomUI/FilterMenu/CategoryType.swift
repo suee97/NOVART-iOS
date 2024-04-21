@@ -12,6 +12,6 @@ enum CategoryType: String, CaseIterable, Decodable {
     case painting = "회화"
     case craft = "공예"
     case graphic = "그래픽"
-    case product = "리빙"
+    case product = "제품"
     case fashion = "패션"
 }
