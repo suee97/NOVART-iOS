@@ -34,6 +34,8 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep>, L
             showAskSheet(user: user)
         case .report:
             showReportSheet(productId: productId)
+        case let .search(query):
+            closeAndShowSearch(query: query)
         default:
             break
         }
@@ -60,6 +62,16 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep>, L
             myPageCoordinator.userId = userId
             parentCoordinator.add(coordinators: myPageCoordinator)
             myPageCoordinator.startAsPush()
+        }
+    }
+    
+    @MainActor
+    private func closeAndShowSearch(query: String) {
+        self.close { [weak self] in
+            guard let self, let parentCoordinator = self.parentCoordinator , let navigator = parentCoordinator.navigator as? StackNavigator else { return }
+            let searchCoordinator = SearchCoordinator(navigator: navigator)
+            parentCoordinator.add(coordinators: searchCoordinator)
+            searchCoordinator.startAsPush(query: query)
         }
     }
     

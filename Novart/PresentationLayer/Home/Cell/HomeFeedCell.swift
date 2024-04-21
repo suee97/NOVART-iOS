@@ -202,8 +202,10 @@ final class HomeFeedCell: UICollectionViewCell {
         
         if item.imageUrls.count < 2 {
             collectionView.isScrollEnabled = false
+            pageControl.isHidden = true
         } else {
             collectionView.isScrollEnabled = true
+            pageControl.isHidden = false
         }
         
         item.$liked
