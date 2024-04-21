@@ -20,6 +20,14 @@ final class MyPageNotificationViewController: BaseViewController, PullToRefreshP
             static let cellWidth: CGFloat = Constants.screenWidth - 16
             static let cellSpacing: CGFloat = 0
         }
+        
+        enum EmptyView {
+            static let iconDiameter: CGFloat = 24
+            static let text = "받은 알림이 없어요"
+            static let textColor = UIColor.Common.grey03
+            static let font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            static let textTopMargin: CGFloat = 8
+        }
     }
     
     
@@ -43,7 +51,14 @@ final class MyPageNotificationViewController: BaseViewController, PullToRefreshP
     override func setupBindings() {
         viewModel.$notifications
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { value in
+            .sink(receiveValue: { notifications in
+                if notifications.isEmpty {
+                    self.collectionView.isHidden = true
+                    self.emptyView.isHidden = false
+                } else {
+                    self.collectionView.isHidden = false
+                    self.emptyView.isHidden = true
+                }
                 self.collectionView.reloadData()
             }).store(in: &cancellables)
     }
@@ -94,10 +109,38 @@ final class MyPageNotificationViewController: BaseViewController, PullToRefreshP
         view.backgroundColor = Constants.backgroundColor
         
         view.addSubview(collectionView)
+        view.addSubview(emptyView)
+        
         collectionView.snp.makeConstraints({ m in
             m.edges.equalToSuperview()
         })
+        emptyView.snp.makeConstraints({ m in
+            m.center.equalToSuperview()
+        })
     }
+    
+    private let emptyView: UIView = {
+        let view = UIView()
+        let imageView = UIImageView(image: UIImage(named: "icon_notification_stroke"))
+        let label = UILabel()
+        label.text = Constants.EmptyView.text
+        label.textColor = Constants.EmptyView.textColor
+        label.font = Constants.EmptyView.font
+        label.sizeToFit()
+        
+        view.addSubview(imageView)
+        view.addSubview(label)
+        imageView.snp.makeConstraints({ m in
+            m.width.height.equalTo(Constants.EmptyView.iconDiameter)
+            m.centerX.top.equalToSuperview()
+        })
+        label.snp.makeConstraints({ m in
+            m.centerX.equalToSuperview()
+            m.top.equalTo(imageView.snp.bottom).offset(Constants.EmptyView.textTopMargin)
+        })
+        
+        return view
+    }()
     
     
     // MARK: - Functions
