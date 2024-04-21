@@ -23,6 +23,13 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
         navigator.start(viewController)
     }
     
+    @MainActor
+    func startAsPush(query: String) {
+        let viewModel = SearchViewModel(query: query, coordinator: self)
+        let viewController = SearchViewController(viewModel: viewModel)
+        navigator.push(viewController, animated: true)
+    }
+    
     override func navigate(to step: SearchStep) {
         switch step {
         case let .search(data):

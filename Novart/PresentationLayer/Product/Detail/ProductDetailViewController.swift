@@ -313,6 +313,7 @@ final class ProductDetailViewController: BaseViewController {
     
     private lazy var productInfoView: ProductInfoView = {
         let view = ProductInfoView()
+        view.delegate = self
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -790,5 +791,12 @@ extension ProductDetailViewController: UIScrollViewDelegate {
             }
         }
         
+    }
+}
+
+// MARK: - ProductInfoView
+extension ProductDetailViewController: ProductInfoViewDelegate {
+    func didTapTag(index: Int) {
+        viewModel.didTapTag(at: index)
     }
 }

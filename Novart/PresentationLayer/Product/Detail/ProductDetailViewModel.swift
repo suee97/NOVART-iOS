@@ -263,6 +263,18 @@ extension ProductDetailViewModel {
     func showReportSheet() {
         coordinator?.navigate(to: .report)
     }
+    
+    @MainActor
+    func showSearchResultFor(query: String) {
+        coordinator?.navigate(to: .search(query: query))
+    }
+    
+    @MainActor
+    func didTapTag(at index: Int) {
+        guard let detailModel = productDetailSubject.value else { return }
+        let tag = detailModel.artTagList[index]
+        showSearchResultFor(query: tag)
+    }
 }
 
 extension ProductDetailViewModel {

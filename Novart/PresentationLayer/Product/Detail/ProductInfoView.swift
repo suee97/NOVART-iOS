@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol ProductInfoViewDelegate: AnyObject {
+    func didTapTag(index: Int)
+}
+
 final class ProductInfoView: UIView {
     
     // MARK: - Constant
@@ -127,6 +131,7 @@ final class ProductInfoView: UIView {
     private lazy var tagView: TagView = {
         let tagView = TagView()
         tagView.delegate = self
+        tagView.isSelectable = false
         tagView.translatesAutoresizingMaskIntoConstraints = false
         return tagView
     }()
@@ -147,6 +152,8 @@ final class ProductInfoView: UIView {
             }
         }
     }
+    
+    weak var delegate: ProductInfoViewDelegate?
     
     private var tagViewHeightConstraint: NSLayoutConstraint?
     
@@ -226,6 +233,10 @@ extension ProductInfoView: TagViewDelegate {
     func invalidateLayout(_ tagView: TagView, contentHeight: CGFloat) {
         tagViewHeightConstraint?.constant = contentHeight
         layoutIfNeeded()
+    }
+    
+    func tagView(_ tagView: TagView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.didTapTag(index: indexPath.row)
     }
 
 }
