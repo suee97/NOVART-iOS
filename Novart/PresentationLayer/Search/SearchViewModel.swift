@@ -19,6 +19,7 @@ final class SearchViewModel {
     @Published var recentSearch: [String] = []
     var currentCategory: CategoryType
     var currentQuery: String
+    var isStartAsPush: Bool = false
     
     init(data: SearchResultModel?, coordinator: SearchCoordinator) {
         self.coordinator = coordinator
@@ -29,6 +30,16 @@ final class SearchViewModel {
         self.searchResult = data
     }
     
+    init(query: String, coordinator: SearchCoordinator) {
+        self.coordinator = coordinator
+        self.productViewModel = ProductSearchViewModel(data: nil, coordinator: coordinator)
+        self.artistViewModel = ArtistSearchViewModel(data: nil, coordinator: coordinator)
+        self.currentCategory = .all
+        self.currentQuery = query
+        self.searchResult = nil
+        self.isStartAsPush = true
+    }
+    
     @MainActor
     private func presentNewSearchResultScene(with data: SearchResultModel) {
         coordinator?.navigate(to: .search(data))
@@ -37,7 +48,6 @@ final class SearchViewModel {
 
 extension SearchViewModel {
     func didTapCategory(type: CategoryType) {
-        print("tapped: \(type.rawValue)")
         currentCategory = type
         changeSearchCategory()
     }
@@ -46,7 +56,7 @@ extension SearchViewModel {
 extension SearchViewModel {
     
     func loadIntialData() {
-        if searchResult == nil {
+        if searchResult == nil && currentQuery == "" {
             Task { [weak self] in
                 guard let self else { return }
                 do {
@@ -68,6 +78,32 @@ extension SearchViewModel {
                     artistViewModel.isLastPage = artistResult.last
                     
                     searchResult = SearchResultModel(query: "", products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        } else if currentQuery != "" {
+            Task { [weak self] in
+                guard let self else { return }
+                do {
+                    async let recentSearch = self.downloadInteractor.getRecentSearch()
+                    async let productData = self.downloadInteractor.searchProducts(query: currentQuery, pageNo: 0, category: currentCategory)
+                    async let artistData = self.downloadInteractor.searchArtists(query: currentQuery, pageNo: 0, category: currentCategory)
+                    
+                    let productResult = try await productData
+                    let artistResult = try await artistData
+                    self.recentSearch = try await recentSearch.filter { !$0.isEmpty }
+                    
+                    productViewModel.products = productResult.content
+                    artistViewModel.artists = artistResult.content
+
+                    productViewModel.searchResultData = SearchResultModel(query: currentQuery, products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
+                    productViewModel.isLastPage = productResult.last
+                    
+                    artistViewModel.searchResultData = SearchResultModel(query: currentQuery, products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
+                    artistViewModel.isLastPage = artistResult.last
+                    
+                    searchResult = SearchResultModel(query: currentQuery, products: productResult.content, artists: artistResult.content, category: currentCategory, isLastPage: (products: productResult.last, artists: artistResult.last))
                 } catch {
                     print(error.localizedDescription)
                 }

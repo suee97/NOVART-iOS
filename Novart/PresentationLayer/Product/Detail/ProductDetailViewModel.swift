@@ -168,8 +168,6 @@ extension ProductDetailViewModel {
     @MainActor
     func didTapContactButton() {
         
-        guard isContactEnabled else { return }
-        
         if !Authentication.shared.isLoggedIn {
             coordinator?.navigate(to: .login)
         } else {
@@ -264,6 +262,18 @@ extension ProductDetailViewModel {
     @MainActor
     func showReportSheet() {
         coordinator?.navigate(to: .report)
+    }
+    
+    @MainActor
+    func showSearchResultFor(query: String) {
+        coordinator?.navigate(to: .search(query: query))
+    }
+    
+    @MainActor
+    func didTapTag(at index: Int) {
+        guard let detailModel = productDetailSubject.value else { return }
+        let tag = detailModel.artTagList[index]
+        showSearchResultFor(query: tag)
     }
 }
 
