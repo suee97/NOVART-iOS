@@ -69,6 +69,11 @@ final class MyPageSettingViewModel {
     func showLoginModal() {
         coordinator.navigate(to: .LoginModal)
     }
+    
+    @MainActor
+    func showPolicy(policyType: PolicyType) {
+        coordinator.navigate(to: .policy(policyType: policyType))
+    }
 }
 
 extension MyPageSettingViewModel {

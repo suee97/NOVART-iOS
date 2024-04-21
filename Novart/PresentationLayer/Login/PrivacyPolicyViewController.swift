@@ -45,6 +45,7 @@ final class PrivacyPolicyViewController: BaseViewController {
             static let trailingMargin: CGFloat = 36
             static let verticalSpacing: CGFloat = 10
             static let horizontalSpacing: CGFloat = 12
+            static let height: CGFloat = 24
         }
         
         enum NextButton {
@@ -155,6 +156,9 @@ final class PrivacyPolicyViewController: BaseViewController {
         view.title = "서비스 이용 약관 동의"
         view.isOptional = false
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapServicePolicy))
+        view.addGestureRecognizer(gesture)
         return view
     }()
     
@@ -175,6 +179,9 @@ final class PrivacyPolicyViewController: BaseViewController {
         view.title = "개인 정보 수집 및 이용 동의"
         view.isOptional = false
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapPrivacyPolicy))
+        view.addGestureRecognizer(gesture)
         return view
     }()
     
@@ -195,8 +202,23 @@ final class PrivacyPolicyViewController: BaseViewController {
         view.title = "마케팅 정보 수신 동의"
         view.isOptional = true
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapMarketingPolicy))
+        view.addGestureRecognizer(gesture)
         return view
     }()
+    
+    @objc private func onTapServicePolicy() {
+        viewModel.showPolicy(policyType: .Usage)
+    }
+    
+    @objc private func onTapPrivacyPolicy() {
+        viewModel.showPolicy(policyType: .Privacy)
+    }
+    
+    @objc private func onTapMarketingPolicy() {
+        viewModel.showPolicy(policyType: .Marketing)
+    }
     
     // MARK: - Properties
     
@@ -255,7 +277,8 @@ final class PrivacyPolicyViewController: BaseViewController {
             marketingPolicyBox.bottomAnchor.constraint(equalTo: nextButton.topAnchor, constant: -Constants.NextButton.topMargin),
             marketingPolicyView.leadingAnchor.constraint(equalTo: marketingPolicyBox.trailingAnchor, constant: Constants.PolicyView.horizontalSpacing),
             marketingPolicyView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.PolicyView.trailingMargin),
-            marketingPolicyView.centerYAnchor.constraint(equalTo: marketingPolicyBox.centerYAnchor)
+            marketingPolicyView.centerYAnchor.constraint(equalTo: marketingPolicyBox.centerYAnchor),
+            marketingPolicyView.heightAnchor.constraint(equalToConstant: Constants.PolicyView.height)
         ])
         
         view.addSubview(privacyPolicyBox)
@@ -265,7 +288,8 @@ final class PrivacyPolicyViewController: BaseViewController {
             privacyPolicyBox.bottomAnchor.constraint(equalTo: marketingPolicyBox.topAnchor, constant: -Constants.PolicyView.verticalSpacing),
             privacyPolicyView.leadingAnchor.constraint(equalTo: privacyPolicyBox.trailingAnchor, constant: Constants.PolicyView.horizontalSpacing),
             privacyPolicyView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.PolicyView.trailingMargin),
-            privacyPolicyView.centerYAnchor.constraint(equalTo: privacyPolicyBox.centerYAnchor)
+            privacyPolicyView.centerYAnchor.constraint(equalTo: privacyPolicyBox.centerYAnchor),
+            privacyPolicyView.heightAnchor.constraint(equalToConstant: Constants.PolicyView.height)
         ])
         
         view.addSubview(servicePolicyBox)
@@ -275,7 +299,8 @@ final class PrivacyPolicyViewController: BaseViewController {
             servicePolicyBox.bottomAnchor.constraint(equalTo: privacyPolicyBox.topAnchor, constant: -Constants.PolicyView.verticalSpacing),
             servicePolicyView.leadingAnchor.constraint(equalTo: servicePolicyBox.trailingAnchor, constant: Constants.PolicyView.horizontalSpacing),
             servicePolicyView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.PolicyView.trailingMargin),
-            servicePolicyView.centerYAnchor.constraint(equalTo: servicePolicyBox.centerYAnchor)
+            servicePolicyView.centerYAnchor.constraint(equalTo: servicePolicyBox.centerYAnchor),
+            servicePolicyView.heightAnchor.constraint(equalToConstant: Constants.PolicyView.height)
         ])
         
         view.addSubview(allButton)

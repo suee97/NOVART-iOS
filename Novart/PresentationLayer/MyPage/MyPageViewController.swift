@@ -70,7 +70,7 @@ final class MyPageViewController: BaseViewController {
         }
         
         enum FollowToastView {
-            static let backgroundColor = UIColor.init(hexString: "#F7F9FA")
+            static let backgroundColor = UIColor.Common.grey01_light
             static let radius: CGFloat = 12
             static let width = getRelativeWidth(from: 342)
             static let height = getRelativeHeight(from: 52)

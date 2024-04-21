@@ -273,6 +273,8 @@
 		0EE255942AC018B4008CE0D1 /* ProductSearchDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE255932AC018B4008CE0D1 /* ProductSearchDataSource.swift */; };
 		0EF59AB12AAB0ABA00FD39E3 /* ReuseableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AB02AAB0ABA00FD39E3 /* ReuseableView.swift */; };
 		0EF59AB52AAB0DC300FD39E3 /* AutoResizableTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF59AB42AAB0DC300FD39E3 /* AutoResizableTableView.swift */; };
+		5B127CD52BC2C7A3003DF39D /* UsagePolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B127CD42BC2C7A3003DF39D /* UsagePolicyViewController.swift */; };
+		5B127CDB2BC2C9E2003DF39D /* PolicyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B127CDA2BC2C9E2003DF39D /* PolicyType.swift */; };
 		5B2144CC2BAFF4CE004ED43A /* MyPageSettingRequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2144CB2BAFF4CD004ED43A /* MyPageSettingRequestModel.swift */; };
 		5B8BE2302B4CDE240068C3AB /* PlainButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8BE22F2B4CDE240068C3AB /* PlainButton.swift */; };
 		5B8BE2322B4D05C20068C3AB /* ProfileEditUserDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8BE2312B4D05C20068C3AB /* ProfileEditUserDataModel.swift */; };
@@ -594,6 +596,8 @@
 		0EE255932AC018B4008CE0D1 /* ProductSearchDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSearchDataSource.swift; sourceTree = "<group>"; };
 		0EF59AB02AAB0ABA00FD39E3 /* ReuseableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseableView.swift; sourceTree = "<group>"; };
 		0EF59AB42AAB0DC300FD39E3 /* AutoResizableTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoResizableTableView.swift; sourceTree = "<group>"; };
+		5B127CD42BC2C7A3003DF39D /* UsagePolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsagePolicyViewController.swift; sourceTree = "<group>"; };
+		5B127CDA2BC2C9E2003DF39D /* PolicyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyType.swift; sourceTree = "<group>"; };
 		5B2144CB2BAFF4CD004ED43A /* MyPageSettingRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageSettingRequestModel.swift; sourceTree = "<group>"; };
 		5B8BE22F2B4CDE240068C3AB /* PlainButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainButton.swift; sourceTree = "<group>"; };
 		5B8BE2312B4D05C20068C3AB /* ProfileEditUserDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditUserDataModel.swift; sourceTree = "<group>"; };
@@ -697,6 +701,7 @@
 				0ED9F0462B11F88600EDCD3C /* Home */,
 				0E1E21232AE5652800F15009 /* Login */,
 				5BB4A8DA2B848C6800F06959 /* Share */,
+				5B127CD82BC2C9C0003DF39D /* Policy */,
 			);
 			path = DomainLayer;
 			sourceTree = "<group>";
@@ -715,6 +720,7 @@
 				0ED9F0452B11F85F00EDCD3C /* Nickname */,
 				0EE0192F2A51493E00389A95 /* Login */,
 				0EE0195A2A56F1BD00389A95 /* MyPage */,
+				5B127CD32BC2C5B3003DF39D /* Policy */,
 			);
 			path = PresentationLayer;
 			sourceTree = "<group>";
@@ -1662,6 +1668,30 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		5B127CD32BC2C5B3003DF39D /* Policy */ = {
+			isa = PBXGroup;
+			children = (
+				5B127CD42BC2C7A3003DF39D /* UsagePolicyViewController.swift */,
+			);
+			path = Policy;
+			sourceTree = "<group>";
+		};
+		5B127CD82BC2C9C0003DF39D /* Policy */ = {
+			isa = PBXGroup;
+			children = (
+				5B127CD92BC2C9D9003DF39D /* Model */,
+			);
+			path = Policy;
+			sourceTree = "<group>";
+		};
+		5B127CD92BC2C9D9003DF39D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5B127CDA2BC2C9E2003DF39D /* PolicyType.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		5B34FA572AF2784C006FF3FC /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -2007,6 +2037,7 @@
 				5BDD4A4A2AD6BE1F00937352 /* PlainEditTextField.swift in Sources */,
 				0EE1F6B72B7A1DDB00756891 /* CleanTarget.swift in Sources */,
 				0EE019452A56EEF300389A95 /* SearchViewController.swift in Sources */,
+				5B127CDB2BC2C9E2003DF39D /* PolicyType.swift in Sources */,
 				0EA8F8352A90967300ADFBFB /* HomeFeedCell.swift in Sources */,
 				5BB9F16E2ADD029500C347F3 /* ToggleSwitchView.swift in Sources */,
 				0EE019A02A6BC57E00389A95 /* APIConstants.swift in Sources */,
@@ -2095,6 +2126,7 @@
 				0EE019A82A6BC5ED00389A95 /* HeadersAdapter.swift in Sources */,
 				5BFC08592B3FEF5F0063EF89 /* MyPageDownloadInteractor.swift in Sources */,
 				5BF6243F2B78921000F502FE /* ReportViewController.swift in Sources */,
+				5B127CD52BC2C7A3003DF39D /* UsagePolicyViewController.swift in Sources */,
 				0E1E212F2AECE43C00F15009 /* CommentViewModel.swift in Sources */,
 				5BFC08612B4A84980063EF89 /* ProfileEditRequestBodyModel.swift in Sources */,
 				0ECDFC192B1202EB00F63921 /* APIClient+Comment.swift in Sources */,
