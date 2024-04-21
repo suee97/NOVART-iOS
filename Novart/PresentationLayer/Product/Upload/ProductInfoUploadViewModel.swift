@@ -49,7 +49,7 @@ final class ProductInfoUploadViewModel {
     init(coordinator: ProductUploadCoordinator?, uploadModel: ProductUploadModel) {
         self.coordinator = coordinator
         self.uploadModel = uploadModel
-        let categories: [CategoryType] = [.craft, .fashion, .product, .graphic, .painting]
+        let categories: [CategoryType] = [.painting, .craft, .graphic, .product, .fashion]
         self.categories = categories.map { TagItem(tag: $0.rawValue) }
     }
     

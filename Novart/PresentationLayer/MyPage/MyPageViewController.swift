@@ -121,9 +121,6 @@ final class MyPageViewController: BaseViewController {
     private var isHeaderFirstSetup = true
     private var isGradient = false
     private var isOtherUserFollowing: Bool?
-    private var askModalTransitioningDelegate: MyPageAskModalTransitioningDelegate!
-    private var reportModalTransitioningDelegate: MyPageAskModalTransitioningDelegate!
-    private var userBlockModalTransitioningDelegate: MyPageAskModalTransitioningDelegate!
     
     
     // MARK: - LifeCycle
@@ -143,6 +140,8 @@ final class MyPageViewController: BaseViewController {
         navigationController?.navigationBar.compactAppearance = Constants.appearance
         navigationController?.navigationBar.standardAppearance = Constants.appearance
         navigationController?.navigationBar.scrollEdgeAppearance = Constants.appearance
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.isNavigationBarHidden = false
         
         if viewModel.userState == .other {
             if let tab = tabBarController {
@@ -579,11 +578,6 @@ final class MyPageViewController: BaseViewController {
     }
     
     private func onTapReport() {
-//        let viewController = MyPageReportModalViewController()
-//        reportModalTransitioningDelegate = MyPageAskModalTransitioningDelegate(from: self, to: viewController)
-//        viewController.modalPresentationStyle = .custom
-//        viewController.transitioningDelegate = reportModalTransitioningDelegate
-//        tabBarController?.present(viewController, animated: true, completion: nil)
         viewModel.showReportSheet()
     }
     
@@ -663,24 +657,28 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         switch viewModel.userState {
         case .loggedOut:
-            header.update(user: nil, userState: .loggedOut)
-        case .other:
+            header.update(user: nil, userState: .loggedOut, category: viewModel.selectedCategory, isEmpty: false)
+        case .other, .me:
             header.isHeaderSticky = isHeaderSticky
             if isHeaderSticky == true {
                 return CGSize(width: collectionView.bounds.width, height: Constants.getRelativeHeight(from: 202))
             }
-            header.update(user: viewModel.otherUser, userState: .other)
-        case .me:
-            header.isHeaderSticky = isHeaderSticky
-            if isHeaderSticky == true {
-                return CGSize(width: collectionView.bounds.width, height: Constants.getRelativeHeight(from: 202))
+            
+            var isEmpty: Bool = false
+            switch viewModel.selectedCategory {
+            case .Following:
+                isEmpty = viewModel.isFollowingsEmpty
+            case .Interest:
+                isEmpty = viewModel.isInterestsEmpty
+            case .Exhibition:
+                isEmpty = viewModel.exhibitions.isEmpty
+            case .Work:
+                isEmpty = viewModel.works.isEmpty
             }
-            if viewModel.selectedCategory == .Interest {
-                header.update(user: Authentication.shared.user, userState: .me, isInterestsEmpty: viewModel.isInterestsEmpty)
-            } else if viewModel.selectedCategory == .Following {
-                header.update(user: Authentication.shared.user, userState: .me, isFollowingsEmpty: viewModel.isFollowingsEmpty)
-            } else {
-                header.update(user: Authentication.shared.user, userState: .me)
+            if viewModel.userState == .me {
+                header.update(user: Authentication.shared.user, userState: .me, category: viewModel.selectedCategory, isEmpty: isEmpty)
+            } else if viewModel.userState == .other {
+                header.update(user: viewModel.otherUser, userState: .other, category: viewModel.selectedCategory, isEmpty: isEmpty)
             }
         }
         return header.systemLayoutSizeFitting(.init(width: collectionView.bounds.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
@@ -699,22 +697,28 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         switch viewModel.userState {
         case .loggedOut:
-            header.update(user: nil, userState: .loggedOut)
-        case .other:
-            header.update(user: viewModel.otherUser, userState: .other)
+            header.update(user: nil, userState: .loggedOut, category: viewModel.selectedCategory, isEmpty: false)
+        case .other, .me:
+            var isEmpty: Bool = false
+            switch viewModel.selectedCategory {
+            case .Following:
+                isEmpty = viewModel.isFollowingsEmpty
+            case .Interest:
+                isEmpty = viewModel.isInterestsEmpty
+            case .Exhibition:
+                isEmpty = viewModel.exhibitions.isEmpty
+            case .Work:
+                isEmpty = viewModel.works.isEmpty
+            }
+            
+            if viewModel.userState == .me {
+                header.update(user: Authentication.shared.user, userState: .me, category: viewModel.selectedCategory, isEmpty: isEmpty)
+            } else if viewModel.userState == .other {
+                header.update(user: viewModel.otherUser, userState: .other, category: viewModel.selectedCategory, isEmpty: isEmpty)
+            }
+            
             if isHeaderFirstSetup {
                 header.workButton.setState(true)
-            }
-        case .me:
-            if viewModel.selectedCategory == .Interest {
-                header.update(user: Authentication.shared.user, userState: .me, isInterestsEmpty: viewModel.isInterestsEmpty)
-            } else if viewModel.selectedCategory == .Following {
-                header.update(user: Authentication.shared.user, userState: .me, isFollowingsEmpty: viewModel.isFollowingsEmpty)
-            } else {
-                header.update(user: Authentication.shared.user, userState: .me)
-            }
-            if isHeaderFirstSetup {
-                header.interestButton.setState(true)
             }
         }
         
@@ -791,26 +795,5 @@ extension MyPageViewController: MyPageHeaderViewDelegate {
         if viewModel.userState == .me {
             viewModel.showProfileEdit()
         }
-    }
-}
-
-
-// MARK: - TransitionDelegate
-final class MyPageAskModalTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
-    
-    init(from presented: UIViewController, to presenting: UIViewController) {
-        super.init()
-    }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return nil
-    }
-    
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        return MyPageAskModalPresentaionController(presentedViewController: presented, presenting: presenting)
-    }
-    
-    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        return nil
     }
 }

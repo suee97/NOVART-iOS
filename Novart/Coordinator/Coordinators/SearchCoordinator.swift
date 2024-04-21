@@ -23,13 +23,21 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
         navigator.start(viewController)
     }
     
+    @MainActor
+    func startAsPush(query: String) {
+        let viewModel = SearchViewModel(query: query, coordinator: self)
+        let viewController = SearchViewController(viewModel: viewModel)
+        navigator.push(viewController, animated: true)
+    }
+    
     override func navigate(to step: SearchStep) {
         switch step {
         case let .search(data):
             showSearchResultScene(data: data)
         case let .product(id):
             presentProductDetailVC(productId: id)
-        default: break
+        case let .artist(id):
+            presentArtistInfo(id: id)
         }
     }
     
@@ -49,6 +57,14 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
         add(coordinators: productDetailCoordinator)
         
         productDetailCoordinator.start()
+    }
+    
+    @MainActor
+    private func presentArtistInfo(id: Int64) {
+        let myPageCoordinator = MyPageCoordinator(navigator: navigator)
+        myPageCoordinator.userId = id
+        add(coordinators: myPageCoordinator)
+        myPageCoordinator.startAsPush()
     }
 }
 

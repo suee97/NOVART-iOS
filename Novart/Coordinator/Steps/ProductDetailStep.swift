@@ -16,6 +16,7 @@ enum ProductDetailStep: Step {
     case login
     case ask(user: PlainUser)
     case report
+    case search(query: String)
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

@@ -80,6 +80,7 @@ final class ArtistSearchViewController: BaseViewController, PullToRefreshProtoco
         })
         
         collectionView.setCollectionViewLayout(searchCollectionViewLayout, animated: false)
+        collectionView.delegate = self
         noResultView.isHidden = true
     }
     
@@ -148,6 +149,16 @@ private extension ArtistSearchViewController {
     }
 }
 
+extension ArtistSearchViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+        let item = dataSource.snapshot().itemIdentifiers(inSection: section)[indexPath.row]
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.viewModel.presentArtistViewController(artistId: item.id)
+        }
+    }
+}
 
 // MARK: - ScrollViewDelegate
 extension ArtistSearchViewController: UIScrollViewDelegate {

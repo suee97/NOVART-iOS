@@ -290,6 +290,7 @@ final class ProductDetailViewController: BaseViewController {
             artistImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.ArtistInfo.horizontalMargin),
             artistImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             artistNameLabel.leadingAnchor.constraint(equalTo: artistImageView.trailingAnchor, constant: Constants.ArtistInfo.spacing),
+            artistNameLabel.trailingAnchor.constraint(equalTo: contactButton.leadingAnchor, constant: -Constants.ArtistInfo.spacing),
             artistNameLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             followButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.ArtistInfo.horizontalMargin),
             followButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -312,6 +313,7 @@ final class ProductDetailViewController: BaseViewController {
     
     private lazy var productInfoView: ProductInfoView = {
         let view = ProductInfoView()
+        view.delegate = self
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -648,6 +650,12 @@ final class ProductDetailViewController: BaseViewController {
         
         productInfoView.viewModel = data
         contactButton.backgroundColor = viewModel.isContactEnabled ? Constants.ArtistInfo.contactButtonColor : Constants.ArtistInfo.contactButtonDisabledColor
+        
+        if data.thumbnailImageUrls.count < 2 {
+            pageController.isHidden = true
+        } else {
+            pageController.isHidden = false
+        }
     }
     
     private func setupRecommendData(data: ProductDetailRecommendData) {
@@ -789,5 +797,12 @@ extension ProductDetailViewController: UIScrollViewDelegate {
             }
         }
         
+    }
+}
+
+// MARK: - ProductInfoView
+extension ProductDetailViewController: ProductInfoViewDelegate {
+    func didTapTag(index: Int) {
+        viewModel.didTapTag(at: index)
     }
 }

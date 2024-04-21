@@ -168,8 +168,6 @@ extension ProductDetailViewModel {
     @MainActor
     func didTapContactButton() {
         
-        guard isContactEnabled else { return }
-        
         if !Authentication.shared.isLoggedIn {
             coordinator?.navigate(to: .login)
         } else {
@@ -265,6 +263,18 @@ extension ProductDetailViewModel {
     func showReportSheet() {
         coordinator?.navigate(to: .report)
     }
+    
+    @MainActor
+    func showSearchResultFor(query: String) {
+        coordinator?.navigate(to: .search(query: query))
+    }
+    
+    @MainActor
+    func didTapTag(at index: Int) {
+        guard let detailModel = productDetailSubject.value else { return }
+        let tag = detailModel.artTagList[index]
+        showSearchResultFor(query: tag)
+    }
 }
 
 extension ProductDetailViewModel {
@@ -339,7 +349,7 @@ extension ProductDetailViewModel {
     
     func showMoreActionSheet() {
         
-        let alertController = AlertController(title: nil, attributedMessage: nil, preferredStyle: .actionSheet)
+        let alertController = AlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         if isMine {
             let editAction = AlertAction(title: "작품 편집", style: .default) { [weak self] _ in

@@ -13,7 +13,7 @@ extension MediaAuthorizationRequestable {
     @MainActor
     func showMediaPickerAuthorizationAlert() {
         
-        let alert = UIAlertController(title: "사진 접근 권한", message: "Openlink에서 사진 첨부 및 저장을 원하시는 경우 '설정'을 눌러 '사진'권한을 허용해주세요.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "사진 접근 권한", message: "Plain에서 사진 첨부 및 저장을 원하시는 경우 '설정'을 눌러 '사진'권한을 허용해주세요.", preferredStyle: .alert)
         
         let settingsAction = UIAlertAction(title: "설정", style: .default) { _ in
             if let settingURL = URL(string: UIApplication.openSettingsURLString) {

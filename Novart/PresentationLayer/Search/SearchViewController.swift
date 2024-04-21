@@ -133,7 +133,7 @@ class SearchViewController: BaseViewController {
         scrollView.isScrollEnabled = true
         scrollView.isUserInteractionEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
-        scrollView.contentInset = UIEdgeInsets(top: 0, left: Constants.leadingMargin, bottom: 0, right: 0)
+        scrollView.contentInset = UIEdgeInsets(top: 0, left: Constants.leadingMargin, bottom: 0, right: Constants.leadingMargin)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
