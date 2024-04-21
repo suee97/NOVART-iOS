@@ -650,6 +650,12 @@ final class ProductDetailViewController: BaseViewController {
         
         productInfoView.viewModel = data
         contactButton.backgroundColor = viewModel.isContactEnabled ? Constants.ArtistInfo.contactButtonColor : Constants.ArtistInfo.contactButtonDisabledColor
+        
+        if data.thumbnailImageUrls.count < 2 {
+            pageController.isHidden = true
+        } else {
+            pageController.isHidden = false
+        }
     }
     
     private func setupRecommendData(data: ProductDetailRecommendData) {
