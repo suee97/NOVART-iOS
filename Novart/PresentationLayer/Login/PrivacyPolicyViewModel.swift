@@ -31,6 +31,11 @@ final class PrivacyPolicyViewModel {
         coordinator?.navigate(to: .main)
     }
     
+    @MainActor
+    func showPolicy(policyType: PolicyType) {
+        coordinator?.navigate(to: .policy(policyType: policyType))
+    }
+    
     private func setBindings() {
         Publishers.CombineLatest($servicePolicySelected, $privacyPolicySelected)
             .sink { [weak self] isServiceSelected, isPrivacySelected in

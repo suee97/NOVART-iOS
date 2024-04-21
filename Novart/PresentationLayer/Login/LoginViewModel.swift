@@ -92,6 +92,11 @@ final class LoginViewModel {
     
     @MainActor
     func showPolicyAgreeViewController() {
-        coordinator?.navigate(to: .policy)
+        coordinator?.navigate(to: .policyAgree)
+    }
+    
+    @MainActor
+    func showPolicy() {
+        
     }
 }

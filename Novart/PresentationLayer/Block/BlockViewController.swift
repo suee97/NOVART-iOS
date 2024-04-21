@@ -14,7 +14,7 @@ final class BlockViewController: BaseViewController, BottomSheetable {
 
     private enum Constants {
         enum Handle {
-            static let color: UIColor = UIColor.Common.warmGrey02
+            static let color: UIColor = UIColor.Common.grey01
             static let width: CGFloat = 40
             static let height: CGFloat = 4
             static let topMargin: CGFloat = 12

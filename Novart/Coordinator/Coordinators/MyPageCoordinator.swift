@@ -21,7 +21,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
             selectedImage: UIImage(named: "tab_my_selected")
         )
         tabBarItem.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
-
+        
         viewController.tabBarItem = tabBarItem
         navigator.start(viewController)
     }
@@ -65,6 +65,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
             showAskSheet(user: user)
         case .logout:
             logout()
+        case let .policy(policyType):
+            showPolicy(policyType: policyType)
         }
     }
     
@@ -199,5 +201,10 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
         }
         appCoordinator.navigate(to: .login)
     }
+    
+    @MainActor
+    private func showPolicy(policyType: PolicyType) {
+        let viewController = PolicyViewController(policyType: policyType)
+        navigator.push(viewController, animated: true)
+    }
 }
-

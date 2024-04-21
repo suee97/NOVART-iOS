@@ -31,8 +31,10 @@ final class LoginCoordinator: BaseStackCoordinator<LoginStep> {
         switch step {
         case .main:
             showMain()
-        case .policy:
+        case .policyAgree:
             showPrivacyPolicyViewController()
+        case let .policy(policyType):
+            showPolicy(policyType: policyType)
         }
     }
     
@@ -69,6 +71,12 @@ final class LoginCoordinator: BaseStackCoordinator<LoginStep> {
     private func showPrivacyPolicyViewController() {
         let viewModel = PrivacyPolicyViewModel(coordinator: self)
         let viewController = PrivacyPolicyViewController(viewModel: viewModel)
+        navigator.push(viewController, animated: true)
+    }
+    
+    @MainActor
+    private func showPolicy(policyType: PolicyType) {
+        let viewController = PolicyViewController(policyType: policyType)
         navigator.push(viewController, animated: true)
     }
 }
