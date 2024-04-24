@@ -233,7 +233,7 @@ final class ProductPreviewViewController: BaseViewController {
             artistNameLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             followButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.ArtistInfo.horizontalMargin),
             followButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            artistNameLabel.trailingAnchor.constraint(equalTo: contactButton.leadingAnchor, constant: Constants.ArtistInfo.spacing),
+            artistNameLabel.trailingAnchor.constraint(equalTo: contactButton.leadingAnchor, constant: -Constants.ArtistInfo.spacing),
             contactButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             contactButton.trailingAnchor.constraint(equalTo: followButton.leadingAnchor, constant: -Constants.ArtistInfo.spacing)
         ])
