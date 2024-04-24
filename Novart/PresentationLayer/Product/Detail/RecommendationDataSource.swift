@@ -16,6 +16,7 @@ private typealias ExhibitionCellRegistration = UICollectionView.CellRegistration
 final class RecommendationDataSource: RecommendationDataSourceType {
 
     static let sectionHeaderElementKind = "RecommendationSectionHeader"
+    var currentSections: [Section] = [.artistProduct, .artistExhibition, .similarProduct]
     
     // MARK: - Section
     enum Section: Int, CaseIterable, Hashable {
@@ -44,8 +45,8 @@ final class RecommendationDataSource: RecommendationDataSourceType {
             }
         }
         
-        let headerRegistration = UICollectionView.SupplementaryRegistration<RecommendationSectionHeaderView>(elementKind: RecommendationDataSource.sectionHeaderElementKind) { supplementaryView, _, indexPath in
-            guard let section = RecommendationDataSource.Section(rawValue: indexPath.section) else { return }
+        let headerRegistration = UICollectionView.SupplementaryRegistration<RecommendationSectionHeaderView>(elementKind: RecommendationDataSource.sectionHeaderElementKind) { [weak self] supplementaryView, _, indexPath in
+            guard let section = self?.currentSections[indexPath.row] else { return }
             switch section {
             case .artistProduct:
                 supplementaryView.title = "작가의 다른 작품"
@@ -62,6 +63,7 @@ final class RecommendationDataSource: RecommendationDataSourceType {
     }
     
     func apply(_ items: [RecommendationDataSource.Section: [PlainItem]]) {
+        currentSections = [.artistProduct, .artistExhibition, .similarProduct]
         var snapshot = RecommendationDataSourceSnapshot()
         
         let productItems = items[.artistProduct] ?? []
@@ -71,16 +73,22 @@ final class RecommendationDataSource: RecommendationDataSourceType {
         if !productItems.isEmpty {
             snapshot.appendSections([.artistProduct])
             snapshot.appendItems(productItems, toSection: .artistProduct)
+        } else {
+            currentSections.removeAll(where: { $0 == .artistProduct })
         }
         
         if !exhibitionItems.isEmpty {
             snapshot.appendSections([.artistExhibition])
             snapshot.appendItems(exhibitionItems, toSection: .artistExhibition)
+        } else {
+            currentSections.removeAll(where: { $0 == .artistExhibition })
         }
         
         if !similarItems.isEmpty {
             snapshot.appendSections([.similarProduct])
             snapshot.appendItems(similarItems, toSection: .similarProduct)
+        } else {
+            currentSections.removeAll(where: { $0 == .similarProduct })
         }
     
         apply(snapshot, animatingDifferences: false)
