@@ -191,7 +191,6 @@ final class ExhibitionButtonsView: UIView {
         commentCountLabel.snp.makeConstraints({ m in
             m.centerY.equalToSuperview()
             m.left.equalTo(imageView.snp.right).offset(Constants.CommentView.Label.leftMargin)
-//            m.right.equalToSuperview().inset(12)
         })
         
         return view

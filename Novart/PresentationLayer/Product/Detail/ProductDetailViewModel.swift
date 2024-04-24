@@ -25,6 +25,7 @@ final class ProductDetailViewModel {
     var coverImageData: [RetrieveImageData] = []
     var detailImageData: [UIImage] = []
     let imageRetrieveQueue = DispatchQueue(label: "imageQueue", qos: .utility)
+    var recommendData: ProductDetailRecommendData?
     
     var didEnterEdit: Bool = false
     
@@ -106,6 +107,7 @@ extension ProductDetailViewModel {
                 let exhibitions = try await fetchExhibitions
                 
                 let recommendData = ProductDetailRecommendData(relatedProducts: relatedProducts, otherProducts: otherProducts, exhibitions: exhibitions)
+                self.recommendData = recommendData
                 self.recommendDataSubject.send(recommendData)
                 
             } catch {
@@ -400,5 +402,48 @@ extension ProductDetailViewModel {
             openChatUrl: prouctModel.artist.openChatUrl,
             following: artist.following
         )
+    }
+    
+    @MainActor
+    func didTapRecommendItem(at indexPath: IndexPath) {
+        guard let recommendData else { return }
+        var sections: [RecommendationDataSource.Section] = [.artistProduct, .artistProduct, .similarProduct]
+        
+        if recommendData.relatedProducts.isEmpty {
+            sections.removeAll(where: { $0 == .artistProduct })
+        }
+        
+        if recommendData.exhibitions.isEmpty {
+            sections.removeAll(where: { $0 == .artistExhibition })
+        }
+        
+        if recommendData.otherProducts.isEmpty {
+            sections.removeAll(where: { $0 == .similarProduct })
+        }
+        
+        let section = sections[indexPath.row]
+        switch section {
+            
+        case .artistProduct:
+            let productId = recommendData.relatedProducts[indexPath.row].id
+            showProduct(id: productId)
+        case .artistExhibition:
+            let exhibitionId = recommendData.exhibitions[indexPath.row].id
+            showExhibition(id: exhibitionId)
+        case .similarProduct:
+            let productId = recommendData.otherProducts[indexPath.row].id
+            showProduct(id: productId)
+        }
+        
+    }
+    
+    @MainActor
+    private func showProduct(id: Int64) {
+        coordinator?.navigate(to: .product(productId: id))
+    }
+    
+    @MainActor
+    private func showExhibition(id: Int64) {
+        coordinator?.navigate(to: .exhibition(id: id))
     }
 }

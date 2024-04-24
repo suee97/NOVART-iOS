@@ -545,6 +545,7 @@ final class ProductDetailViewController: BaseViewController {
         ])
         
         recommendationCollectionView.setCollectionViewLayout(recommendationLayout, animated: false)
+        recommendationCollectionView.delegate = self
         
         view.addSubview(floatingButtonStackView)
         NSLayoutConstraint.activate([
@@ -687,6 +688,12 @@ private extension ProductDetailViewController {
     @objc
     private func didTapArtistInfoView() {
         viewModel.didTapUserProfile()
+    }
+}
+
+extension ProductDetailViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel.didTapRecommendItem(at: indexPath)
     }
 }
 

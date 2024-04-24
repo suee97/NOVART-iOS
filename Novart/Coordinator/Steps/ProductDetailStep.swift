@@ -10,8 +10,8 @@ import UIKit
 enum ProductDetailStep: Step {
     case comment(productId: Int64)
     case artist(userId: Int64?)
-    case product
-    case exhibition
+    case product(productId: Int64)
+    case exhibition(id: Int64)
     case edit(product: ProductUploadModel)
     case login
     case ask(user: PlainUser)
