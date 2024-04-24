@@ -261,6 +261,16 @@ class SearchViewController: BaseViewController {
         return view
     }()
     
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "icon_nav_chevron_left"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }), for: .touchUpInside)
+        return button
+    }()
+    
     // MARK: - Properties
     
     private var viewModel: SearchViewModel
@@ -412,6 +422,10 @@ class SearchViewController: BaseViewController {
             recentSearchView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         recentSearchView.isHidden = true
+        
+        if viewModel.isStartAsPush {
+            searchBarStackView.insertArrangedSubview(backButton, at: 0)
+        }
     }
     
     private func updateSelectedPage() {
