@@ -81,16 +81,20 @@ extension MyPageViewModel {
                 
                 (interests, followings, works, exhibitions) = try await (interestsTask, followingsTask, worksTask, exhibitionsTask)
                 
-                if interests.isEmpty && userState == .me {
+                if interests.isEmpty {
                     isInterestsEmpty = true
-                    interests = try await interactor.fetchRecommendInterests()
+                    if userState == .me {
+                        interests = try await interactor.fetchRecommendInterests()
+                    }
                 } else {
                     isInterestsEmpty = false
                 }
                 
-                if followings.isEmpty && userState == .me {
+                if followings.isEmpty {
                     isFollowingsEmpty = true
-                    followings = try await interactor.fetchRecommendFollowings()
+                    if userState == .me {
+                        followings = try await interactor.fetchRecommendFollowings()
+                    }
                 } else {
                     isFollowingsEmpty = false
                 }
