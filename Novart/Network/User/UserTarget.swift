@@ -28,7 +28,7 @@ enum UserTarget: TargetType {
         case let .checkValidNickname(nickname):
             return "users/check-duplicate-nickname/\(nickname)"
         case .putDeviceToken:
-            return "users/me/fcm-device-token"
+            return "users/me/device-token"
         case let .deviceTokenTest(deviceToken):
             return "fcm/\(deviceToken)"
         }
