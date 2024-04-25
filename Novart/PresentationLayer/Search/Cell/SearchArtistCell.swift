@@ -14,7 +14,20 @@ final class SearchArtistCell: UICollectionViewCell {
     private enum Constants {
 
         static let cornerRadius: CGFloat = 12
-
+        
+        enum BackgroundImageView {
+            static let defaultColor = UIColor.init(hexString: "#CACDCF")
+        }
+        
+        enum ProfileOuterFrameView {
+            static let diameter: CGFloat = 56
+            static let color: UIColor = .white
+        }
+        
+        enum ProfileImageView {
+            static let diameter: CGFloat = 54
+        }
+        
         enum BottomInfo {
             static let textColor: UIColor = UIColor.Common.black
             static let font: UIFont = UIFont.systemFont(ofSize: 14, weight: .bold)
@@ -27,9 +40,27 @@ final class SearchArtistCell: UICollectionViewCell {
 
     private lazy var backgroundImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.backgroundColor = Constants.BackgroundImageView.defaultColor
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    private let profileOuterFrameView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.ProfileOuterFrameView.color
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = Constants.ProfileOuterFrameView.diameter / 2
+        return view
+    }()
+    
+    private lazy var profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = Constants.ProfileImageView.diameter / 2
         return imageView
     }()
     
@@ -80,6 +111,22 @@ final class SearchArtistCell: UICollectionViewCell {
             backgroundImageView.bottomAnchor.constraint(equalTo: bottomInfoView.topAnchor)
         ])
         
+        contentView.addSubview(profileOuterFrameView)
+        NSLayoutConstraint.activate([
+            profileOuterFrameView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            profileOuterFrameView.centerYAnchor.constraint(equalTo: backgroundImageView.centerYAnchor),
+            profileOuterFrameView.widthAnchor.constraint(equalToConstant: Constants.ProfileOuterFrameView.diameter),
+            profileOuterFrameView.heightAnchor.constraint(equalToConstant: Constants.ProfileOuterFrameView.diameter)
+        ])
+        
+        profileOuterFrameView.addSubview(profileImageView)
+        NSLayoutConstraint.activate([
+            profileImageView.centerXAnchor.constraint(equalTo: profileOuterFrameView.centerXAnchor),
+            profileImageView.centerYAnchor.constraint(equalTo: profileOuterFrameView.centerYAnchor),
+            profileImageView.widthAnchor.constraint(equalToConstant: Constants.ProfileImageView.diameter),
+            profileImageView.heightAnchor.constraint(equalToConstant: Constants.ProfileImageView.diameter)
+        ])
+        
         bottomInfoView.addSubview(artistLabel)
         NSLayoutConstraint.activate([
             artistLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
@@ -99,6 +146,15 @@ final class SearchArtistCell: UICollectionViewCell {
 extension SearchArtistCell {
     func update(with data: ArtistModel) {
         artistLabel.text = data.nickname
-        backgroundImageView.image = UIImage(named: "mock_table")
+        if let backgroundUrlString = data.backgroundImageUrl, let backgroundUrl = URL(string: backgroundUrlString) {
+            backgroundImageView.kf.setImage(with: backgroundUrl)
+            backgroundImageView.alpha = 0.8
+        }
+        
+        if let profileUrlString = data.profileImageUrl, let profileUrl = URL(string: profileUrlString) {
+            profileImageView.kf.setImage(with: profileUrl)
+        } else {
+            profileImageView.image = UIImage(named: "default_user_profile_image")
+        }   
     }
 }
