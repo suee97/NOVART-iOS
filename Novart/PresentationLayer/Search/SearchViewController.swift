@@ -342,7 +342,11 @@ class SearchViewController: BaseViewController {
             searchBarStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -Constants.SearchBar.horizontalMargin)
         ])
         
-        searchBar.text = viewModel.searchResult?.query
+        if let searchResult = viewModel.searchResult {
+            searchBar.text = viewModel.searchResult?.query
+        } else {
+            searchBar.text = viewModel.currentQuery
+        }
         
         viewModel.categoryItems.forEach { type in
             let categoryButton = CategoryTabButton()
