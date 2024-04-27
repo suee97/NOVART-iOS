@@ -300,15 +300,21 @@ final class MyPageViewController: BaseViewController {
                         }
                     }),
                     UIAction(title: "공유", image: UIImage(systemName: "square.and.arrow.up"), handler: { _ in
-                        print("🟢🟢🟢 공유하기(me) 🟢🟢🟢")
+                        guard let myId = Authentication.shared.user?.id else { return }
+                        let dataToShare = "https://\(URLSchemeFactory.plainURLScheme).com/profile/\(myId)"
+                        let activityController = ActivityController(activityItems: [dataToShare], applicationActivities: nil)
+                        activityController.show()
                     }),
                 ]
             }
             
             if viewModel.userState == .other {
                 return [
-                    UIAction(title: "공유", image: UIImage(systemName: "square.and.arrow.up"), handler: { _ in
-                        print("🟢🟢🟢 공유하기(other) 🟢🟢🟢")
+                    UIAction(title: "공유", image: UIImage(systemName: "square.and.arrow.up"), handler: { [weak self] _ in
+                        guard let self, let profileId = self.viewModel.userId else { return }
+                        let dataToShare = "https://\(URLSchemeFactory.plainURLScheme).com/profile/\(profileId)"
+                        let activityController = ActivityController(activityItems: [dataToShare], applicationActivities: nil)
+                        activityController.show()
                     }),
                     UIAction(title: "사용자 차단", image: UIImage(named: "icon_block"), handler: { [weak self] _ in
                         guard let self else { return }

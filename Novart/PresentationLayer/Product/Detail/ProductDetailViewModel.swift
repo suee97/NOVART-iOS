@@ -344,7 +344,7 @@ extension ProductDetailViewModel {
     }
     
     func showActivityController() {
-        let dataToShare = "제품id: \(productId) 공유 됨"
+        let dataToShare = "https://\(URLSchemeFactory.plainURLScheme).com/art/\(productId)"
         let activityController = ActivityController(activityItems: [dataToShare], applicationActivities: nil)
         activityController.show()
     }

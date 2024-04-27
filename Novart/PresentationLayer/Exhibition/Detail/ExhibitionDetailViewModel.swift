@@ -45,7 +45,7 @@ extension ExhibitionDetailViewModel {
                 let artItems = exhibitionData.arts.map { ExhibitionArtItem(item: $0) }
                 self.artItems = artItems
                 let infoItem = ExhibitionDetailInfoModel(model: exhibitionData)
-                let endItem = ExhibitionEndItem(likeCount: exhibitionData.likesCount, commentCount: exhibitionData.commentCount, likes: exhibitionData.likes)
+                let endItem = ExhibitionEndItem(exhibitionId: exhibitionId, likeCount: exhibitionData.likesCount, commentCount: exhibitionData.commentCount, likes: exhibitionData.likes)
                 
                 detailInfoItemSubject.send([.info: [infoItem], .art: artItems, .end: [endItem]])
                 let shorcutThumbnailUrls = exhibitionData.arts.compactMap { $0.thumbnailImageUrls.first }

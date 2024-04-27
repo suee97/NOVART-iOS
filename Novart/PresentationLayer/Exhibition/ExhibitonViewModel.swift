@@ -88,6 +88,14 @@ final class ExhibitionViewModel {
     func presentLoginModal() {
         coordinator.navigate(to: .login)
     }
+    
+    func didTapShareButton() {
+        guard let cellIndex else { return }
+        let exhibitionId = processedExhibitions[cellIndex].id
+        let dataToShare = "https://\(URLSchemeFactory.plainURLScheme).com/exhibition/\(exhibitionId)"
+        let activityController = ActivityController(activityItems: [dataToShare], applicationActivities: nil)
+        activityController.show()
+    }
 }
 
 private extension ExhibitionViewModel {
