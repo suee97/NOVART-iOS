@@ -8,7 +8,7 @@
 import UIKit
 
 struct URLSchemeFactory {
-    static let plainURLScheme: String = "plain-app-dev"
+    static let plainURLScheme: String = "plain-app"
     
     static func create(request: URLRequest, isMainFrame: Bool) -> URLSchemeExecutable? {
         return URLSchemeFactoryType(request: request, isMainFrame: isMainFrame)?.create()
@@ -23,7 +23,7 @@ enum URLSchemeFactoryType {
     init?(request: URLRequest, isMainFrame: Bool) {
         guard let url = request.url, let host = url.host(), isMainFrame else { return nil }
         
-        if host.hasPrefix("plain-app-dev") {
+        if host.hasPrefix("plain-app") {
             self = .plain(url)
         } else {
             self = .common(url)

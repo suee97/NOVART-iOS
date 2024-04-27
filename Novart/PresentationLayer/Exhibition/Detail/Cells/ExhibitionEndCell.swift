@@ -182,8 +182,18 @@ final class ExhibitionEndCell: UICollectionViewCell {
         button.setImage(image)
         button.setTitle("공유")
         button.translatesAutoresizingMaskIntoConstraints = false
+        let tapGuestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapShareButton))
+        button.addGestureRecognizer(tapGuestureRecognizer)
         return button
     }()
+    
+    @objc
+    func didTapShareButton() {
+        guard let item = self.item else { return }
+        let dataToShare = "https://\(URLSchemeFactory.plainURLScheme).com/exhibition/\(item.exhibitionId)"
+        let activityController = ActivityController(activityItems: [dataToShare], applicationActivities: nil)
+        activityController.show()
+    }
     
     private lazy var buttonStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [likeButton, commentButton, shareButton])
@@ -233,6 +243,7 @@ final class ExhibitionEndCell: UICollectionViewCell {
     var input: PassthroughSubject<(ExhibitionDetailViewController.ArtCellInput, Int64), Never>?
     var currentLikeState: Bool = false
     var currentLikeCount: Int = 0
+    var item: ExhibitionEndItem?
     
     // MARK: - Initialization
 
@@ -261,6 +272,7 @@ extension ExhibitionEndCell {
     func update(with item: ExhibitionEndItem) {
         contentView.backgroundColor = UIColor(red: 242/255.0, green: 242/255.0, blue: 242/255.0, alpha: 1.0)
         
+        self.item = item
         likeButton.setTitle(convertNumToString(item.likeCount))
         commentButton.setTitle(convertNumToString(item.commentCount))
         updateLikeButton(like: item.likes)
