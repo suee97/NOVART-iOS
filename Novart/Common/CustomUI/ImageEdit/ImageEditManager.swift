@@ -18,6 +18,7 @@ class ImageEditManager: NSObject {
         viewController.toolbarPosition = .bottom
         viewController.doneButtonTitle = "완료"
         viewController.cancelButtonTitle = "취소"
+        viewController.allowedAspectRatios = [.preset4x3, .presetSquare]
         viewController.delegate = self
         presenter.present(viewController, animated: true)
     }
