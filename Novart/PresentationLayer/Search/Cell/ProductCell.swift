@@ -115,6 +115,13 @@ final class ProductCell: UICollectionViewCell {
         layer.shadowOpacity = 0.1
         layer.shadowOffset = CGSize(width: 0, height: 2)
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        productImageView.image = nil
+        productLabel.text = ""
+        artistLabel.text = ""
+    }
 }
 
 extension ProductCell {
