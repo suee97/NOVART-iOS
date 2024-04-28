@@ -26,6 +26,7 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
     @MainActor
     func startAsPush(query: String) {
         let viewModel = SearchViewModel(query: query, coordinator: self)
+        viewModel.isStartAsPush = true
         let viewController = SearchViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }
@@ -44,6 +45,7 @@ final class SearchCoordinator: BaseStackCoordinator<SearchStep> {
     @MainActor
     private func showSearchResultScene(data: SearchResultModel) {
         let viewModel = SearchViewModel(data: data, coordinator: self)
+        viewModel.isStartAsPush = true
         let searchViewController = SearchViewController(viewModel: viewModel)
         navigator.push(searchViewController, animated: true)
     }

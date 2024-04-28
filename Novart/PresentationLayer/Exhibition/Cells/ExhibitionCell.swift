@@ -14,6 +14,7 @@ final class ExhibitionCell: UICollectionViewCell {
         static let shadowOpacity: Float = 0.12
         static let shadowRadius: CGFloat = 4
         static let shadowOffset = CGSize(width: 0, height: 0.5)
+        static let noExhibitionIconBottomMargin: CGFloat = 20
         
         enum ExhibitionImageView {
             static let radius: CGFloat = 12
@@ -54,9 +55,15 @@ final class ExhibitionCell: UICollectionViewCell {
     // MARK: - UI
     var exhibition: ProcessedExhibition? {
         didSet {
-            guard let exhibition = exhibition else { return }
-            exhibitionImageView.image = exhibition.imageView.image
-            descLabel.text = exhibition.description
+            if let exhibition {
+                exhibitionImageView.image = exhibition.imageView.image
+                descLabel.text = exhibition.description
+            } else {
+                previewLabel.isHidden = true
+                exhibitionImageView.image = nil
+                descLabel.text = ""
+                noExhibitionIcon.isHidden = false
+            }
         }
     }
     
@@ -96,6 +103,12 @@ final class ExhibitionCell: UICollectionViewCell {
         return label
     }()
     
+    private let noExhibitionIcon: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "icon_no_exhibition")
+        return imageView
+    }()
+    
     private func setUpView() {
         backgroundColor = .clear
         
@@ -103,6 +116,7 @@ final class ExhibitionCell: UICollectionViewCell {
         container.addSubview(exhibitionImageView)
         container.addSubview(descLabel)
         container.addSubview(previewLabel)
+        container.addSubview(noExhibitionIcon)
         
         container.snp.makeConstraints({ m in
             m.edges.equalToSuperview()
@@ -124,6 +138,11 @@ final class ExhibitionCell: UICollectionViewCell {
             m.centerX.equalToSuperview()
             m.bottom.equalToSuperview().inset(Constants.PreviewLabel.bottomMargin)
         })
+        
+        noExhibitionIcon.snp.makeConstraints { m in
+            m.centerX.equalToSuperview()
+            m.centerY.equalToSuperview().offset(-Constants.noExhibitionIconBottomMargin)
+        }
     }
     
     private func setUpShadow() {
@@ -133,5 +152,13 @@ final class ExhibitionCell: UICollectionViewCell {
         layer.shadowOffset = Constants.shadowOffset
         contentView.layer.masksToBounds = true
         layer.cornerRadius = Constants.radius
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        exhibitionImageView.image = nil
+        descLabel.text = ""
+        previewLabel.isHidden = false
+        noExhibitionIcon.isHidden = true
     }
 }

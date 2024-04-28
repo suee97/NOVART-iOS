@@ -85,28 +85,51 @@ final class ExhibitionButtonsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func setupInitialData() {
+        likeCountLabel.text = "0"
+        self.likeView.snp.removeConstraints()
+        let likeViewWidth = self.likeCountLabel.bounds.width + 52
+        self.likeView.snp.makeConstraints({ m in
+            m.width.equalTo(likeViewWidth)
+        })
+        self.likeHeartImageView.image = UIImage(named: "icon_exhibition_heart")
+        
+        self.commentCountLabel.text = "0"
+        self.commentView.snp.removeConstraints()
+        let commenViewWidth = self.commentCountLabel.bounds.width + 52
+        self.commentView.snp.makeConstraints({ m in
+            m.width.equalTo(commenViewWidth)
+        })
+        
+    
+    }
+    
     private func setUpBindings() {
         viewModel.$cellIndex.sink(receiveValue: { [weak self] value in
-            guard let self, let value = value else { return }
+            guard let self else { return }
             
-            // LikeView
-            self.likeCountLabel.text = self.convertCountToString(count: self.viewModel.currentLikeCounts[value])
-            self.likeView.snp.removeConstraints()
-            let likeViewWidth = self.likeCountLabel.bounds.width + 52
-            self.likeView.snp.makeConstraints({ m in
-                m.width.equalTo(likeViewWidth)
-            })
-            
-            // LikeHeart
-            self.likeHeartImageView.image = self.viewModel.currentLikeStates[value] ? UIImage(named: "icon_exhibition_heart_fill") : UIImage(named: "icon_exhibition_heart")
-            
-            // CommentView
-            self.commentCountLabel.text = self.convertCountToString(count: self.viewModel.processedExhibitions[value].commentCount)
-            self.commentView.snp.removeConstraints()
-            let commenViewWidth = self.commentCountLabel.bounds.width + 52
-            self.commentView.snp.makeConstraints({ m in
-                m.width.equalTo(commenViewWidth)
-            })
+            if let value {
+                // LikeView
+                self.likeCountLabel.text = self.convertCountToString(count: self.viewModel.currentLikeCounts[value])
+                self.likeView.snp.removeConstraints()
+                let likeViewWidth = self.likeCountLabel.bounds.width + 52
+                self.likeView.snp.makeConstraints({ m in
+                    m.width.equalTo(likeViewWidth)
+                })
+                
+                // LikeHeart
+                self.likeHeartImageView.image = self.viewModel.currentLikeStates[value] ? UIImage(named: "icon_exhibition_heart_fill") : UIImage(named: "icon_exhibition_heart")
+                
+                // CommentView
+                self.commentCountLabel.text = self.convertCountToString(count: self.viewModel.processedExhibitions[value].commentCount)
+                self.commentView.snp.removeConstraints()
+                let commenViewWidth = self.commentCountLabel.bounds.width + 52
+                self.commentView.snp.makeConstraints({ m in
+                    m.width.equalTo(commenViewWidth)
+                })
+            } else {
+                setupInitialData()
+            }
             
         }).store(in: &cancellables)
     }
@@ -129,6 +152,7 @@ final class ExhibitionButtonsView: UIView {
         likeCountLabel.snp.makeConstraints({ m in
             m.centerY.equalToSuperview()
             m.left.equalTo(likeHeartImageView.snp.right).offset(Constants.LikeView.Label.leftMargin)
+//            m.right.equalToSuperview().inset(12)
         })
         
         return view

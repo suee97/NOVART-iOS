@@ -92,7 +92,7 @@ final class MyPageProfileEditViewController: BaseViewController {
             enum DupCheckButton {
                 static let title: String = "중복확인"
                 static let font = UIFont.systemFont(ofSize: 14, weight: .medium)
-                static let activeBackgroundColor = UIColor.Common.main
+                static let activeBackgroundColor = UIColor.Common.grey04
                 static let activeForegroundColor = UIColor.Common.white
                 static let inActiveBackgroundColor = UIColor.Common.grey00
                 static let inActiveForegroundColor = UIColor.Common.grey01

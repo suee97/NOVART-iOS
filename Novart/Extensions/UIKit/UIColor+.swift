@@ -81,5 +81,9 @@ extension UIColor {
         static var warmGrey04: UIColor {
             UIColor(named: "warm_grey04") ?? .clear
         }
+        
+        static var defaultGrey: UIColor {
+            UIColor(named: "defaultGrey") ?? .clear
+        }
     }
 }

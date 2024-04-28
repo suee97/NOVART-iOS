@@ -57,7 +57,7 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
         enum Feed {
             static let itemWidth: CGFloat = screenWidth - leadingMargin * 2
             static let itemHeight: CGFloat = itemWidth * 4 / 3
-            static let spacing: CGFloat = 24
+            static let spacing: CGFloat = 12
         }
         
         enum FilterButton {

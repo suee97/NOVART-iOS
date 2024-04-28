@@ -36,6 +36,11 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep>, L
             showReportSheet(productId: productId)
         case let .search(query):
             closeAndShowSearch(query: query)
+        case let .product(productId):
+            closeAndShowProduct(id: productId)
+        case let .exhibition(id):
+            closeAndShowExhibition(id: id)
+            
         default:
             break
         }
@@ -106,5 +111,34 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep>, L
         
         add(coordinators: coordinator)
         coordinator.start()
+    }
+    
+    @MainActor
+    private func closeAndShowProduct(id: Int64) {
+        self.close { [weak self] in
+            guard let self, let parentCoordinator = self.parentCoordinator , let navigator = parentCoordinator.navigator as? StackNavigator else { return }
+            let root = BaseNavigationController()
+            let productDetailStackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
+            let productDetailCoordinator = ProductDetailCoordinator(navigator: productDetailStackNavigator)
+            productDetailCoordinator.productId = id
+            parentCoordinator.add(coordinators: productDetailCoordinator)
+            productDetailCoordinator.start()
+        
+        }
+    }
+    
+    @MainActor
+    private func closeAndShowExhibition(id: Int64) {
+        
+        self.close { [weak self] in
+            guard let self, let parentCoordinator = self.parentCoordinator , let navigator = parentCoordinator.navigator as? StackNavigator else { return }
+            let root = BaseNavigationController()
+            let stackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
+            let exhibitionDetailCoordinator = ExhibitionDetailCoordinator(navigator: stackNavigator)
+            exhibitionDetailCoordinator.exhibitionId = id
+            parentCoordinator.add(coordinators: exhibitionDetailCoordinator)
+            exhibitionDetailCoordinator.start()
+
+        }
     }
 }

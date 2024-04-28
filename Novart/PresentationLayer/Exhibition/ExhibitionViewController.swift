@@ -120,8 +120,6 @@ final class ExhibitionViewController: BaseViewController {
     private lazy var buttonsView = ExhibitionButtonsView(viewModel: viewModel)
     
     override func setupView() {
-        view.backgroundColor = .gray
-        
         view.addSubview(collectionView)
         view.addSubview(pageControl)
         view.addSubview(buttonsView)
@@ -145,6 +143,8 @@ final class ExhibitionViewController: BaseViewController {
             m.height.equalTo(Constants.ButtonsView.height)
         })
         buttonsView.delegate = self
+        
+        view.backgroundColor = UIColor.Common.defaultGrey
     }
 }
 
@@ -179,7 +179,8 @@ extension ExhibitionViewController: UICollectionViewDelegate, UICollectionViewDa
             let visibleRect = CGRect(origin: collectionView.contentOffset, size: collectionView.bounds.size)
             let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
             let visibleIndexPath = collectionView.indexPathForItem(at: visiblePoint)
-            if let index = visibleIndexPath?.row {
+            if let index = visibleIndexPath?.row,
+               !self.viewModel.processedExhibitions.isEmpty {
                 self.viewModel.cellIndex = index
             }
         }
@@ -197,11 +198,21 @@ extension ExhibitionViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if viewModel.processedExhibitions.isEmpty {
+            return 1
+        }
+        
         return viewModel.processedExhibitions.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ExhibitionCell.reuseIdentifier, for: indexPath) as? ExhibitionCell else { return UICollectionViewCell() }
+        
+        if viewModel.processedExhibitions.isEmpty {
+            cell.exhibition = nil
+            return cell
+        }
+        
         cell.exhibition = viewModel.processedExhibitions[indexPath.row]
         
         return cell
@@ -212,6 +223,7 @@ extension ExhibitionViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard !viewModel.processedExhibitions.isEmpty else { return }
         let exhibition = viewModel.processedExhibitions[indexPath.row]
         viewModel.showExhibitionDetail(exhibitionId: Int64(exhibition.id))
     }
@@ -231,7 +243,7 @@ extension ExhibitionViewController: ExhibitionButtonsViewDelegate {
     }
     
     func didTapShareButton() {
-        print("share")
+        viewModel.didTapShareButton()
     }
     
     func didTapInfoButton() {
