@@ -16,6 +16,7 @@ final class ProductDetailViewController: BaseViewController {
         static let horizontalMargin: CGFloat = 24
         static let topMargin: CGFloat = 62
         static let screenWidth: CGFloat = UIScreen.main.bounds.width
+        static let closeButtonTopMargin: CGFloat = 72
         
         enum TitleLabel {
             static let font: UIFont = .systemFont(ofSize: 20, weight: .semibold)
@@ -73,7 +74,7 @@ final class ProductDetailViewController: BaseViewController {
             static let contactButtonWidth: CGFloat = 60
             static let followButtonWidth: CGFloat = 74
             static let profileButtonWidth: CGFloat = 106
-            static let contactButtonColor: UIColor = UIColor.Common.grey04
+            static let contactButtonColor: UIColor = UIColor.Common.grey01
             static let contactButtonDisabledColor: UIColor = UIColor.Common.warmGrey02
             static let followButtonColor: UIColor = UIColor.Common.main
             static let followingButtonColor: UIColor = UIColor.Common.grey04
@@ -484,7 +485,7 @@ final class ProductDetailViewController: BaseViewController {
         
         view.addSubview(closeButton)
         NSLayoutConstraint.activate([
-            closeButton.centerYAnchor.constraint(equalTo: view.topAnchor, constant: Constants.topMargin),
+            closeButton.centerYAnchor.constraint(equalTo: view.topAnchor, constant: Constants.closeButtonTopMargin),
             closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalMargin)
         ])
         
@@ -649,7 +650,6 @@ final class ProductDetailViewController: BaseViewController {
         }
         
         productInfoView.viewModel = data
-        contactButton.backgroundColor = viewModel.isContactEnabled ? Constants.ArtistInfo.contactButtonColor : Constants.ArtistInfo.contactButtonDisabledColor
         
         if data.thumbnailImageUrls.count < 2 {
             pageController.isHidden = true

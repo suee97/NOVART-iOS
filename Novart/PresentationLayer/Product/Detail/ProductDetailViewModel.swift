@@ -38,15 +38,6 @@ final class ProductDetailViewModel {
         return Authentication.shared.user?.id == artistId
     }
     
-    var isContactEnabled: Bool {
-        guard let productModel = productDetailSubject.value else { return false }
-        if (productModel.artist.email != nil) || (productModel.artist.openChatUrl != nil) {
-            return true
-        } else {
-            return false
-        }
-    }
-    
     init(productId: Int64, coordinator: ProductDetailCoordinator) {
         self.coordinator = coordinator
         self.productId = productId
