@@ -54,8 +54,8 @@ final class SearchArtistCell: UICollectionViewCell {
         return view
     }()
     
-    private lazy var profileImageView: UIImageView = {
-        let imageView = UIImageView()
+    private lazy var profileImageView: PlainProfileImageView = {
+        let imageView = PlainProfileImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
@@ -145,6 +145,13 @@ final class SearchArtistCell: UICollectionViewCell {
         layer.shadowOpacity = 0.1
         layer.shadowOffset = CGSize(width: 0, height: 2)
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        backgroundImageView.image = nil
+        profileImageView.removeImage()
+        artistLabel.text = ""
+    }
 }
 
 extension SearchArtistCell {
@@ -159,9 +166,7 @@ extension SearchArtistCell {
         }
         
         if let profileUrlString = data.profileImageUrl, let profileUrl = URL(string: profileUrlString) {
-            profileImageView.kf.setImage(with: profileUrl)
-        } else {
-            profileImageView.image = UIImage(named: "default_user_profile_image")
-        }   
+            profileImageView.setImage(with: profileUrl)
+        }
     }
 }

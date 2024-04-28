@@ -12,18 +12,14 @@ final class HomeViewModel {
     private weak var coordinator: HomeCoordinator?
     var downloadInteractor: HomeDownloadInteractor = HomeDownloadInteractor()
     
-    var feedDataSubject: PassthroughSubject<[FeedItemViewModel], Never> = .init()
+    var feedDataSubject: PassthroughSubject<([FeedItemViewModel], Bool), Never> = .init()
     var selectedCategory: CategoryType = .all
     
     private var isPaginationFinished: Bool?
     private var fetchedPages = [Int64]()
     private var isFetching = false
     
-    private var feedData: [FeedItemViewModel] = [] {
-        didSet {
-            feedDataSubject.send(feedData)
-        }
-    }
+    private var feedData: [FeedItemViewModel] = []
     
     init(coordinator: HomeCoordinator) {
         self.coordinator = coordinator
@@ -77,7 +73,7 @@ extension HomeViewModel {
         fetchFeedItems(category: .all, lastId: nil)
     }
 
-    func fetchFeedItems(category: CategoryType, lastId: Int64?) {
+    func fetchFeedItems(category: CategoryType, lastId: Int64?, scrollToTop: Bool = true) {
         guard !isFetching else { return }
         if let lastId { fetchedPages.append(lastId) }
         Task {
@@ -85,6 +81,7 @@ extension HomeViewModel {
             do {
                 let items = try await downloadInteractor.fetchFeedItems(category: category, lastId: lastId)
                 feedData = items.map { FeedItemViewModel($0) }
+                feedDataSubject.send((feedData, scrollToTop))
                 isPaginationFinished = (items.isEmpty)
             } catch {
                 print(error)
@@ -100,6 +97,7 @@ extension HomeViewModel {
                 isFetching = true
                 let items = try await downloadInteractor.fetchFeedItems(category: selectedCategory, lastId: feedData.last?.id)
                 feedData.append(contentsOf: items.map { FeedItemViewModel($0) })
+                feedDataSubject.send((feedData, false))
                 isPaginationFinished = (items.isEmpty)
             } catch {
                 print(error)
@@ -137,6 +135,7 @@ extension HomeViewModel {
             try await Task.sleep(seconds: 1) // Test
             let items = try await downloadInteractor.fetchFeedItems(category: selectedCategory, lastId: nil)
             feedData = items.map { FeedItemViewModel($0) }
+            feedDataSubject.send((feedData, true))
             isPaginationFinished = (items.isEmpty)
             fetchedPages.removeAll()
         } catch {

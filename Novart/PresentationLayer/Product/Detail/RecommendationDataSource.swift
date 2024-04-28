@@ -46,7 +46,7 @@ final class RecommendationDataSource: RecommendationDataSourceType {
         }
         
         let headerRegistration = UICollectionView.SupplementaryRegistration<RecommendationSectionHeaderView>(elementKind: RecommendationDataSource.sectionHeaderElementKind) { [weak self] supplementaryView, _, indexPath in
-            guard let section = self?.currentSections[indexPath.row] else { return }
+            guard let section = self?.currentSections[indexPath.section] else { return }
             switch section {
             case .artistProduct:
                 supplementaryView.title = "작가의 다른 작품"

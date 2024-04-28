@@ -88,6 +88,7 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
         collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.decelerationRate = .fast
+        collectionView.showsVerticalScrollIndicator = false
         return collectionView
     }()
     
@@ -190,10 +191,15 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
     override func setupBindings() {
         viewModel.feedDataSubject
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] items in
-                self?.dataSource.apply(items)
-                self?.collectionView.isHidden = items.isEmpty
-                self?.emptyContentView.isHidden = !items.isEmpty
+            .sink { [weak self] (items, scrollToTop) in
+                guard let self else { return }
+                self.dataSource.apply(items)
+                self.collectionView.isHidden = items.isEmpty
+                self.emptyContentView.isHidden = !items.isEmpty
+                if scrollToTop {
+                    self.collectionView.setContentOffset(.zero, animated: false)
+                }
+
             }
             .store(in: &subscriptions)
     }
