@@ -34,10 +34,10 @@ final class HomeFeedCell: UICollectionViewCell {
         }
         
         enum Label {
-            static let itemNameFont: UIFont = .systemFont(ofSize: 24, weight: .bold)
-            static let artistNameFont: UIFont = .systemFont(ofSize: 20, weight: .regular)
+            static let itemNameFont: UIFont = .systemFont(ofSize: 20, weight: .bold)
+            static let artistNameFont: UIFont = .systemFont(ofSize: 14, weight: .regular)
             static let color: UIColor = UIColor.Common.white
-            static let spacing: CGFloat = 4
+            static let spacing: CGFloat = 2
         }
         
         enum Dim {
