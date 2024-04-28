@@ -40,7 +40,6 @@ final class SearchArtistCell: UICollectionViewCell {
 
     private lazy var backgroundImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = Constants.BackgroundImageView.defaultColor
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
@@ -89,6 +88,11 @@ final class SearchArtistCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
     }
     
     // MARK: - Setup
@@ -149,6 +153,9 @@ extension SearchArtistCell {
         if let backgroundUrlString = data.backgroundImageUrl, let backgroundUrl = URL(string: backgroundUrlString) {
             backgroundImageView.kf.setImage(with: backgroundUrl)
             backgroundImageView.alpha = 0.8
+        } else {
+            backgroundImageView.image = nil
+            backgroundImageView.backgroundColor = Constants.BackgroundImageView.defaultColor
         }
         
         if let profileUrlString = data.profileImageUrl, let profileUrl = URL(string: profileUrlString) {
