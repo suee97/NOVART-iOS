@@ -90,11 +90,6 @@ final class SearchArtistCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-    }
-    
     // MARK: - Setup
 
     private func setupView() {
