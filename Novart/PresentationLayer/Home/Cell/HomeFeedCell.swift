@@ -262,7 +262,7 @@ private extension HomeFeedCell {
             let originalCount = viewModel.imageUrls.count
             let itemWidth = Constants.Image.itemWidth
             let margin = itemWidth / 2
-            var horizontalOffset = point.x + margin - width * 2
+            let horizontalOffset = point.x + margin - width * CGFloat(viewModel.imageUrls.count)
             let pageIndex = Int(horizontalOffset / itemWidth)
             self.pageControl.currentPage = pageIndex
 
