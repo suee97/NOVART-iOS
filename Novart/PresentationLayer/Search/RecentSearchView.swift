@@ -19,6 +19,7 @@ final class RecentSearchView: UIView {
     enum Constants {
         
         static let horizontalInsets: CGFloat = 24
+        static let topMargin: CGFloat = 8
         
         enum Recent {
             static let titleFont: UIFont = .systemFont(ofSize: 16, weight: .bold)
@@ -100,7 +101,7 @@ final class RecentSearchView: UIView {
         backgroundColor = UIColor.white
         addSubview(recentTitleLabel)
         NSLayoutConstraint.activate([
-            recentTitleLabel.topAnchor.constraint(equalTo: self.topAnchor),
+            recentTitleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: Constants.topMargin),
             recentTitleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.horizontalInsets)
         ])
         

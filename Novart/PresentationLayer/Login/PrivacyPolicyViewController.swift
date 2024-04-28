@@ -19,13 +19,13 @@ final class PrivacyPolicyViewController: BaseViewController {
         static let bottomMargin: CGFloat = 22
         
         enum TitleLabel {
-            static let font: UIFont = UIFont.systemFont(ofSize: 20, weight: .bold)
+            static let font: UIFont = UIFont.systemFont(ofSize: 24, weight: .bold)
             static let textColor: UIColor = UIColor.Common.black
             static let bottonMargin: CGFloat = 16
         }
         
         enum SubtitleLabel {
-            static let font: UIFont = UIFont.systemFont(ofSize: 12, weight: .regular)
+            static let font: UIFont = UIFont.systemFont(ofSize: 14, weight: .regular)
             static let textColor: UIColor = UIColor.Common.grey03
         }
         
@@ -64,11 +64,18 @@ final class PrivacyPolicyViewController: BaseViewController {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.TitleLabel.textColor
-        label.font = Constants.TitleLabel.font
-        label.textAlignment = .left
         label.numberOfLines = 2
-        label.text = "플레인 서비스에\n대한 동의가 필요해요"
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 3
+        paragraphStyle.alignment = .left
+        let attributes: [NSAttributedString.Key: Any] = [
+            .paragraphStyle: paragraphStyle,
+            .font: Constants.TitleLabel.font,
+            .foregroundColor: Constants.TitleLabel.textColor
+        ]
+        let attributedString = NSAttributedString(string: "플레인 서비스에\n대한 동의가 필요해요", attributes: attributes)
+        label.attributedText = attributedString
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
