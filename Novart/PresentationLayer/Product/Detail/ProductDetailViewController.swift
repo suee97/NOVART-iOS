@@ -482,11 +482,10 @@ final class ProductDetailViewController: BaseViewController {
         barArtistImageView.layer.cornerRadius = Constants.ArtistView.imageSize / 2
         barArtistImageView.clipsToBounds = true
         
-        contentView.addSubview(closeButton)
+        view.addSubview(closeButton)
         NSLayoutConstraint.activate([
-            closeButton.centerYAnchor.constraint(equalTo: barTitleLabel.centerYAnchor),
-            closeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin),
-            closeButton.leadingAnchor.constraint(greaterThanOrEqualTo: barTitleLabel.trailingAnchor, constant: Constants.TitleLabel.trailingMargin)
+            closeButton.centerYAnchor.constraint(equalTo: view.topAnchor, constant: Constants.topMargin),
+            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalMargin)
         ])
         
         contentView.addSubview(coverCollectionView)
