@@ -74,6 +74,11 @@ final class ProductImageUploadViewModel {
         coordinator?.navigate(to: .imageEdit(image: image))
     }
     
+    @MainActor
+    func showCancelAlert() {
+        coordinator?.navigate(to: .cancelAlert(isEditScene: isEditScene))
+    }
+    
     func showMediaPicker() {
         let preselectedIdentifiers: [String] = step == .coverImage ? selectedCoverIdentifiers : selectedDetailIdentifiers
         coordinator?.showMediaPicker(preselectedIdentifiers: preselectedIdentifiers, mediaPickerSelectionBlock: { [weak self] medias in

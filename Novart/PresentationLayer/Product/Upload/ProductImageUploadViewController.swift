@@ -195,7 +195,7 @@ final class ProductImageUploadViewController: BaseViewController, MediaPickerPre
             guard let self else { return }
             switch self.viewModel.step {
             case .coverImage:
-                self.viewModel.closeCoordinator()
+                self.viewModel.showCancelAlert()
             case .detailImage:
                 self.navigationController?.popViewController(animated: true)
             }

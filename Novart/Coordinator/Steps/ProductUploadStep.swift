@@ -13,6 +13,7 @@ enum ProductUploadStep: Step {
     case imageEdit(image: UploadMediaItem)
     case preview(data: ProductPreviewModel, editModel: ProductUploadModel)
     case upload(data: ProductPreviewModel)
+    case cancelAlert(isEditScene: Bool)
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }
