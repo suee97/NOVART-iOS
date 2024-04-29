@@ -45,6 +45,8 @@ final class ProductUploadCoordinator: BaseStackCoordinator<ProductUploadStep>, M
             showPreview(data: data, productModel: productModel)
         case let .upload(data):
             showUploadScene(data: data)
+        case let .cancelAlert(isEditScene):
+            showCancelAlert(isEditScene: isEditScene)
         }
     }
     
@@ -86,5 +88,25 @@ final class ProductUploadCoordinator: BaseStackCoordinator<ProductUploadStep>, M
             guard let self else { return }
             self.productUploadViewController?.didFinishImageCrop(image: croppedImage, identifier: image.identifier)
         }
+    }
+    
+    @MainActor
+    private func showCancelAlert(isEditScene: Bool) {
+        let title = isEditScene ? "작품 편집을 중단하시겠어요?" : "작품 등록을 종료하시겠어요?"
+        let message = isEditScene ? "편집한 정보가 반영되지 않습니다." : "작품이 저장되지 않습니다."
+        
+        let alertController = AlertController(title: title, message: message, preferredStyle: .alert)
+        let keepGoingAction = AlertAction(title: "이어서 편집", style: .default, handler: nil)
+        let terminatingAction = AlertAction(title: "종료", style: .destructive, handler: { [weak self] _ in
+            if isEditScene {
+                self?.closeAsPop()
+            } else {
+                self?.close()
+            }
+        })
+        
+        alertController.addAction(keepGoingAction)
+        alertController.addAction(terminatingAction)
+        alertController.show()
     }
 }
