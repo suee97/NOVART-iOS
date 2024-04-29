@@ -274,15 +274,17 @@ final class ProductInfoUploadViewController: BaseViewController {
         let button = UIButton()
         button.titleLabel?.font = Constants.Recommend.font
         button.setTitleColor(Constants.Recommend.color, for: .normal)
-        button.setTitle("추천태그", for: .normal)
+        button.setTitle("추천", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             self.viewModel.recommendationExpanded.toggle()
             if self.viewModel.recommendationExpanded {
                 self.recommendTagViewHeightConstraint?.constant = recommendTagCalculatedHeight
+                tagRecommendImageView.image = Constants.Recommend.upImage
             } else {
                 self.recommendTagViewHeightConstraint?.constant = 0
+                tagRecommendImageView.image = Constants.Recommend.downImage
             }
             self.view.layoutIfNeeded()
         }), for: .touchUpInside)
