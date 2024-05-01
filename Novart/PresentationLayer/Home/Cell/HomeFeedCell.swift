@@ -38,6 +38,7 @@ final class HomeFeedCell: UICollectionViewCell {
             static let artistNameFont: UIFont = .systemFont(ofSize: 14, weight: .regular)
             static let color: UIColor = UIColor.Common.white
             static let spacing: CGFloat = 2
+            static let trailingMargin: CGFloat = 24
         }
         
         enum Dim {
@@ -66,6 +67,8 @@ final class HomeFeedCell: UICollectionViewCell {
         let label = UILabel()
         label.font = Constants.Label.itemNameFont
         label.textColor = Constants.Label.color
+        label.numberOfLines = 0
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -86,6 +89,10 @@ final class HomeFeedCell: UICollectionViewCell {
             guard let self else { return }
             self.viewModel?.didTapLikeButton()
         }), for: .touchUpInside)
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: 24),
+            button.heightAnchor.constraint(equalToConstant: 24)
+        ])
         return button
     }()
     
@@ -170,7 +177,8 @@ final class HomeFeedCell: UICollectionViewCell {
         contentView.addSubview(likeButton)
         NSLayoutConstraint.activate([
             likeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.trailingMargin),
-            likeButton.bottomAnchor.constraint(equalTo: artistNameLabel.bottomAnchor)
+            likeButton.bottomAnchor.constraint(equalTo: artistNameLabel.bottomAnchor),
+            itemNameLabel.trailingAnchor.constraint(equalTo: likeButton.leadingAnchor, constant: -Constants.Label.trailingMargin)
         ])
         
         contentView.addSubview(categoryBadge)
@@ -192,7 +200,7 @@ final class HomeFeedCell: UICollectionViewCell {
         cancellables.removeAll()
         
         viewModel = item
-        itemNameLabel.text = item.name
+        itemNameLabel.text = "asdkfjasdklfjasldk;jsa;ldasdfasdfasdfasdfsdafs"
         artistNameLabel.text = item.artist
         categoryBadge.text = item.category.rawValue
         pageControl.numberOfPages = item.imageUrls.count
@@ -296,19 +304,5 @@ extension HomeFeedCell: UICollectionViewDelegate, UIScrollViewDelegate {
             scrollToMiddle()
             setupComplete = true
         }
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let viewModel else { return }
-        let offset = scrollView.contentOffset.x
-        let width = scrollView.bounds.size.width
-        let totalCount = viewModel.loopedImageUrls.count
-        let originalCount = viewModel.imageUrls.count
-
-//        if offset <= width * CGFloat(originalCount) { // Reached the beginning
-//            collectionView.contentOffset = CGPoint(x: width * CGFloat(originalCount) + offset, y: 0)
-//        } else if offset >= width * CGFloat(originalCount * 2) { // Reached the end
-//            collectionView.contentOffset = CGPoint(x: offset - width * CGFloat(originalCount), y: 0)
-//        }
     }
 }

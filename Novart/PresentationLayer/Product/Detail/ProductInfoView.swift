@@ -58,6 +58,8 @@ final class ProductInfoView: UIView {
         let label = UILabel()
         label.textColor = Constants.TitleLabel.textColor
         label.font = Constants.TitleLabel.font
+        label.numberOfLines = 2
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
