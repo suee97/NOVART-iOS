@@ -21,7 +21,7 @@ final class ProductDetailViewController: BaseViewController {
         enum TitleLabel {
             static let font: UIFont = .systemFont(ofSize: 20, weight: .semibold)
             static let textColor: UIColor = UIColor.Common.warmBlack
-            static let trailingMargin: CGFloat = 48
+            static let trailingMargin: CGFloat = 96
         }
         
         enum ButtonShadow {
@@ -132,6 +132,8 @@ final class ProductDetailViewController: BaseViewController {
         let label = UILabel()
         label.font = Constants.TitleLabel.font
         label.textColor = Constants.TitleLabel.textColor
+        label.textAlignment = .left
+        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -467,7 +469,8 @@ final class ProductDetailViewController: BaseViewController {
         contentView.addSubview(barTitleLabel)
         NSLayoutConstraint.activate([
             barTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
-            barTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topMargin)
+            barTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topMargin),
+            barTitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.TitleLabel.trailingMargin)
         ])
         
         contentView.addSubview(barArtistImageView)
