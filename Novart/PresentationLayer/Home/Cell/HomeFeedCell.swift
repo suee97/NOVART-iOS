@@ -200,7 +200,7 @@ final class HomeFeedCell: UICollectionViewCell {
         cancellables.removeAll()
         
         viewModel = item
-        itemNameLabel.text = "asdkfjasdklfjasldk;jsa;ldasdfasdfasdfasdfsdafs"
+        itemNameLabel.text = item.name
         artistNameLabel.text = item.artist
         categoryBadge.text = item.category.rawValue
         pageControl.numberOfPages = item.imageUrls.count

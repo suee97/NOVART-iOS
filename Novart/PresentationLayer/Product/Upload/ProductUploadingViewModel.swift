@@ -17,7 +17,8 @@ final class ProductUploadingViewModel {
     
     private weak var coordinator: ProductUploadCoordinator?
     private let interactor = ProductUploadInteractor()
-    let uploadedProduct: PassthroughSubject<ProductModel, Never> = .init()
+    let uploadedProductSubject: PassthroughSubject<ProductModel, Never> = .init()
+    var uploadedProduct: ProductModel?
     
     @Published var state: State = .uploading
     
@@ -44,6 +45,12 @@ final class ProductUploadingViewModel {
     func close() {
         coordinator?.close()
     }
+    
+    @MainActor
+    func showProductDetail() {
+        guard let productId = uploadedProduct?.id else { return }
+        coordinator?.navigate(to: .product(id: productId))
+    }
 }
 
 extension ProductUploadingViewModel {
@@ -54,7 +61,8 @@ extension ProductUploadingViewModel {
 
                 let uploadModel = createProductUploadData(thumbnailImageUrls: uploadedThumbmnailUrls, artImageUrls: uploadedArtUrls)
                 let product = try await interactor.uploadProductToServer(product: uploadModel)
-                uploadedProduct.send(product)
+                uploadedProduct = product
+                uploadedProductSubject.send(product)
                 state = .complete
             } catch {
                 print(error.localizedDescription)
@@ -93,5 +101,10 @@ extension ProductUploadingViewModel {
         try await interactor.uploadToS3(presignedUrls: joinedUrls.map { $0.presignedUrl }, images: imageData)
         
         return (presignedThumbnailUrls.map { $0.imageUrl }, presignedArtUrls.map { $0.imageUrl })
+    }
+    
+    @MainActor
+    func didTapPreview() {
+        showProductDetail()
     }
 }

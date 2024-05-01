@@ -47,6 +47,8 @@ final class ProductUploadCoordinator: BaseStackCoordinator<ProductUploadStep>, M
             showUploadScene(data: data)
         case let .cancelAlert(isEditScene):
             showCancelAlert(isEditScene: isEditScene)
+        case let .product(id):
+            showProductDetail(productId: id)
         }
     }
     
@@ -108,5 +110,18 @@ final class ProductUploadCoordinator: BaseStackCoordinator<ProductUploadStep>, M
         alertController.addAction(keepGoingAction)
         alertController.addAction(terminatingAction)
         alertController.show()
+    }
+    
+    @MainActor
+    private func showProductDetail(productId: Int64) {
+        self.close { [weak self] in
+            guard let self, let parentCoordinator = self.parentCoordinator , let navigator = parentCoordinator.navigator as? StackNavigator else { return }
+            let root = BaseNavigationController()
+            let productDetailStackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
+            let productDetailCoordinator = ProductDetailCoordinator(navigator: productDetailStackNavigator)
+            productDetailCoordinator.productId = productId
+            parentCoordinator.add(coordinators: productDetailCoordinator)
+            productDetailCoordinator.start()
+        }
     }
 }

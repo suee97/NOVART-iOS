@@ -178,6 +178,8 @@ final class ProductUploadingViewController: BaseViewController {
             previewImageView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
         ])
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapPreview))
+        view.addGestureRecognizer(tapGesture)
         return view
     }()
     
@@ -269,7 +271,7 @@ final class ProductUploadingViewController: BaseViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.uploadedProduct
+        viewModel.uploadedProductSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] product in
                 guard let self else { return }
@@ -285,5 +287,10 @@ final class ProductUploadingViewController: BaseViewController {
         descriptionLabel.text = viewModel.uploadingDesription
         stateLabel.text = viewModel.stateText
         loadingAnimationView.play()
+    }
+    
+    @objc
+    private func didTapPreview() {
+        viewModel.didTapPreview()
     }
 }

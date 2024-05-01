@@ -14,6 +14,7 @@ enum ProductUploadStep: Step {
     case preview(data: ProductPreviewModel, editModel: ProductUploadModel)
     case upload(data: ProductPreviewModel)
     case cancelAlert(isEditScene: Bool)
+    case product(id: Int64)
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }
