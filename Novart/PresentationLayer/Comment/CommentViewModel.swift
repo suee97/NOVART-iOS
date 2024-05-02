@@ -206,7 +206,10 @@ extension CommentViewModel {
         case .exhibition:
             try await commentInteractor.deleteExhibitionComment(commentId: commentId)
         }
-        comments.remove(at: idx)
+        
+        if comments.count > idx {
+            comments.remove(at: idx)
+        }
         PlainSnackbar.show(message: "의견을 삭제했어요.", configuration: .init(imageType: .none))
     }
 }
