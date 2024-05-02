@@ -60,10 +60,17 @@ final class MyPageProfileEditViewController: BaseViewController {
             static let defaultColor = UIColor.Common.sub
         }
         
+        enum Crop {
+            static let topMargin: CGFloat = 4
+            static let font: UIFont = .systemFont(ofSize: 12, weight: .medium)
+            static let color: UIColor = .Common.grey03
+            static let disabledColor: UIColor = .Common.grey01
+        }
+        
         enum Nickname {
             enum Label {
                 static let title: String = "닉네임*"
-                static let topMargin: CGFloat = getRelativeHeight(from: 32)
+                static let topMargin: CGFloat = getRelativeHeight(from: 48)
             }
             
             enum Field {
@@ -181,13 +188,20 @@ final class MyPageProfileEditViewController: BaseViewController {
         }
     }
     
+    private enum CropType {
+        case profile
+        case background
+    }
+    
     
     // MARK: - Properties
     private let viewModel: MyPageProfileEditViewModel
     private var cancellables = Set<AnyCancellable>()
     private let profilePicker = UIImagePickerController()
     private let backgroundPicker = UIImagePickerController()
-    
+    private let imageEditManager: ImageEditManager = .init()
+    private var cropType: CropType = .profile
+
     private var isKeyboardShowing = false
     private var recommendExpanded: Bool = false
     private var nicknameDupChecked: Bool = true {
@@ -264,6 +278,32 @@ final class MyPageProfileEditViewController: BaseViewController {
                 }
             }
         }).store(in: &cancellables)
+        
+        viewModel.shouldUpdateImageView
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let self else { return }
+                if let profileImage = self.viewModel.originalProfileImage {
+                    self.profileImageView.image = profileImage
+                }
+                
+                if let backgroundImage = self.viewModel.originalBackgroundImage {
+                    self.backgroundImageView.image = backgroundImage
+                }
+            }
+            .store(in: &cancellables)
+        
+        imageEditManager.didFinishCrop = { [weak self] image in
+            guard let self else { return }
+            switch self.cropType {
+            case .profile:
+                self.profileImageView.image = image
+                self.userData.profileImage = image
+            case .background:
+                self.backgroundImageView.image = image
+                self.userData.backgroundImage = image
+            }
+        }
     }
     
     
@@ -373,12 +413,8 @@ final class MyPageProfileEditViewController: BaseViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapProfileImage))
         profileImageView.addGestureRecognizer(gesture)
         
-        guard let urlString = viewModel.user.profileImageUrl, let url = URL(string: urlString) else {
-            profileImageView.image = UIImage(named: "default_user_profile_image")
-            return profileImageView
-        }
+        profileImageView.image = UIImage(named: "default_user_profile_image")
         
-        profileImageView.kf.setImage(with: url)
         return profileImageView
     }()
     
@@ -398,13 +434,8 @@ final class MyPageProfileEditViewController: BaseViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapBackgroundImage))
         backgroundImageView.addGestureRecognizer(gesture)
         
-        guard let urlString = viewModel.user.backgroundImageUrl, let url = URL(string: urlString) else {
-            backgroundImageView.image = nil
-            backgroundImageView.backgroundColor = Constants.BackgroundImage.defaultColor
-            return backgroundImageView
-        }
-        
-        backgroundImageView.kf.setImage(with: url)
+        backgroundImageView.image = nil
+        backgroundImageView.backgroundColor = Constants.BackgroundImage.defaultColor
         
         return backgroundImageView
     }()
@@ -509,6 +540,40 @@ final class MyPageProfileEditViewController: BaseViewController {
         return view
     }()
     
+    private lazy var profileCropButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("자르기", for: .normal)
+        button.titleLabel?.font = Constants.Crop.font
+        button.setImage(UIImage(named: "icon_crop_mypage"), for: .normal)
+        button.setImage(UIImage(named: "icon_crop_mypage_dimmed"), for: .disabled)
+        button.setTitleColor(Constants.Crop.color, for: .normal)
+        button.setTitleColor(Constants.Crop.disabledColor, for: .disabled)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self, let image = self.viewModel.originalProfileImage else { return }
+            self.showImageCropViewController(type: .profile, image: image)
+        }), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var backgroundCropButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("자르기", for: .normal)
+        button.titleLabel?.font = Constants.Crop.font
+        button.setImage(UIImage(named: "icon_crop_mypage"), for: .normal)
+        button.setImage(UIImage(named: "icon_crop_mypage_dimmed"), for: .disabled)
+        button.setTitleColor(Constants.Crop.color, for: .normal)
+        button.setTitleColor(Constants.Crop.disabledColor, for: .disabled)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self, let image = self.viewModel.originalBackgroundImage else { return }
+            self.showImageCropViewController(type: .background, image: image)
+        }), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var recommendTagView = TagView()
     
     override func setupView() {
@@ -521,6 +586,8 @@ final class MyPageProfileEditViewController: BaseViewController {
         contentView.addSubview(profileCameraView)
         contentView.addSubview(backgroundImageLabel)
         contentView.addSubview(backgroundImageView)
+        contentView.addSubview(profileCropButton)
+        contentView.addSubview(backgroundCropButton)
         contentView.addSubview(nicknameLabel)
         contentView.addSubview(nicknameMaxCountLabel)
         contentView.addSubview(nicknameCurCountLabel)
@@ -580,6 +647,19 @@ final class MyPageProfileEditViewController: BaseViewController {
             m.width.equalTo(Constants.BackgroundImage.imageSize.width)
             m.height.equalTo(Constants.BackgroundImage.imageSize.height)
         })
+        
+        profileCropButton.snp.makeConstraints { m in
+            m.centerX.equalTo(profileImageView.snp.centerX)
+            m.top.equalTo(profileImageView.snp.bottom).offset(Constants.Crop.topMargin)
+        }
+        
+        backgroundCropButton.snp.makeConstraints { m in
+            m.centerX.equalTo(backgroundImageView.snp.centerX)
+            m.top.equalTo(backgroundImageView.snp.bottom).offset(Constants.Crop.topMargin)
+        }
+        
+        profileCropButton.isEnabled = viewModel.isProfileCropEnabled
+        backgroundCropButton.isEnabled = viewModel.isBackgroundCropEnabled
         
         nicknameLabel.snp.makeConstraints({ m in
             m.left.equalToSuperview().inset(Constants.CommonLayout.horizontalMargin)
@@ -797,6 +877,11 @@ final class MyPageProfileEditViewController: BaseViewController {
             applyButton.isEnabled = false
         }
     }
+    
+    private func showImageCropViewController(type: CropType, image: UIImage) {
+        self.cropType = type
+        imageEditManager.presentCropViewController(using: image, presenter: self)
+    }
 }
 
 
@@ -965,18 +1050,30 @@ extension MyPageProfileEditViewController: UIImagePickerControllerDelegate, UINa
                 userData.profileFileName = String(fileName)
             }
             profileImageView.image = image
+            viewModel.originalProfileImage = image
             userData.profileImage = image
-        }
-        
-        if picker == backgroundPicker {
+            profileCropButton.isEnabled = true
+            
+            dismiss(animated: true) { [weak self] in
+                self?.showImageCropViewController(type: .profile, image: image)
+            }
+            
+        } else if picker == backgroundPicker {
             if let fileName = url.absoluteString.split(separator: "/").last {
                 userData.backgroundFileName = String(fileName)
             }
             backgroundImageView.image = image
+            viewModel.originalBackgroundImage = image
             userData.backgroundImage = image
+            backgroundCropButton.isEnabled = true
+            
+            dismiss(animated: true) { [weak self] in
+                self?.showImageCropViewController(type: .background, image: image)
+            }
+        } else {
+            dismiss(animated: true)
         }
         
-        dismiss(animated: true)
     }
 }
 

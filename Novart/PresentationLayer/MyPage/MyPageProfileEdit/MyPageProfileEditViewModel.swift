@@ -1,6 +1,7 @@
 import UIKit
 import Combine
 import Alamofire
+import Kingfisher
 
 final class MyPageProfileEditViewModel {
     
@@ -14,18 +15,31 @@ final class MyPageProfileEditViewModel {
     @Published var recommendTagItemSelectCount: Int = 0
     @Published var tagFieldString: String = ""
     var recommendTagItems = [TagItem(tag: "제품", isSelected: false), TagItem(tag: "공예", isSelected: false), TagItem(tag: "그래픽", isSelected: false), TagItem(tag: "회화", isSelected: false), TagItem(tag: "UX", isSelected: false), TagItem(tag: "UI", isSelected: false), TagItem(tag: "모던", isSelected: false), TagItem(tag: "클래식", isSelected: false), TagItem(tag: "오브제", isSelected: false), TagItem(tag: "감성적인", isSelected: false), TagItem(tag: "심플", isSelected: false), TagItem(tag: "귀여운", isSelected: false), TagItem(tag: "키치한", isSelected: false), TagItem(tag: "힙한", isSelected: false), TagItem(tag: "레트로", isSelected: false), TagItem(tag: "트렌디", isSelected: false), TagItem(tag: "부드러운", isSelected: false), TagItem(tag: "몽환적인", isSelected: false), TagItem(tag: "실용적인", isSelected: false), TagItem(tag: "빈티지", isSelected: false), TagItem(tag: "화려한", isSelected: false), TagItem(tag: "재활용", isSelected: false), TagItem(tag: "친환경", isSelected: false), TagItem(tag: "지속가능한", isSelected: false), TagItem(tag: "밝은", isSelected: false), TagItem(tag: "어두운", isSelected: false), TagItem(tag: "차가운", isSelected: false), TagItem(tag: "따뜻한", isSelected: false)]
-
-
+    
+    
     // 원본 유저 데이터
     let user: PlainUser
     
     @Published var isLoading: Bool = false
+    var originalProfileImage: UIImage?
+    var originalBackgroundImage: UIImage?
+    let shouldUpdateImageView: PassthroughSubject<Void, Never> = .init()
+    
+    var isProfileCropEnabled: Bool {
+        user.profileImageUrl != nil
+    }
+    
+    var isBackgroundCropEnabled: Bool {
+        user.backgroundImageUrl != nil
+    }
     
     init(coordinator: MyPageCoordinator, user: PlainUser) {
         self.coordinator = coordinator
         self.user = user
         initCategoryTags()
         initRecommendTags()
+        downloadProfileImage()
+        downloadBackgroundImage()
     }
     
     
@@ -220,4 +234,42 @@ extension MyPageProfileEditViewModel {
         coordinator.navigate(to: .MyPageMain)
     }
     
+}
+
+// MARK: - Image
+extension MyPageProfileEditViewModel {
+    func downloadImage(from urlString: String) async throws -> UIImage? {
+        guard let url = URL(string: urlString) else {
+            return nil
+        }
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            KingfisherManager.shared.retrieveImage(with: url) { result in
+                switch result {
+                case .success(let imageResult):
+                    continuation.resume(returning: imageResult.image)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+    
+    func downloadProfileImage() {
+        Task {
+            guard let profileImageUrl = user.profileImageUrl else { return }
+            let profileImage = try await downloadImage(from: profileImageUrl)
+            self.originalProfileImage = profileImage
+            self.shouldUpdateImageView.send()
+        }
+    }
+    
+    func downloadBackgroundImage() {
+        Task {
+            guard let backgroundImageUrl = user.backgroundImageUrl else { return }
+            let backgroundImage = try await downloadImage(from: backgroundImageUrl)
+            self.originalBackgroundImage = backgroundImage
+            self.shouldUpdateImageView.send()
+        }
+    }
 }
