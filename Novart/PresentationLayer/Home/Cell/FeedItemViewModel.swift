@@ -80,4 +80,8 @@ final class FeedItemViewModel: Identifiable, Hashable {
             }
         }
     }
+    
+    func changeLikeStatue(likeStatus: HomeFeedLikeStatusModel) {
+        self.liked = likeStatus.isLike
+    }
 }

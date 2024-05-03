@@ -10,4 +10,5 @@ import Foundation
 enum NotificationKeys {
     static let navigateToLoginKey = "navigateToLogin"
     static let showLoginModalKey = "showLoginModal"
+    static let changeHomeFeedLikeStatusKey = "changeHomeFeedLikeStatus"
 }

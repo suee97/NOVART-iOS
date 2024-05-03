@@ -53,13 +53,25 @@ final class HomeViewModel {
     
     private func setupObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(showLoginModal), name: .init(NotificationKeys.showLoginModalKey), object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(changeLikeStatus), name: .init(NotificationKeys.changeHomeFeedLikeStatusKey), object: nil)
     }
     
     @objc
     private func showLoginModal() {
         DispatchQueue.main.async { [weak self] in
             self?.showLoginModalScene()
+        }
+    }
+    
+    @objc
+    private func changeLikeStatus(notification: Notification) {
+        guard let likeStatus = notification.object as? HomeFeedLikeStatusModel else { return }
+        for item in feedData {
+            if item.id == likeStatus.productId {
+                item.changeLikeStatue(likeStatus: likeStatus)
+                feedDataSubject.send((feedData, false))
+                return
+            }
         }
     }
 }
