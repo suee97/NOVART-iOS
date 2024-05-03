@@ -7,8 +7,10 @@
 
 import UIKit
 
-class MainTabBarViewController: UITabBarController {
+final class MainTabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
+    var beforeTabBarIndex: Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,7 +20,7 @@ class MainTabBarViewController: UITabBarController {
     
 
     private func setupTabBar() {
-        
+        self.delegate = self
         view.backgroundColor = .white
         
         tabBar.clipsToBounds = true
@@ -35,4 +37,9 @@ class MainTabBarViewController: UITabBarController {
         // Change to your desired color
     }
     
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        let afterTabBarIndex = tabBarController.selectedIndex
+        NotificationCenter.default.post(name: .init(NotificationKeys.scrollToTopKey), object: (before: beforeTabBarIndex, after: afterTabBarIndex))
+        beforeTabBarIndex = afterTabBarIndex
+    }
 }

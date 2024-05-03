@@ -143,6 +143,7 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
         super.viewDidLoad()
         viewModel.loadInitialData()
         setupRefreshControl()
+        setupObservers()
     }
     
     // MARK: - Setup
@@ -209,12 +210,23 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
         collectionView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
     }
     
+    private func setupObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(scrollToTop), name: .init(NotificationKeys.scrollToTopKey), object: nil)
+    }
+    
     @objc func onRefresh() {
         Task {
             await viewModel.onRefresh()
             await MainActor.run {
                 self.collectionView.refreshControl?.endRefreshing()
             }
+        }
+    }
+    
+    @objc private func scrollToTop(notification: Notification) {
+        guard let tabBarIndex = notification.object as? (Int, Int) else { return }
+        if tabBarIndex.1 == 0 && tabBarIndex.0 == tabBarIndex.1 { // beforeIndex == afterIndex
+            collectionView.setContentOffset(CGPoint(x:0,y:0), animated: true)
         }
     }
 }
