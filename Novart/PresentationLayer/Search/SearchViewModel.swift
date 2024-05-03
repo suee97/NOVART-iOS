@@ -143,7 +143,11 @@ extension SearchViewModel {
                 let artistResult = try await artistData
                 
                 productViewModel.products = productResult.content
+                productViewModel.searchResultData?.category = currentCategory
+                
                 artistViewModel.artists = artistResult.content
+                artistViewModel.searchResultData?.category = currentCategory
+                
             } catch {
                 print(error.localizedDescription)
             }
