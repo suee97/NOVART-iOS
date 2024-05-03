@@ -275,6 +275,7 @@ extension ProductDetailViewModel {
         Task {
             do {
                 try await productInteractor.likeProduct(id: productId)
+                NotificationCenter.default.post(name: .init(NotificationKeys.changeHomeFeedLikeStatusKey), object: HomeFeedLikeStatusModel(productId: productId, isLike: true))
             } catch {
                 isLikedSubject.send(false)
             }
@@ -285,6 +286,7 @@ extension ProductDetailViewModel {
         Task {
             do {
                 try await productInteractor.cancelLikeProduct(id: productId)
+                NotificationCenter.default.post(name: .init(NotificationKeys.changeHomeFeedLikeStatusKey), object: HomeFeedLikeStatusModel(productId: productId, isLike: false))
             } catch {
                 isLikedSubject.send(true)
             }
