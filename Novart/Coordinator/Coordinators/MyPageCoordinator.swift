@@ -107,20 +107,11 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
         productUploadCoordinator.start()
     }
     
-//    @MainActor
-//    private func showLoginModal() {
-//        let bottomSheetRoot = BottomSheetNavigationController()
-//        bottomSheetRoot.bottomSheetConfiguration.customHeight = UIScreen.main.bounds.height - 132
-//        let stackNavigator = StackNavigator(rootViewController: bottomSheetRoot, presenter: navigator.rootViewController)
-//        let loginCoordinator = LoginCoordinator(navigator: stackNavigator)
-//        add(coordinators: loginCoordinator)
-//        loginCoordinator.startAsModal()
-//    }
-    
     @MainActor
     func close() {
         navigator.pop(animated: true)
-        if !(navigator.rootViewController.topViewController is MyPageViewController) {
+        if !(navigator.rootViewController.topViewController is MyPageViewController) ||
+            !(navigator.rootViewController.topViewController is MyPageNotificationViewController) {
             end()
         }
     }
