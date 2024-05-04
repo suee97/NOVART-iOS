@@ -414,7 +414,7 @@ extension ProductDetailViewModel {
             sections.removeAll(where: { $0 == .similarProduct })
         }
         
-        let section = sections[indexPath.row]
+        let section = sections[indexPath.section]
         switch section {
             
         case .artistProduct:
