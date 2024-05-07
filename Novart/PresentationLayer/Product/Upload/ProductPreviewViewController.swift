@@ -118,7 +118,7 @@ final class ProductPreviewViewController: BaseViewController {
     private lazy var uploadButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = Constants.UploadButton.font
-        let buttonTitle: String = viewModel.isEditScene ? "수정" : "등록"
+        let buttonTitle: String = viewModel.isEditScene ? "편집완료" : "등록"
         button.setTitle(buttonTitle, for: .normal)
         button.setTitleColor(Constants.UploadButton.textColor, for: .normal)
         button.setTitleColor(Constants.UploadButton.disabledColor, for: .disabled)
