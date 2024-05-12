@@ -11,7 +11,7 @@ final class UploadMediaDetailCell: UICollectionViewCell {
     
     private enum Constants {
         static let screenWidth: CGFloat = UIScreen.main.bounds.width
-        static let buttonMargin: CGFloat = 24
+        static let buttonMargin: CGFloat = 20
     }
     
     private lazy var imageView: UIImageView = {
@@ -23,7 +23,7 @@ final class UploadMediaDetailCell: UICollectionViewCell {
     
     private lazy var deleteButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "icon_upload_close"), for: .normal)
+        button.setImage(UIImage(named: "icon_close_round"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addAction(UIAction(handler: {[weak self] _ in
             guard let self,

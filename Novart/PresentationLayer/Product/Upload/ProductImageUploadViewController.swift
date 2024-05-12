@@ -158,6 +158,8 @@ final class ProductImageUploadViewController: BaseViewController, MediaPickerPre
     var mediaPicker: MediaPickerController = MediaPickerController()
     private var cancellables: Set<AnyCancellable> = .init()
     
+    private var isReentryFromCrop: Bool = false
+    
     // MARK: - Init
     
     init(viewModel: ProductImageUploadViewModel) {
@@ -177,8 +179,9 @@ final class ProductImageUploadViewController: BaseViewController, MediaPickerPre
         super.viewDidAppear(animated)
         viewModel.setAsMediaPresenter(viewController: self)
         updateNavButtonState()
-        if viewModel.isRentry {
+        if viewModel.isRentry || isReentryFromCrop {
             setupBindings()
+            isReentryFromCrop = false
         }
     }
     
@@ -409,6 +412,7 @@ extension ProductImageUploadViewController: UploadCellActionDelegate {
 
 extension ProductImageUploadViewController {
     func didFinishImageCrop(image: UIImage, identifier: String) {
+        isReentryFromCrop = true
         viewModel.didFinishImageCrop(image: image, identifier: identifier)
     }
     

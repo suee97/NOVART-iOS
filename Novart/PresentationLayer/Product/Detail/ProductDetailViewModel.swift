@@ -81,10 +81,10 @@ extension ProductDetailViewModel {
                 let productDetail = try await interactor.fetchProductDetail(id: self.productId)
                 
                 async let downloadImages = downloadImages(from: productDetail.artImageUrls)
-                async let fetchRelatedProducts = interactor.fetchRelatedProducts(id: self.productId)
                 async let fetchOtherProducts = interactor.fetchOtherProductsFromArtist(productId: productId, artistId: productDetail.artist.userId)
                 async let fetchExhibitions = interactor.fetchExhibitions(artistId: productDetail.artist.userId)
-                
+                async let fetchRelatedProducts = interactor.fetchRelatedProducts(id: self.productId)
+
                 self.productDetailSubject.send(productDetail)
                 self.isLikedSubject.send(productDetail.likes)
                 self.isFollowingSubject.send(productDetail.artist.following)
@@ -93,11 +93,11 @@ extension ProductDetailViewModel {
                 self.detailImageData = images.compactMap { $0 }
                 self.productImages.send(images)
                 
-                let relatedProducts = try await fetchRelatedProducts
                 let otherProducts = try await fetchOtherProducts
                 let exhibitions = try await fetchExhibitions
-                
-                let recommendData = ProductDetailRecommendData(relatedProducts: relatedProducts, otherProducts: otherProducts, exhibitions: exhibitions)
+                let relatedProducts = try await fetchRelatedProducts
+
+                let recommendData = ProductDetailRecommendData(otherProducts: otherProducts, exhibitions: exhibitions, relatedProducts: relatedProducts)
                 self.recommendData = recommendData
                 self.recommendDataSubject.send(recommendData)
                 
@@ -263,6 +263,11 @@ extension ProductDetailViewModel {
     }
     
     @MainActor
+    func showFollowList() {
+        coordinator?.navigate(to: .followList)
+    }
+    
+    @MainActor
     func didTapTag(at index: Int) {
         guard let detailModel = productDetailSubject.value else { return }
         let tag = detailModel.artTagList[index]
@@ -299,7 +304,12 @@ extension ProductDetailViewModel {
                 guard let userId = productDetailSubject.value?.artist.userId else { return }
                 _ = try await myPageInteractor.follow(userId: userId)
                 DispatchQueue.main.async {
-                    PlainSnackbar.show(message: "새로운 작가를 팔로우 했어요!", configuration: .init(imageType: .icon(.check), buttonType: .text("모두 보기"), buttonAction: nil))
+                    PlainSnackbar.show(message: "새로운 작가를 팔로우 했어요!", configuration: .init(imageType: .icon(.check), buttonType: .text("모두 보기"), buttonAction: { [weak self] in
+                        guard let self else { return }
+                        DispatchQueue.main.async {
+                            self.showFollowList()
+                        }
+                    }))
                 }
             } catch {
                 isFollowingSubject.send(false)
@@ -400,9 +410,9 @@ extension ProductDetailViewModel {
     @MainActor
     func didTapRecommendItem(at indexPath: IndexPath) {
         guard let recommendData else { return }
-        var sections: [RecommendationDataSource.Section] = [.artistProduct, .artistProduct, .similarProduct]
+        var sections: [RecommendationDataSource.Section] = [.artistProduct, .artistExhibition, .similarProduct]
         
-        if recommendData.relatedProducts.isEmpty {
+        if recommendData.otherProducts.isEmpty {
             sections.removeAll(where: { $0 == .artistProduct })
         }
         
@@ -410,7 +420,7 @@ extension ProductDetailViewModel {
             sections.removeAll(where: { $0 == .artistExhibition })
         }
         
-        if recommendData.otherProducts.isEmpty {
+        if recommendData.relatedProducts.isEmpty {
             sections.removeAll(where: { $0 == .similarProduct })
         }
         
@@ -418,13 +428,13 @@ extension ProductDetailViewModel {
         switch section {
             
         case .artistProduct:
-            let productId = recommendData.relatedProducts[indexPath.row].id
+            let productId = recommendData.otherProducts[indexPath.row].id
             showProduct(id: productId)
         case .artistExhibition:
             let exhibitionId = recommendData.exhibitions[indexPath.row].id
             showExhibition(id: exhibitionId)
         case .similarProduct:
-            let productId = recommendData.otherProducts[indexPath.row].id
+            let productId = recommendData.relatedProducts[indexPath.row].id
             showProduct(id: productId)
         }
         

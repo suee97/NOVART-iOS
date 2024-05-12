@@ -27,8 +27,9 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     }
     
     @MainActor
-    func startAsPush() {
+    func startAsPush(selectedCategory: MyPageCategory = .Work) {
         let viewModel = MyPageViewModel(coordinator: self, userId: userId)
+        viewModel.selectedCategory = selectedCategory
         let viewController = MyPageViewController(viewModel: viewModel)
         viewModel.isStartAsPush = true
         navigator.push(viewController, animated: true)
@@ -110,10 +111,11 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     @MainActor
     func close() {
         navigator.pop(animated: true)
-        if !(navigator.rootViewController.topViewController is MyPageViewController) ||
-            !(navigator.rootViewController.topViewController is MyPageNotificationViewController) {
+        
+        if !(navigator.rootViewController.topViewController is MyPageViewController) && (navigator.rootViewController.topViewController is MyPageNotificationViewController) {
             end()
         }
+
     }
     
     @MainActor

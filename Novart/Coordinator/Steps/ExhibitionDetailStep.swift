@@ -13,6 +13,7 @@ enum ExhibitionDetailStep: Step {
     case exhibition
     case login
     case ask(user: PlainUser)
+    case followList
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

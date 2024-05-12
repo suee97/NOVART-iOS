@@ -6,7 +6,7 @@ final class MyPageViewModel {
     weak var coordinator: MyPageCoordinator?
     private var interactor = MyPageDownloadInteractor()
     
-    @Published private (set) var selectedCategory: MyPageCategory = .Work
+    @Published var selectedCategory: MyPageCategory = .Work
     @Published private (set) var scrollHeight: Double = 0.0
     
     @Published var interests = [ProductModel]()
@@ -106,7 +106,7 @@ extension MyPageViewModel {
                 
                 if !isInitialLoadFinished {
                     isInitialLoadFinished = true
-                    setCategory(.Work)
+//                    setCategory(.Work)
                 }
             } catch {
                 print(error.localizedDescription)

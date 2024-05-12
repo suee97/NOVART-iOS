@@ -94,6 +94,11 @@ extension ExhibitionDetailViewModel {
     }
     
     @MainActor
+    func showFollowList() {
+        coordinator?.navigate(to: .followList)
+    }
+    
+    @MainActor
     func didTapContactButton(userId: Int64) {
         guard let artModel = artItems.first(where: { $0.artistInfo.userId == userId }) else { return }
         let user = convertArtistToUserModel(artModel: artModel)
@@ -108,7 +113,12 @@ private extension ExhibitionDetailViewModel {
             do {
                 _ = try await myPageInteractor.follow(userId: id)
                 DispatchQueue.main.async {
-                    PlainSnackbar.show(message: "새로운 작가를 팔로우 했어요!", configuration: .init(imageType: .icon(.check), buttonType: .text("모두 보기"), buttonAction: nil))
+                    PlainSnackbar.show(message: "새로운 작가를 팔로우 했어요!", configuration: .init(imageType: .icon(.check), buttonType: .text("모두 보기"), buttonAction: { [weak self] in
+                        guard let self else { return }
+                        DispatchQueue.main.async {
+                            self.showFollowList()
+                        }
+                    }))
                 }
             } catch {
                 print(error.localizedDescription)

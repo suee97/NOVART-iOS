@@ -81,38 +81,49 @@ final class ProductImageUploadViewModel {
     
     func showMediaPicker() {
         let preselectedIdentifiers: [String] = step == .coverImage ? selectedCoverIdentifiers : selectedDetailIdentifiers
-        coordinator?.showMediaPicker(preselectedIdentifiers: preselectedIdentifiers, mediaPickerSelectionBlock: { [weak self] medias in
+        coordinator?.showMediaPicker(preselectedIdentifiers: preselectedIdentifiers, selectionLimit: 3, mediaPickerSelectionBlock: { [weak self] medias in
             guard let self else { return }
             switch self.step {
             case .coverImage:
                 if medias.identifiers.count <= 3 {
-                    let prevSelectedCount = selectedCoverIdentifiers.count
                     selectedCoverIdentifiers = medias.identifiers
                     var coverItems: [UploadMediaItem] = []
-                    for (idx, info) in medias.infos.enumerated() {
-                        let uploadItem = UploadMediaItem(image: info.loadImage,
-                                                         identifier: medias.identifiers[idx + prevSelectedCount],
-                                                         width: info.loadImage.size.width,
-                                                         height: info.loadImage.size.height)
-                        coverItems.append(uploadItem)
+                    
+                    for identifier in medias.identifiers {
+                        if let info = medias.infos.first(where: { $0.localIdentifier == identifier}) {
+                            let uploadItem = UploadMediaItem(image: info.loadImage,
+                                                             identifier: identifier,
+                                                             width: info.loadImage.size.width,
+                                                             height: info.loadImage.size.height)
+                            coverItems.append(uploadItem)
+                        } else {
+                            if let uploadItem = self.uploadModel.coverImages.first(where: { $0.identifier == identifier }) {
+                                coverItems.append(uploadItem)
+                            }
+                        }
                     }
-                    self.uploadModel.addImages(step: .coverImage, images: coverItems)
+                    self.uploadModel.setImages(step: .coverImage, images: coverItems)
                     self.selectedImagesSubject.send(uploadModel.coverImages)
                     self.isNextEnabled = true
                 }
             case .detailImage:
                 if !medias.identifiers.isEmpty {
-                    let prevSelectedCount = selectedDetailIdentifiers.count
                     selectedDetailIdentifiers = medias.identifiers
                     var detailItems: [UploadMediaItem] = []
-                    for (idx, info) in medias.infos.enumerated() {
-                        let uploadItem = UploadMediaItem(image: info.loadImage,
-                                                         identifier: medias.identifiers[idx+prevSelectedCount],
-                                                         width: info.loadImage.size.width,
-                                                         height: info.loadImage.size.height)
-                        detailItems.append(uploadItem)
+                    for identifier in medias.identifiers {
+                        if let info = medias.infos.first(where: { $0.localIdentifier == identifier}) {
+                            let uploadItem = UploadMediaItem(image: info.loadImage,
+                                                             identifier: identifier,
+                                                             width: info.loadImage.size.width,
+                                                             height: info.loadImage.size.height)
+                            detailItems.append(uploadItem)
+                        } else {
+                            if let uploadItem = self.uploadModel.detailImages.first(where: { $0.identifier == identifier }) {
+                                detailItems.append(uploadItem)
+                            }
+                        }
                     }
-                    self.uploadModel.addImages(step: .detailImage, images: detailItems)
+                    self.uploadModel.setImages(step: .detailImage, images: detailItems)
                     self.selectedImagesSubject.send(uploadModel.detailImages)
 
                     self.isNextEnabled = true
@@ -125,9 +136,11 @@ final class ProductImageUploadViewModel {
         switch step {
         case .coverImage:
             uploadModel.coverImages.removeAll(where: { $0.identifier == identifier })
+            selectedCoverIdentifiers.removeAll(where: { $0 == identifier } )
             self.selectedImagesSubject.send(uploadModel.coverImages)
         case .detailImage:
             uploadModel.detailImages.removeAll(where: { $0.identifier == identifier })
+            selectedDetailIdentifiers.removeAll(where: { $0 == identifier } )
             self.selectedImagesSubject.send(uploadModel.detailImages)
         }
     }

@@ -8,7 +8,7 @@
 import Foundation
 
 struct ProductDetailRecommendData {
-    let relatedProducts: [ProductModel]
     let otherProducts: [ProductModel]
     let exhibitions: [ExhibitionModel]
+    let relatedProducts: [ProductModel]
 }

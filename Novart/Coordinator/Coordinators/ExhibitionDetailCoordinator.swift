@@ -30,6 +30,8 @@ final class ExhibitionDetailCoordinator: BaseStackCoordinator<ExhibitionDetailSt
             presentLoginModal()
         case let .ask(user):
             showAskSheet(user: user)
+        case .followList:
+            closeAndShowMyFollowList()
         default:
             break
         }
@@ -59,6 +61,18 @@ final class ExhibitionDetailCoordinator: BaseStackCoordinator<ExhibitionDetailSt
             myPageCoordinator.startAsPush()
         }
     }
+    
+    @MainActor
+    private func closeAndShowMyFollowList() {
+        self.close { [weak self] in
+            guard let self, let parentCoordinator = self.parentCoordinator , let navigator = parentCoordinator.navigator as? StackNavigator else { return }
+            let myPageCoordinator = MyPageCoordinator(navigator: navigator)
+            myPageCoordinator.userId = nil
+            parentCoordinator.add(coordinators: myPageCoordinator)
+            myPageCoordinator.startAsPush(selectedCategory: .Following)
+        }
+    }
+
     
     @MainActor
     private func showAskSheet(user: PlainUser) {

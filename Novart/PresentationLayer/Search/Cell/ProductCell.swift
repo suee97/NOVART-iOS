@@ -18,7 +18,7 @@ final class ProductCell: UICollectionViewCell {
 
         enum BottomInfo {
             static let leadingMargin: CGFloat = 12
-            static let trailingMargin: CGFloat = 12
+            static let trailingMargin: CGFloat = 10
             static let productTextColor: UIColor = UIColor.Common.black
             static let productFont: UIFont = UIFont.systemFont(ofSize: 14, weight: .bold)
             static let artistTextColor: UIColor = UIColor.Common.grey03
@@ -104,6 +104,7 @@ final class ProductCell: UICollectionViewCell {
         bottomInfoView.addSubview(infoStackView)
         NSLayoutConstraint.activate([
             infoStackView.leadingAnchor.constraint(equalTo: bottomInfoView.leadingAnchor, constant: Constants.BottomInfo.leadingMargin),
+            infoStackView.trailingAnchor.constraint(equalTo: bottomInfoView.trailingAnchor, constant: -Constants.BottomInfo.trailingMargin),
             infoStackView.centerYAnchor.constraint(equalTo: bottomInfoView.centerYAnchor)
         ])
         
