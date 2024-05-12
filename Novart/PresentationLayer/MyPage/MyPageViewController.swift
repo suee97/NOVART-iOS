@@ -227,6 +227,17 @@ final class MyPageViewController: BaseViewController {
             }
             self.uploadProductButton.isHidden = (self.viewModel.userState == .me && value == .Work) ? false : true
             self.collectionView.reloadData()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let header = self.collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView {
+                    for button in header.categoryButtons {
+                        if button.category == value {
+                            button.setState(true)
+                        } else {
+                            button.setState(false)
+                        }
+                    }
+                }
+            }
         }).store(in: &cancellables)
         
         viewModel.$scrollHeight.sink(receiveValue: { value in

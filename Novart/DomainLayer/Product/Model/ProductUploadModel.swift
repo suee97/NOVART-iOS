@@ -43,12 +43,30 @@ class ProductUploadModel: ObservableObject {
         self.category = category
     }
     
-    func addImages(step: UploadStep, images: [UploadMediaItem]) {
+    func setImages(step: UploadStep, images: [UploadMediaItem]) {
         switch step {
         case .coverImage:
-            self.coverImages.append(contentsOf: images)
+            if images.count < self.coverImages.count {
+                self.coverImages.removeSubrange((images.count - 1)...(self.coverImages.count - 1 ))
+            }
+            for (idx, image) in images.enumerated() {
+                if idx < self.coverImages.count {
+                    self.coverImages[idx] = image
+                } else {
+                    self.coverImages.append(image)
+                }
+            }
         case .detailImage:
-            self.detailImages.append(contentsOf: images)
+            if images.count < self.detailImages.count {
+                self.detailImages.removeSubrange((images.count - 1)...(self.detailImages.count - 1 ))
+            }
+            for (idx, image) in images.enumerated() {
+                if idx < self.detailImages.count {
+                    self.detailImages[idx] = image
+                } else {
+                    self.detailImages.append(image)
+                }
+            }
         }
     }
     

@@ -40,9 +40,8 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep>, L
             closeAndShowProduct(id: productId)
         case let .exhibition(id):
             closeAndShowExhibition(id: id)
-            
-        default:
-            break
+        case .followList:
+            closeAndShowMyFollowList()
         }
     }
     
@@ -141,4 +140,17 @@ final class ProductDetailCoordinator: BaseStackCoordinator<ProductDetailStep>, L
 
         }
     }
+    
+    @MainActor
+    private func closeAndShowMyFollowList() {
+        self.close { [weak self] in
+            guard let self, let parentCoordinator = self.parentCoordinator , let navigator = parentCoordinator.navigator as? StackNavigator else { return }
+            let myPageCoordinator = MyPageCoordinator(navigator: navigator)
+            myPageCoordinator.userId = nil
+            parentCoordinator.add(coordinators: myPageCoordinator)
+            myPageCoordinator.startAsPush(selectedCategory: .Following)
+        }
+    }
+
+    
 }
