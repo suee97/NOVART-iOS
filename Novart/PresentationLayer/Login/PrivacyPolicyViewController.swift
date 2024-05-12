@@ -21,7 +21,7 @@ final class PrivacyPolicyViewController: BaseViewController {
         enum TitleLabel {
             static let font: UIFont = UIFont.systemFont(ofSize: 24, weight: .bold)
             static let textColor: UIColor = UIColor.Common.black
-            static let bottonMargin: CGFloat = 16
+            static let bottonMargin: CGFloat = 12
         }
         
         enum SubtitleLabel {
