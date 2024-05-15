@@ -731,6 +731,12 @@ extension ProductInfoUploadViewController: UITextViewDelegate {
         textViewPlaceHolder.isHidden = !descriptionTextView.text.isEmpty
         viewModel.uploadModel.description = descriptionTextView.text
     }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard textView == descriptionTextView else { return true }
+        let textString = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        return textString.count <= viewModel.maxDescriptionCount
+    }
 }
 
 // MARK: - TextField

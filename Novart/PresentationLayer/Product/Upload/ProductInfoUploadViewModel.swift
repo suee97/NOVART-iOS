@@ -13,7 +13,7 @@ final class ProductInfoUploadViewModel {
     
     var maxTitleCount: Int = 30
     var maxCategoryCount: Int = 1
-    var maxDescriptionCount: Int = 200
+    var maxDescriptionCount: Int = 300
     var maxTagCount: Int = 5
     
     @Published var uploadModel: ProductUploadModel
