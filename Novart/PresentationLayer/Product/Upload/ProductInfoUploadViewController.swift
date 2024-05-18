@@ -517,18 +517,20 @@ final class ProductInfoUploadViewController: BaseViewController {
             }
             .store(in: &cancellables)
         
+        viewModel.uploadModel.$forSale
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isForSale in
+                self?.priceTextField.isHidden = !isForSale
+            }
+            .store(in: &cancellables)
+        
         Publishers.CombineLatest3(viewModel.$initialCategoryViewApplyFinished, viewModel.$initialRecommendViewApplyFinished, viewModel.$initialPriceViewApplyFinished)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] categoryFinished, recommendFinished, priceFinished in
                 guard let self else { return }
                 let editModel = viewModel.uploadModel
                 if categoryFinished, recommendFinished, priceFinished {
-                    if viewModel.isEditScene {
-                        if editModel.forSale {
-                            self.priceTextField.text = Int(editModel.price ?? 0).toDecimalString()
-                        }
-                        self.viewModel.price = Int(editModel.price ?? 0)
-                    }
+                    self.priceTextField.text = editModel.forSale ? Int(editModel.price ?? 0).toDecimalString() : ""
                     self.syncRecomendTagData(editModel: editModel)
                     self.syncCategoryTagData(editModel: editModel)
                     self.syncPriceTagData(editModel: editModel)
@@ -687,6 +689,13 @@ extension ProductInfoUploadViewController: TagViewDelegate {
     func tagView(_ tagView: TagView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if tagView == recommendTagView {
             return viewModel.uploadModel.artTagList.count < 5
+        }
+        return true
+    }
+    
+    func tagView(_ tagView: TagView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        if tagView == priceTagView {
+            return false
         }
         return true
     }
