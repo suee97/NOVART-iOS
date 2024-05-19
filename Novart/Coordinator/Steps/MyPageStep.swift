@@ -16,6 +16,7 @@ enum MyPageStep: Step {
     case LoginModal
     case Close
     case logout
+    case login
     
     case product(Int64)
     case artist(Int64)

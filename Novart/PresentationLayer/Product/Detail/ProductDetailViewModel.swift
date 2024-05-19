@@ -69,6 +69,12 @@ extension ProductDetailViewModel {
         let attributedString = NSAttributedString(string: text, attributes: attributes)
         return attributedString
     }
+    
+    func isUserCanContact(openChatUrl: String?, email: String?) -> Bool {
+        if let openChatUrl, !openChatUrl.isEmpty { return true }
+        if let email, !email.isEmpty { return true }
+        return false
+    }
 }
 
 extension ProductDetailViewModel {
@@ -160,14 +166,15 @@ extension ProductDetailViewModel {
     
     @MainActor
     func didTapContactButton() {
-        
         if !Authentication.shared.isLoggedIn {
             coordinator?.navigate(to: .login)
-        } else {
-            guard let product = productDetailSubject.value else { return }
-            let user = convertArtistToUserModel(prouctModel: product)
-            coordinator?.navigate(to: .ask(user: user))
+            return
         }
+        
+        guard let product = productDetailSubject.value else { return }
+        let user = convertArtistToUserModel(prouctModel: product)
+        let canContact = isUserCanContact(openChatUrl: user.openChatUrl, email: user.email)
+        if canContact { coordinator?.navigate(to: .ask(user: user)) }
     }
     
     @MainActor

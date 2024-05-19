@@ -50,7 +50,10 @@ final class MyPageViewController: BaseViewController {
         
         enum AskButton {
             static let text = "문의"
-            static let backgroundColor = UIColor.Common.grey04
+            static let activeBackgroundColor = UIColor.Common.grey04
+            static let activeTextColor = UIColor.Common.white
+            static let inActiveBackgroundColor = UIColor.Common.grey01
+            static let inActiveTextColor = UIColor.Common.grey00
             static let font = UIFont.systemFont(ofSize: 16, weight: .bold)
             static let width = getRelativeWidth(from: 84)
             static let height = getRelativeHeight(from: 42)
@@ -276,6 +279,13 @@ final class MyPageViewController: BaseViewController {
                 self.followButton.backgroundColor = otherUser.following ? Constants.FollowButton.followedColor : Constants.FollowButton.unFollowedColor
                 let buttonTitle = otherUser.following ? Constants.FollowButton.followedText : Constants.FollowButton.unFollowedText
                 self.followButton.setTitle(buttonTitle, for: .normal)
+                if self.viewModel.isUserCanContact(openChatUrl: otherUser.openChatUrl, email: otherUser.email) {
+                    self.askButton.setTitleColor(Constants.AskButton.activeTextColor, for: .normal)
+                    self.askButton.backgroundColor = Constants.AskButton.activeBackgroundColor
+                } else {
+                    self.askButton.setTitleColor(Constants.AskButton.inActiveTextColor, for: .normal)
+                    self.askButton.backgroundColor = Constants.AskButton.inActiveBackgroundColor
+                }
             }
         }).store(in: &cancellables)
     }
@@ -427,7 +437,6 @@ final class MyPageViewController: BaseViewController {
      lazy var askButton: PlainButton = {
         let button = PlainButton()
         button.setTitle(Constants.AskButton.text, for: .normal)
-        button.backgroundColor = Constants.AskButton.backgroundColor
         button.titleLabel?.font = Constants.AskButton.font
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
