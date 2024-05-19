@@ -247,7 +247,7 @@ final class ProductImageUploadViewController: BaseViewController, MediaPickerPre
             coverCollectionView.setCollectionViewLayout(coverImageLayout, animated: false)
             NSLayoutConstraint.activate([
                 coverCollectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: Constants.horizontalMargin),
-                coverCollectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -Constants.horizontalMargin),
+                coverCollectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
                 coverCollectionView.topAnchor.constraint(equalTo: addImageButton.bottomAnchor, constant: Constants.AddImage.bottomMargin),
                 coverCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
