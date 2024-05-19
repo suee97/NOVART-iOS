@@ -17,6 +17,7 @@ final class ProductDetailViewController: BaseViewController {
         static let topMargin: CGFloat = 62
         static let screenWidth: CGFloat = UIScreen.main.bounds.width
         static let closeButtonTopMargin: CGFloat = 72
+        static let closeButtonHorizontalMargin: CGFloat = 12
         
         enum TitleLabel {
             static let font: UIFont = .systemFont(ofSize: 20, weight: .semibold)
@@ -489,7 +490,7 @@ final class ProductDetailViewController: BaseViewController {
         view.addSubview(closeButton)
         NSLayoutConstraint.activate([
             closeButton.centerYAnchor.constraint(equalTo: view.topAnchor, constant: Constants.closeButtonTopMargin),
-            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.horizontalMargin)
+            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.closeButtonHorizontalMargin)
         ])
         
         contentView.addSubview(coverCollectionView)

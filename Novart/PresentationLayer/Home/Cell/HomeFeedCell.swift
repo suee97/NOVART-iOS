@@ -33,6 +33,10 @@ final class HomeFeedCell: UICollectionViewCell {
             static let spacing: CGFloat = 24
         }
         
+        enum Category {
+            static let trailingMargin: CGFloat = 12
+        }
+        
         enum Label {
             static let itemNameFont: UIFont = .systemFont(ofSize: 20, weight: .bold)
             static let artistNameFont: UIFont = .systemFont(ofSize: 14, weight: .regular)
@@ -183,7 +187,7 @@ final class HomeFeedCell: UICollectionViewCell {
         
         contentView.addSubview(categoryBadge)
         NSLayoutConstraint.activate([
-            categoryBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.trailingMargin),
+            categoryBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.Category.trailingMargin),
             categoryBadge.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topMargin)
         ])
         
