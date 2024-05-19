@@ -81,7 +81,8 @@ final class ProductImageUploadViewModel {
     
     func showMediaPicker() {
         let preselectedIdentifiers: [String] = step == .coverImage ? selectedCoverIdentifiers : selectedDetailIdentifiers
-        coordinator?.showMediaPicker(preselectedIdentifiers: preselectedIdentifiers, selectionLimit: 3, mediaPickerSelectionBlock: { [weak self] medias in
+        let sectionLimit: Int? = step == .coverImage ? 3 : nil
+        coordinator?.showMediaPicker(preselectedIdentifiers: preselectedIdentifiers, selectionLimit: sectionLimit, mediaPickerSelectionBlock: { [weak self] medias in
             guard let self else { return }
             switch self.step {
             case .coverImage:
