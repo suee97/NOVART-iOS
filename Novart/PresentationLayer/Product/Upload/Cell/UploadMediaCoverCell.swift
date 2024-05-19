@@ -17,6 +17,10 @@ final class UploadMediaCoverCell: UICollectionViewCell {
             static let color: UIColor = UIColor.Common.black
             static let margin: CGFloat = 4
         }
+        
+        enum Close {
+            static let margin: CGFloat = 8
+        }
     }
     
     private lazy var imageView: UIImageView = {
@@ -40,7 +44,7 @@ final class UploadMediaCoverCell: UICollectionViewCell {
     
     private lazy var deleteButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "icon_upload_close"), for: .normal)
+        button.setImage(UIImage(named: "icon_close_round"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addAction(UIAction(handler: {[weak self] _ in
             guard let self,
@@ -80,8 +84,8 @@ final class UploadMediaCoverCell: UICollectionViewCell {
         
         contentView.addSubview(deleteButton)
         NSLayoutConstraint.activate([
-            deleteButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.Crop.margin),
-            deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.Crop.margin),
+            deleteButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -Constants.Close.margin),
+            deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.Close.margin),
         ])
         
         self.clipsToBounds = false
