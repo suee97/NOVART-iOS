@@ -51,6 +51,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
             presentLoginModal()
         case .Close:
             close()
+        case .login:
+            presentLoginModal()
             
         case let .product(id):
             presentProductDetailVC(productId: id)

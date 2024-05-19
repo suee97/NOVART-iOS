@@ -69,14 +69,15 @@ final class ProductDetailViewController: BaseViewController {
         enum ArtistInfo {
             static let topMargin: CGFloat = 40
             static let buttonTextColor: UIColor = UIColor.Common.white
+            static let buttonDisabledTextColor: UIColor = UIColor.Common.grey00
             static let buttonFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .semibold)
             static let cornerRadius: CGFloat = 12
             static let buttonHeight: CGFloat = 40
             static let contactButtonWidth: CGFloat = 60
             static let followButtonWidth: CGFloat = 74
             static let profileButtonWidth: CGFloat = 106
-            static let contactButtonColor: UIColor = UIColor.Common.grey01
-            static let contactButtonDisabledColor: UIColor = UIColor.Common.warmGrey02
+            static let contactButtonColor: UIColor = UIColor.Common.grey04
+            static let contactButtonDisabledColor: UIColor = UIColor.Common.grey01
             static let followButtonColor: UIColor = UIColor.Common.main
             static let followingButtonColor: UIColor = UIColor.Common.grey04
             static let profileButtonColor: UIColor = UIColor.Common.white
@@ -203,9 +204,9 @@ final class ProductDetailViewController: BaseViewController {
     private lazy var contactButton: UIButton = {
         let button = UIButton()
         button.setTitle("문의", for: .normal)
-        button.setTitleColor(Constants.ArtistInfo.buttonTextColor, for: .normal)
+//        button.setTitleColor(Constants.ArtistInfo.buttonTextColor, for: .normal)
         button.titleLabel?.font = Constants.ArtistInfo.buttonFont
-        button.backgroundColor = Constants.ArtistInfo.contactButtonColor
+//        button.backgroundColor = Constants.ArtistInfo.contactButtonColor
         button.layer.cornerRadius = Constants.ArtistInfo.cornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -629,6 +630,14 @@ final class ProductDetailViewController: BaseViewController {
         let thumbnailUrls = data.thumbnailImageUrls
         pageController.totalCount = thumbnailUrls.count
         productCoverDataSource.apply(thumbnailUrls)
+        
+        if viewModel.isUserCanContact(openChatUrl: data.artist.openChatUrl, email: data.artist.email) {
+            contactButton.setTitleColor(Constants.ArtistInfo.buttonTextColor, for: .normal)
+            contactButton.backgroundColor = Constants.ArtistInfo.contactButtonColor
+        } else {
+            contactButton.setTitleColor(Constants.ArtistInfo.buttonDisabledTextColor, for: .normal)
+            contactButton.backgroundColor = Constants.ArtistInfo.contactButtonDisabledColor
+        }
         
         barTitleLabel.text = data.name
         barArtistLabel.text = data.artist.nickname

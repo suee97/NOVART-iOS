@@ -47,6 +47,12 @@ final class MyPageViewModel {
     func setScrollHeight(_ height: Double) {
         scrollHeight = height
     }
+    
+    func isUserCanContact(openChatUrl: String?, email: String?) -> Bool {
+        if let openChatUrl, !openChatUrl.isEmpty { return true }
+        if let email, !email.isEmpty { return true }
+        return false
+    }
 }
 
 
@@ -211,8 +217,16 @@ extension MyPageViewModel {
     
     @MainActor
     func showAskSheet() {
-        guard userState == .other, let user = otherUser else { return }
-        coordinator?.navigate(to: .ask(user: user))
+        if userState == .loggedOut {
+            coordinator?.navigate(to: .login)
+            return
+        }
+        if userState == .me { return }
+        guard let user = otherUser else { return }
+        
+        if isUserCanContact(openChatUrl: user.openChatUrl, email: user.email) {
+            coordinator?.navigate(to: .ask(user: user))
+        }
     }
 }
 
