@@ -356,16 +356,6 @@ final class ProductInfoUploadViewController: BaseViewController {
         setupData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-//        setUpKeyboardObserver()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-//        removeKeyboardObserver()
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupData()
@@ -527,46 +517,26 @@ final class ProductInfoUploadViewController: BaseViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.uploadModel.objectWillChange
+        viewModel.uploadModel.$forSale
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let self else { return }
-                let productModel = self.viewModel.uploadModel
-
-                self.titleTextField.text = productModel.name
-                self.titleCountLabel.text = "\(productModel.name?.count ?? 0)"
-                self.descriptionTextView.text = productModel.description
-                self.descriptionCountLabel.text = "\(productModel.description?.count ?? 0)"
-                self.recommendTagCountLabel.text = "\(productModel.artTagList.count)"
-                self.priceTextField.isHidden = !productModel.forSale
-
+            .sink { [weak self] isForSale in
+                self?.priceTextField.isHidden = !isForSale
             }
             .store(in: &cancellables)
         
-        if viewModel.isEditScene {
-            updateDescriptionPlaceholder()
-            Publishers.CombineLatest3(viewModel.$initialCategoryViewApplyFinished, viewModel.$initialRecommendViewApplyFinished, viewModel.$initialPriceViewApplyFinished)
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] categoryFinished, recommendFinished, priceFinished in
-                    
-                    guard let self else { return }
-                    let editModel = viewModel.uploadModel
-                    if categoryFinished,
-                       recommendFinished,
-                       priceFinished {
-                        self.titleTextField.text = editModel.name
-                        self.descriptionTextView.text = editModel.description
-                        if editModel.forSale {
-                            self.priceTextField.text = Int(editModel.price ?? 0).toDecimalString()
-                        }
-                        self.viewModel.price = Int(editModel.price ?? 0)
-                        self.syncRecomendTagData(editModel: editModel)
-                        self.syncCategoryTagData(editModel: editModel)
-                        self.syncPriceTagData(editModel: editModel)
-                    }
+        Publishers.CombineLatest3(viewModel.$initialCategoryViewApplyFinished, viewModel.$initialRecommendViewApplyFinished, viewModel.$initialPriceViewApplyFinished)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] categoryFinished, recommendFinished, priceFinished in
+                guard let self else { return }
+                let editModel = viewModel.uploadModel
+                if categoryFinished, recommendFinished, priceFinished {
+                    self.priceTextField.text = editModel.forSale ? Int(editModel.price ?? 0).toDecimalString() : ""
+                    self.syncRecomendTagData(editModel: editModel)
+                    self.syncCategoryTagData(editModel: editModel)
+                    self.syncPriceTagData(editModel: editModel)
                 }
-                .store(in: &cancellables)
-        }
+            }
+            .store(in: &cancellables)
         
         NotificationCenter.default.addObserver(
             self,
@@ -592,19 +562,32 @@ final class ProductInfoUploadViewController: BaseViewController {
             guard let self else { return }
             self.viewModel.initialRecommendViewApplyFinished = true
         }
+        
+        let productModel = viewModel.uploadModel
+        titleTextField.text = productModel.name
+        titleCountLabel.text = "\(productModel.name?.count ?? 0)"
+        descriptionTextView.text = productModel.description
+        descriptionCountLabel.text = "\(productModel.description?.count ?? 0)"
+        recommendTagCountLabel.text = "\(productModel.artTagList.count)"
+        priceTextField.isHidden = !productModel.forSale
+        
+        if let description = productModel.description, !description.isEmpty {
+            self.textViewPlaceHolder.isHidden = true
+        } else {
+            self.textViewPlaceHolder.isHidden = false
+        }
     }
     
     private func syncRecomendTagData(editModel: ProductUploadModel) {
-        var selectedRecomendaryTagIndexes: [Int] = []
+        var selectedRecommendaryTagIndexes: [Int] = []
         for (idx, category) in self.viewModel.recommendTags.enumerated() {
             let tagName = category.tag ?? ""
             if editModel.artTagList.contains(where: { $0 == tagName }) {
-                selectedRecomendaryTagIndexes.append(idx)
-                self.viewModel.selectRecommendTag(index: idx, isSelected: true)
+                selectedRecommendaryTagIndexes.append(idx)
             }
         }
-        
-        self.recommendTagView.selectItems(indexes: selectedRecomendaryTagIndexes)
+        selectedRecommendaryTagIndexes.forEach{ viewModel.selectRecommendTag(index: $0, isSelected: true) }
+        self.recommendTagView.selectItems(indexes: selectedRecommendaryTagIndexes)
         self.viewModel.recommendTagFieldString = editModel.artTagList.joined(separator: ", ")
     }
     
@@ -710,6 +693,13 @@ extension ProductInfoUploadViewController: TagViewDelegate {
         return true
     }
     
+    func tagView(_ tagView: TagView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        if tagView == priceTagView {
+            return false
+        }
+        return true
+    }
+    
     func invalidateLayout(_ tagView: TagView, contentHeight: CGFloat) {
         if tagView == recommendTagView,
            contentHeight > 1 {
@@ -785,45 +775,3 @@ extension ProductInfoUploadViewController: UITextFieldDelegate {
         previewButton.isEnabled =  (titleText.trimmingCharacters(in: [" "]).count > 0 && viewModel.categories.filter({$0.isSelected}).count == 1)
     }
 }
-
-//// MARK: - Keyboard
-//extension ProductInfoUploadViewController {
-//    private func setUpKeyboardObserver() {
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-//    }
-//    
-//    private func removeKeyboardObserver() {
-//        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-//    }
-//    
-//    @objc private func keyboardWillShow(_ notification: Notification) {
-//        if isKeyboardShowing { return }
-//        
-//        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let tabBarHeight = self.tabBarController?.tabBar.frame.height {
-//            UIView.animate(withDuration: 0.3) {
-//                let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height - tabBarHeight, right: 0)
-//                self.scrollView.contentInset = contentInset
-//                self.scrollView.scrollIndicatorInsets = contentInset
-//                
-//                let currentOffset = self.scrollView.contentOffset
-//                let newOffset = CGPoint(x: currentOffset.x, y: currentOffset.y + keyboardSize.height - tabBarHeight)
-//                self.scrollView.setContentOffset(newOffset, animated: true)
-//            }
-//            isKeyboardShowing = true
-//        }
-//    }
-//    
-//    @objc private func keyboardWillHide(_ notification: Notification) {
-//        UIView.animate(withDuration: 0.3) {
-//            self.scrollView.contentInset = .zero
-//            self.scrollView.scrollIndicatorInsets = .zero
-//            self.isKeyboardShowing = false
-//        }
-//    }
-//    
-//    @objc private func hideKeyboard() {
-//        view.endEditing(true)
-//    }
-//}

@@ -34,8 +34,6 @@ final class ProductInfoUploadViewModel {
     @Published var initialCategoryViewApplyFinished: Bool = false
     @Published var initialRecommendViewApplyFinished: Bool = false
     @Published var initialPriceViewApplyFinished: Bool = false
-    var forSale: Bool = false
-    var price: Int = 0
 
     var selectedTags: [String] {
         let selectedTags = recommendTags.filter({ $0.isSelected })
@@ -68,6 +66,8 @@ final class ProductInfoUploadViewModel {
     }
     
     func selectPriceTag(index: Int) {
+        if priceTags[index].isSelected { return }
+        
         var updatedTags: [TagItem] = []
         for (idx, tag) in priceTags.enumerated() {
             if idx == index {
