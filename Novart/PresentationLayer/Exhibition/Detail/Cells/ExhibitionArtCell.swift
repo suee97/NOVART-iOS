@@ -223,13 +223,14 @@ final class ExhibitionArtCell: UICollectionViewCell {
     // MARK: - Properties
     
     var input: PassthroughSubject<(ExhibitionDetailViewController.ArtCellInput, Int64), Never>?
-    
+    var cancellables: Set<AnyCancellable> = .init()
     var currentFollowingState: Bool = false
     
     private var viewModel: ExhibitionArtItem? {
         didSet {
             if let viewModel {
                 setupData(viewModel: viewModel)
+                setupBindings()
             }
         }
     }
@@ -312,32 +313,44 @@ final class ExhibitionArtCell: UICollectionViewCell {
             artistImageView.kf.setImage(with: artistImageUrl)
         }
         coverCollectionView.reloadData()
-        setupDetailImageViews(with: viewModel.detailImages)
+//        setupDetailImageViews(with: viewModel.detailImages)
         currentFollowingState = viewModel.artistInfo.following
         updateFollowButton(isFollowing: currentFollowingState)
         contactButton.backgroundColor = viewModel.isContactEnabled ? Constants.ArtistInfo.contactButtonColor : Constants.ArtistInfo.contactButtonDisabledColor
 
     }
     
-    private func setupDetailImageViews(with images: [ExhibitionDetailImageInfoModel]) {
+    private func setupBindings() {
+        guard let viewModel else { return }
+        viewModel.exhibitionImages
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] images in
+                guard let self,
+                      !images.isEmpty else { return }
+                self.setupDetailImageViews(with: images)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func setupDetailImageViews(with images: [UIImage]) {
         var stackViewHeight: CGFloat = 0
         for image in images {
             let imageView = UIImageView()
             imageView.translatesAutoresizingMaskIntoConstraints = false
             imageView.contentMode = .scaleToFill
+            imageView.image = image
+            
+            detailImageStackView.addArrangedSubview(imageView)
             
             let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: Constants.CoverImage.imageSize)
-            let aspectRatio = CGFloat(image.height) / CGFloat(image.width)
+            let aspectRatio = CGFloat(image.size.height) / CGFloat(image.size.width)
             let heightConstraint = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: aspectRatio)
 
             NSLayoutConstraint.activate([
                widthConstraint,
                heightConstraint
             ])
-            let url = URL(string: image.url)
-            imageView.kf.setImage(with: url)
-            detailImageStackView.addArrangedSubview(imageView)
-
+            
             stackViewHeight += (Constants.CoverImage.imageSize * aspectRatio + Constants.DetailImage.spacing)
         }
         stackViewHeight -= Constants.DetailImage.spacing
@@ -348,6 +361,7 @@ final class ExhibitionArtCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         detailImageStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        cancellables.removeAll()
     }
     
     private func updateFollowButton(isFollowing: Bool) {
