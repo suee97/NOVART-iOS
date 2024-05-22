@@ -17,6 +17,7 @@ final class ExhibitionArtItem: ExhibitionDetailItem {
     let thumbnailImageUrls: [String]
     let detailImages: [ExhibitionDetailImageInfoModel]
     let artistInfo: ExhibitionArtistFollowInfoModel
+    let exhibitionImages: CurrentValueSubject<[UIImage], Never> = .init([])
     
     var isContactEnabled: Bool {
         artistInfo.email != nil || artistInfo.openChatUrl != nil 
@@ -40,5 +41,54 @@ final class ExhibitionArtItem: ExhibitionDetailItem {
         self.subtitle = "Subtitle"
         self.detailImages = item.detailImageInfo
         self.artistInfo = item.artistFollow
+        super.init()
+        loadImages()
+    }
+    
+    func loadImages() {
+        Task {
+            do {
+                let images = try await downloadImages(from: detailImages.map { $0.url }).compactMap { $0 }
+                exhibitionImages.send(images)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func downloadImage(from urlString: String) async throws -> UIImage? {
+        guard let url = URL(string: urlString) else {
+            return nil
+        }
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            KingfisherManager.shared.retrieveImage(with: url) { result in
+                switch result {
+                case .success(let imageResult):
+                    continuation.resume(returning: imageResult.image)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+    
+    func downloadImages(from urlStrings: [String]) async throws -> [UIImage?] {
+        var images: [UIImage?] = []
+
+        try await withThrowingTaskGroup(of: UIImage?.self) { [weak self] group in
+            guard let self else { return }
+            for urlString in urlStrings {
+                group.addTask {
+                    try await self.downloadImage(from: urlString)
+                }
+            }
+
+            for try await image in group {
+                images.append(image)
+            }
+        }
+
+        return images
     }
 }
