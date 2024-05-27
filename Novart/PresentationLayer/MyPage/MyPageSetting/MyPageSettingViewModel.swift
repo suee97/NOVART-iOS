@@ -2,8 +2,6 @@ import UIKit
 import Combine
 
 final class MyPageSettingViewModel {
-    
-    // MARK: - Properties
     private let coordinator: MyPageCoordinator
     private let downloadInteractor = MyPageDownloadInteractor()
     var user: PlainUser?
@@ -18,10 +16,14 @@ final class MyPageSettingViewModel {
         self.coordinator = coordinator
         self.user = user
     }
+}
+
+
+// MARK: - API
+extension MyPageSettingViewModel {
     
-    
-    // MARK: - API
     func fetchSetting() {
+        guard let user else { return }
         Task {
             do {
                 isLoading = true
@@ -57,9 +59,13 @@ final class MyPageSettingViewModel {
             }
         }
     }
-
     
-    // MARK: - Navigation
+}
+
+
+// MARK: - Navigation
+extension MyPageSettingViewModel {
+    
     @MainActor
     func showMain() {
         coordinator.navigate(to: .MyPageMain)
@@ -93,9 +99,11 @@ final class MyPageSettingViewModel {
         let alertController = AlertController(title: nil, message: message, preferredStyle: .alert)
         let cancelAction = AlertAction(title: "취소", style: .default, handler: nil)
         let deleteUserAction = AlertAction(title: "탈퇴하기", style: .destructive, handler: { [weak self] _ in
+            // TODO: 서버 개발 대기 중
 //            self?.coordinator.navigate(to: )
         })
         alertController.addActions([cancelAction, deleteUserAction])
         alertController.show()
     }
+    
 }
