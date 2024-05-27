@@ -16,7 +16,7 @@ final class ProductInfoUploadViewController: BaseViewController {
         static let topMargin: CGFloat = 16
         static let horizontalMargin: CGFloat = 24
         static let screenWidth: CGFloat = UIScreen.main.bounds.width
-        static let bottomMargin: CGFloat = 38
+        static let bottomMargin: CGFloat = 20
 
         enum PreviewButton {
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
@@ -71,6 +71,13 @@ final class ProductInfoUploadViewController: BaseViewController {
             static let color: UIColor = UIColor.Common.grey04
             static let upImage = UIImage(named: "icon_chevron_up_v2")
             static let downImage = UIImage(named: "icon_chevron_down_v2")
+        }
+        
+        enum PriceNoticeLabel {
+            static let font = UIFont.systemFont(ofSize: 12, weight: .regular)
+            static let textColor = UIColor.init(hexString: "#FF3E31")
+            static let text = "거래 가격은 10억까지 입력이 가능합니다."
+            static let topMargin = CGFloat(4)
         }
     }
     
@@ -331,6 +338,16 @@ final class ProductInfoUploadViewController: BaseViewController {
         return textField
     }()
     
+    private let priceNoticeLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.PriceNoticeLabel.text
+        label.font = Constants.PriceNoticeLabel.font
+        label.textColor = Constants.PriceNoticeLabel.textColor
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = true
+        return label
+    }()
+    
     
     // MARK: - Properties
 
@@ -491,6 +508,7 @@ final class ProductInfoUploadViewController: BaseViewController {
         contentView.addSubview(priceLabel)
         contentView.addSubview(priceTagView)
         contentView.addSubview(priceTextField)
+        contentView.addSubview(priceNoticeLabel)
         NSLayoutConstraint.activate([
             priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
             priceLabel.topAnchor.constraint(equalTo: recommendTagView.bottomAnchor, constant: Constants.Title.topMargin),
@@ -504,7 +522,10 @@ final class ProductInfoUploadViewController: BaseViewController {
             priceTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
             priceTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.horizontalMargin),
             priceTextField.heightAnchor.constraint(equalToConstant: Constants.TextField.height),
-            priceTextField.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.bottomMargin)
+            
+            priceNoticeLabel.topAnchor.constraint(equalTo: priceTextField.bottomAnchor, constant: Constants.PriceNoticeLabel.topMargin),
+            priceNoticeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalMargin),
+            priceNoticeLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.bottomMargin)
         ])
         priceTextField.delegate = self
     }
@@ -528,12 +549,12 @@ final class ProductInfoUploadViewController: BaseViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] categoryFinished, recommendFinished, priceFinished in
                 guard let self else { return }
-                let editModel = viewModel.uploadModel
+                let uploadModel = viewModel.uploadModel
                 if categoryFinished, recommendFinished, priceFinished {
-                    self.priceTextField.text = editModel.forSale ? Int(editModel.price ?? 0).toDecimalString() : ""
-                    self.syncRecomendTagData(editModel: editModel)
-                    self.syncCategoryTagData(editModel: editModel)
-                    self.syncPriceTagData(editModel: editModel)
+                    self.priceTextField.text = Int(uploadModel.price ?? 0).toDecimalString()
+                    self.syncRecomendTagData(editModel: uploadModel)
+                    self.syncCategoryTagData(editModel: uploadModel)
+                    self.syncPriceTagData(editModel: uploadModel)
                 }
             }
             .store(in: &cancellables)
@@ -603,6 +624,8 @@ final class ProductInfoUploadViewController: BaseViewController {
         let idx = editModel.forSale ? 1 : 0
         self.viewModel.selectPriceTag(index: idx)
         self.priceTagView.selectItems(indexes: [idx])
+        self.validateCanPreview()
+        self.validateIsPriceUnderLimit()
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -666,6 +689,8 @@ extension ProductInfoUploadViewController: TagViewDelegate {
             viewModel.selectPriceTag(index: indexPath.row)
             tagView.applyItems(viewModel.priceTags)
             viewModel.uploadModel.forSale = indexPath.row == 0 ? false : true
+            validateCanPreview()
+            validateIsPriceUnderLimit()
         default:
             break
         }
@@ -739,6 +764,8 @@ extension ProductInfoUploadViewController: UITextFieldDelegate {
         } else if textField == priceTextField {
             guard let price = textField.text?.replacingOccurrences(of: ",", with: "") else { return }
             viewModel.uploadModel.price = Int64(price) ?? 0
+            validateCanPreview()
+            validateIsPriceUnderLimit()
         }
     }
     
@@ -772,6 +799,28 @@ extension ProductInfoUploadViewController: UITextFieldDelegate {
     
     @objc private func validateCanPreview() {
         guard let titleText = titleTextField.text else { return }
-        previewButton.isEnabled =  (titleText.trimmingCharacters(in: [" "]).count > 0 && viewModel.categories.filter({$0.isSelected}).count == 1)
+        let titleValidation: Bool = titleText.trimmingCharacters(in: [" "]).count > 0
+        let categoryValidation: Bool = viewModel.categories.filter({$0.isSelected}).count == 1
+        let forSale: Bool = viewModel.uploadModel.forSale
+        
+        if !forSale {
+            previewButton.isEnabled = (titleValidation && categoryValidation)
+            return
+        }
+        
+        let priceValidation: Bool = validateIsPriceUnderLimit()
+        previewButton.isEnabled = (titleValidation && categoryValidation && priceValidation)
+    }
+    
+    private func validateIsPriceUnderLimit() -> Bool {
+        let forSale = viewModel.uploadModel.forSale
+        if !forSale {
+            priceNoticeLabel.isHidden = true
+            return true
+        }
+        guard let price = viewModel.uploadModel.price else { return false }
+        let validation = price > 0 && price < 1000000000
+        priceNoticeLabel.isHidden = validation
+        return validation
     }
 }
