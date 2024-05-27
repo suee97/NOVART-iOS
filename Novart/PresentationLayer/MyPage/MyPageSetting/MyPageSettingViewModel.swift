@@ -74,11 +74,28 @@ final class MyPageSettingViewModel {
     func showPolicy(policyType: PolicyType) {
         coordinator.navigate(to: .policy(policyType: policyType))
     }
-}
-
-extension MyPageSettingViewModel {
+    
     @MainActor
-    func didTapLogoutButton() {
-        coordinator.navigate(to: .logout)
+    func showLogoutAlert() {
+        let message = "정말 로그아웃 하시겠어요?"
+        let alertController = AlertController(title: nil, message: message, preferredStyle: .alert)
+        let cancelAction = AlertAction(title: "취소", style: .default, handler: nil)
+        let logoutAction = AlertAction(title: "로그아웃", style: .destructive, handler: { [weak self] _ in
+            self?.coordinator.navigate(to: .logout)
+        })
+        alertController.addActions([cancelAction, logoutAction])
+        alertController.show()
+    }
+    
+    @MainActor
+    func showDeleteAlert() {
+        let message = "정말 탈퇴하시겠어요?\n본인의 모든 정보가 사라지게 됩니다."
+        let alertController = AlertController(title: nil, message: message, preferredStyle: .alert)
+        let cancelAction = AlertAction(title: "취소", style: .default, handler: nil)
+        let deleteUserAction = AlertAction(title: "탈퇴하기", style: .destructive, handler: { [weak self] _ in
+//            self?.coordinator.navigate(to: )
+        })
+        alertController.addActions([cancelAction, deleteUserAction])
+        alertController.show()
     }
 }
