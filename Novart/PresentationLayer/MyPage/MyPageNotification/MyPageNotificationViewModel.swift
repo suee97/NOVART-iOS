@@ -4,10 +4,10 @@ import Combine
 final class MyPageNotificationViewModel {
     private weak var coordinator: MyPageCoordinator?
     private var downloadInteractor = NotificationDownloadInteractor()
-    @Published var notifications = [NotificationModel]()
+    @Published private(set) var notifications = [NotificationModel]()
     
-    var fetchedPages = [Int64]()
-    var isFetching = false
+    private var fetchedPages = [Int64]()
+    private var isFetching = false
     
     init(coordinator: MyPageCoordinator) {
         self.coordinator = coordinator
@@ -16,7 +16,7 @@ final class MyPageNotificationViewModel {
 
 extension MyPageNotificationViewModel {
     
-    func fetchNotifications(notificationId: Int64) {
+    func fetchNotifications(notificationId: Int64 = 0) {
         guard !isFetching else { return }
         Task {
             isFetching = true
@@ -31,7 +31,7 @@ extension MyPageNotificationViewModel {
         }
     }
     
-    func putNotificationReadStatus(notificationId: Int64) {
+    private func putNotificationReadStatus(notificationId: Int64) {
         Task {
             do {
                 try await downloadInteractor.putNotificationReadStatus(notificationId: notificationId)
@@ -63,6 +63,13 @@ extension MyPageNotificationViewModel {
         isFetching = false
     }
     
+    func readNotification(index: Int) {
+        if notifications[index].status == .UnRead {
+            notifications[index].status = .Read
+            putNotificationReadStatus(notificationId: notifications[index].id)
+        }
+    }
+    
 }
 
 
@@ -75,8 +82,8 @@ extension MyPageNotificationViewModel {
     }
     
     @MainActor
-    func didTapNotification(at indexPath: IndexPath) {
-        let notification = notifications[indexPath.row]
+    func pushViewController(index: Int) {
+        let notification = notifications[index]
         NotificationNavigationHandler(coordinator: coordinator).execute(notification: notification)
     }
     

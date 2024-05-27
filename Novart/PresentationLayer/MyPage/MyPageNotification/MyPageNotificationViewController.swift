@@ -51,21 +51,18 @@ final class MyPageNotificationViewController: BaseViewController, PullToRefreshP
     override func setupBindings() {
         viewModel.$notifications
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { notifications in
-                if notifications.isEmpty {
-                    self.collectionView.isHidden = true
-                    self.emptyView.isHidden = false
-                } else {
-                    self.collectionView.isHidden = false
-                    self.emptyView.isHidden = true
-                }
+            .sink(receiveValue: { [weak self] notifications in
+                guard let self else { return }
+                self.collectionView.isHidden = notifications.isEmpty
+                self.emptyView.isHidden = !notifications.isEmpty
                 self.collectionView.reloadData()
             }).store(in: &cancellables)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.fetchNotifications(notificationId: 0)
+        viewModel.fetchNotifications()
+        setUpDelegate()
         setupRefreshControl()
     }
     
@@ -73,8 +70,8 @@ final class MyPageNotificationViewController: BaseViewController, PullToRefreshP
     private lazy var backButtonItem: UIBarButtonItem = {
         let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: Constants.Navigation.backButtonSize))
         button.setBackgroundImage(UIImage(named: "icon_back"), for: .normal)
-        button.addAction(UIAction(handler: { _ in
-            self.viewModel.showMain()
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.viewModel.showMain()
         }), for: .touchUpInside)
         let item = UIBarButtonItem(customView: button)
         return item
@@ -86,8 +83,7 @@ final class MyPageNotificationViewController: BaseViewController, PullToRefreshP
         navigationItem.leftBarButtonItem = backButtonItem
         navigationItem.rightBarButtonItem = nil
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.font: Constants.Navigation.titleFont,
-            .foregroundColor: UIColor.red
+            NSAttributedString.Key.font: Constants.Navigation.titleFont
         ]
     }
     
@@ -105,7 +101,6 @@ final class MyPageNotificationViewController: BaseViewController, PullToRefreshP
     }()
     
     override func setupView() {
-        setUpDelegate()
         view.backgroundColor = Constants.backgroundColor
         
         view.addSubview(collectionView)
@@ -193,16 +188,8 @@ extension MyPageNotificationViewController: UICollectionViewDelegate, UICollecti
         // 셀의 뷰 업데이트
         guard let cell = collectionView.cellForItem(at: indexPath) as? MyPageNotificationCell else { return }
         cell.didSelect(notification: viewModel.notifications[indexPath.row])
-        
-        if viewModel.notifications[indexPath.row].status == .UnRead {
-            // 뷰모델 데이터 변경
-            viewModel.notifications[indexPath.row].status = .Read
-            
-            // 알림 확인 API 요청
-            viewModel.putNotificationReadStatus(notificationId: viewModel.notifications[indexPath.row].id)
-        }
-        
-        viewModel.didTapNotification(at: indexPath)
+        viewModel.readNotification(index: indexPath.row)
+        viewModel.pushViewController(index: indexPath.row)
     }
 }
 
