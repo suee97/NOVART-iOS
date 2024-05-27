@@ -218,18 +218,19 @@ final class MyPageSettingViewController: BaseViewController {
         button.setTitle(Constants.Account.logoutTitle, for: .normal)
         button.titleLabel?.font = Constants.primaryFont
         button.addAction(UIAction(handler: { [weak self] _ in
-            self?.viewModel.didTapLogoutButton()
+            self?.viewModel.showLogoutAlert()
         }), for: .touchUpInside)
         return button
     }()
     
-    private let deleteButton: UIButton = {
+    private lazy var deleteButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(Constants.primaryColor, for: .normal)
         button.setTitle(Constants.Account.deleteTitle, for: .normal)
         button.titleLabel?.font = Constants.primaryFont
-        button.addAction(UIAction(handler: { _ in
-            print("delete button")
+        button.addAction(UIAction(handler: { [weak self] _ in
+            // TODO: 서버 개발 대기 중
+//            self?.viewModel.showDeleteAlert()
         }), for: .touchUpInside)
         return button
     }()

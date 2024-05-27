@@ -57,9 +57,6 @@ class APIClient {
     
     static func request<D: Decodable>(target: URLRequestConvertible, type: D.Type) async throws -> D {
         let accessToken = KeychainService.shared.accessToken
-        
-        // 푸시 알림 테스트 계정 토큰입니다.
-//        let accessToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTcwMzk3NzE5MX0.yIjh7D5twww7P71lwZZIvAmgkhb3Brj9RzaJj4raCaJORXfXTaVYyIzyO33MqIWFARmaGAcUtKDURfLMvrws9A"
         let credential = OAuthCredential(accessToken: accessToken, expiration: Date(timeIntervalSinceNow: 60 * 60))
         
         let authenticator = OAuthAuthenticator()

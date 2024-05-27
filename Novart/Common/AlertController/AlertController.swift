@@ -217,6 +217,10 @@ public final class AlertController: NSObject {
         addAction(actionClosure())
     }
     
+    public func addActions(_ actions: [AlertAction]) {
+        actions.forEach { self.addAction($0) }
+    }
+    
     public func addConfirmAction(handler: ((AlertAction) -> Void)? = nil) {
         addAction(.confirmActionWithHandler(handler))
     }
