@@ -62,9 +62,6 @@ final class MyPageSettingViewController: BaseViewController {
             
             static let noticeTitle: String = "공지사항"
             static let noticeTopMargin: CGFloat = 8
-            
-            static let updateTitle: String = "최신버전 업데이트"
-            static let updateTopMargin: CGFloat = 16
         }
         
         enum Account {
@@ -195,22 +192,22 @@ final class MyPageSettingViewController: BaseViewController {
         print("noticePolicyRowView !!")
     })
     
-    // 실제 데이터 받을 때 수정 필요
-    private let updateInfoView: UIView = {
-        let view = ToggleSwitchView(title: Constants.Etc.updateTitle, desc: "최신버전: 23.23.0", isOn: false, onSwitch: { _ in })
-        view.toggle.removeFromSuperview()
-        
-        let infoLabel = UILabel()
-        infoLabel.text = "23.10.2(23102)"
-        infoLabel.font = Constants.primaryFont
-        
-        view.addSubview(infoLabel)
-        infoLabel.snp.makeConstraints({ m in
-            m.right.centerY.equalToSuperview()
-        })
-        
-        return view
-    }()
+    // 추후 수정 가능성이 있어서 뷰만 주석처리 하겠습니다. (관련 로직은 삭제)
+//    private let updateInfoView: UIView = {
+//        let view = ToggleSwitchView(title: Constants.Etc.updateTitle, desc: "최신버전: 23.23.0", isOn: false, onSwitch: { _ in })
+//        view.toggle.removeFromSuperview()
+//        
+//        let infoLabel = UILabel()
+//        infoLabel.text = "23.10.2(23102)"
+//        infoLabel.font = Constants.primaryFont
+//        
+//        view.addSubview(infoLabel)
+//        infoLabel.snp.makeConstraints({ m in
+//            m.right.centerY.equalToSuperview()
+//        })
+//        
+//        return view
+//    }()
     
     private lazy var logoutButton: UIButton = {
         let button = UIButton()
@@ -260,6 +257,8 @@ final class MyPageSettingViewController: BaseViewController {
             contentView.addSubview(inquireToggleView)
             contentView.addSubview(logoutButton)
             contentView.addSubview(deleteButton)
+            contentView.addSubview(noticePolicyButton)
+            contentView.addSubview(etcSectionLabel)
         } else {
             contentView.addSubview(loginButton)
         }
@@ -268,9 +267,6 @@ final class MyPageSettingViewController: BaseViewController {
         contentView.addSubview(usagePolicyButton)
         contentView.addSubview(privacyPolicyButton)
         contentView.addSubview(communityPolicyButton)
-        contentView.addSubview(etcSectionLabel)
-        contentView.addSubview(noticePolicyButton)
-        contentView.addSubview(updateInfoView)
         
         scrollView.snp.makeConstraints({ m in
             m.edges.equalTo(view.safeAreaLayoutGuide)
@@ -348,26 +344,20 @@ final class MyPageSettingViewController: BaseViewController {
             m.height.equalTo(Constants.cellHeight)
         })
         
-        insertDivider(before: communityPolicyButton, topOffset: Constants.UsageInfo.bottomDividerOffset, after: etcSectionLabel, bottomOffset: Constants.defaultVerticalMargin)
-        
-        etcSectionLabel.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-        })
-        
-        noticePolicyButton.snp.makeConstraints({ m in
-            m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-            m.top.equalTo(etcSectionLabel.snp.bottom).offset(Constants.Etc.noticeTopMargin)
-            m.height.equalTo(Constants.cellHeight)
-        })
-        
         if viewModel.user != nil {
-            updateInfoView.snp.makeConstraints({ m in
+            insertDivider(before: communityPolicyButton, topOffset: Constants.UsageInfo.bottomDividerOffset, after: etcSectionLabel, bottomOffset: Constants.defaultVerticalMargin)
+            
+            etcSectionLabel.snp.makeConstraints({ m in
                 m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-                m.top.equalTo(noticePolicyButton.snp.bottom).offset(Constants.Etc.updateTopMargin)
+            })
+            
+            noticePolicyButton.snp.makeConstraints({ m in
+                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
+                m.top.equalTo(etcSectionLabel.snp.bottom).offset(Constants.Etc.noticeTopMargin)
                 m.height.equalTo(Constants.cellHeight)
             })
             
-            insertDivider(before: updateInfoView, topOffset: Constants.defaultVerticalMargin, after: logoutButton, bottomOffset: Constants.Account.logoutTopMargin)
+            insertDivider(before: noticePolicyButton, topOffset: Constants.defaultVerticalMargin, after: logoutButton, bottomOffset: Constants.Account.logoutTopMargin)
             
             logoutButton.snp.makeConstraints({ m in
                 m.left.equalToSuperview().inset(Constants.defaultHorizontalMargin)
@@ -381,10 +371,7 @@ final class MyPageSettingViewController: BaseViewController {
                 m.bottom.equalToSuperview().offset(-Constants.Account.deletBottomMargin)
             })
         } else {
-            updateInfoView.snp.makeConstraints({ m in
-                m.left.right.equalToSuperview().inset(Constants.defaultHorizontalMargin)
-                m.top.equalTo(noticePolicyButton.snp.bottom).offset(Constants.Etc.updateTopMargin)
-                m.height.equalTo(Constants.cellHeight)
+            communityPolicyButton.snp.makeConstraints({ m in
                 m.bottom.equalToSuperview()
             })
         }
