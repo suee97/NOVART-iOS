@@ -6,6 +6,10 @@ extension APIClient {
         try await APIClient.request(target: ExhibitionTarget.fetchExhibitions, type: [ExhibitionModel].self)
     }
     
+    static func fetchExhibitionInfo(id: Int64) async throws -> ExhibitionInfoModel {
+        try await APIClient.request(target: ExhibitionTarget.fetchExhibitionInfo(id: id), type: ExhibitionInfoModel.self)
+    }
+    
     static func fetchExhibitionDetail(exhibitionId: Int64) async throws -> ExhibitionDetailModel {
         try await APIClient.request(target: ExhibitionTarget.fetchExhibitionDetail(id: exhibitionId), type: ExhibitionDetailModel.self)
     }

@@ -30,11 +30,17 @@ final class ExhibitionCoordinator: BaseStackCoordinator<ExhibitionStep>, LoginMo
             presentLoginModal()
         case let .artist(userId):
             showUserProfile(userId: userId)
+        case let .exhibitionGuide(id, backgroundColor):
+            showExhibitionGuide(id: id, backgroundColor: backgroundColor)
         }
     }
     
     @MainActor
     private func showExhibitionDetailScene(exhibitionId: Int64) {
+        if let presentedViewController = navigator.rootViewController.presentedViewController {
+            navigator.rootViewController.dismiss(animated: true)
+        }
+        
         let root = BaseNavigationController()
         let stackNavigator = StackNavigator(rootViewController: root, presenter: navigator.rootViewController)
         let exhibitionDetailCoordinator = ExhibitionDetailCoordinator(navigator: stackNavigator)
@@ -63,5 +69,18 @@ final class ExhibitionCoordinator: BaseStackCoordinator<ExhibitionStep>, LoginMo
         myPageCoordinator.userId = userId
         add(coordinators: myPageCoordinator)
         myPageCoordinator.startAsPush()
+    }
+    
+    @MainActor
+    private func showExhibitionGuide(id: Int64, backgroundColor: UIColor) {
+        let downloadInteractor = ExhibitionInteractor()
+        let viewModel = ExhibitionGuideViewModel(exhibitionId: id, backgroundColor: backgroundColor, coordinator: self, downloadInteractor: downloadInteractor)
+        let viewController = ExhibitionGuideViewController(viewModel: viewModel)
+        let bottomSheetNavigationController = BottomSheetNavigationController()
+        bottomSheetNavigationController.pushViewController(viewController, animated: false)
+        let height = UIScreen.main.bounds.height
+        bottomSheetNavigationController.bottomSheetConfiguration.customHeight = height
+        bottomSheetNavigationController.modalPresentationStyle = .pageSheet
+        navigator.rootViewController.presentSheet(bottomSheetNavigationController, with: bottomSheetNavigationController.bottomSheetConfiguration)
     }
 }

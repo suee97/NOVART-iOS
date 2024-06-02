@@ -246,7 +246,7 @@ extension ExhibitionViewController: ExhibitionButtonsViewDelegate {
         viewModel.didTapShareButton()
     }
     
-    func didTapInfoButton() {
-        print("info")
+    func didTapGuideButton() {
+        viewModel.showExhibitionGuide()
     }
 }

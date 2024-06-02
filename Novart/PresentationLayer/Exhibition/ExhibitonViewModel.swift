@@ -18,6 +18,12 @@ final class ExhibitionViewModel {
         self.coordinator = coordinator
     }
     
+}
+
+
+// MARK: - API
+extension ExhibitionViewModel {
+    
     func fetchExhibitions() {
         Task {
             do {
@@ -29,6 +35,38 @@ final class ExhibitionViewModel {
                 
             } catch {
                 print(error)
+            }
+        }
+    }
+    
+    func didTapShareButton() {
+        guard let cellIndex else { return }
+        let exhibitionId = processedExhibitions[cellIndex].id
+        let dataToShare = "https://\(URLSchemeFactory.plainURLScheme).com/exhibition/\(exhibitionId)"
+        let activityController = ActivityController(activityItems: [dataToShare], applicationActivities: nil)
+        activityController.show()
+    }
+    
+    func makeLikeRequest() {
+        guard let cellIndex else { return }
+        let exhibitionId = exhibitions[cellIndex].id
+        Task {
+            do {
+                try await downloadInteractor.makeLikeRequest(id: exhibitionId)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func makeUnlikeRequest() {
+        guard let cellIndex else { return }
+        let exhibitionId = exhibitions[cellIndex].id
+        Task {
+            do {
+                try await downloadInteractor.makeUnlikeRequest(id: exhibitionId)
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }
@@ -64,6 +102,12 @@ final class ExhibitionViewModel {
         self.processedExhibitions = processedExhibitions
     }
     
+}
+
+
+// MARK: - Navigation
+extension ExhibitionViewModel {
+    
     @MainActor
     func showExhibitionDetail(exhibitionId: Int64) {
         coordinator.navigate(to: .exhibitionDetail(id: exhibitionId))
@@ -92,44 +136,17 @@ final class ExhibitionViewModel {
         coordinator.navigate(to: .login)
     }
     
-    func didTapShareButton() {
-        guard let cellIndex else { return }
-        let exhibitionId = processedExhibitions[cellIndex].id
-        let dataToShare = "https://\(URLSchemeFactory.plainURLScheme).com/exhibition/\(exhibitionId)"
-        let activityController = ActivityController(activityItems: [dataToShare], applicationActivities: nil)
-        activityController.show()
-    }
-}
-
-private extension ExhibitionViewModel {
-    func makeLikeRequest() {
-        guard let cellIndex else { return }
-        let exhibitionId = exhibitions[cellIndex].id
-        Task {
-            do {
-                try await downloadInteractor.makeLikeRequest(id: exhibitionId)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    func makeUnlikeRequest() {
-        guard let cellIndex else { return }
-        let exhibitionId = exhibitions[cellIndex].id
-        Task {
-            do {
-                try await downloadInteractor.makeUnlikeRequest(id: exhibitionId)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
     @MainActor
     func showCommentViewController() {
         guard let cellIndex else { return }
         let exhibitionId = exhibitions[cellIndex].id
         coordinator.navigate(to: .comment(id: exhibitionId))
+    }
+
+    @MainActor
+    func showExhibitionGuide() {
+        guard let cellIndex else { return }
+        let exhibitionId = exhibitions[cellIndex].id
+        coordinator.navigate(to: .exhibitionGuide(id: exhibitionId, backgroundColor: processedExhibitions[cellIndex].backgroundColor))
     }
 }
