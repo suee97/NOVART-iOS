@@ -114,7 +114,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     func close() {
         navigator.pop(animated: true)
         
-        if !(navigator.rootViewController.topViewController is MyPageViewController) && (navigator.rootViewController.topViewController is MyPageNotificationViewController) {
+        if !(navigator.rootViewController.topViewController is MyPageViewController) && !(navigator.rootViewController.topViewController is MyPageNotificationViewController) {
             end()
         }
 
