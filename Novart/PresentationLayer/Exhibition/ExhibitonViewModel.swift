@@ -35,7 +35,8 @@ final class ExhibitionViewModel {
     
     @MainActor
     private func processExhibitions() async {
-        processedExhibitions.removeAll()
+        var processedExhibitions: [ProcessedExhibition] = []
+        
         for e in exhibitions {
             guard let posterUrl = e.posterImageUrl,
                   let url = URL(string: posterUrl) else { return }
@@ -59,6 +60,8 @@ final class ExhibitionViewModel {
                 processedExhibitions.append(processedExhibition)
             }
         }
+        
+        self.processedExhibitions = processedExhibitions
     }
     
     @MainActor
