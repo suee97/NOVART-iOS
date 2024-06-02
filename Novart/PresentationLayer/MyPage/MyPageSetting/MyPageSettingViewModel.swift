@@ -99,8 +99,15 @@ extension MyPageSettingViewModel {
         let alertController = AlertController(title: nil, message: message, preferredStyle: .alert)
         let cancelAction = AlertAction(title: "취소", style: .default, handler: nil)
         let deleteUserAction = AlertAction(title: "탈퇴하기", style: .destructive, handler: { [weak self] _ in
-            // TODO: 서버 개발 대기 중
-//            self?.coordinator.navigate(to: )
+            guard let self else { return }
+            Task {
+                do {
+                    try await self.downloadInteractor.deleteUser()
+                    self.coordinator.navigate(to: .deleteUser)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
         })
         alertController.addActions([cancelAction, deleteUserAction])
         alertController.show()

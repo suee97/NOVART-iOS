@@ -70,6 +70,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
             logout()
         case let .policy(policyType):
             showPolicy(policyType: policyType)
+        case .deleteUser:
+            deleteUser()
         }
     }
     
@@ -201,5 +203,15 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     private func showPolicy(policyType: PolicyType) {
         let viewController = PolicyViewController(policyType: policyType)
         navigator.push(viewController, animated: true)
+    }
+    
+    @MainActor
+    private func deleteUser() {
+        Authentication.shared.logoutUser()
+        guard let appCoordinator = UIApplication.shared.appCoordinator else { return }
+        for childCoordinator in appCoordinator.childCoordinators {
+            childCoordinator.end()
+        }
+        appCoordinator.navigate(to: .login)
     }
 }

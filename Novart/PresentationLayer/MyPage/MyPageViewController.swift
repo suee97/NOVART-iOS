@@ -288,6 +288,12 @@ final class MyPageViewController: BaseViewController {
                 }
             }
         }).store(in: &cancellables)
+        
+        viewModel.notificationCheckStatusSubject.sink(receiveValue: { [weak self] notificationCheckStatus in
+            guard let self else { return }
+            let iconPath = notificationCheckStatus.unread ? "icon_notification_unread" : "icon_notification2"
+            self.notificationButton.setBackgroundImage(UIImage(named: iconPath), for: .normal)
+        }).store(in: &cancellables)
     }
     
     

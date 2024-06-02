@@ -286,6 +286,7 @@
 		5B127CDF2BD4F848003DF39D /* PolicyChapterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B127CDE2BD4F848003DF39D /* PolicyChapterModel.swift */; };
 		5B127CE12BD4F8FE003DF39D /* PolicyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B127CE02BD4F8FE003DF39D /* PolicyViewModel.swift */; };
 		5B127CE32BD4FE71003DF39D /* PolicyChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B127CE22BD4FE71003DF39D /* PolicyChapterView.swift */; };
+		5B196E4F2C0C9E5F00898B88 /* NotificationCheckStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B196E4E2C0C9E5F00898B88 /* NotificationCheckStatus.swift */; };
 		5B2144CC2BAFF4CE004ED43A /* MyPageSettingRequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2144CB2BAFF4CD004ED43A /* MyPageSettingRequestModel.swift */; };
 		5B8BE2302B4CDE240068C3AB /* PlainButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8BE22F2B4CDE240068C3AB /* PlainButton.swift */; };
 		5B8BE2322B4D05C20068C3AB /* ProfileEditUserDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8BE2312B4D05C20068C3AB /* ProfileEditUserDataModel.swift */; };
@@ -620,6 +621,7 @@
 		5B127CDE2BD4F848003DF39D /* PolicyChapterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyChapterModel.swift; sourceTree = "<group>"; };
 		5B127CE02BD4F8FE003DF39D /* PolicyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyViewModel.swift; sourceTree = "<group>"; };
 		5B127CE22BD4FE71003DF39D /* PolicyChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyChapterView.swift; sourceTree = "<group>"; };
+		5B196E4E2C0C9E5F00898B88 /* NotificationCheckStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCheckStatus.swift; sourceTree = "<group>"; };
 		5B2144CB2BAFF4CD004ED43A /* MyPageSettingRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageSettingRequestModel.swift; sourceTree = "<group>"; };
 		5B8BE22F2B4CDE240068C3AB /* PlainButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainButton.swift; sourceTree = "<group>"; };
 		5B8BE2312B4D05C20068C3AB /* ProfileEditUserDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditUserDataModel.swift; sourceTree = "<group>"; };
@@ -1875,6 +1877,7 @@
 				5BF6243C2B76026300F502FE /* EmptyResponseModel.swift */,
 				5BB4A8DE2B9D9B9C00F06959 /* MyPageSettingResponseModel.swift */,
 				5B2144CB2BAFF4CD004ED43A /* MyPageSettingRequestModel.swift */,
+				5B196E4E2C0C9E5F00898B88 /* NotificationCheckStatus.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2047,6 +2050,7 @@
 				0E43AB562B78E5FC0087922A /* BlockCoordinator.swift in Sources */,
 				0E1E21202AE533F200F15009 /* ProductDetailInteractor.swift in Sources */,
 				0EE019592A56F18500389A95 /* SearchCoordinator.swift in Sources */,
+				5B196E4F2C0C9E5F00898B88 /* NotificationCheckStatus.swift in Sources */,
 				0EE1F6BD2B80B1CC00756891 /* ReportDoneViewModel.swift in Sources */,
 				0E41738A2B25DF3C0017AAD9 /* MediaPickerProtocols.swift in Sources */,
 				0EE0194B2A56EF6F00389A95 /* HomeStep.swift in Sources */,

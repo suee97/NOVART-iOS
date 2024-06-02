@@ -57,4 +57,12 @@ extension APIClient {
     static func putSetting(setting: MyPageSettingRequestModel) async throws -> MyPageSettingResponseModel {
         try await APIClient.request(target: MyPageTarget.putSetting(setting: setting), type: MyPageSettingResponseModel.self)
     }
+    
+    static func deleteUser() async throws {
+        try await APIClient.request(target: MyPageTarget.deleteUser, type: String.self)
+    }
+    
+    static func fetchNotificationCheckStatus() async throws -> NotificationCheckStatus{
+        try await APIClient.request(target: MyPageTarget.fetchNotificationCheckStatus, type: NotificationCheckStatus.self)
+    }
 }
