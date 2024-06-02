@@ -609,6 +609,11 @@ final class ProductDetailViewController: BaseViewController {
     }
     
     private func setupDetailImageViews(with images: [UIImage?]) {
+        for subview in detailImageStackView.arrangedSubviews {
+            detailImageStackView.removeArrangedSubview(subview)
+            subview.removeFromSuperview()
+        }
+        
         for image in images {
             if let image {
                 let imageView = UIImageView()
