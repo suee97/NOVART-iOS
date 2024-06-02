@@ -186,6 +186,7 @@ private extension ExhibitionDetailViewController {
                 })
                 .store(in: &self.cancellables)
             
+            cell.input = self.artCellInputSubject
             cell.update(with: item)
         }
         

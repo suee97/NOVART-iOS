@@ -87,6 +87,13 @@ final class ParticipantCell: UICollectionViewCell {
             roleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        nameLabel.text = ""
+        roleLabel.text = ""
+        imageView.removeImage()
+    }
 }
 
 extension ParticipantCell {

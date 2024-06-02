@@ -193,6 +193,7 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
         shortcutView.setSelected(at: index)
     }
     
+    var input: PassthroughSubject<(ExhibitionDetailViewController.ArtCellInput, Int64), Never>?
     var exhibitionShortcutViewXOffsetSubject: PassthroughSubject<CGFloat, Never> = .init()
     var selectedShorcutIndexSubject: PassthroughSubject<Int, Never> = .init()
     // MARK: - Initialization
@@ -298,7 +299,9 @@ extension ExhibitionDetailInfoCell {
 }
 
 extension ExhibitionDetailInfoCell: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        didTapArtist(index: indexPath.row)
+    }
 }
 
 extension ExhibitionDetailInfoCell: UICollectionViewDataSource {
@@ -347,5 +350,13 @@ extension ExhibitionDetailInfoCell: ExhibitionShortcutViewDelegate {
     
     func exhibitionShortcutViewDidSelectIndexAt(index: Int) {
         selectedShorcutIndexSubject.send(index)
+    }
+}
+
+// MARK: - Tap
+private extension ExhibitionDetailInfoCell {
+    private func didTapArtist(index: Int) {
+        guard let artist = viewModel?.participants[index] else { return }
+        self.input?.send((.shouldShowProfile, artist.id))
     }
 }
