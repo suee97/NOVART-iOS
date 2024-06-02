@@ -170,8 +170,8 @@ final class ExhibitionArtCell: UICollectionViewCell {
         return button
     }()
     
-    private lazy var artistImageView: UIImageView = {
-        let imageView = UIImageView()
+    private lazy var artistImageView: PlainProfileImageView = {
+        let imageView = PlainProfileImageView()
         imageView.contentMode = .scaleToFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -180,7 +180,6 @@ final class ExhibitionArtCell: UICollectionViewCell {
         ])
         imageView.layer.cornerRadius = Constants.ArtistInfo.imageSize / 2
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "mock_artist")
         return imageView
     }()
     
@@ -310,13 +309,18 @@ final class ExhibitionArtCell: UICollectionViewCell {
         artistNameLabel.text = viewModel.artistInfo.nickname
         if let profileImageUrl = viewModel.artistInfo.profileImageUrl {
             let artistImageUrl = URL(string: profileImageUrl)
-            artistImageView.kf.setImage(with: artistImageUrl)
+            artistImageView.setImage(with: artistImageUrl)
         }
         coverCollectionView.reloadData()
-//        setupDetailImageViews(with: viewModel.detailImages)
         currentFollowingState = viewModel.artistInfo.following
         updateFollowButton(isFollowing: currentFollowingState)
         contactButton.backgroundColor = viewModel.isContactEnabled ? Constants.ArtistInfo.contactButtonColor : Constants.ArtistInfo.contactButtonDisabledColor
+        
+        if viewModel.thumbnailImageUrls.count < 2 {
+            pageController.isHidden = true
+        } else {
+            pageController.isHidden = false
+        }
 
     }
     

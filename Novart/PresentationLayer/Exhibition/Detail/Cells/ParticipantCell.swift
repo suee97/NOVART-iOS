@@ -24,8 +24,8 @@ final class ParticipantCell: UICollectionViewCell {
         }
     }
     
-    private lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
+    private lazy var imageView: PlainProfileImageView = {
+        let imageView = PlainProfileImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -93,7 +93,7 @@ extension ParticipantCell {
     func update(with data: ExhibitionParticipantModel) {
         if let profileImageUrl = data.profileImageUrl {
             let url = URL(string: profileImageUrl)
-            imageView.kf.setImage(with: url)
+            imageView.setImage(with: url)
         }
         nameLabel.text = data.nickname
         roleLabel.text = data.job
