@@ -226,8 +226,7 @@ final class MyPageSettingViewController: BaseViewController {
         button.setTitle(Constants.Account.deleteTitle, for: .normal)
         button.titleLabel?.font = Constants.primaryFont
         button.addAction(UIAction(handler: { [weak self] _ in
-            // TODO: 서버 개발 대기 중
-//            self?.viewModel.showDeleteAlert()
+            self?.viewModel.showDeleteAlert()
         }), for: .touchUpInside)
         return button
     }()

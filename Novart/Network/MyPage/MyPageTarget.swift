@@ -13,6 +13,7 @@ enum MyPageTarget: TargetType {
     case fetchMyPageUserInfo(userId: Int64)
     case follow(userId: Int64)
     case unFollow(userId: Int64)
+    case fetchNotificationCheckStatus
     
     // MyPageProfileEdit
     case checkDuplicateNickname(nickname: String)
@@ -23,6 +24,7 @@ enum MyPageTarget: TargetType {
     // MyPageSetting
     case fetchSetting
     case putSetting(setting: MyPageSettingRequestModel)
+    case deleteUser
     
     var baseURL: String {
         switch self {
@@ -63,25 +65,29 @@ enum MyPageTarget: TargetType {
             return ""
         case .fetchSetting, .putSetting:
             return "users/me/setting"
+        case .deleteUser:
+            return "users/me"
+        case .fetchNotificationCheckStatus:
+            return "users/me/unread"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchRecommenInterests, .fetchRecommenFollowings, .fetchMyPageUserInfo, .checkDuplicateNickname, .fetchSetting:
+        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchRecommenInterests, .fetchRecommenFollowings, .fetchMyPageUserInfo, .checkDuplicateNickname, .fetchSetting, .fetchNotificationCheckStatus:
             return .get
         case .follow, .requestPresignedUrl:
             return .post
         case .profileEdit, .putSetting, .putImageData:
             return .put
-        case .unFollow:
+        case .unFollow, .deleteUser:
             return .delete
         }
     }
     
     var parameters: RequestParams {
         switch self {
-        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchRecommenInterests, .fetchRecommenFollowings, .fetchMyPageUserInfo, .follow, .unFollow, .checkDuplicateNickname, .fetchSetting:
+        case .fetchMyPageInterests, .fetchMyPageFollowings, .fetchMyPageWorks, .fetchMyPageExhibitions, .fetchRecommenInterests, .fetchRecommenFollowings, .fetchMyPageUserInfo, .follow, .unFollow, .checkDuplicateNickname, .fetchSetting, .deleteUser, .fetchNotificationCheckStatus:
             return .query(nil)
         case let .requestPresignedUrl(filename, category):
             return .body(["filename": filename, "category": category])

@@ -17,6 +17,7 @@ final class MyPageViewModel {
     var isFollowingsEmpty = false
     var isStartAsPush = false
     var isInitialLoadFinished = false
+    var notificationCheckStatusSubject = PassthroughSubject<NotificationCheckStatus, Never>()
     
     let userId: Int64?
     @Published var otherUser: PlainUser?
@@ -109,6 +110,11 @@ extension MyPageViewModel {
                 self.followings = followings
                 self.works = works
                 self.exhibitions = exhibitions
+                
+                if userState == .me {
+                    let notificationCheckStatus = try await interactor.fetchNotificationCheckStatus()
+                    notificationCheckStatusSubject.send(notificationCheckStatus)
+                }
                 
                 if !isInitialLoadFinished {
                     isInitialLoadFinished = true

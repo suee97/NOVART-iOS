@@ -65,4 +65,12 @@ final class MyPageDownloadInteractor {
     func putSetting(setting: MyPageSettingRequestModel) async throws -> MyPageSettingResponseModel {
         try await APIClient.putSetting(setting: setting)
     }
+    
+    func deleteUser() async throws {
+        try await APIClient.deleteUser()
+    }
+    
+    func fetchNotificationCheckStatus() async throws -> NotificationCheckStatus {
+        try await APIClient.fetchNotificationCheckStatus()
+    }
 }

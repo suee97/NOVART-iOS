@@ -25,6 +25,7 @@ enum MyPageStep: Step {
     case report(userId: Int64)
     case ask(user: PlainUser)
     case policy(policyType: PolicyType)
+    case deleteUser
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }
