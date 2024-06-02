@@ -365,6 +365,7 @@ final class ExhibitionArtCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         detailImageStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        artistImageView.removeImage()
         cancellables.removeAll()
     }
     
