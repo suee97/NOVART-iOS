@@ -63,8 +63,13 @@ final class PolicyViewModel {
         PolicyChapterModel(title: "7. 마치며", descriptions: ["플레인 커뮤니티는 여러분의 참여로 더욱 풍부해집니다. 우리 모두가 서로를 존중하고, 안전하며, 창의적인 환경에서 활동할 수 있도록 노력해 주시기 바랍니다. 감사합니다."])
     ]
     
-    // 마케팅 (내용 미정)
-    private lazy var marketingContent: [PolicyChapterModel] = [PolicyChapterModel(title: "마케팅 (내용 미정)", descriptions: ["마케팅 (내용 미정)"])]
+    private lazy var marketingContent: [PolicyChapterModel] = [
+        PolicyChapterModel(title: "", descriptions: ["플레인은 다음과 같은 목적으로 개인정보를 마케팅 및 광고에 활용하고자 합니다. 이에 대한 동의는 선택 사항이며, 동의하지 않으시더라도 서비스 이용에 제한은 없습니다."]),
+        PolicyChapterModel(title: "1. 마케팅 및 광고에의 활용 목적", descriptions: ["﹒신제품이나 서비스의 안내\n﹒맞춤형 광고 게재\n﹒이벤트 및 프로모션 참여 기회 제공\n﹒고객 만족도 조사"]),
+        PolicyChapterModel(title: "2. 수집 항목", descriptions: ["﹒이름, 사용자 정보, 이메일 주소, 전화번호 등 연락처 정보\n﹒서비스 이용 기록, 방문 기록, 구매 및 결제 기록"]),
+        PolicyChapterModel(title: "3. 보유 및 이용 기간", descriptions: ["﹒동의일로부터 5년까지"]),
+        PolicyChapterModel(title: "4. 동의 철회", descriptions: ["사용자는 언제든지 마케팅 목적의 개인정보 수집 및 이용에 대한 동의를 철회할 수 있습니다. 동의 철회는 [애플리케이션 내 설정] 또는 고객센터를 통해 요청할 수 있으며, 동의를 철회하더라도 기본적인 서비스 이용에는 영향을 미치지 않습니다."])
+    ]
     
     func getPolicyChapters(category: PolicyType) -> [PolicyChapterModel] {
         switch category {
