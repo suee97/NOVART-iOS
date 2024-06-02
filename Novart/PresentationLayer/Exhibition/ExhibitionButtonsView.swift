@@ -6,7 +6,7 @@ protocol ExhibitionButtonsViewDelegate: AnyObject {
     func didTapLikeButton(shouldLike: Bool)
     func didTapCommentButton()
     func didTapShareButton()
-    func didTapInfoButton()
+    func didTapGuideButton()
     func shouldShowLogin()
 }
 
@@ -357,7 +357,7 @@ final class ExhibitionButtonsView: UIView {
             setDimEffect(view: infoView, isPressed: true)
         } else if sender.state == .ended {
             setDimEffect(view: infoView, isPressed: false)
-            delegate?.didTapInfoButton()
+            delegate?.didTapGuideButton()
         }
     }
     

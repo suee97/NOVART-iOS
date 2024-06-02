@@ -3,6 +3,7 @@ import Foundation
 
 enum ExhibitionTarget: TargetType {
     case fetchExhibitions
+    case fetchExhibitionInfo(id: Int64)
     case fetchExhibitionDetail(id: Int64)
     case fetchArtistExhibition(artistId: Int64)
     case like(id: Int64)
@@ -16,6 +17,8 @@ enum ExhibitionTarget: TargetType {
         switch self {
         case .fetchExhibitions:
             return "exhibitions"
+        case let .fetchExhibitionInfo(id):
+            return "exhibitions/\(id)/info"
         case let .fetchExhibitionDetail(id):
             return "exhibitions/\(id)"
         case let .fetchArtistExhibition(artistId):
@@ -29,7 +32,7 @@ enum ExhibitionTarget: TargetType {
     
     var method: HTTPMethod {
         switch self {
-        case .fetchExhibitions, .fetchExhibitionDetail, .fetchArtistExhibition:
+        case .fetchExhibitions, .fetchExhibitionInfo, .fetchExhibitionDetail, .fetchArtistExhibition:
             return .get
         case .like:
             return .post
@@ -40,7 +43,7 @@ enum ExhibitionTarget: TargetType {
     
     var parameters: RequestParams {
         switch self {
-        case .fetchExhibitions, .fetchExhibitionDetail, .fetchArtistExhibition:
+        case .fetchExhibitions, .fetchExhibitionInfo, .fetchExhibitionDetail, .fetchArtistExhibition:
             return .query(nil)
         case .like:
             return .body(nil)
