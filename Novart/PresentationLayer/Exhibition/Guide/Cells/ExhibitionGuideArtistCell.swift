@@ -90,7 +90,7 @@ final class ExhibitionGuideArtistCell: UICollectionViewCell {
         })
     }
     
-    func update(backgroundColor: UIColor, artist: ExhibitionParticipantModelTmp?) {
+    func update(backgroundColor: UIColor, artist: ExhibitionParticipantModel?) {
         contentView.backgroundColor = backgroundColor
         guard let artist else { return }
         if let imageUrlString = artist.profileImageUrl, let url = URL(string: imageUrlString) {
