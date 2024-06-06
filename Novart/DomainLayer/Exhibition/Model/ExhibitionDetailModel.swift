@@ -53,10 +53,3 @@ struct ExhibitionArtistFollowInfoModel: Decodable {
     let email: String?
     let openChatUrl: String?
 }
-
-struct ExhibitionParticipantModel: Decodable {
-    let id: Int64
-    let profileImageUrl: String?
-    let nickname: String
-    let job: String
-}

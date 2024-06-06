@@ -32,7 +32,7 @@ extension ExhibitionGuideViewModel {
         return artists.count
     }
     
-    func getArtist(index: Int) -> ExhibitionParticipantModelTmp? {
+    func getArtist(index: Int) -> ExhibitionParticipantModel? {
         guard let exhibitionInfo = self.exhibitionInfo, let artists = exhibitionInfo.artists else { return nil }
         if artists.count < index + 1 {
             return nil

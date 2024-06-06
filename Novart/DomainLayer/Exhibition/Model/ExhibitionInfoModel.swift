@@ -10,12 +10,12 @@ struct ExhibitionInfoModel: Decodable {
     var description: String? = ""
     var artCount: String? = ""
     var estimationDuration: String? = ""
-    var artists: [ExhibitionParticipantModelTmp]? = []
+    var artists: [ExhibitionParticipantModel]? = []
 }
 
 
 // TODO: - ExhibitionDetail 수정할 때 모델 통합 예정
-struct ExhibitionParticipantModelTmp: Decodable {
+struct ExhibitionParticipantModel: Decodable {
     let id: Int64
     let profileImageUrl: String?
     let nickname: String?
