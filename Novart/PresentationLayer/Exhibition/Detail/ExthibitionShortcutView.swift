@@ -92,8 +92,8 @@ final class ExhibitionShortcutView: UIView {
             if idx == 0 {
                 view.isSelected = true
             }
-            view.didTap = { [weak self] in
-                guard let self else { return }
+            view.didTap = { [weak self, weak view] in
+                guard let self, let view else { return }
                 
                 for itemView in self.stackView.arrangedSubviews {
                     guard let itemView = itemView as? ExhibitionShortcutItemView else { return }

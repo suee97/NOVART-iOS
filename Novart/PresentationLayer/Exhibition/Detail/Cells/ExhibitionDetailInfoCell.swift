@@ -193,7 +193,7 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
         shortcutView.setSelected(at: index)
     }
     
-    var input: PassthroughSubject<(ExhibitionDetailViewController.ArtCellInput, Int64), Never>?
+    weak var input: PassthroughSubject<(ExhibitionDetailViewController.ArtCellInput, Int64), Never>?
     var exhibitionShortcutViewXOffsetSubject: PassthroughSubject<CGFloat, Never> = .init()
     var selectedShorcutIndexSubject: PassthroughSubject<Int, Never> = .init()
     // MARK: - Initialization

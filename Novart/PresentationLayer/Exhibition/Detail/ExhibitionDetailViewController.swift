@@ -174,14 +174,16 @@ private extension ExhibitionDetailViewController {
             
             self.detailInfoCell?.exhibitionShortcutViewXOffsetSubject
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { xOffset in
+                .sink(receiveValue: { [weak self] xOffset in
+                    guard let self else { return }
                     self.shortcutView.contentXOffset = xOffset
                 })
                 .store(in: &self.cancellables)
             
             self.detailInfoCell?.selectedShorcutIndexSubject
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { index in
+                .sink(receiveValue: { [weak self] index in
+                    guard let self else { return }
                     self.scrollToExhibition(idx: index)
                 })
                 .store(in: &self.cancellables)
