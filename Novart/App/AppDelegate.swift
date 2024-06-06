@@ -10,6 +10,7 @@ import GoogleSignIn
 import KakaoSDKCommon
 import Firebase
 import FirebaseMessaging
+import Kingfisher
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +22,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configureGoogleSignIn()
         configureKakaoSignIn()
         registerNotification()
+        
+        let memoryStorage = ImageCache.default.memoryStorage
+        memoryStorage.config.totalCostLimit = 50 * 1024 * 1024 // 50 MB
+        memoryStorage.config.countLimit = 100 // Max number of images
         
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self

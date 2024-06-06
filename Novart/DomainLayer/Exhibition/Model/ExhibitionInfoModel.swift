@@ -13,8 +13,6 @@ struct ExhibitionInfoModel: Decodable {
     var artists: [ExhibitionParticipantModel]? = []
 }
 
-
-// TODO: - ExhibitionDetail 수정할 때 모델 통합 예정
 struct ExhibitionParticipantModel: Decodable {
     let id: Int64
     let profileImageUrl: String?
