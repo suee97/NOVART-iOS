@@ -59,6 +59,7 @@ final class ExhibitionDetailViewController: BaseViewController {
         case didTapCommentButton
         case shouldShowLogin
         case shouldShowProfile
+        case didProcessDominantColor(color: UIColor)
     }
         
     // MARK: - Init
@@ -159,6 +160,8 @@ final class ExhibitionDetailViewController: BaseViewController {
                     self.viewModel.showLoginModal()
                 case .shouldShowProfile:
                     self.viewModel.showArtistProfile(userId: id)
+                case let .didProcessDominantColor(color):
+                    self.collectionView.backgroundColor = color
                 }
             }
             .store(in: &cancellables)

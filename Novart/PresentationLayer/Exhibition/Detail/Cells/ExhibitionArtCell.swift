@@ -250,6 +250,7 @@ final class ExhibitionArtCell: UICollectionViewCell {
     // MARK: - Setup
     
     private func setupView() {
+        contentView.backgroundColor = .white
         contentView.addSubview(coverCollectionView)
         NSLayoutConstraint.activate([
             coverCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor),

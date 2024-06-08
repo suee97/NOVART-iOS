@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import Kingfisher
+import ColorThiefSwift
 
 final class ExhibitionDetailInfoCell: UICollectionViewCell {
     
@@ -278,14 +279,21 @@ final class ExhibitionDetailInfoCell: UICollectionViewCell {
 
 extension ExhibitionDetailInfoCell {
     func update(with data: ExhibitionDetailInfoModel) {
-        contentView.backgroundColor = UIColor(red: 242/255.0, green: 242/255.0, blue: 242/255.0, alpha: 1.0)
         viewModel = data
     }
     
     func setData(viewModel: ExhibitionDetailInfoModel) {
         if let posterImageUrl = viewModel.posterImageUrl {
             let url = URL(string: posterImageUrl)
-            posterImageView.kf.setImage(with: url)
+            posterImageView.kf.setImage(with: url) { [weak self] _ in
+                guard let self else { return }
+                if let dominant = ColorThief.getColor(from: self.posterImageView.image ?? UIImage())?.makeUIColor() {
+                    let hueValue = dominant.getHsb().0
+                    let hsbColor = UIColor(hue: hueValue / 360, saturation: 0.08, brightness: 0.95, alpha: 1.0)
+                    self.contentView.backgroundColor = hsbColor
+                    self.input?.send((.didProcessDominantColor(color: hsbColor), 0))
+                }
+            }
         }
         titleLabel.text = viewModel.title
         subtitleLabel.text = viewModel.subtitle
