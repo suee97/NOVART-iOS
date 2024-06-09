@@ -188,8 +188,8 @@ final class MyPageSettingViewController: BaseViewController {
         self.viewModel.showPolicy(policyType: .Community)
     })
     
-    private let noticePolicyButton = TextNavigationButton(title: Constants.Etc.noticeTitle, onTap: {
-        print("noticePolicyRowView !!")
+    private lazy var noticePolicyButton = TextNavigationButton(title: Constants.Etc.noticeTitle, onTap: {
+        self.viewModel.showNoticeWebPage()
     })
     
     // 추후 수정 가능성이 있어서 뷰만 주석처리 하겠습니다. (관련 로직은 삭제)
