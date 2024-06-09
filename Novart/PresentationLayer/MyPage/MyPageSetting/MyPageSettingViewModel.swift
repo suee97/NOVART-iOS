@@ -113,4 +113,9 @@ extension MyPageSettingViewModel {
         alertController.show()
     }
     
+    func showNoticeWebPage() {
+        if let url = URL(string: "https://majestic-utensil-ebe.notion.site/b544b8023f6a4de7a348922e64eb7fc0?pvs=4") {
+            UIApplication.shared.open(url, options: [:])
+        }
+    }
 }

@@ -59,7 +59,7 @@ extension APIClient {
     }
     
     static func deleteUser() async throws {
-        try await APIClient.request(target: MyPageTarget.deleteUser, type: String.self)
+        try await APIClient.request(target: MyPageTarget.deleteUser, type: EmptyResponseModel.self)
     }
     
     static func fetchNotificationCheckStatus() async throws -> NotificationCheckStatus{
