@@ -20,7 +20,8 @@ final class SearchDownloadInteractor {
     }
     
     func getRecentSearch() async throws -> [String] {
-        try await APIClient.getRecentSearch()
+        guard let user = Authentication.shared.user else { return [] }
+        return try await APIClient.getRecentSearch()
     }
     
     func deleteRecentQuery(query: String) async throws {
