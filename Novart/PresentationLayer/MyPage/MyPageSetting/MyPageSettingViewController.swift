@@ -215,7 +215,7 @@ final class MyPageSettingViewController: BaseViewController {
         button.setTitle(Constants.Account.logoutTitle, for: .normal)
         button.titleLabel?.font = Constants.primaryFont
         button.addAction(UIAction(handler: { [weak self] _ in
-            self?.viewModel.showLogoutAlert()
+            self?.viewModel.onTapLogout()
         }), for: .touchUpInside)
         return button
     }()

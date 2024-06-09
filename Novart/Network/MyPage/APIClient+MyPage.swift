@@ -65,4 +65,8 @@ extension APIClient {
     static func fetchNotificationCheckStatus() async throws -> NotificationCheckStatus{
         try await APIClient.request(target: MyPageTarget.fetchNotificationCheckStatus, type: NotificationCheckStatus.self)
     }
+    
+    static func clearDeviceToken() async throws {
+        try await APIClient.request(target: MyPageTarget.clearDeviceToken, type: EmptyResponseModel.self)
+    }
 }

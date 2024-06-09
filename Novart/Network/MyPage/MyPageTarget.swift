@@ -25,6 +25,7 @@ enum MyPageTarget: TargetType {
     case fetchSetting
     case putSetting(setting: MyPageSettingRequestModel)
     case deleteUser
+    case clearDeviceToken
     
     var baseURL: String {
         switch self {
@@ -69,6 +70,8 @@ enum MyPageTarget: TargetType {
             return "users/me"
         case .fetchNotificationCheckStatus:
             return "users/me/unread"
+        case .clearDeviceToken:
+            return "users/me/device-token"
         }
     }
     
@@ -78,7 +81,7 @@ enum MyPageTarget: TargetType {
             return .get
         case .follow, .requestPresignedUrl:
             return .post
-        case .profileEdit, .putSetting, .putImageData:
+        case .profileEdit, .putSetting, .putImageData, .clearDeviceToken:
             return .put
         case .unFollow, .deleteUser:
             return .delete
@@ -97,6 +100,8 @@ enum MyPageTarget: TargetType {
             return .body(data)
         case let .putSetting(setting):
             return .body(setting)
+        case .clearDeviceToken:
+            return .body(["deviceToken": ""])
         }
     }
 }

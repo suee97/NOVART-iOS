@@ -82,12 +82,20 @@ extension MyPageSettingViewModel {
     }
     
     @MainActor
-    func showLogoutAlert() {
+    func onTapLogout() {
         let message = "정말 로그아웃 하시겠어요?"
         let alertController = AlertController(title: nil, message: message, preferredStyle: .alert)
         let cancelAction = AlertAction(title: "취소", style: .default, handler: nil)
         let logoutAction = AlertAction(title: "로그아웃", style: .destructive, handler: { [weak self] _ in
-            self?.coordinator.navigate(to: .logout)
+            guard let self else { return }
+            Task {
+                do {
+                    try await self.downloadInteractor.clearDeviceToken()
+                    self.coordinator.navigate(to: .logout)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
         })
         alertController.addActions([cancelAction, logoutAction])
         alertController.show()

@@ -73,4 +73,8 @@ final class MyPageDownloadInteractor {
     func fetchNotificationCheckStatus() async throws -> NotificationCheckStatus {
         try await APIClient.fetchNotificationCheckStatus()
     }
+    
+    func clearDeviceToken() async throws {
+        try await APIClient.clearDeviceToken()
+    }
 }
