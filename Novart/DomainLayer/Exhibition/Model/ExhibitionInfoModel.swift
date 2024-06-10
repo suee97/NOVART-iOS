@@ -9,7 +9,7 @@ struct ExhibitionInfoModel: Decodable {
     var category: String? = ""
     var description: String? = ""
     var artCount: String? = ""
-    var estimationDuration: String? = ""
+    var estimatedDuration: String? = ""
     var artists: [ExhibitionParticipantModel]? = []
 }
 

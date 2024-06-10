@@ -124,18 +124,19 @@ final class ExhibitionGuideViewController: BaseViewController {
     
     // MARK: - Binding
     override func setupBindings() {
-        viewModel.$exhibitionInfo.receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] exhibitionInfo in
-            guard let self else { return }
-            self.artistCollectionView.reloadData()
-            self.categorySubLabel.text = exhibitionInfo?.category ?? "-"
-            self.artCountSubLabel.text = exhibitionInfo?.artCount ?? "-"
-            self.estimatedDurationSubLabel.text = exhibitionInfo?.estimationDuration ?? "-"
-            self.nameLabel.text = exhibitionInfo?.name ?? "-"
-            self.engNameLabel.text = exhibitionInfo?.englishName ?? "-"
-            self.descriptionLabel.text = exhibitionInfo?.description ?? "-"
-            if let posterUrlString = exhibitionInfo?.posterImageUrl, let posterUrl = URL(string: posterUrlString) {
-                self.posterImageView.kf.setImage(with: posterUrl)
-            }
+        viewModel.$exhibitionInfo.receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] exhibitionInfo in
+                guard let self else { return }
+                self.artistCollectionView.reloadData()
+                self.categorySubLabel.text = exhibitionInfo?.category ?? "-"
+                self.artCountSubLabel.text = exhibitionInfo?.artCount ?? "-"
+                self.estimatedDurationSubLabel.text = exhibitionInfo?.estimatedDuration ?? "-"
+                self.nameLabel.text = exhibitionInfo?.name ?? "-"
+                self.engNameLabel.text = exhibitionInfo?.englishName ?? "-"
+                self.descriptionLabel.text = exhibitionInfo?.description ?? "-"
+                if let posterUrlString = exhibitionInfo?.posterImageUrl, let posterUrl = URL(string: posterUrlString) {
+                    self.posterImageView.kf.setImage(with: posterUrl)
+                }
         }).store(in: &cancellables)
     }
     
@@ -147,7 +148,6 @@ final class ExhibitionGuideViewController: BaseViewController {
         view.layer.cornerRadius = Constants.GrabberView.radius
         return view
     }()
-    
     
     private let infoLabel = UILabel.makeExhibitionGuideLabel(text: Constants.InfoLabel.text, type: .title)
     

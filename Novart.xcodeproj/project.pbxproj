@@ -1805,8 +1805,8 @@
 		5BB933E22AF3A472000185D1 /* Exhibition */ = {
 			isa = PBXGroup;
 			children = (
-				0E760E712B1B10F30051CB6C /* Detail */,
 				5B0A95732C04A93500975172 /* Guide */,
+				0E760E712B1B10F30051CB6C /* Detail */,
 				5BB933E32AF3A472000185D1 /* Cells */,
 				5BB933E92AF3A472000185D1 /* ExhibitionButtonsView.swift */,
 				5BB933EA2AF3A472000185D1 /* ExhibitionViewController.swift */,
