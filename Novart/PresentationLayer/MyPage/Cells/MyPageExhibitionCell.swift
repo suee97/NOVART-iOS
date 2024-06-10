@@ -85,8 +85,8 @@ final class MyPageExhibitionCell: UICollectionViewCell {
 }
 
 extension MyPageExhibitionCell {
-    func update(with item: MyPageExhibition) {
-        if let urlString = item.thumbnailImgUrl, let url = URL(string: urlString) {
+    func update(with item: ExhibitionModel) {
+        if let urlString = item.posterImageUrl, let url = URL(string: urlString) {
             exhibitionImageView.kf.setImage(with: url)
         }
     }

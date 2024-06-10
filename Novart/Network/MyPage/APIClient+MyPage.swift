@@ -14,8 +14,8 @@ extension APIClient {
         try await APIClient.request(target: MyPageTarget.fetchMyPageWorks(userId: userId), type: [MyPageWork].self)
     }
     
-    static func fetchMyPageExhibitions(userId: Int64) async throws -> [MyPageExhibition] {
-        try await APIClient.request(target: MyPageTarget.fetchMyPageExhibitions(userId: userId), type: [MyPageExhibition].self)
+    static func fetchMyPageExhibitions(userId: Int64) async throws -> [ExhibitionModel] {
+        try await APIClient.request(target: MyPageTarget.fetchMyPageExhibitions(userId: userId), type: [ExhibitionModel].self)
     }
     
     static func fetchRecommendInterests() async throws -> [ProductModel] {

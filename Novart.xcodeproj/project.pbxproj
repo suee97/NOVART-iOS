@@ -324,7 +324,6 @@
 		5BDD4A142AC955A600937352 /* MyPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A102AC955A600937352 /* MyPageViewModel.swift */; };
 		5BDD4A212AC955C100937352 /* MyPageWorkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A182AC955C100937352 /* MyPageWorkCell.swift */; };
 		5BDD4A222AC955C100937352 /* MyPageExhibitionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A192AC955C100937352 /* MyPageExhibitionCell.swift */; };
-		5BDD4A232AC955C100937352 /* MyPageExhibitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A1B2AC955C100937352 /* MyPageExhibitions.swift */; };
 		5BDD4A252AC955C100937352 /* MyPageInterest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A1D2AC955C100937352 /* MyPageInterest.swift */; };
 		5BDD4A262AC955C100937352 /* MyPageWorks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDD4A1E2AC955C100937352 /* MyPageWorks.swift */; };
 		5BDD4A292AC9561000937352 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5BDD4A282AC9561000937352 /* SnapKit */; };
@@ -655,7 +654,6 @@
 		5BDD4A102AC955A600937352 /* MyPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewModel.swift; sourceTree = "<group>"; };
 		5BDD4A182AC955C100937352 /* MyPageWorkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageWorkCell.swift; sourceTree = "<group>"; };
 		5BDD4A192AC955C100937352 /* MyPageExhibitionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageExhibitionCell.swift; sourceTree = "<group>"; };
-		5BDD4A1B2AC955C100937352 /* MyPageExhibitions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageExhibitions.swift; sourceTree = "<group>"; };
 		5BDD4A1D2AC955C100937352 /* MyPageInterest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageInterest.swift; sourceTree = "<group>"; };
 		5BDD4A1E2AC955C100937352 /* MyPageWorks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageWorks.swift; sourceTree = "<group>"; };
 		5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditViewController.swift; sourceTree = "<group>"; };
@@ -1866,7 +1864,6 @@
 			isa = PBXGroup;
 			children = (
 				5BAE07EE2B4AC06F007E5CF5 /* MyPageCategory.swift */,
-				5BDD4A1B2AC955C100937352 /* MyPageExhibitions.swift */,
 				5BDD4A1D2AC955C100937352 /* MyPageInterest.swift */,
 				5BDD4A1E2AC955C100937352 /* MyPageWorks.swift */,
 				5BC224562B1F0DCB0032D3CE /* MyPageNotificationModel.swift */,
@@ -2237,7 +2234,6 @@
 				5BFC08552B3FEDE80063EF89 /* MyPageTarget.swift in Sources */,
 				0E08B2772AC96B46001F1CB3 /* SetNicknameViewModel.swift in Sources */,
 				0EE019D72A6C36B300389A95 /* PolicyContentView.swift in Sources */,
-				5BDD4A232AC955C100937352 /* MyPageExhibitions.swift in Sources */,
 				0E91A3A12BAD792500E02908 /* NotificationNavigationExecutable.swift in Sources */,
 				0EE019CF2A6BCD3900389A95 /* APIClient+User.swift in Sources */,
 				0EE018F92A4817CA00389A95 /* Coordinator.swift in Sources */,
