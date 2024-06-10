@@ -14,7 +14,7 @@ final class MyPageDownloadInteractor {
         try await APIClient.fetchMyPageWorks(userId: userId)
     }
     
-    func fetchMyPageExhibitions(userId: Int64) async throws -> [MyPageExhibition] {
+    func fetchMyPageExhibitions(userId: Int64) async throws -> [ExhibitionModel] {
         try await APIClient.fetchMyPageExhibitions(userId: userId)
     }
     

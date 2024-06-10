@@ -12,7 +12,7 @@ final class MyPageViewModel {
     @Published var interests = [ProductModel]()
     @Published var followings = [ArtistModel]()
     @Published var works = [MyPageWork]()
-    @Published var exhibitions = [MyPageExhibition]()
+    @Published var exhibitions = [ExhibitionModel]()
     var isInterestsEmpty = false
     var isFollowingsEmpty = false
     var isStartAsPush = false
@@ -84,7 +84,7 @@ extension MyPageViewModel {
                 var interests = [ProductModel]()
                 var followings = [ArtistModel]()
                 var works = [MyPageWork]()
-                var exhibitions = [MyPageExhibition]()
+                var exhibitions = [ExhibitionModel]()
                 
                 (interests, followings, works, exhibitions) = try await (interestsTask, followingsTask, worksTask, exhibitionsTask)
                 
