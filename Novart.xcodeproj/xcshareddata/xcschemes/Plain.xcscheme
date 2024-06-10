@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0EE018DC2A48156C00389A95"
-               BuildableName = "Novart.app"
-               BlueprintName = "Novart"
+               BuildableName = "Plain.app"
+               BlueprintName = "Plain"
                ReferencedContainer = "container:Novart.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,8 +44,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0EE018DC2A48156C00389A95"
-            BuildableName = "Novart.app"
-            BlueprintName = "Novart"
+            BuildableName = "Plain.app"
+            BlueprintName = "Plain"
             ReferencedContainer = "container:Novart.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,8 +61,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0EE018DC2A48156C00389A95"
-            BuildableName = "Novart.app"
-            BlueprintName = "Novart"
+            BuildableName = "Plain.app"
+            BlueprintName = "Plain"
             ReferencedContainer = "container:Novart.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

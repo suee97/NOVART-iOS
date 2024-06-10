@@ -509,7 +509,7 @@
 		0ED3356A2AF938A200DCC40A /* TagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
 		0ED3356C2AF93A1A00DCC40A /* TagCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionLayout.swift; sourceTree = "<group>"; };
 		0ED3356E2AF93AFF00DCC40A /* TagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagViewModel.swift; sourceTree = "<group>"; };
-		0EE018DD2A48156C00389A95 /* Novart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Novart.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0EE018DD2A48156C00389A95 /* Plain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Plain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE018E02A48156C00389A95 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0EE018E22A48156C00389A95 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		0EE018E92A48156D00389A95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1287,7 +1287,7 @@
 		0EE018DE2A48156C00389A95 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0EE018DD2A48156C00389A95 /* Novart.app */,
+				0EE018DD2A48156C00389A95 /* Plain.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1911,9 +1911,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0EE018DC2A48156C00389A95 /* Novart */ = {
+		0EE018DC2A48156C00389A95 /* Plain */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0EE018F12A48156D00389A95 /* Build configuration list for PBXNativeTarget "Novart" */;
+			buildConfigurationList = 0EE018F12A48156D00389A95 /* Build configuration list for PBXNativeTarget "Plain" */;
 			buildPhases = (
 				0EE018D92A48156C00389A95 /* Sources */,
 				0EE018DA2A48156C00389A95 /* Frameworks */,
@@ -1923,7 +1923,7 @@
 			);
 			dependencies = (
 			);
-			name = Novart;
+			name = Plain;
 			packageProductDependencies = (
 				0EE0198A2A6BAC5000389A95 /* GoogleSignIn */,
 				0EE019942A6BB4E000389A95 /* KakaoSDK */,
@@ -1940,7 +1940,7 @@
 				5BB4A8CD2B79EA7C00F06959 /* FirebaseMessaging */,
 			);
 			productName = Novart;
-			productReference = 0EE018DD2A48156C00389A95 /* Novart.app */;
+			productReference = 0EE018DD2A48156C00389A95 /* Plain.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1982,7 +1982,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0EE018DC2A48156C00389A95 /* Novart */,
+				0EE018DC2A48156C00389A95 /* Plain */,
 			);
 		};
 /* End PBXProject section */
@@ -2538,7 +2538,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0EE018F12A48156D00389A95 /* Build configuration list for PBXNativeTarget "Novart" */ = {
+		0EE018F12A48156D00389A95 /* Build configuration list for PBXNativeTarget "Plain" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0EE018F22A48156D00389A95 /* Debug */,
