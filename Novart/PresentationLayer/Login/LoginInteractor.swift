@@ -52,8 +52,23 @@ final class LoginInteractor: NSObject, ASAuthorizationControllerDelegate {
                     }
                 }
             } else {
-                continuation.resume(throwing: ServiceError.kakaoTalkLoginUnavailable)
-                return
+                UserApi.shared.loginWithKakaoAccount { (oauthToken, error) in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                        return
+                    }
+                    
+                    if let oauthToken = oauthToken {
+                        Authentication.shared.signInProvider = .kakao
+                        Authentication.shared.providerAccessToken = oauthToken.accessToken
+                        continuation.resume(returning: oauthToken)
+                        return
+                    } else {
+                        continuation.resume(throwing: ServiceError.kakaoTalkLoginUnavailable)
+                        return
+                    }
+                }
+                
             }
         })
     }
