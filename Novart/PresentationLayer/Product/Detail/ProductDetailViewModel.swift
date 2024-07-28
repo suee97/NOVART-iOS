@@ -113,7 +113,7 @@ extension ProductDetailViewModel {
         }
     }
     
-    func downloadImage(from urlString: String) async throws -> UIImage? {
+    func downloadImage(from urlString: String) async throws -> (String, UIImage)? {
         guard let url = URL(string: urlString) else {
             return nil
         }
@@ -122,7 +122,7 @@ extension ProductDetailViewModel {
             KingfisherManager.shared.retrieveImage(with: url) { result in
                 switch result {
                 case .success(let imageResult):
-                    continuation.resume(returning: imageResult.image)
+                    continuation.resume(returning: (urlString, imageResult.image))
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }
@@ -131,9 +131,9 @@ extension ProductDetailViewModel {
     }
     
     func downloadImages(from urlStrings: [String]) async throws -> [UIImage?] {
-        var images: [UIImage?] = []
+        var images: [String: UIImage] = [:]
 
-        try await withThrowingTaskGroup(of: UIImage?.self) { [weak self] group in
+        try await withThrowingTaskGroup(of: (urlString: String, image: UIImage)?.self) { [weak self] group in
             guard let self else { return }
             for urlString in urlStrings {
                 group.addTask {
@@ -141,12 +141,20 @@ extension ProductDetailViewModel {
                 }
             }
 
-            for try await image in group {
-                images.append(image)
+            for try await data in group {
+                if let url = data?.urlString,
+                   let image = data?.image {
+                    images[url] = image
+                }
             }
         }
 
-        return images
+        var sortedImages: [UIImage?] = []
+        for url in urlStrings {
+            sortedImages.append(images[url])
+        }
+        
+        return sortedImages
     }
     
     @MainActor
