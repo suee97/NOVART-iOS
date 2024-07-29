@@ -4,7 +4,6 @@ import ColorThiefSwift
 import Kingfisher
 
 final class ExhibitionViewModel {
-    
     private let coordinator: ExhibitionCoordinator
     private var downloadInteractor: ExhibitionInteractor = ExhibitionInteractor()
     private var exhibitions = [ExhibitionModel]()
@@ -17,13 +16,10 @@ final class ExhibitionViewModel {
     init(coordinator: ExhibitionCoordinator) {
         self.coordinator = coordinator
     }
-    
 }
 
 
-// MARK: - API
 extension ExhibitionViewModel {
-    
     func fetchExhibitions() {
         Task {
             do {
@@ -32,7 +28,6 @@ extension ExhibitionViewModel {
                 self.currentLikeStates = exhibitions.map { $0.likes }
                 self.currentLikeCounts = exhibitions.map { $0.likesCount }
                 await processExhibitions()
-                
             } catch {
                 print(error)
             }
@@ -98,16 +93,12 @@ extension ExhibitionViewModel {
                 processedExhibitions.append(processedExhibition)
             }
         }
-        
         self.processedExhibitions = processedExhibitions
     }
-    
 }
 
 
-// MARK: - Navigation
 extension ExhibitionViewModel {
-    
     @MainActor
     func showExhibitionDetail(exhibitionId: Int64) {
         coordinator.navigate(to: .exhibitionDetail(id: exhibitionId))

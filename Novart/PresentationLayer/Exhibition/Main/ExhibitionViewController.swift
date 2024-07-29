@@ -6,7 +6,6 @@ final class ExhibitionViewController: BaseViewController {
     
     // MARK: - Constants
     private enum Constants {
-        
         static let screenWidth: CGFloat = UIScreen.main.bounds.width
         static let leftMargin: CGFloat = 24
         static let rightMargin: CGFloat = 24
@@ -40,11 +39,13 @@ final class ExhibitionViewController: BaseViewController {
     // MARK: - Properties
     private let viewModel: ExhibitionViewModel
     private var cancellables = Set<AnyCancellable>()
+    private let exhibitionMainDataSource: ExhibitionMainDataSource
     
     
     // MARK: - LifeCycle
     init(viewModel: ExhibitionViewModel) {
         self.viewModel = viewModel
+        self.exhibitionMainDataSource = ExhibitionMainDataSource(collectionView: collectionView)
         super.init()
         setupCollectionView()
         viewModel.fetchExhibitions()
@@ -52,33 +53,6 @@ final class ExhibitionViewController: BaseViewController {
     
     required init? (coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func setupBindings() {
-        viewModel.$processedExhibitions.sink(receiveValue: { value in
-            self.collectionView.reloadData()
-            self.pageControl.numberOfPages = value.count
-        }).store(in: &cancellables)
-        
-        viewModel.$cellIndex.sink(receiveValue: { value in
-            guard let value = value else { return }
-            self.pageControl.currentPage = value
-            
-            // 배경 색상 변경
-            UIView.animate(withDuration: Constants.animateDuration, animations: {
-                self.view.backgroundColor = self.viewModel.processedExhibitions[value].backgroundColor
-            })
-            
-            // 투명도 변경
-            if let visibleCells = self.collectionView.visibleCells as? [ExhibitionCell],
-               let currentCell = self.collectionView.cellForItem(at: [0, value]) as? ExhibitionCell {
-                visibleCells.forEach({
-                    $0.container.layer.opacity = 0.8
-                })
-                currentCell.container.layer.opacity = 1.0
-            }
-            
-        }).store(in: &cancellables)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -98,9 +72,42 @@ final class ExhibitionViewController: BaseViewController {
     }
     
     
+    // MARK: - Binding
+    override func setupBindings() {
+        viewModel.$processedExhibitions
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] items in
+                guard let self else { return }
+                self.exhibitionMainDataSource.apply(items)
+                self.pageControl.numberOfPages = items.count
+            })
+            .store(in: &cancellables)
+        
+        viewModel.$cellIndex.sink(receiveValue: { [weak self] cellIndex in
+            guard let self, let cellIndex else { return }
+            self.pageControl.currentPage = cellIndex
+            
+            // 배경 색상 변경
+            UIView.animate(withDuration: Constants.animateDuration, animations: {
+                self.view.backgroundColor = self.viewModel.processedExhibitions[cellIndex].backgroundColor
+            })
+            
+            // 투명도 변경
+            if let visibleCells = self.collectionView.visibleCells as? [ExhibitionCell],
+               let currentCell = self.collectionView.cellForItem(at: [0, cellIndex]) as? ExhibitionCell {
+                visibleCells.forEach({
+                    $0.container.layer.opacity = 0.8
+                })
+                currentCell.container.layer.opacity = 1.0
+            }
+            
+        }).store(in: &cancellables)
+    }
+    
+    
     // MARK: - UI
-    private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createCollectionViewLayout())
+    private let collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.bounces = false
         collectionView.backgroundColor = .clear
         collectionView.clipsToBounds = false
@@ -120,6 +127,8 @@ final class ExhibitionViewController: BaseViewController {
     private lazy var buttonsView = ExhibitionButtonsView(viewModel: viewModel)
     
     override func setupView() {
+        view.backgroundColor = UIColor.Common.defaultGrey
+        
         view.addSubview(collectionView)
         view.addSubview(pageControl)
         view.addSubview(buttonsView)
@@ -143,15 +152,12 @@ final class ExhibitionViewController: BaseViewController {
             m.height.equalTo(Constants.ButtonsView.height)
         })
         buttonsView.delegate = self
-        
-        view.backgroundColor = UIColor.Common.defaultGrey
     }
 }
 
 
 // MARK: - CollectionView
-extension ExhibitionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-        
+extension ExhibitionViewController: UICollectionViewDelegate {
     private func createCollectionViewLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .absolute(Constants.CollectionView.itemWidth),
@@ -191,31 +197,8 @@ extension ExhibitionViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     private func setupCollectionView() {
+        collectionView.setCollectionViewLayout(createCollectionViewLayout(), animated: false)
         collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        collectionView.register(ExhibitionCell.self, forCellWithReuseIdentifier: ExhibitionCell.reuseIdentifier)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if viewModel.processedExhibitions.isEmpty {
-            return 1
-        }
-        
-        return viewModel.processedExhibitions.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ExhibitionCell.reuseIdentifier, for: indexPath) as? ExhibitionCell else { return UICollectionViewCell() }
-        
-        if viewModel.processedExhibitions.isEmpty {
-            cell.exhibition = nil
-            return cell
-        }
-        
-        cell.exhibition = viewModel.processedExhibitions[indexPath.row]
-        
-        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
