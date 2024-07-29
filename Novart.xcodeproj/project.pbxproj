@@ -281,7 +281,6 @@
 		5B0A95882C07005D00975172 /* SFPRODISPLAYMEDIUM.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 5B0A957E2C07005D00975172 /* SFPRODISPLAYMEDIUM.OTF */; };
 		5B0A95892C07005D00975172 /* SFPRODISPLAYREGULAR.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 5B0A957F2C07005D00975172 /* SFPRODISPLAYREGULAR.OTF */; };
 		5B0A95902C083F1D00975172 /* ExhibitionGuideArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0A958F2C083F1D00975172 /* ExhibitionGuideArtistCell.swift */; };
-		5B0C9C752C4536B80013A6D5 /* MyPageProfileEditViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0C9C742C4536B80013A6D5 /* MyPageProfileEditViewModelTests.swift */; };
 		5B127CD52BC2C7A3003DF39D /* PolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B127CD42BC2C7A3003DF39D /* PolicyViewController.swift */; };
 		5B127CDB2BC2C9E2003DF39D /* PolicyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B127CDA2BC2C9E2003DF39D /* PolicyType.swift */; };
 		5B127CDF2BD4F848003DF39D /* PolicyChapterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B127CDE2BD4F848003DF39D /* PolicyChapterModel.swift */; };
@@ -630,7 +629,6 @@
 		5B0A957F2C07005D00975172 /* SFPRODISPLAYREGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = SFPRODISPLAYREGULAR.OTF; sourceTree = "<group>"; };
 		5B0A958F2C083F1D00975172 /* ExhibitionGuideArtistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionGuideArtistCell.swift; sourceTree = "<group>"; };
 		5B0C9C722C4536B70013A6D5 /* PlainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5B0C9C742C4536B80013A6D5 /* MyPageProfileEditViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfileEditViewModelTests.swift; sourceTree = "<group>"; };
 		5B127CD42BC2C7A3003DF39D /* PolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyViewController.swift; sourceTree = "<group>"; };
 		5B127CDA2BC2C9E2003DF39D /* PolicyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyType.swift; sourceTree = "<group>"; };
 		5B127CDE2BD4F848003DF39D /* PolicyChapterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyChapterModel.swift; sourceTree = "<group>"; };
@@ -1764,7 +1762,6 @@
 		5B0C9C732C4536B80013A6D5 /* PlainTests */ = {
 			isa = PBXGroup;
 			children = (
-				5B0C9C742C4536B80013A6D5 /* MyPageProfileEditViewModelTests.swift */,
 			);
 			path = PlainTests;
 			sourceTree = "<group>";
@@ -2406,7 +2403,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B0C9C752C4536B80013A6D5 /* MyPageProfileEditViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
