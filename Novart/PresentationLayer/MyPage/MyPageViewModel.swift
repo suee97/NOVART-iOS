@@ -2,13 +2,17 @@ import Combine
 import UIKit
 import Alamofire
 
+enum MyPageUserState {
+    case me // 로그인O + 마이페이지
+    case other// 로그인 유무 상관X + 다른 유저 프로필
+    case loggedOut // 로그인X + 마이페이지
+}
+
 final class MyPageViewModel {
-    weak var coordinator: MyPageCoordinator?
+    private weak var coordinator: MyPageCoordinator?
     private var interactor = MyPageDownloadInteractor()
     
-    @Published var selectedCategory: MyPageCategory = .Work
-    @Published private (set) var scrollHeight: Double = 0.0
-    
+    @Published private(set) var selectedCategory: MyPageCategory = .Work
     @Published var interests = [ProductModel]()
     @Published var followings = [ArtistModel]()
     @Published var works = [MyPageWork]()
@@ -40,13 +44,12 @@ final class MyPageViewModel {
         self.coordinator = coordinator
         self.userId = userId
     }
-    
+}
+
+
+extension MyPageViewModel {
     func setCategory(_ category: MyPageCategory) {
         selectedCategory = category
-    }
-    
-    func setScrollHeight(_ height: Double) {
-        scrollHeight = height
     }
     
     func isUserCanContact(openChatUrl: String?, email: String?) -> Bool {
@@ -59,8 +62,6 @@ final class MyPageViewModel {
 
 // MARK: API
 extension MyPageViewModel {
-    
-    @MainActor
     func getAllItems() {
         var uid: Int64? = nil
         switch userState {
@@ -234,10 +235,4 @@ extension MyPageViewModel {
             coordinator?.navigate(to: .ask(user: user))
         }
     }
-}
-
-enum MyPageUserState {
-    case other // 로그인 유무 상관X + 다른 유저 프로필
-    case loggedOut // 로그인X + 마이페이지
-    case me // 로그인O + 마이페이지
 }

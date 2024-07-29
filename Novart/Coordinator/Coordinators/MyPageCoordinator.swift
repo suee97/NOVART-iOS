@@ -29,7 +29,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     @MainActor
     func startAsPush(selectedCategory: MyPageCategory = .Work) {
         let viewModel = MyPageViewModel(coordinator: self, userId: userId)
-        viewModel.selectedCategory = selectedCategory
+        viewModel.setCategory(selectedCategory)
         let viewController = MyPageViewController(viewModel: viewModel)
         viewModel.isStartAsPush = true
         navigator.push(viewController, animated: true)
@@ -83,7 +83,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     @MainActor
     private func showProfileEdit() {
         guard let user = Authentication.shared.user else { return }
-        let viewModel = MyPageProfileEditViewModel(coordinator: self, user: user)
+        let viewModel = MyPageProfileEditViewModel(user: user)
+        viewModel.coordinator = self
         let viewController = MyPageProfileEditViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }

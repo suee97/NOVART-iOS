@@ -5,16 +5,12 @@ final class MyPageNotificationViewModel {
     private weak var coordinator: MyPageCoordinator?
     private var downloadInteractor = NotificationDownloadInteractor()
     @Published private(set) var notifications = [NotificationModel]()
-    
     private var fetchedPages = [Int64]()
     private var isFetching = false
     
     init(coordinator: MyPageCoordinator) {
         self.coordinator = coordinator
     }
-}
-
-extension MyPageNotificationViewModel {
     
     func fetchNotifications(notificationId: Int64 = 0) {
         guard !isFetching else { return }
@@ -43,10 +39,8 @@ extension MyPageNotificationViewModel {
     
     func scrollViewDidReachBottom(cellIds: [Int64]) {
         guard let lastId = notifications.last?.id, !isFetching else { return }
-        let isFetched = fetchedPages.contains(lastId)
-        if !isFetched && cellIds.contains(lastId) {
-            fetchNotifications(notificationId: lastId)
-        }
+        guard !fetchedPages.contains(lastId) && cellIds.contains(lastId) else { return }
+        fetchNotifications(notificationId: lastId)
     }
     
     func onRefresh() async {
@@ -64,17 +58,10 @@ extension MyPageNotificationViewModel {
     }
     
     func readNotification(index: Int) {
-        if notifications[index].status == .UnRead {
-            notifications[index].status = .Read
-            putNotificationReadStatus(notificationId: notifications[index].id)
-        }
+        guard notifications[index].status == .UnRead else { return }
+        notifications[index].status = .Read
+        putNotificationReadStatus(notificationId: notifications[index].id)
     }
-    
-}
-
-
-// MARK: - Navigation
-extension MyPageNotificationViewModel {
     
     @MainActor
     func showMain() {
@@ -86,5 +73,4 @@ extension MyPageNotificationViewModel {
         let notification = notifications[index]
         NotificationNavigationHandler(coordinator: coordinator).execute(notification: notification)
     }
-    
 }
