@@ -236,6 +236,8 @@ final class MyPageProfileEditViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpDelegate()
+        viewModel.downloadProfileImage()
+        viewModel.downloadBackgroundImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -409,12 +411,9 @@ final class MyPageProfileEditViewController: BaseViewController {
         profileImageView.clipsToBounds = true
         profileImageView.isUserInteractionEnabled = true
         profileImageView.contentMode = .scaleAspectFill
-        
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapProfileImage))
         profileImageView.addGestureRecognizer(gesture)
-        
         profileImageView.image = UIImage(named: "default_user_profile_image")
-        
         return profileImageView
     }()
     
@@ -424,19 +423,14 @@ final class MyPageProfileEditViewController: BaseViewController {
         backgroundImageView.clipsToBounds = true
         backgroundImageView.isUserInteractionEnabled = true
         backgroundImageView.contentMode = .scaleAspectFill
-        
         let cameraImageView = UIImageView(frame: CGRect(origin: Constants.BackgroundImage.cameraOrigin, size: Constants.BackgroundImage.cameraSize))
         cameraImageView.image = UIImage(named: "icon_camera")
         cameraImageView.alpha = Constants.BackgroundImage.cameraAlpha
-        
         backgroundImageView.addSubview(cameraImageView)
-        
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onTapBackgroundImage))
         backgroundImageView.addGestureRecognizer(gesture)
-        
         backgroundImageView.image = nil
         backgroundImageView.backgroundColor = Constants.BackgroundImage.defaultColor
-        
         return backgroundImageView
     }()
     
@@ -869,7 +863,7 @@ final class MyPageProfileEditViewController: BaseViewController {
     
     private func validateApply(nicknameDupChecked: Bool, emailText: String?) {
         guard let emailText else { return }
-        if nicknameDupChecked && viewModel.validateEmail(text: emailText) {
+        if nicknameDupChecked && viewModel.checkEmailValidation(email: emailText) {
             applyButton.setTitleColor(Constants.Navigation.applyActiveColor, for: .normal)
             applyButton.isEnabled = true
         } else {
@@ -934,12 +928,12 @@ extension MyPageProfileEditViewController: UITextFieldDelegate {
             }
         case tagField:
             viewModel.tagFieldString = textField.text ?? ""
-            viewModel.tagFieldChangedFromUser()
+            viewModel.updateRecommendTagSelectionFromUserTagFieldEditing()
             recommendTagView.applyItems(viewModel.recommendTagItems)
         case emailField:
             guard let text = emailField.text else { return }
             validateApply(nicknameDupChecked: nicknameDupChecked, emailText: text)
-            let validationResult: Bool = viewModel.validateEmail(text: text)
+            let validationResult: Bool = viewModel.checkEmailValidation(email: text)
             emailValidationLabel.isHidden = validationResult
             if validationResult { userData.email = text }
         case linkField:
@@ -1002,22 +996,23 @@ extension MyPageProfileEditViewController {
 
 // MARK: - TagView
 extension MyPageProfileEditViewController: TagViewDelegate {
+    func tagView(_ tagView: TagView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        if tagView == categoryTagView {
+            return viewModel.shouldAddCategoryTagItem()
+        }
+        if tagView == recommendTagView {
+            return viewModel.shouldAddRecommendTagItem()
+        }
+        return false
+    }
+    
     func tagView(_ tagView: TagView, didSelectItemAt indexPath: IndexPath) {
         if tagView == categoryTagView {
-            if viewModel.categoryTagItemSelectCount < Constants.Category.Count.maxCount {
-                viewModel.updateCategoryTagSelection(indexPath: indexPath, isSelected: true)
-            } else {
-                tagView.applyItems(viewModel.categoryTagItems)
-            }
+            viewModel.updateCategoryTagSelection(indexPath: indexPath, isSelected: true)
             return
         }
-        
         if tagView == recommendTagView {
-            if viewModel.recommendTagItemSelectCount < Constants.Tag.Count.maxCount {
-                viewModel.updateRecommendTagSelection(indexPath: indexPath, isSelected: true)
-            } else {
-                tagView.applyItems(viewModel.recommendTagItems)
-            }
+            viewModel.updateRecommendTagSelection(indexPath: indexPath, isSelected: true)
             return
         }
     }
@@ -1027,7 +1022,6 @@ extension MyPageProfileEditViewController: TagViewDelegate {
             viewModel.updateCategoryTagSelection(indexPath: indexPath, isSelected: false)
             return
         }
-        
         if tagView == recommendTagView {
             viewModel.updateRecommendTagSelection(indexPath: indexPath, isSelected: false)
             return

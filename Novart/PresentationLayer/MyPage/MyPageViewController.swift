@@ -10,15 +10,8 @@ final class MyPageViewController: BaseViewController {
         static let screenWidth = UIScreen.main.bounds.size.width
         static let screenHeight = UIScreen.main.bounds.size.height
         
-        static func getRelativeWidth(from width: CGFloat) -> CGFloat {
-            Constants.screenWidth * (width/390)
-        }
-        static func getRelativeHeight(from height: CGFloat) -> CGFloat {
-            Constants.screenHeight * (height/844)
-        }
-        
         static let navIconSize = CGRect(origin: CGPoint.zero, size: CGSize(width: 24, height: 24))
-        static let headerTransitionHeight: CGFloat = getRelativeHeight(from: 202)
+        static let headerTransitionHeight: CGFloat = 230 - 47
         
         static var appearance: UINavigationBarAppearance = {
             let appearance = UINavigationBarAppearance()
@@ -29,23 +22,30 @@ final class MyPageViewController: BaseViewController {
         }()
         
         enum Layout {
-            static let sectionInset = UIEdgeInsets(top: 0, left: getRelativeWidth(from: 24), bottom: getRelativeWidth(from: 24), right: getRelativeWidth(from: 24)) // bottom은 임의로 추가
+            static let sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 24, right: 24) // bottom은 임의로 추가
             static let navigationBarSpacerWidth: CGFloat = 16
         }
         
         enum CollectionView {
-            static let itemSpacing: CGFloat = getRelativeWidth(from: 12)
-            static let lineSpacing: CGFloat = getRelativeHeight(from: 12)
+            static let itemSpacing: CGFloat = 12
+            static let lineSpacing: CGFloat = 12
             static let bottomMargin: CGFloat = 24
         }
         
         enum CellSize {
-            static let cellWidth: CGFloat = (Constants.screenWidth - 60) / 2
+            private static let InterestCellWidth = (Constants.screenWidth - 60) / 2
+            private static let InterestCellHeight = InterestCellWidth * (221 / 165)
+            private static let FollowingCellWidth = (Constants.screenWidth - 60) / 2
+            private static let FollowingCellHeight = FollowingCellWidth * (110 / 165)
+            private static let WorkCellWidth = (Constants.screenWidth - 60) / 2
+            private static let WorkCellHeight = WorkCellWidth * (205 / 165)
+            private static let ExhibitionCellWidth = Constants.screenWidth - 48
+            private static let ExhibitionCellHeight = ExhibitionCellWidth * (528 / 342)
             
-            static let InterestCellSize = CGSize(width: getRelativeWidth(from: 165), height: Constants.CellSize.cellWidth * (221/165))
-            static let FollowingCellSize = CGSize(width: getRelativeWidth(from: 165), height: Constants.CellSize.cellWidth * (110/165))
-            static let WorkCellSize = CGSize(width: getRelativeWidth(from: 165), height: Constants.CellSize.cellWidth * (205/165))
-            static let ExhibitionCellSize = CGSize(width: getRelativeWidth(from: 342), height: (Constants.screenWidth - 48) * (525/342))
+            static let InterestCellSize = CGSize(width: InterestCellWidth, height: InterestCellHeight)
+            static let FollowingCellSize = CGSize(width: FollowingCellWidth, height: FollowingCellHeight)
+            static let WorkCellSize = CGSize(width: WorkCellWidth, height: WorkCellHeight)
+            static let ExhibitionCellSize = CGSize(width: ExhibitionCellWidth, height: ExhibitionCellHeight)
         }
         
         enum AskButton {
@@ -55,19 +55,19 @@ final class MyPageViewController: BaseViewController {
             static let inActiveBackgroundColor = UIColor.Common.grey01
             static let inActiveTextColor = UIColor.Common.grey00
             static let font = UIFont.systemFont(ofSize: 16, weight: .bold)
-            static let width = getRelativeWidth(from: 84)
-            static let height = getRelativeHeight(from: 42)
-            static let leftMargin = getRelativeWidth(from: 24)
-            static let topMargin = getRelativeHeight(from: 7)
+            static let width = 84
+            static let height = 42
+            static let leftMargin = 24
+            static let topMargin = 7
         }
         
         enum FollowButton {
             static let unFollowedText = "팔로우"
             static let followedText = "팔로잉"
             static let font = UIFont.systemFont(ofSize: 16, weight: .bold)
-            static let width = getRelativeWidth(from: 250)
-            static let height = getRelativeHeight(from: 42)
-            static let leftMargin = getRelativeWidth(from: 8)
+            static let width = 250
+            static let height = 42
+            static let leftMargin = 8
             static let unFollowedColor = UIColor.Common.main
             static let followedColor = UIColor.Common.grey04
         }
@@ -75,12 +75,12 @@ final class MyPageViewController: BaseViewController {
         enum FollowToastView {
             static let backgroundColor = UIColor.Common.grey01_light
             static let radius: CGFloat = 12
-            static let width = getRelativeWidth(from: 342)
-            static let height = getRelativeHeight(from: 52)
+            static let width = 342
+            static let height = 52
             
             enum IconImageView {
-                static let diameter = getRelativeWidth(from: 24)
-                static let leftMargin = getRelativeWidth(from: 16)
+                static let diameter = 24
+                static let leftMargin = 16
                 static let iconImage = UIImage(named: "icon_follow_check")
             }
             
@@ -88,14 +88,14 @@ final class MyPageViewController: BaseViewController {
                 static let text = "새로운 작가를 팔로우했어요!"
                 static let textColor = UIColor.Common.grey04
                 static let font = UIFont.systemFont(ofSize: 14, weight: .medium)
-                static let leftMargin = getRelativeWidth(from: 8)
+                static let leftMargin = 8
             }
             
             enum ShowAllButton {
                 static let text = "모두 보기"
                 static let textColor = UIColor.Common.black
                 static let font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-                static let rightMargin = getRelativeWidth(from: 10)
+                static let rightMargin = 10
             }
         }
         
@@ -118,19 +118,19 @@ final class MyPageViewController: BaseViewController {
     private var cellCount: Int {
         return self.viewModel.getItemCount()
     }
-    private var cellId = ProductCell.reuseIdentifier
     private var cellType: UICollectionViewCell.Type = ProductCell.self
     private var isHeaderSticky = false
     private var isHeaderFirstSetup = true
     private var isGradient = false
     private var isOtherUserFollowing: Bool?
+    private var headerHeight: CGFloat = 0
+    private var transitionScrollHeight: CGFloat?
     
     
     // MARK: - LifeCycle
     init(viewModel: MyPageViewModel) {
         self.viewModel = viewModel
         super.init()
-        collectionView.register(MyPageHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageHeaderView.reuseIdentifier)
     }
     
     required init?(coder: NSCoder) {
@@ -206,90 +206,74 @@ final class MyPageViewController: BaseViewController {
     
     // MARK: - Binding
     override func setupBindings() {
-        viewModel.$selectedCategory.sink(receiveValue: { value in
-            switch value {
-            case .Interest:
-                self.cellSize = Constants.CellSize.InterestCellSize
-                self.cellId = ProductCell.reuseIdentifier
-                self.cellType = ProductCell.self
-            case .Following:
-                self.cellSize = Constants.CellSize.FollowingCellSize
-                self.cellId = SearchArtistCell.reuseIdentifier
-                self.cellType = SearchArtistCell.self
-            case .Work:
-                self.cellSize = Constants.CellSize.WorkCellSize
-                self.cellId = MyPageWorkCell.reuseIdentifier
-                self.cellType = MyPageWorkCell.self
-            case .Exhibition:
-                self.cellSize = Constants.CellSize.ExhibitionCellSize
-                self.cellId = MyPageExhibitionCell.reuseIdentifier
-                self.cellType = MyPageExhibitionCell.self
-            }
-            if self.isHeaderSticky {
-                self.collectionView.contentOffset = CGPoint(x: 0, y: Constants.headerTransitionHeight)
-            }
-            self.uploadProductButton.isHidden = (self.viewModel.userState == .me && value == .Work) ? false : true
-            self.collectionView.reloadData()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                if let header = self.collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView {
-                    for button in header.categoryButtons {
-                        if button.category == value {
-                            button.setState(true)
-                        } else {
-                            button.setState(false)
+        viewModel.$selectedCategory
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] value in
+                guard let self else { return }
+                switch value {
+                case .Interest:
+                    self.cellSize = Constants.CellSize.InterestCellSize
+                    self.cellType = ProductCell.self
+                case .Following:
+                    self.cellSize = Constants.CellSize.FollowingCellSize
+                    self.cellType = SearchArtistCell.self
+                case .Work:
+                    self.cellSize = Constants.CellSize.WorkCellSize
+                    self.cellType = MyPageWorkCell.self
+                case .Exhibition:
+                    self.cellSize = Constants.CellSize.ExhibitionCellSize
+                    self.cellType = MyPageExhibitionCell.self
+                }
+                if self.isHeaderSticky {
+                    self.collectionView.contentOffset = CGPoint(x: 0, y: 220)
+                }
+                self.uploadProductButton.isHidden = (self.viewModel.userState == .me && value == .Work) ? false : true
+                
+                self.collectionView.reloadData()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    if let header = self.collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView {
+                        for button in header.categoryButtons {
+                            if button.category == value {
+                                button.setState(true)
+                            } else {
+                                button.setState(false)
+                            }
                         }
                     }
                 }
-            }
         }).store(in: &cancellables)
         
-        viewModel.$scrollHeight.sink(receiveValue: { value in
-            if value >= Constants.headerTransitionHeight && !self.isHeaderSticky {
-                self.collectionViewLayout.sectionHeadersPinToVisibleBounds = true
-                self.isHeaderSticky = true
+        Publishers.CombineLatest4(viewModel.$interests, viewModel.$followings, viewModel.$works, viewModel.$exhibitions)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                guard let self else { return }
                 self.collectionView.reloadData()
-            } else if value < Constants.headerTransitionHeight && self.isHeaderSticky {
-                self.collectionViewLayout.sectionHeadersPinToVisibleBounds = false
-                self.isHeaderSticky = false
-                self.collectionView.reloadData()
-            }
-        }).store(in: &cancellables)
+            }).store(in: &cancellables)
         
-        viewModel.$interests.sink(receiveValue: { value in
-            self.collectionView.reloadData()
-        }).store(in: &cancellables)
-        
-        viewModel.$followings.sink(receiveValue: { value in
-            self.collectionView.reloadData()
-        }).store(in: &cancellables)
-        
-        viewModel.$works.sink(receiveValue: { value in
-            self.collectionView.reloadData()
-        }).store(in: &cancellables)
-        
-        viewModel.$exhibitions.sink(receiveValue: { value in
-            self.collectionView.reloadData()
-        }).store(in: &cancellables)
-        
-        viewModel.$otherUser.sink(receiveValue: { otherUser in
-            guard let otherUser else { return }
-            self.isOtherUserFollowing = otherUser.following
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-                self.followButton.backgroundColor = otherUser.following ? Constants.FollowButton.followedColor : Constants.FollowButton.unFollowedColor
-                let buttonTitle = otherUser.following ? Constants.FollowButton.followedText : Constants.FollowButton.unFollowedText
-                self.followButton.setTitle(buttonTitle, for: .normal)
-                if self.viewModel.isUserCanContact(openChatUrl: otherUser.openChatUrl, email: otherUser.email) {
-                    self.askButton.setTitleColor(Constants.AskButton.activeTextColor, for: .normal)
-                    self.askButton.backgroundColor = Constants.AskButton.activeBackgroundColor
-                } else {
-                    self.askButton.setTitleColor(Constants.AskButton.inActiveTextColor, for: .normal)
-                    self.askButton.backgroundColor = Constants.AskButton.inActiveBackgroundColor
+        viewModel.$otherUser
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] otherUser in
+                guard let self, let otherUser else { return }
+                self.isOtherUserFollowing = otherUser.following
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                    self.followButton.backgroundColor = otherUser.following ? Constants.FollowButton.followedColor : Constants.FollowButton.unFollowedColor
+                    let buttonTitle = otherUser.following ? Constants.FollowButton.followedText : Constants.FollowButton.unFollowedText
+                    self.followButton.setTitle(buttonTitle, for: .normal)
+                    if self.viewModel.isUserCanContact(openChatUrl: otherUser.openChatUrl, email: otherUser.email) {
+                        self.askButton.setTitleColor(Constants.AskButton.activeTextColor, for: .normal)
+                        self.askButton.backgroundColor = Constants.AskButton.activeBackgroundColor
+                    } else {
+                        self.askButton.setTitleColor(Constants.AskButton.inActiveTextColor, for: .normal)
+                        self.askButton.backgroundColor = Constants.AskButton.inActiveBackgroundColor
+                    }
                 }
-            }
         }).store(in: &cancellables)
         
-        viewModel.notificationCheckStatusSubject.sink(receiveValue: { [weak self] notificationCheckStatus in
+        viewModel.notificationCheckStatusSubject
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] notificationCheckStatus in
             guard let self else { return }
             let iconPath = notificationCheckStatus.unread ? "icon_notification_unread" : "icon_notification2"
             self.notificationButton.setBackgroundImage(UIImage(named: iconPath), for: .normal)
@@ -303,6 +287,7 @@ final class MyPageViewController: BaseViewController {
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = Constants.CollectionView.itemSpacing
         layout.minimumLineSpacing = Constants.CollectionView.lineSpacing
+        layout.sectionInset = UIEdgeInsets(top: 18, left: 24, bottom: 24, right: 24)
         return layout
     }()
     
@@ -311,7 +296,11 @@ final class MyPageViewController: BaseViewController {
         collectionView.backgroundColor = .clear
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.delaysContentTouches = false
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: Constants.CollectionView.bottomMargin, right: 0)
+        collectionView.register(MyPageHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageHeaderView.reuseIdentifier)
+        collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseIdentifier)
+        collectionView.register(SearchArtistCell.self, forCellWithReuseIdentifier: SearchArtistCell.reuseIdentifier)
+        collectionView.register(MyPageWorkCell.self, forCellWithReuseIdentifier: MyPageWorkCell.reuseIdentifier)
+        collectionView.register(MyPageExhibitionCell.self, forCellWithReuseIdentifier: MyPageExhibitionCell.reuseIdentifier)
         if viewModel.userState == .loggedOut { collectionView.isScrollEnabled = false }
         return collectionView
     }()
@@ -463,7 +452,7 @@ final class MyPageViewController: BaseViewController {
     }()
     
     private lazy var followToastView: UIView = {
-        let view = UIView(frame: CGRect(x: (Constants.screenWidth - Constants.FollowToastView.width) / 2, y: Constants.screenHeight - 52, width: Constants.FollowToastView.width, height: Constants.FollowToastView.height))
+        let view = UIView(frame: CGRect(x: (Int(Constants.screenWidth) - Constants.FollowToastView.width) / 2, y: Int(Constants.screenHeight) - 52, width: Constants.FollowToastView.width, height: Constants.FollowToastView.height))
         view.backgroundColor = Constants.FollowToastView.backgroundColor
         view.layer.cornerRadius = Constants.FollowToastView.radius
         
@@ -482,7 +471,7 @@ final class MyPageViewController: BaseViewController {
         showAllButton.titleLabel?.font = Constants.FollowToastView.ShowAllButton.font
         showAllButton.setTitleColor(Constants.FollowToastView.ShowAllButton.textColor, for: .normal)
         showAllButton.addAction(UIAction(handler: { _ in
-            print("Show All Button Tapped")
+            print("Show All Button Tapped") // TODO: 여기 개발 해야함
         }), for: .touchUpInside)
         
         view.addSubview(iconImageView)
@@ -630,7 +619,7 @@ final class MyPageViewController: BaseViewController {
 }
 
 
-// MARK: - CollectionView
+// MARK: - CollectionView + HeaderView
 extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -642,31 +631,30 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        collectionView.register(cellType, forCellWithReuseIdentifier: cellId)
         switch viewModel.selectedCategory {
         case .Interest:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? ProductCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.reuseIdentifier, for: indexPath) as? ProductCell else {
                 return UICollectionViewCell()
             }
             let item = viewModel.interests[indexPath.row]
             cell.update(with: item)
             return cell
         case .Following:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? SearchArtistCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchArtistCell.reuseIdentifier, for: indexPath) as? SearchArtistCell else {
                 return UICollectionViewCell()
             }
             let item = viewModel.followings[indexPath.row]
             cell.update(with: item)
             return cell
         case .Work:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageWorkCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyPageWorkCell.reuseIdentifier, for: indexPath) as? MyPageWorkCell else {
                 return UICollectionViewCell()
             }
             let item = viewModel.works[indexPath.row]
             cell.update(with: item)
             return cell
         case .Exhibition:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MyPageExhibitionCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyPageExhibitionCell.reuseIdentifier, for: indexPath) as? MyPageExhibitionCell else {
                 return UICollectionViewCell()
             }
             let item = viewModel.exhibitions[indexPath.row]
@@ -675,98 +663,28 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        if isHeaderSticky {
-            return UIEdgeInsets(top: Constants.getRelativeHeight(from: 202 + 18), left: Constants.getRelativeWidth(from: 24), bottom: 0, right: Constants.getRelativeWidth(from: 24))
-        } else {
-            return UIEdgeInsets(top: 0, left: Constants.getRelativeWidth(from: 24), bottom: 0, right: Constants.getRelativeWidth(from: 24))
-        }
-    }
-
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        
         lazy var header = MyPageHeaderView()
-        
-        switch viewModel.userState {
-        case .loggedOut:
-            header.update(user: nil, userState: .loggedOut, category: viewModel.selectedCategory, isEmpty: false)
-        case .other, .me:
-            header.isHeaderSticky = isHeaderSticky
-            if isHeaderSticky == true {
-                return CGSize(width: collectionView.bounds.width, height: Constants.getRelativeHeight(from: 202))
-            }
-            
-            var isEmpty: Bool = false
-            switch viewModel.selectedCategory {
-            case .Following:
-                isEmpty = viewModel.isFollowingsEmpty
-            case .Interest:
-                isEmpty = viewModel.isInterestsEmpty
-            case .Exhibition:
-                isEmpty = viewModel.exhibitions.isEmpty
-            case .Work:
-                isEmpty = viewModel.works.isEmpty
-            }
-            if viewModel.userState == .me {
-                header.update(user: Authentication.shared.user, userState: .me, category: viewModel.selectedCategory, isEmpty: isEmpty)
-            } else if viewModel.userState == .other {
-                header.update(user: viewModel.otherUser, userState: .other, category: viewModel.selectedCategory, isEmpty: isEmpty)
-            }
-        }
-        return header.systemLayoutSizeFitting(.init(width: collectionView.bounds.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
+        updateHeaderView(with: header)
+        let headerSize = header.systemLayoutSizeFitting(.init(width: collectionView.bounds.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
+        if !self.isHeaderSticky { self.headerHeight = headerSize.height }
+        return headerSize
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard kind == UICollectionView.elementKindSectionHeader,
-                  let header = collectionView.dequeueReusableSupplementaryView(
-                    ofKind: kind,
-                    withReuseIdentifier: MyPageHeaderView.reuseIdentifier,
-                    for: indexPath
-                  ) as? MyPageHeaderView else {return UICollectionReusableView()}
+        guard kind == UICollectionView.elementKindSectionHeader, let header = collectionView.dequeueReusableSupplementaryView( ofKind: kind, withReuseIdentifier: MyPageHeaderView.reuseIdentifier, for: indexPath ) as? MyPageHeaderView else { return UICollectionReusableView() }
         
         header.delegate = self
-        header.isHeaderSticky = isHeaderSticky
+
+        updateHeaderView(with: header)
         
-        switch viewModel.userState {
-        case .loggedOut:
-            header.update(user: nil, userState: .loggedOut, category: viewModel.selectedCategory, isEmpty: false)
-        case .other, .me:
-            var isEmpty: Bool = false
-            switch viewModel.selectedCategory {
-            case .Following:
-                isEmpty = viewModel.isFollowingsEmpty
-            case .Interest:
-                isEmpty = viewModel.isInterestsEmpty
-            case .Exhibition:
-                isEmpty = viewModel.exhibitions.isEmpty
-            case .Work:
-                isEmpty = viewModel.works.isEmpty
-            }
-            
-            if viewModel.userState == .me {
-                header.update(user: Authentication.shared.user, userState: .me, category: viewModel.selectedCategory, isEmpty: isEmpty)
-            } else if viewModel.userState == .other {
-                header.update(user: viewModel.otherUser, userState: .other, category: viewModel.selectedCategory, isEmpty: isEmpty)
-            }
-            
+        if viewModel.userState == .me || viewModel.userState == .other {
             if isHeaderFirstSetup {
                 header.workButton.setState(true)
             }
         }
-        
         isHeaderFirstSetup = false
         
-        header.onTapCategoryButton = ({ category in
-            if self.viewModel.userState == .loggedOut { return }
-            self.viewModel.setCategory(category)
-            for e in header.categoryButtons {
-                if e.category == category {
-                    e.setState(true)
-                } else {
-                    e.setState(false)
-                }
-            }
-        })
         return header
     }
     
@@ -805,13 +723,66 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        scrollView.bounces = (scrollView.contentOffset.y > 10)
-        viewModel.setScrollHeight(collectionView.bounds.minY)
+        scrollView.bounces = (scrollView.contentOffset.y > 10) // 상단 스크롤 방지
+        
+        let headerBottomPositionFromWindow = getHeaderBottomPositionFromWindow()
+        guard let headerBottomPositionFromWindow else { return }
+        let scrollHeight = scrollView.contentOffset.y
+        if !isHeaderSticky && headerBottomPositionFromWindow <= 195 {
+            isHeaderSticky = true
+            guard let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView else { return }
+            updateHeaderView(with: header)
+            collectionViewLayout.sectionHeadersPinToVisibleBounds = true
+            transitionScrollHeight = scrollHeight
+            collectionViewLayout.sectionInset = UIEdgeInsets(top: scrollHeight + 12, left: 24, bottom: 24, right: 24)
+            collectionView.collectionViewLayout.invalidateLayout()
+            return
+        }
+        
+        if let transitionScrollHeight, isHeaderSticky, scrollHeight < transitionScrollHeight {
+            isHeaderSticky = false
+            guard let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView else { return }
+            updateHeaderView(with: header)
+            collectionViewLayout.sectionHeadersPinToVisibleBounds = false
+            collectionViewLayout.sectionInset = UIEdgeInsets(top: 18, left: 24, bottom: 24, right: 24)
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+    
+    private func getHeaderBottomPositionFromWindow() -> CGFloat? {
+        guard let window = self.view.window else { return nil }
+        guard let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView else { return nil }
+        let frame = window.convert(header.frame, from: collectionView)
+        return frame.maxY
+    }
+    
+    func updateHeaderView(with header: MyPageHeaderView) {
+        switch self.viewModel.userState {
+        case .loggedOut:
+            header.updateHeaderView(user: nil, userState: .loggedOut, category: viewModel.selectedCategory, isContentsEmpty: false, isSticky: isHeaderSticky)
+        case .other, .me:
+            var isEmpty: Bool = false
+            switch viewModel.selectedCategory {
+            case .Following:
+                isEmpty = viewModel.isFollowingsEmpty
+            case .Interest:
+                isEmpty = viewModel.isInterestsEmpty
+            case .Exhibition:
+                isEmpty = viewModel.exhibitions.isEmpty
+            case .Work:
+                isEmpty = viewModel.works.isEmpty
+            }
+            if self.viewModel.userState == .me {
+                header.updateHeaderView(user: Authentication.shared.user, userState: .me, category: viewModel.selectedCategory, isContentsEmpty: isEmpty, isSticky: isHeaderSticky)
+            } else if self.viewModel.userState == .other {
+                header.updateHeaderView(user: viewModel.otherUser, userState: .other, category: viewModel.selectedCategory, isContentsEmpty: isEmpty, isSticky: isHeaderSticky)
+            }
+        }
     }
 }
 
 
-// MARK: - HeaderView
+// MARK: - HeaderView Delegate
 extension MyPageViewController: MyPageHeaderViewDelegate {
     func onTapLoginButton() {
         viewModel.showLoginModal()
@@ -826,6 +797,15 @@ extension MyPageViewController: MyPageHeaderViewDelegate {
     func onTapProfileLabel() {
         if viewModel.userState == .me {
             viewModel.showProfileEdit()
+        }
+    }
+    
+    func onTapCategoryButton(header: MyPageHeaderView, selectedCategory: MyPageCategory) {
+        if viewModel.userState == .loggedOut || viewModel.selectedCategory == selectedCategory { return }
+        viewModel.setCategory(selectedCategory)
+        for button in header.categoryButtons {
+            let state = (button.category == selectedCategory)
+            button.setState(state)
         }
     }
 }

@@ -4,73 +4,60 @@ import Alamofire
 import Kingfisher
 
 final class MyPageProfileEditViewModel {
-    
-    // MARK: - Properties
-    private let coordinator: MyPageCoordinator
+    weak var coordinator: MyPageCoordinator?
     private var interactor = MyPageDownloadInteractor()
-    
+    let user: PlainUser
+    @Published var isLoading: Bool = false
     @Published var categoryTagItemSelectCount: Int = 0
-    var categoryTagItems = [TagItem(tag: "제품 디자이너", isSelected: false), TagItem(tag: "시각 디자이너", isSelected: false),TagItem(tag: "UX 디자이너", isSelected: false), TagItem(tag: "패션 디자이너", isSelected: false), TagItem(tag: "3D 아티스트", isSelected: false), TagItem(tag: "크리에이터", isSelected: false), TagItem(tag: "일러스트레이터", isSelected: false), TagItem(tag: "공예가", isSelected: false), TagItem(tag: "화가", isSelected: false)]
-    
     @Published var recommendTagItemSelectCount: Int = 0
     @Published var tagFieldString: String = ""
-    var recommendTagItems = [TagItem(tag: "제품", isSelected: false), TagItem(tag: "공예", isSelected: false), TagItem(tag: "그래픽", isSelected: false), TagItem(tag: "회화", isSelected: false), TagItem(tag: "UX", isSelected: false), TagItem(tag: "UI", isSelected: false), TagItem(tag: "모던", isSelected: false), TagItem(tag: "클래식", isSelected: false), TagItem(tag: "오브제", isSelected: false), TagItem(tag: "감성적인", isSelected: false), TagItem(tag: "심플", isSelected: false), TagItem(tag: "귀여운", isSelected: false), TagItem(tag: "키치한", isSelected: false), TagItem(tag: "힙한", isSelected: false), TagItem(tag: "레트로", isSelected: false), TagItem(tag: "트렌디", isSelected: false), TagItem(tag: "부드러운", isSelected: false), TagItem(tag: "몽환적인", isSelected: false), TagItem(tag: "실용적인", isSelected: false), TagItem(tag: "빈티지", isSelected: false), TagItem(tag: "화려한", isSelected: false), TagItem(tag: "재활용", isSelected: false), TagItem(tag: "친환경", isSelected: false), TagItem(tag: "지속가능한", isSelected: false), TagItem(tag: "밝은", isSelected: false), TagItem(tag: "어두운", isSelected: false), TagItem(tag: "차가운", isSelected: false), TagItem(tag: "따뜻한", isSelected: false)]
-    
-    
-    // 원본 유저 데이터
-    let user: PlainUser
-    
-    @Published var isLoading: Bool = false
+    var categoryTagItems: [TagItem]
+    var recommendTagItems: [TagItem]
     var originalProfileImage: UIImage?
     var originalBackgroundImage: UIImage?
     let shouldUpdateImageView: PassthroughSubject<Void, Never> = .init()
-    
     var isProfileCropEnabled: Bool {
         user.profileImageUrl != nil
     }
-    
     var isBackgroundCropEnabled: Bool {
         user.backgroundImageUrl != nil
     }
     
-    init(coordinator: MyPageCoordinator, user: PlainUser) {
-        self.coordinator = coordinator
+    init(user: PlainUser) {
         self.user = user
-        initCategoryTags()
-        initRecommendTags()
+        let jobTagList = JobTags.tagList
+        let RecommendTagList = RecommendTags.tagList
+        self.categoryTagItems = TagItemConverter(tagList: jobTagList).getTagItems()
+        self.recommendTagItems = TagItemConverter(tagList: RecommendTagList).getTagItems()
+        setUpCategoryTagItems()
+        setUpRecommendTagItems()
         downloadProfileImage()
         downloadBackgroundImage()
     }
     
-    
-    // MARK: - Functions
-    private func initCategoryTags() {
+    private func setUpCategoryTagItems() {
         for i in 0..<categoryTagItems.count {
-            guard let tag = categoryTagItems[i].tag else { return }
-            if user.jobs.contains(tag) {
-                categoryTagItems[i].isSelected = true
-            }
+            guard let tag = categoryTagItems[i].tag, user.jobs.contains(tag) else { continue }
+            categoryTagItems[i].isSelected = true
         }
         updateCategoryTagItemSelectCount()
     }
     
-    private func initRecommendTags() {
+    private func setUpRecommendTagItems() {
         for i in 0..<recommendTagItems.count {
-            guard let tag = recommendTagItems[i].tag else { return }
-            if user.tags.contains(tag) {
-                recommendTagItems[i].isSelected = true
-            }
+            guard let tag = recommendTagItems[i].tag, user.tags.contains(tag) else { continue }
+            recommendTagItems[i].isSelected = true
         }
-        
-        for e in user.tags {
-            if e != user.tags.last {
-                tagFieldString += "\(e), "
-            } else {
-                tagFieldString += "\(e)"
-            }
-        }
-        
+        setUpTagFieldText()
         updateRecommendTagItemSelectCount()
+    }
+    
+    private func setUpTagFieldText() {
+        var tagFieldString = ""
+        for e in user.tags {
+            tagFieldString += (e == user.tags.last) ? "\(e)" : "\(e), "
+        }
+        self.tagFieldString = tagFieldString
     }
     
     func updateCategoryTagSelection(indexPath: IndexPath, isSelected: Bool) {
@@ -78,53 +65,51 @@ final class MyPageProfileEditViewModel {
         updateCategoryTagItemSelectCount()
     }
     
-    func updateRecommendTagSelection(indexPath: IndexPath, isSelected: Bool) {
-        recommendTagItems[indexPath.row].isSelected = isSelected
-        
-        // 선택된 추천태그 문자열
-        let tagString = recommendTagItems[indexPath.row].tag ?? ""
-        
-        if isSelected {
-            tagFieldString += tagFieldString.isEmpty ? tagString : ", \(tagString)" // 추천태그 추가
-        } else {
-            // 추천태그 제거
-            if let range = tagFieldString.range(of: tagString) {
-                var lb = range.lowerBound
-                var ub = range.upperBound
-                
-                // 추천태그가 중간, 마지막 위치일 때 좌측 ","를 만나는 범위까지 문자열 삭제
-                if lb != tagFieldString.startIndex {
-                    while true {
-                        if lb == tagFieldString.startIndex {
-                            break
-                        }
-                        if tagFieldString[lb] != "," {
-                            lb = tagFieldString.index(lb, offsetBy: -1)
-                        } else {
-                            break
-                        }
-                    }
-                    tagFieldString.replaceSubrange(lb..<range.upperBound, with: "")
-                } else {
-                    // 추천태그가 첫번째 위치일 때 우측 "," & 공백을 제외한 문제열을 만날 때까지 삭제
-                    while true {
-                        if ub == tagFieldString.endIndex {
-                            break
-                        }
-                        if tagFieldString[ub] == "," || tagFieldString[ub] == " " {
-                            ub = tagFieldString.index(ub, offsetBy: +1)
-                        } else {
-                            break
-                        }
-                    }
-                    tagFieldString.replaceSubrange(tagFieldString.startIndex..<ub, with: "")
-                }
-            }
-        }
-        updateRecommendTagItemSelectCount() // 추천태그 선택 변경으로 인한 count update
+    func shouldAddRecommendTagItem() -> Bool {
+        let maxRecommendTagCount = 3
+        return recommendTagItemSelectCount < maxRecommendTagCount
     }
     
-    // 텍스트 필드 ',' 기준으로 태그 개수 카운트
+    func shouldAddCategoryTagItem() -> Bool {
+        let maxCategoryTagCount = 2
+        return categoryTagItemSelectCount < maxCategoryTagCount
+    }
+    
+    func updateRecommendTagSelection(indexPath: IndexPath, isSelected: Bool) {
+        recommendTagItems[indexPath.row].isSelected = isSelected
+        let tagString = recommendTagItems[indexPath.row].tag ?? ""
+        if isSelected {
+            addTagToTagFieldString(with: tagString)
+        } else {
+            removeTagFromTagFieldString(target: tagString)
+        }
+        updateRecommendTagItemSelectCount()
+    }
+    
+    private func addTagToTagFieldString(with tagString: String) {
+        if tagFieldString.isEmpty {
+            tagFieldString += tagString
+        } else {
+            tagFieldString += ", \(tagString)"
+        }
+    }
+    
+    private func removeTagFromTagFieldString(target tagString: String) {
+        let currentTags = tagFieldString
+            .components(separatedBy: ",")
+            .map { $0.trimmingCharacters(in: [" "]) }
+        let newTags = currentTags.filter { $0 != tagString }
+        var newTagFieldString = ""
+        for tag in newTags {
+            if tag == newTags.last {
+                newTagFieldString += tag
+            } else {
+                newTagFieldString += "\(tag), "
+            }
+        }
+        tagFieldString = newTagFieldString
+    }
+    
     private func updateRecommendTagItemSelectCount() {
         if tagFieldString.isEmpty {
             recommendTagItemSelectCount = 0
@@ -134,36 +119,33 @@ final class MyPageProfileEditViewModel {
     }
     
     private func updateCategoryTagItemSelectCount() {
-        categoryTagItemSelectCount = categoryTagItems.filter{$0.isSelected}.count
+        categoryTagItemSelectCount = categoryTagItems
+            .filter { $0.isSelected }
+            .count
     }
     
-    // 유저의 텍스트필드 입력에 따른 뷰모델 및 UI 동기화
-    func tagFieldChangedFromUser() {
+    func updateRecommendTagSelectionFromUserTagFieldEditing() {
         if !tagFieldString.isEmpty {
-            let tags = tagFieldString.components(separatedBy: ",").map{$0.trimmingCharacters(in: .whitespaces)}
-            
+            let tags = tagFieldString
+                .components(separatedBy: ",")
+                .map{ $0.trimmingCharacters(in: .whitespaces) }
             for i in 0..<recommendTagItems.count {
-                let idx = tags.firstIndex(of: recommendTagItems[i].tag ?? "") ?? -1
-                recommendTagItems[i].isSelected = (idx != -1)
+                guard let recommendTag = recommendTagItems[i].tag else { continue }
+                recommendTagItems[i].isSelected = tags.contains(recommendTag)
             }
         }
         updateRecommendTagItemSelectCount()
     }
     
-    func validateEmail(text: String) -> Bool {
-        if text.isEmpty { return true }
+    func checkEmailValidation(email: String) -> Bool {
+        if email.isEmpty { return true }
         let pattern = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}\\@[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+"
-        guard let _ = text.range(of: pattern, options: .regularExpression) else {
+        if let _ = email.range(of: pattern, options: .regularExpression) {
+            return true
+        } else {
             return false
         }
-        return true
     }
-    
-}
-
-
-// MARK: - API
-extension MyPageProfileEditViewModel {
     
     // true: 중복, false: 사용가능
     func checkDuplicateNickname(nickname: String) async throws -> Bool {
@@ -223,22 +205,13 @@ extension MyPageProfileEditViewModel {
             }
         }
     }
-}
-
-
-// MARK: - Navigation
-extension MyPageProfileEditViewModel {
     
     @MainActor
     func showMain() {
-        coordinator.navigate(to: .MyPageMain)
+        coordinator?.navigate(to: .MyPageMain)
     }
     
-}
-
-// MARK: - Image
-extension MyPageProfileEditViewModel {
-    func downloadImage(from urlString: String) async throws -> UIImage? {
+    private func downloadImage(from urlString: String) async throws -> UIImage? {
         guard let url = URL(string: urlString) else {
             return nil
         }
@@ -257,19 +230,27 @@ extension MyPageProfileEditViewModel {
     
     func downloadProfileImage() {
         Task {
-            guard let profileImageUrl = user.profileImageUrl else { return }
-            let profileImage = try await downloadImage(from: profileImageUrl)
-            self.originalProfileImage = profileImage
-            self.shouldUpdateImageView.send()
+            do {
+                guard let profileImageUrl = user.profileImageUrl else { return }
+                let profileImage = try await downloadImage(from: profileImageUrl)
+                self.originalProfileImage = profileImage
+                self.shouldUpdateImageView.send()
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
     
     func downloadBackgroundImage() {
         Task {
-            guard let backgroundImageUrl = user.backgroundImageUrl else { return }
-            let backgroundImage = try await downloadImage(from: backgroundImageUrl)
-            self.originalBackgroundImage = backgroundImage
-            self.shouldUpdateImageView.send()
+            do {
+                guard let backgroundImageUrl = user.backgroundImageUrl else { return }
+                let backgroundImage = try await downloadImage(from: backgroundImageUrl)
+                self.originalBackgroundImage = backgroundImage
+                self.shouldUpdateImageView.send()
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
 }
