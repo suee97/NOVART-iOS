@@ -150,9 +150,7 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        Task { @MainActor in
-            viewModel.showSetNicknameSceneIfNeeded()
-        }
+        viewModel.shouldShowNicknameSceneIfNeeded()
     }
     
     override func setupNavigationBar() {
@@ -260,7 +258,7 @@ private extension HomeViewController {
 // MARK: - CollectionViewDelegate
 extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewModel.didSelectProductAt(index: indexPath.row)
+        viewModel.didTapProduct(index: indexPath.row)
     }
 }
 
@@ -277,6 +275,6 @@ extension HomeViewController: UIScrollViewDelegate {
 extension HomeViewController: FilterMenuViewDelegate {
     func didTapRowAt(menuView: FilterMenuView, category: CategoryType) {
         viewModel.selectedCategory = category
-        viewModel.fetchFeedItems(category: category, lastId: nil)
+        viewModel.fetchProducts(category: category, lastID: nil)
     }
 }
