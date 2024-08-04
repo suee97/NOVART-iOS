@@ -12,13 +12,12 @@ struct HomeRepository: HomeRepositoryInterface {
         try await APIClient.fetchFeed(category: category, lastId: lastProductID)
     }
     
-    func likeProduct(productID: Int64?) async throws {
-        
+    func likeProduct(productID: Int64) async throws {
+        _ = try await APIClient.likeProduct(id: productID)
     }
     
-    func unlikeProduct(productID: Int64?) async throws {
-        
+    func unlikeProduct(productID: Int64) async throws {
+        _ = try await APIClient.cancelLikeProduct(id: productID)
     }
-    
-    
+
 }

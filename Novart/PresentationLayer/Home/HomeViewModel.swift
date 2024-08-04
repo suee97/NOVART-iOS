@@ -16,14 +16,14 @@ final class HomeViewModel {
     let unlikeProductUseCase: UnlikeProductUseCase
     let fetchProductsUseCase: FetchProductsUseCase
     
-    var feedDataSubject: PassthroughSubject<([FeedItemViewModel], Bool), Never> = .init()
+    var feedDataSubject: PassthroughSubject<([HomeProductItemViewModel], Bool), Never> = .init()
     var selectedCategory: CategoryType = .all
     
     private var isPaginationFinished: Bool?
     private var fetchedPages = [Int64]()
     private var isFetching = false
     
-    private var feedData: [FeedItemViewModel] = []
+    private var feedData: [HomeProductItemViewModel] = []
     
     init(coordinator: HomeCoordinator, repository: HomeRepositoryInterface) {
         self.coordinator = coordinator
@@ -92,7 +92,7 @@ extension HomeViewModel {
         do {
             try await Task.sleep(seconds: 1) // Test
             let items = try await fetchProductsUseCase.execute(category: selectedCategory, lastProductID: nil)
-            feedData = items.map { FeedItemViewModel($0) }
+            feedData = items.map { HomeProductItemViewModel($0) }
             feedDataSubject.send((feedData, true))
             isPaginationFinished = (items.isEmpty)
             fetchedPages.removeAll()
@@ -101,6 +101,11 @@ extension HomeViewModel {
         }
         isFetching = false
     }
+    
+    func fetchItem(for id: Int) -> Int {
+        return id
+    }
+
 }
 
 // MARK: - Navigation
@@ -141,20 +146,15 @@ private extension HomeViewModel {
     }
 }
 
-extension HomeViewModel {
-    func fetchItem(for id: Int) -> Int {
-        return id
-    }
-
-
-    private func fetchFeedItems(category: CategoryType, lastId: Int64?, scrollToTop: Bool = true) {
+private extension HomeViewModel {
+    func fetchFeedItems(category: CategoryType, lastId: Int64?, scrollToTop: Bool = true) {
         guard !isFetching else { return }
         if let lastId { fetchedPages.append(lastId) }
         Task {
             isFetching = true
             do {
                 let items = try await fetchProductsUseCase.execute(category: category, lastProductID: lastId)
-                feedData = items.map { FeedItemViewModel($0) }
+                feedData = items.map { HomeProductItemViewModel($0) }
                 feedDataSubject.send((feedData, scrollToTop))
                 isPaginationFinished = (items.isEmpty)
             } catch {
@@ -164,13 +164,13 @@ extension HomeViewModel {
         }
     }
     
-    private func loadMoreItems() {
+    func loadMoreItems() {
         guard !isFetching else { return }
         Task {
             do {
                 isFetching = true
                 let items = try await fetchProductsUseCase.execute(category: selectedCategory, lastProductID: feedData.last?.id)
-                feedData.append(contentsOf: items.map { FeedItemViewModel($0) })
+                feedData.append(contentsOf: items.map { HomeProductItemViewModel($0) })
                 feedDataSubject.send((feedData, false))
                 isPaginationFinished = (items.isEmpty)
             } catch {
@@ -180,7 +180,7 @@ extension HomeViewModel {
         }
     }
     
-    private func loadMoreProducts() {
+    func loadMoreProducts() {
         guard let isPaginationFinished, !isPaginationFinished, let lastId = feedData.last?.id else { return }
         let fetched = fetchedPages.contains(lastId)
         if fetched { return }

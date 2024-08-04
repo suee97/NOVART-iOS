@@ -123,15 +123,15 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
     // MARK: - Properties
     
     private var viewModel: HomeViewModel
-    private var dataSource: HomeDataSource
+    private var dataSource: HomeDataSource?
     var refreshControl: PlainRefreshControl
     private var subscriptions: Set<AnyCancellable> = .init()
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
-        self.dataSource = HomeDataSource(collectionView: collectionView)
         self.refreshControl = PlainRefreshControl()
         super.init()
+        self.dataSource = HomeDataSource(collectionView: collectionView, delegate: self)
     }
     
     required init?(coder: NSCoder) {
@@ -191,8 +191,8 @@ final class HomeViewController: BaseViewController, PullToRefreshProtocol {
         viewModel.feedDataSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] (items, scrollToTop) in
-                guard let self else { return }
-                self.dataSource.apply(items)
+                guard let self, let dataSource else { return }
+                dataSource.apply(items)
                 self.collectionView.isHidden = items.isEmpty
                 self.emptyContentView.isHidden = !items.isEmpty
                 if scrollToTop {
@@ -276,5 +276,12 @@ extension HomeViewController: FilterMenuViewDelegate {
     func didTapRowAt(menuView: FilterMenuView, category: CategoryType) {
         viewModel.selectedCategory = category
         viewModel.fetchProducts(category: category, lastID: nil)
+    }
+}
+
+// MARK: - HomeProductCellDelegate
+extension HomeViewController: HomeProductCellDelegate {
+    func didTapLikeButton(productID: Int64, like: Bool) {
+        viewModel.didTapProductLikeButton(productID: productID, like: like)
     }
 }

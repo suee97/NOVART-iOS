@@ -7,10 +7,10 @@
 
 import UIKit
 
-typealias HomeDataSourceType = UICollectionViewDiffableDataSource<HomeDataSource.Section, FeedItemViewModel>
+typealias HomeDataSourceType = UICollectionViewDiffableDataSource<HomeDataSource.Section, HomeProductItemViewModel>
 
-private typealias HomeDataSourceSnapshot = NSDiffableDataSourceSnapshot<HomeDataSource.Section, FeedItemViewModel>
-private typealias HomeFeedCellRegistration = UICollectionView.CellRegistration<HomeFeedCell, FeedItemViewModel>
+private typealias HomeDataSourceSnapshot = NSDiffableDataSourceSnapshot<HomeDataSource.Section, HomeProductItemViewModel>
+private typealias HomeFeedCellRegistration = UICollectionView.CellRegistration<HomeProductCell, HomeProductItemViewModel>
 
 final class HomeDataSource: HomeDataSourceType {
 
@@ -19,9 +19,9 @@ final class HomeDataSource: HomeDataSourceType {
         case feed
     }
     
-    init(collectionView: UICollectionView) {
+    init(collectionView: UICollectionView, delegate: HomeProductCellDelegate) {
         let homeFeedCellRegistration = HomeFeedCellRegistration { cell, _, item in
-            cell.update(with: item)
+            cell.update(with: item, delegate: delegate)
         }
         
         super.init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
@@ -29,7 +29,7 @@ final class HomeDataSource: HomeDataSourceType {
         }
     }
     
-    func apply(_ items: [FeedItemViewModel]) {
+    func apply(_ items: [HomeProductItemViewModel]) {
         var snapshot = snapshot()
         
         snapshot.deleteSections([.feed])
