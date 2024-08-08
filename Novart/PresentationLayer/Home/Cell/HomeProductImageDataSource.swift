@@ -1,5 +1,5 @@
 //
-//  FeedImageDataSource.swift
+//  HomeProductImageDataSource.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/08/19.
@@ -7,22 +7,20 @@
 
 import UIKit
 
-typealias FeedImageDataSourceType = UICollectionViewDiffableDataSource<FeedImageDataSource.Section, Int>
+typealias HomeProductImageDataSourceType = UICollectionViewDiffableDataSource<HomeProductImageDataSource.Section, Int>
 
-private typealias FeedImageDataSourceSnapshot = NSDiffableDataSourceSnapshot<HomeDataSource.Section, Int>
-private typealias FeedImageCellRegistration = UICollectionView.CellRegistration<FeedImageCell, Int>
+private typealias HomeProductImageDataSourceSnapshot = NSDiffableDataSourceSnapshot<HomeDataSource.Section, Int>
+private typealias HomeProductImageCellRegistration = UICollectionView.CellRegistration<HomeProductImageCell, Int>
 
-final class FeedImageDataSource: FeedImageDataSourceType {
+final class HomeProductImageDataSource: HomeProductImageDataSourceType {
 
     // MARK: - Section
     enum Section: Int, CaseIterable, Hashable {
         case image
     }
     
-//    let dataProvid
-    
     init(collectionView: UICollectionView, dataProvider: @escaping ((Int) -> String)) {
-        let feedImageCellRegistration = FeedImageCellRegistration { cell, _, item in
+        let feedImageCellRegistration = HomeProductImageCellRegistration { cell, _, item in
             let imageUrl = dataProvider(item)
             cell.update(with: imageUrl)
         }

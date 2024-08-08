@@ -8,8 +8,8 @@
 import Foundation
 import Combine
 
-final class FeedItemViewModel: Identifiable, Hashable {
-    static func == (lhs: FeedItemViewModel, rhs: FeedItemViewModel) -> Bool {
+final class HomeProductItemViewModel: Identifiable, Hashable {
+    static func == (lhs: HomeProductItemViewModel, rhs: HomeProductItemViewModel) -> Bool {
         lhs.id == rhs.id
     }
     
@@ -45,40 +45,6 @@ final class FeedItemViewModel: Identifiable, Hashable {
         }
         self.category = item.category
         self.liked = item.likes
-    }
-    
-    func didTapLikeButton() {
-        if !Authentication.shared.isLoggedIn {
-            NotificationCenter.default.post(name: .init(NotificationKeys.showLoginModalKey), object: nil)
-        } else {
-            if liked {
-                liked = false
-                makeCancelLikeRequest()
-            } else {
-                liked = true
-                makeLikeRequest()
-            }
-        }
-    }
-    
-    func makeLikeRequest() {
-        Task {
-            do {
-                try await productInteractor.likeProduct(id: id)
-            } catch {
-                liked = false
-            }
-        }
-    }
-    
-    func makeCancelLikeRequest() {
-        Task {
-            do {
-                try await productInteractor.cancelLikeProduct(id: id)
-            } catch {
-                liked = true
-            }
-        }
     }
     
     func changeLikeStatue(likeStatus: HomeFeedLikeStatusModel) {

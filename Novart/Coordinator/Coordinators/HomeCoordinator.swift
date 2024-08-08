@@ -10,7 +10,7 @@ import UIKit
 final class HomeCoordinator: BaseStackCoordinator<HomeStep>, LoginModalPresentableCoordinator {
     override func start() {
         super.start()
-        let viewModel = HomeViewModel(coordinator: self)
+        let viewModel = HomeViewModel(coordinator: self, repository: HomeRepository())
         let viewController = HomeViewController(viewModel: viewModel)
         
         let tabBarItem = UITabBarItem(
