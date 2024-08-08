@@ -1,5 +1,5 @@
 //
-//  FeedImageCell.swift
+//  HomeProductImageCell.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/08/19.
@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-final class FeedImageCell: UICollectionViewCell {
+final class HomeProductImageCell: UICollectionViewCell {
     
     // MARK: - UI
     

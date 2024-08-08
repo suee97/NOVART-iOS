@@ -1,5 +1,5 @@
 //
-//  HomeFeedCell.swift
+//  HomeProductCell.swift
 //  Novart
 //
 //  Created by Jinwook Huh on 2023/08/19.
@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class HomeFeedCell: UICollectionViewCell {
+final class HomeProductCell: UICollectionViewCell {
     
     // MARK: - Constants
     
@@ -90,8 +90,18 @@ final class HomeFeedCell: UICollectionViewCell {
         button.setImage(UIImage(named: "icon_heart"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addAction(UIAction(handler: { [weak self] _ in
-            guard let self else { return }
-            self.viewModel?.didTapLikeButton()
+            guard let self, let viewModel else { return }
+            if !Authentication.shared.isLoggedIn {
+                NotificationCenter.default.post(name: .init(NotificationKeys.showLoginModalKey), object: nil)
+            } else {
+                if viewModel.liked {
+                    viewModel.liked = false
+                    self.delegate?.didTapLikeButton(productID: viewModel.id, like: false)
+                } else {
+                    viewModel.liked = true
+                    self.delegate?.didTapLikeButton(productID: viewModel.id, like: true)
+                }
+            }
         }), for: .touchUpInside)
         NSLayoutConstraint.activate([
             button.widthAnchor.constraint(equalToConstant: 24),
@@ -124,8 +134,9 @@ final class HomeFeedCell: UICollectionViewCell {
     
     // MARK: - Properties
     
-    private var dataSource: FeedImageDataSource?
-    private var viewModel: FeedItemViewModel?
+    private var dataSource: HomeProductImageDataSource?
+    private var viewModel: HomeProductItemViewModel?
+    private weak var delegate: HomeProductCellDelegate?
     private var cancellables: Set<AnyCancellable> = .init()
     private var setupComplete: Bool = false
     
@@ -200,15 +211,16 @@ final class HomeFeedCell: UICollectionViewCell {
         ])
     }
     
-    func update(with item: FeedItemViewModel) {
+    func update(with item: HomeProductItemViewModel, delegate: HomeProductCellDelegate) {
         cancellables.removeAll()
         
+        self.delegate = delegate
         viewModel = item
         itemNameLabel.text = item.name
         artistNameLabel.text = item.artist
         categoryBadge.text = item.category.rawValue
         pageControl.numberOfPages = item.imageUrls.count
-        dataSource = FeedImageDataSource(collectionView: collectionView, dataProvider: item.dataProvider(index:))
+        dataSource = HomeProductImageDataSource(collectionView: collectionView, dataProvider: item.dataProvider(index:))
         let applyData = Array(0..<item.loopedImageUrls.count)
         dataSource?.apply(applyData)
         
@@ -242,6 +254,7 @@ final class HomeFeedCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         dataSource = nil
+        delegate = nil
         setupComplete = false
     }
     
@@ -254,7 +267,7 @@ final class HomeFeedCell: UICollectionViewCell {
 }
 
 // MARK: - CollectionViewLayout
-private extension HomeFeedCell {
+private extension HomeProductCell {
     var imageSectionLayout: NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(Constants.Image.itemWidth), heightDimension: .absolute(Constants.Image.itemHeight))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -299,7 +312,7 @@ private extension HomeFeedCell {
 }
 
 // MARK: - CollectionViewDelegate
-extension HomeFeedCell: UICollectionViewDelegate, UIScrollViewDelegate {
+extension HomeProductCell: UICollectionViewDelegate, UIScrollViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     }
     
