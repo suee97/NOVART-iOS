@@ -297,6 +297,7 @@
 		5B41E0B22C65CFF000BA024A /* MyPageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0B12C65CFEA00BA024A /* MyPageRepository.swift */; };
 		5B41E0B42C65D00D00BA024A /* MyPageRepositoryInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0B32C65D00400BA024A /* MyPageRepositoryInterface.swift */; };
 		5B41E0B72C65D40100BA024A /* FetchNotificationCheckStatusUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0B62C65D3FC00BA024A /* FetchNotificationCheckStatusUseCase.swift */; };
+		5B41E0BF2C66997700BA024A /* Kingfisher+Downsampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0BE2C66997000BA024A /* Kingfisher+Downsampling.swift */; };
 		5B5AC7E52C465E3E0037A0DB /* JobTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5AC7E42C465E3E0037A0DB /* JobTags.swift */; };
 		5B5AC7E72C465EDD0037A0DB /* RecommendTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5AC7E62C465EDD0037A0DB /* RecommendTags.swift */; };
 		5B5AC7F72C50E7A10037A0DB /* TagItemConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5AC7F62C50E7A10037A0DB /* TagItemConverter.swift */; };
@@ -655,6 +656,7 @@
 		5B41E0B12C65CFEA00BA024A /* MyPageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageRepository.swift; sourceTree = "<group>"; };
 		5B41E0B32C65D00400BA024A /* MyPageRepositoryInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageRepositoryInterface.swift; sourceTree = "<group>"; };
 		5B41E0B62C65D3FC00BA024A /* FetchNotificationCheckStatusUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchNotificationCheckStatusUseCase.swift; sourceTree = "<group>"; };
+		5B41E0BE2C66997000BA024A /* Kingfisher+Downsampling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kingfisher+Downsampling.swift"; sourceTree = "<group>"; };
 		5B5AC7E42C465E3E0037A0DB /* JobTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobTags.swift; sourceTree = "<group>"; };
 		5B5AC7E62C465EDD0037A0DB /* RecommendTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTags.swift; sourceTree = "<group>"; };
 		5B5AC7F62C50E7A10037A0DB /* TagItemConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagItemConverter.swift; sourceTree = "<group>"; };
@@ -1453,6 +1455,7 @@
 		0EE0192A2A5146C900389A95 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				5B41E0BB2C66996300BA024A /* Kingfisher */,
 				0EE1F6CA2B80D78700756891 /* Task */,
 				0E6C65982B417716005E269E /* Date */,
 				0EE0192C2A5146E100389A95 /* UIKit */,
@@ -1888,6 +1891,14 @@
 			path = MyPage;
 			sourceTree = "<group>";
 		};
+		5B41E0BB2C66996300BA024A /* Kingfisher */ = {
+			isa = PBXGroup;
+			children = (
+				5B41E0BE2C66997000BA024A /* Kingfisher+Downsampling.swift */,
+			);
+			path = Kingfisher;
+			sourceTree = "<group>";
+		};
 		5B5AC7FA2C57771C0037A0DB /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -2210,6 +2221,7 @@
 				0E760E882B1B111F0051CB6C /* ExhibitionDetailItem.swift in Sources */,
 				0E43AB562B78E5FC0087922A /* BlockCoordinator.swift in Sources */,
 				5B5AC7E72C465EDD0037A0DB /* RecommendTags.swift in Sources */,
+				5B41E0BF2C66997700BA024A /* Kingfisher+Downsampling.swift in Sources */,
 				0E1E21202AE533F200F15009 /* ProductDetailInteractor.swift in Sources */,
 				0EE019592A56F18500389A95 /* SearchCoordinator.swift in Sources */,
 				5B196E4F2C0C9E5F00898B88 /* NotificationCheckStatus.swift in Sources */,
