@@ -176,7 +176,7 @@ final class MyPageViewController: BaseViewController {
         } else if viewModel.userState == .me,
                   !viewModel.isStartAsPush,
                   viewModel.isInitialLoadFinished {
-            viewModel.getAllItems()
+            viewModel.setupData()
         }
     }
     
@@ -244,7 +244,7 @@ final class MyPageViewController: BaseViewController {
                 }
         }).store(in: &cancellables)
         
-        Publishers.CombineLatest4(viewModel.$interests, viewModel.$followings, viewModel.$works, viewModel.$exhibitions)
+        viewModel.shouldReloadCollectionViewSubject
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
@@ -521,7 +521,7 @@ final class MyPageViewController: BaseViewController {
     }()
     
     override func setupView() {
-        viewModel.getAllItems()
+        viewModel.setupData()
         viewModel.getOtherUserInfo()
     
         let safeArea = view.safeAreaLayoutGuide
