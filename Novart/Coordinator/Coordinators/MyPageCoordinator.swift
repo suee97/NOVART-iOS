@@ -12,7 +12,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     var userId: Int64?
     
     override func start() {
-        let viewModel = MyPageViewModel(coordinator: self, userId: nil) // MARK: - TEST
+        let viewModel = MyPageViewModel(coordinator: self, userId: nil, repository: MyPageRepository()) // MARK: - TEST
         let viewController = MyPageViewController(viewModel: viewModel)
         
         let tabBarItem = UITabBarItem(
@@ -28,7 +28,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     
     @MainActor
     func startAsPush(selectedCategory: MyPageCategory = .Work) {
-        let viewModel = MyPageViewModel(coordinator: self, userId: userId)
+        let viewModel = MyPageViewModel(coordinator: self, userId: userId, repository: MyPageRepository())
         viewModel.setCategory(selectedCategory)
         let viewController = MyPageViewController(viewModel: viewModel)
         viewModel.isStartAsPush = true
@@ -136,7 +136,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     
     @MainActor
     private func showArtistProfile(userId: Int64) {
-        let viewModel = MyPageViewModel(coordinator: self, userId: userId)
+        let viewModel = MyPageViewModel(coordinator: self, userId: userId, repository: MyPageRepository())
         viewModel.isStartAsPush = true
         let viewController = MyPageViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
