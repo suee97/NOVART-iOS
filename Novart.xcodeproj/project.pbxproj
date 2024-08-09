@@ -1513,14 +1513,10 @@
 		0EE0195A2A56F1BD00389A95 /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
-				5BC2244B2B188DC80032D3CE /* MyPageNotification */,
-				5BB9F1682AD90F3500C347F3 /* MyPageSetting */,
-				5BDD4A422AD48BF800937352 /* MyPageProfileEdit */,
-				0EE019462A56EEFE00389A95 /* MyPageViewController.swift */,
-				5BDD4A102AC955A600937352 /* MyPageViewModel.swift */,
-				5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */,
-				5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */,
-				5BDD4A152AC955C100937352 /* Cells */,
+				5B41E0B02C65CD9900BA024A /* Main */,
+				5BC2244B2B188DC80032D3CE /* Notification */,
+				5BB9F1682AD90F3500C347F3 /* Setting */,
+				5BDD4A422AD48BF800937352 /* ProfileEdit */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -1740,17 +1736,17 @@
 		0EE8E5AB2C5DFDAE007D1F14 /* DataLayer */ = {
 			isa = PBXGroup;
 			children = (
-				0EE8E5AC2C5DFDC2007D1F14 /* Repository */,
+				0EE8E5AC2C5DFDC2007D1F14 /* Repositories */,
 			);
 			path = DataLayer;
 			sourceTree = "<group>";
 		};
-		0EE8E5AC2C5DFDC2007D1F14 /* Repository */ = {
+		0EE8E5AC2C5DFDC2007D1F14 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
 				0EE8E5AE2C5E0A79007D1F14 /* HomeRepository.swift */,
 			);
-			path = Repository;
+			path = Repositories;
 			sourceTree = "<group>";
 		};
 		0EE8E5B32C5F311D007D1F14 /* Home */ = {
@@ -1863,6 +1859,18 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
+		5B41E0B02C65CD9900BA024A /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				5BDD4A152AC955C100937352 /* Cells */,
+				0EE019462A56EEFE00389A95 /* MyPageViewController.swift */,
+				5BDD4A102AC955A600937352 /* MyPageViewModel.swift */,
+				5BDD4A0E2AC955A600937352 /* MyPageHeaderView.swift */,
+				5BDD4A0D2AC955A600937352 /* MyPageCategoryButton.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
 		5B5AC7FA2C57771C0037A0DB /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -1928,7 +1936,7 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		5BB9F1682AD90F3500C347F3 /* MyPageSetting */ = {
+		5BB9F1682AD90F3500C347F3 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
 				5BB9F1692AD90F5000C347F3 /* MyPageSettingViewController.swift */,
@@ -1936,17 +1944,17 @@
 				5BB9F16D2ADD029500C347F3 /* ToggleSwitchView.swift */,
 				5BB9F16F2ADD177100C347F3 /* MyPageSettingViewModel.swift */,
 			);
-			path = MyPageSetting;
+			path = Setting;
 			sourceTree = "<group>";
 		};
-		5BC2244B2B188DC80032D3CE /* MyPageNotification */ = {
+		5BC2244B2B188DC80032D3CE /* Notification */ = {
 			isa = PBXGroup;
 			children = (
 				5BC224502B19C14D0032D3CE /* Cell */,
 				5BC2244C2B188E410032D3CE /* MyPageNotificationViewController.swift */,
 				5BC2244E2B188E870032D3CE /* MyPageNotificationViewModel.swift */,
 			);
-			path = MyPageNotification;
+			path = Notification;
 			sourceTree = "<group>";
 		};
 		5BC224502B19C14D0032D3CE /* Cell */ = {
@@ -1985,14 +1993,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		5BDD4A422AD48BF800937352 /* MyPageProfileEdit */ = {
+		5BDD4A422AD48BF800937352 /* ProfileEdit */ = {
 			isa = PBXGroup;
 			children = (
 				5BDD4A372AD25AC000937352 /* MyPageProfileEditViewController.swift */,
 				5BDD4A432AD48C9500937352 /* MyPageProfileEditViewModel.swift */,
 				5B5AC7F62C50E7A10037A0DB /* TagItemConverter.swift */,
 			);
-			path = MyPageProfileEdit;
+			path = ProfileEdit;
 			sourceTree = "<group>";
 		};
 		5BF624302B60E42000F502FE /* LoginModal */ = {
