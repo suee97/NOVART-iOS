@@ -22,6 +22,7 @@ final class MyPageViewModel {
     var isStartAsPush = false
     var isInitialLoadFinished = false
     var notificationCheckStatusSubject = PassthroughSubject<NotificationCheckStatus, Never>()
+    private let fetchNotificationCheckStatusUseCase: FetchNotificationCheckStatusUseCase
     
     let userId: Int64?
     @Published var otherUser: PlainUser?
@@ -40,9 +41,10 @@ final class MyPageViewModel {
     
     // userId가 nil인 경우: 마이페이지로 접근
     // userId가 nil이 아닌 경우: 다른 유저의 프로필 접근
-    init(coordinator: MyPageCoordinator, userId: Int64? = nil) {
+    init(coordinator: MyPageCoordinator, userId: Int64? = nil, repository: MyPageRepositoryInterface) {
         self.coordinator = coordinator
         self.userId = userId
+        self.fetchNotificationCheckStatusUseCase = .init(repository: repository)
     }
 }
 
@@ -113,7 +115,7 @@ extension MyPageViewModel {
                 self.exhibitions = exhibitions
                 
                 if userState == .me {
-                    let notificationCheckStatus = try await interactor.fetchNotificationCheckStatus()
+                    let notificationCheckStatus = try await fetchNotificationCheckStatusUseCase.execute()
                     notificationCheckStatusSubject.send(notificationCheckStatus)
                 }
                 
