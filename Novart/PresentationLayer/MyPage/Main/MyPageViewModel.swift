@@ -13,10 +13,11 @@ final class MyPageViewModel {
     private var interactor = MyPageDownloadInteractor()
     
     @Published private(set) var selectedCategory: MyPageCategory = .Work
-    @Published var interests = [ProductModel]()
-    @Published var followings = [ArtistModel]()
-    @Published var works = [MyPageWork]()
-    @Published var exhibitions = [ExhibitionModel]()
+    var interests = [ProductModel]()
+    var followings = [ArtistModel]()
+    var works = [MyPageWork]()
+    var exhibitions = [ExhibitionModel]()
+    var shouldReloadCollectionViewSubject = PassthroughSubject<Bool, Never>()
     var isInterestsEmpty = false
     var isFollowingsEmpty = false
     var isStartAsPush = false
@@ -48,7 +49,6 @@ final class MyPageViewModel {
     }
 }
 
-
 extension MyPageViewModel {
     func setCategory(_ category: MyPageCategory) {
         selectedCategory = category
@@ -59,73 +59,68 @@ extension MyPageViewModel {
         if let email, !email.isEmpty { return true }
         return false
     }
-}
-
-
-// MARK: API
-extension MyPageViewModel {
-    func getAllItems() {
-        var uid: Int64? = nil
-        switch userState {
-        case .loggedOut:
-            return
-        case .me:
-            uid = Authentication.shared.user?.id
-        case .other:
-            uid = self.userId
-        }
-        
-        guard let uid else { return }
-        
+    
+    func setupData() {
+        let userId = getUserId()
+        guard let userId else { return }
         Task {
             do {
-                async let interestsTask = interactor.fetchMyPageInterests(userId: uid)
-                async let followingsTask = interactor.fetchMyPageFollowings(userId: uid)
-                async let worksTask = interactor.fetchMyPageWorks(userId: uid)
-                async let exhibitionsTask = interactor.fetchMyPageExhibitions(userId: uid)
-                
-                var interests = [ProductModel]()
-                var followings = [ArtistModel]()
-                var works = [MyPageWork]()
-                var exhibitions = [ExhibitionModel]()
-                
-                (interests, followings, works, exhibitions) = try await (interestsTask, followingsTask, worksTask, exhibitionsTask)
-                
-                if interests.isEmpty {
-                    isInterestsEmpty = true
-                    if userState == .me {
-                        interests = try await interactor.fetchRecommendInterests()
-                    }
-                } else {
-                    isInterestsEmpty = false
-                }
-                
-                if followings.isEmpty {
-                    isFollowingsEmpty = true
-                    if userState == .me {
-                        followings = try await interactor.fetchRecommendFollowings()
-                    }
-                } else {
-                    isFollowingsEmpty = false
-                }
-                
-                self.interests = interests
-                self.followings = followings
-                self.works = works
-                self.exhibitions = exhibitions
-                
-                if userState == .me {
-                    let notificationCheckStatus = try await fetchNotificationCheckStatusUseCase.execute()
-                    notificationCheckStatusSubject.send(notificationCheckStatus)
-                }
-                
-                if !isInitialLoadFinished {
-                    isInitialLoadFinished = true
-//                    setCategory(.Work)
-                }
+                try await fetchAllCategoryContents(userId: userId)
+                try await fetchRecommendInterestContentsIfNeeded()
+                try await fetchRecommendFollowingContentsIfNeeded()
+                try await fetchNotificationCheckStatusIfNeeded()
+                changeInitialLoadFlagIfNeeded()
+                shouldReloadCollectionViewSubject.send(true)
             } catch {
                 print(error.localizedDescription)
             }
+        }
+    }
+    
+    private func getUserId() -> Int64? {
+        switch userState {
+        case .me:
+            return Authentication.shared.user?.id
+        case .other:
+            return userId
+        case .loggedOut:
+            return nil
+        }
+    }
+    
+    private func fetchAllCategoryContents(userId: Int64?) async throws {
+        guard let userId else { return }
+        async let interestsTask = interactor.fetchMyPageInterests(userId: userId)
+        async let followingsTask = interactor.fetchMyPageFollowings(userId: userId)
+        async let worksTask = interactor.fetchMyPageWorks(userId: userId)
+        async let exhibitionsTask = interactor.fetchMyPageExhibitions(userId: userId)
+        (interests, followings, works, exhibitions) = try await (interestsTask, followingsTask, worksTask, exhibitionsTask)
+    }
+    
+    private func fetchRecommendInterestContentsIfNeeded() async throws {
+        isInterestsEmpty = interests.isEmpty
+        if isInterestsEmpty && userState == .me {
+            interests = try await interactor.fetchRecommendInterests()
+        }
+    }
+    
+    private func fetchRecommendFollowingContentsIfNeeded() async throws {
+        isFollowingsEmpty = followings.isEmpty
+        if isFollowingsEmpty && userState == .me {
+            followings = try await interactor.fetchRecommendFollowings()
+        }
+    }
+    
+    private func fetchNotificationCheckStatusIfNeeded() async throws {
+        if userState == .me {
+            let notificationCheckStatus = try await fetchNotificationCheckStatusUseCase.execute()
+            notificationCheckStatusSubject.send(notificationCheckStatus)
+        }
+    }
+    
+    private func changeInitialLoadFlagIfNeeded() {
+        if !isInitialLoadFinished {
+            isInitialLoadFinished = true
         }
     }
     
@@ -162,7 +157,6 @@ extension MyPageViewModel {
     }
 }
 
-// MARK: Navigation
 extension MyPageViewModel {
     @MainActor
     func showProfileEdit() {
