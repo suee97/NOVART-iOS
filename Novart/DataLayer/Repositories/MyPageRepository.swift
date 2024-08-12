@@ -12,4 +12,12 @@ struct MyPageRepository: MyPageRepositoryInterface {
         async let exhibitionContents = APIClient.fetchMyPageExhibitions(userId: userId)
         return try await (interestContents, followingContents, workContents, exhibitionContents)
     }
+    
+    func fetchRecommendInterests() async throws -> [ProductModel] {
+        return try await APIClient.fetchRecommendInterests()
+    }
+    
+    func fetchRecommendFollowings() async throws -> [ArtistModel] {
+        return try await APIClient.fetchRecommendFollowings()
+    }
 }
