@@ -301,6 +301,9 @@
 		5B41E0C12C69E52100BA024A /* FetchAllCategoryContentsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0C02C69E51000BA024A /* FetchAllCategoryContentsUseCase.swift */; };
 		5B41E0C32C69E96100BA024A /* FetchRecommendInterestsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0C22C69E95A00BA024A /* FetchRecommendInterestsUseCase.swift */; };
 		5B41E0C72C69EA2D00BA024A /* FetchRecommendFollowingsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0C62C69EA2100BA024A /* FetchRecommendFollowingsUseCase.swift */; };
+		5B41E0C92C6A607A00BA024A /* FollowUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0C82C6A607700BA024A /* FollowUseCase.swift */; };
+		5B41E0CB2C6A608B00BA024A /* UnFollowUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0CA2C6A608700BA024A /* UnFollowUseCase.swift */; };
+		5B41E0CD2C6A61A200BA024A /* FetchUserInfoUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0CC2C6A619F00BA024A /* FetchUserInfoUseCase.swift */; };
 		5B5AC7E52C465E3E0037A0DB /* JobTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5AC7E42C465E3E0037A0DB /* JobTags.swift */; };
 		5B5AC7E72C465EDD0037A0DB /* RecommendTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5AC7E62C465EDD0037A0DB /* RecommendTags.swift */; };
 		5B5AC7F72C50E7A10037A0DB /* TagItemConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5AC7F62C50E7A10037A0DB /* TagItemConverter.swift */; };
@@ -663,6 +666,9 @@
 		5B41E0C02C69E51000BA024A /* FetchAllCategoryContentsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAllCategoryContentsUseCase.swift; sourceTree = "<group>"; };
 		5B41E0C22C69E95A00BA024A /* FetchRecommendInterestsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRecommendInterestsUseCase.swift; sourceTree = "<group>"; };
 		5B41E0C62C69EA2100BA024A /* FetchRecommendFollowingsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRecommendFollowingsUseCase.swift; sourceTree = "<group>"; };
+		5B41E0C82C6A607700BA024A /* FollowUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowUseCase.swift; sourceTree = "<group>"; };
+		5B41E0CA2C6A608700BA024A /* UnFollowUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnFollowUseCase.swift; sourceTree = "<group>"; };
+		5B41E0CC2C6A619F00BA024A /* FetchUserInfoUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchUserInfoUseCase.swift; sourceTree = "<group>"; };
 		5B5AC7E42C465E3E0037A0DB /* JobTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobTags.swift; sourceTree = "<group>"; };
 		5B5AC7E62C465EDD0037A0DB /* RecommendTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTags.swift; sourceTree = "<group>"; };
 		5B5AC7F62C50E7A10037A0DB /* TagItemConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagItemConverter.swift; sourceTree = "<group>"; };
@@ -1892,6 +1898,9 @@
 		5B41E0B52C65D22C00BA024A /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				5B41E0CC2C6A619F00BA024A /* FetchUserInfoUseCase.swift */,
+				5B41E0C82C6A607700BA024A /* FollowUseCase.swift */,
+				5B41E0CA2C6A608700BA024A /* UnFollowUseCase.swift */,
 				5B41E0C62C69EA2100BA024A /* FetchRecommendFollowingsUseCase.swift */,
 				5B41E0C22C69E95A00BA024A /* FetchRecommendInterestsUseCase.swift */,
 				5B41E0C02C69E51000BA024A /* FetchAllCategoryContentsUseCase.swift */,
@@ -2194,6 +2203,7 @@
 			files = (
 				0E6C65912B373612005E269E /* ProductInfoUploadViewController.swift in Sources */,
 				0E6C658F2B36CA82005E269E /* UploadMediaItem.swift in Sources */,
+				5B41E0C92C6A607A00BA024A /* FollowUseCase.swift in Sources */,
 				5BB933F42AF3A8BA000185D1 /* UIColor+HSB.swift in Sources */,
 				0EE1F6C92B80D46700756891 /* PassThroughView.swift in Sources */,
 				0E7FAD4E2B81EFA6003C100D /* AlertWindow.swift in Sources */,
@@ -2318,6 +2328,7 @@
 				0EE018F52A48175600389A95 /* AppCoordinator.swift in Sources */,
 				0E4173832B25A3FC0017AAD9 /* ProductImageUploadViewController.swift in Sources */,
 				5BB9F16C2ADCFF7E00C347F3 /* TextNavigationButton.swift in Sources */,
+				5B41E0CB2C6A608B00BA024A /* UnFollowUseCase.swift in Sources */,
 				0E7FAD4A2B81EFA6003C100D /* AlertViewController.swift in Sources */,
 				0EE8E5AA2C5DF481007D1F14 /* HomeRepositoryInterface.swift in Sources */,
 				0E91A3A42BAD7B1B00E02908 /* NotificationProductAction.swift in Sources */,
@@ -2504,6 +2515,7 @@
 				0EE0193B2A5157DF00389A95 /* UIColor+Hex.swift in Sources */,
 				0EAF1F322ADBC7BE00E9A10C /* ArtistSearchViewController.swift in Sources */,
 				0EE019D12A6BCD5400389A95 /* SetNameResponse.swift in Sources */,
+				5B41E0CD2C6A61A200BA024A /* FetchUserInfoUseCase.swift in Sources */,
 				0EE8E5AF2C5E0A79007D1F14 /* HomeRepository.swift in Sources */,
 				0E7FAD392B81C50B003C100D /* PlainProfileImageView.swift in Sources */,
 				0EE018E12A48156C00389A95 /* AppDelegate.swift in Sources */,

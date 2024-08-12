@@ -10,7 +10,6 @@ enum MyPageUserState {
 
 final class MyPageViewModel {
     private weak var coordinator: MyPageCoordinator?
-    private var interactor = MyPageDownloadInteractor()
     
     @Published private(set) var selectedCategory: MyPageCategory = .Work
     var interests = [ProductModel]()
@@ -27,6 +26,9 @@ final class MyPageViewModel {
     private let fetchAllCategoryContentsUseCase: FetchAllCategoryContentsUseCase
     private let fetchRecommendInterestsUseCase: FetchRecommendInterestsUseCase
     private let fetchRecommendFollowingsUseCase: FetchRecommendFollowingsUseCase
+    private let followUseCase: FollowUseCase
+    private let unFollowUseCase: UnFollowUseCase
+    private let fetchUserInfoUseCase: FetchUserInfoUseCase
     
     let userId: Int64?
     @Published var otherUser: PlainUser?
@@ -52,6 +54,9 @@ final class MyPageViewModel {
         self.fetchAllCategoryContentsUseCase = .init(repository: repository)
         self.fetchRecommendInterestsUseCase = .init(repository: repository)
         self.fetchRecommendFollowingsUseCase = .init(repository: repository)
+        self.followUseCase = .init(repository: repository)
+        self.unFollowUseCase = .init(repository: repository)
+        self.fetchUserInfoUseCase = .init(repository: repository)
     }
 }
 
@@ -127,11 +132,11 @@ extension MyPageViewModel {
         }
     }
     
-    func getOtherUserInfo() {
+    func fetchOtherUserInfo() {
         guard let userId else { return }
         Task {
             do {
-                otherUser = try await interactor.fetchMyPageUserInfo(userId: userId)
+                otherUser = try await fetchUserInfoUseCase.execute(userId: userId)
             } catch {
                 print(error.localizedDescription)
             }
@@ -139,11 +144,11 @@ extension MyPageViewModel {
     }
     
     func follow(userId: Int64) async throws -> EmptyResponseModel {
-        try await interactor.follow(userId: userId)
+        try await followUseCase.execute(userId: userId)
     }
     
     func unFollow(userId: Int64) async throws -> EmptyResponseModel {
-        try await interactor.unFollow(userId: userId)
+        try await unFollowUseCase.execute(userId: userId)
     }
     
     func getItemCount() -> Int {

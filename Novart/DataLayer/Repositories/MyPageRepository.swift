@@ -20,4 +20,16 @@ struct MyPageRepository: MyPageRepositoryInterface {
     func fetchRecommendFollowings() async throws -> [ArtistModel] {
         return try await APIClient.fetchRecommendFollowings()
     }
+    
+    func follow(userId: Int64) async throws -> EmptyResponseModel {
+        return try await APIClient.follow(userId: userId)
+    }
+    
+    func unFollow(userId: Int64) async throws -> EmptyResponseModel {
+        return try await APIClient.unFollow(userId: userId)
+    }
+    
+    func fetchUserInfo(userId: Int64) async throws -> PlainUser {
+        return try await APIClient.fetchMyPageUserInfo(userId: userId)
+    }
 }
