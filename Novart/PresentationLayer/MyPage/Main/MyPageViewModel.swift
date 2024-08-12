@@ -25,6 +25,8 @@ final class MyPageViewModel {
     var notificationCheckStatusSubject = PassthroughSubject<NotificationCheckStatus, Never>()
     private let fetchNotificationCheckStatusUseCase: FetchNotificationCheckStatusUseCase
     private let fetchAllCategoryContentsUseCase: FetchAllCategoryContentsUseCase
+    private let fetchRecommendInterestsUseCase: FetchRecommendInterestsUseCase
+    private let fetchRecommendFollowingsUseCase: FetchRecommendFollowingsUseCase
     
     let userId: Int64?
     @Published var otherUser: PlainUser?
@@ -48,6 +50,8 @@ final class MyPageViewModel {
         self.userId = userId
         self.fetchNotificationCheckStatusUseCase = .init(repository: repository)
         self.fetchAllCategoryContentsUseCase = .init(repository: repository)
+        self.fetchRecommendInterestsUseCase = .init(repository: repository)
+        self.fetchRecommendFollowingsUseCase = .init(repository: repository)
     }
 }
 
@@ -99,14 +103,14 @@ extension MyPageViewModel {
     private func fetchRecommendInterestContentsIfNeeded() async throws {
         isInterestsEmpty = interests.isEmpty
         if isInterestsEmpty && userState == .me {
-            interests = try await interactor.fetchRecommendInterests()
+            interests = try await fetchRecommendInterestsUseCase.execute()
         }
     }
     
     private func fetchRecommendFollowingContentsIfNeeded() async throws {
         isFollowingsEmpty = followings.isEmpty
         if isFollowingsEmpty && userState == .me {
-            followings = try await interactor.fetchRecommendFollowings()
+            followings = try await fetchRecommendFollowingsUseCase.execute()
         }
     }
     
