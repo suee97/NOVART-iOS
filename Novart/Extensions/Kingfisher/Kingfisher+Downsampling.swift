@@ -3,15 +3,18 @@ import Kingfisher
 
 extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     func setImageWithDownsampling(
-        with source: URL,
+        with resource: Resource?,
         size: CGSize,
+        options: KingfisherOptionsInfo? = nil,
         completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)? = nil) {
-            self.setImage(with: source, options: [
+            var mergedOptions: KingfisherOptionsInfo = [
                 .processor(DownsamplingImageProcessor(size: size)),
                 .scaleFactor(UIScreen.main.scale),
                 .cacheOriginalImage
-            ],
-            completionHandler: completionHandler
-        )
+            ]
+            if let options {
+                mergedOptions.append(contentsOf: options)
+            }
+            self.setImage(with: resource, options: mergedOptions, completionHandler: completionHandler)
     }
 }

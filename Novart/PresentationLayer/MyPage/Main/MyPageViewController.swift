@@ -522,7 +522,7 @@ final class MyPageViewController: BaseViewController {
     
     override func setupView() {
         viewModel.setupData()
-        viewModel.getOtherUserInfo()
+        viewModel.fetchOtherUserInfo()
     
         let safeArea = view.safeAreaLayoutGuide
         

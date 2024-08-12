@@ -40,6 +40,12 @@ final class MyPageWorkCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        workImageView.image = nil
+        workNameLabel.text = ""
+    }
+    
     
     // MARK: - UI
     private let workImageView: UIImageView = {
