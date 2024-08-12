@@ -24,6 +24,7 @@ final class MyPageViewModel {
     var isInitialLoadFinished = false
     var notificationCheckStatusSubject = PassthroughSubject<NotificationCheckStatus, Never>()
     private let fetchNotificationCheckStatusUseCase: FetchNotificationCheckStatusUseCase
+    private let fetchAllCategoryContentsUseCase: FetchAllCategoryContentsUseCase
     
     let userId: Int64?
     @Published var otherUser: PlainUser?
@@ -46,6 +47,7 @@ final class MyPageViewModel {
         self.coordinator = coordinator
         self.userId = userId
         self.fetchNotificationCheckStatusUseCase = .init(repository: repository)
+        self.fetchAllCategoryContentsUseCase = .init(repository: repository)
     }
 }
 
@@ -90,11 +92,8 @@ extension MyPageViewModel {
     
     private func fetchAllCategoryContents(userId: Int64?) async throws {
         guard let userId else { return }
-        async let interestsTask = interactor.fetchMyPageInterests(userId: userId)
-        async let followingsTask = interactor.fetchMyPageFollowings(userId: userId)
-        async let worksTask = interactor.fetchMyPageWorks(userId: userId)
-        async let exhibitionsTask = interactor.fetchMyPageExhibitions(userId: userId)
-        (interests, followings, works, exhibitions) = try await (interestsTask, followingsTask, worksTask, exhibitionsTask)
+        let allCategoryContents = try await fetchAllCategoryContentsUseCase.execute(userId: userId)
+        (self.interests, self.followings, self.works, self.exhibitions) = (allCategoryContents.interests, allCategoryContents.followings, allCategoryContents.works, allCategoryContents.exhibitions)
     }
     
     private func fetchRecommendInterestContentsIfNeeded() async throws {
