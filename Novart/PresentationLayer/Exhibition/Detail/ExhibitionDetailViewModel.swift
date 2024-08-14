@@ -113,7 +113,7 @@ private extension ExhibitionDetailViewModel {
             do {
                 _ = try await myPageInteractor.follow(userId: id)
                 DispatchQueue.main.async {
-                    PlainSnackbar.show(message: "새로운 작가를 팔로우 했어요!", configuration: .init(imageType: .icon(.check), buttonType: .text("모두 보기"), buttonAction: { [weak self] in
+                    PlainSnackbar.show(message: "새로운 작가를 팔로우했어요!", configuration: .init(imageType: .icon(.check), buttonType: .text("모두 보기"), buttonAction: { [weak self] in
                         guard let self else { return }
                         DispatchQueue.main.async {
                             self.showFollowList()

@@ -72,33 +72,6 @@ final class MyPageViewController: BaseViewController {
             static let followedColor = UIColor.Common.grey04
         }
         
-        enum FollowToastView {
-            static let backgroundColor = UIColor.Common.grey01_light
-            static let radius: CGFloat = 12
-            static let width = 342
-            static let height = 52
-            
-            enum IconImageView {
-                static let diameter = 24
-                static let leftMargin = 16
-                static let iconImage = UIImage(named: "icon_follow_check")
-            }
-            
-            enum TitleLabel {
-                static let text = "새로운 작가를 팔로우했어요!"
-                static let textColor = UIColor.Common.grey04
-                static let font = UIFont.systemFont(ofSize: 14, weight: .medium)
-                static let leftMargin = 8
-            }
-            
-            enum ShowAllButton {
-                static let text = "모두 보기"
-                static let textColor = UIColor.Common.black
-                static let font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-                static let rightMargin = 10
-            }
-        }
-        
         enum UploadButton {
             static let size: CGFloat = 50
             static let backgrounColor: UIColor = UIColor.Common.main
@@ -446,54 +419,9 @@ final class MyPageViewController: BaseViewController {
         button.titleLabel?.font = Constants.FollowButton.font
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
-            self.onTapFollowButton()
+            self.viewModel.onTapFollowButton()
         }), for: .touchUpInside)
         return button
-    }()
-    
-    private lazy var followToastView: UIView = {
-        let view = UIView(frame: CGRect(x: (Int(Constants.screenWidth) - Constants.FollowToastView.width) / 2, y: Int(Constants.screenHeight) - 52, width: Constants.FollowToastView.width, height: Constants.FollowToastView.height))
-        view.backgroundColor = Constants.FollowToastView.backgroundColor
-        view.layer.cornerRadius = Constants.FollowToastView.radius
-        
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.15
-        view.layer.shadowOffset = CGSize(width: 0, height: 1)
-        view.layer.masksToBounds = false
-        
-        let iconImageView = UIImageView(image: Constants.FollowToastView.IconImageView.iconImage)
-        let titleLabel = UILabel()
-        titleLabel.text = Constants.FollowToastView.TitleLabel.text
-        titleLabel.textColor = Constants.FollowToastView.TitleLabel.textColor
-        titleLabel.font = Constants.FollowToastView.TitleLabel.font
-        let showAllButton = UIButton()
-        showAllButton.setTitle(Constants.FollowToastView.ShowAllButton.text, for: .normal)
-        showAllButton.titleLabel?.font = Constants.FollowToastView.ShowAllButton.font
-        showAllButton.setTitleColor(Constants.FollowToastView.ShowAllButton.textColor, for: .normal)
-        showAllButton.addAction(UIAction(handler: { _ in
-            print("Show All Button Tapped") // TODO: 여기 개발 해야함
-        }), for: .touchUpInside)
-        
-        view.addSubview(iconImageView)
-        view.addSubview(titleLabel)
-        view.addSubview(showAllButton)
-        
-        iconImageView.snp.makeConstraints({ m in
-            m.centerY.equalToSuperview()
-            m.left.equalToSuperview().inset(Constants.FollowToastView.IconImageView.leftMargin)
-            m.width.height.equalTo(Constants.FollowToastView.IconImageView.diameter)
-        })
-        titleLabel.snp.makeConstraints({ m in
-            m.left.equalTo(iconImageView.snp.right).offset(Constants.FollowToastView.TitleLabel.leftMargin)
-            m.centerY.equalToSuperview()
-        })
-        showAllButton.snp.makeConstraints({ m in
-            m.centerY.equalToSuperview()
-            m.right.equalToSuperview().inset(Constants.FollowToastView.ShowAllButton.rightMargin)
-        })
-        
-        view.isHidden = true
-        return view
     }()
     
     private lazy var uploadProductButton: UIButton = {
@@ -531,7 +459,7 @@ final class MyPageViewController: BaseViewController {
         collectionView.dataSource = self
         
         view.addSubview(collectionView)
-        view.addSubview(followToastView)
+//        view.addSubview(followToastView)
         view.addSubview(uploadProductButton)
         
         collectionView.snp.makeConstraints({ m in
@@ -548,54 +476,6 @@ final class MyPageViewController: BaseViewController {
     // MARK: - Functions
     private func onTapAskButton() {
         viewModel.showAskSheet()
-    }
-    
-    private func onTapFollowButton() {
-        guard let _ = Authentication.shared.user, let otherUser = viewModel.otherUser else { return }
-
-        Task {
-            if otherUser.following {
-                do {
-                    let _ = try await viewModel.unFollow(userId: otherUser.id)
-                    viewModel.otherUser?.following = false
-                } catch {
-                    print(error.localizedDescription)
-                }
-            } else {
-                do {
-                    let _ = try await viewModel.follow(userId: otherUser.id)
-                    viewModel.otherUser?.following = true
-                    
-                    if !followToastView.isHidden { return }
-                    showFollowToastView()
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-                        self.hideFollowToastView()
-                    }
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-    }
-    
-    private func showFollowToastView() {
-        UIView.animate(withDuration: 0.1, delay: 0, options: [.curveEaseIn],
-                       animations: {
-            self.followToastView.center.y = self.view.frame.maxY - 52
-            self.followToastView.layoutIfNeeded()
-        }, completion: nil)
-        
-        followToastView.isHidden = false
-    }
-    
-    private func hideFollowToastView() {
-        UIView.animate(withDuration: 0.1, delay: 0, options: [.curveLinear],
-                       animations: {
-            self.followToastView.center.y = Constants.screenHeight - 52
-            self.followToastView.layoutIfNeeded()
-        },  completion: {(_ completed: Bool) -> Void in
-            self.followToastView.isHidden = true
-        })
     }
     
     private func onTapReport() {
