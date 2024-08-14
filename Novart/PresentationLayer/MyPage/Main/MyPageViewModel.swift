@@ -143,12 +143,37 @@ extension MyPageViewModel {
         }
     }
     
-    func follow(userId: Int64) async throws -> EmptyResponseModel {
-        try await followUseCase.execute(userId: userId)
+    func onTapFollowButton() {
+        Task.detached { [weak self] in
+            guard let self else { return }
+            let isLoggedIn = Authentication.shared.isLoggedIn
+            guard isLoggedIn, let otherUser else { return }
+            if otherUser.following {
+                let _ = try await unFollow(userId: otherUser.id)
+                fetchOtherUserInfo()
+            } else {
+                let _ = try await follow(userId: otherUser.id)
+                fetchOtherUserInfo()
+                await showFollowSnackBar()
+            }
+        }
     }
     
-    func unFollow(userId: Int64) async throws -> EmptyResponseModel {
-        try await unFollowUseCase.execute(userId: userId)
+    private func showFollowSnackBar() async {
+        await MainActor.run {
+            PlainSnackbar.show(message: "새로운 작가를 팔로우했어요!", configuration: .init(imageType: .icon(.check), buttonType: .text("모두 보기"), buttonAction: { [weak self] in
+                guard let self else { return }
+                self.showFollowList()
+            }))
+        }
+    }
+    
+    private func follow(userId: Int64) async throws {
+        let _ = try await followUseCase.execute(userId: userId)
+    }
+    
+    private func unFollow(userId: Int64) async throws {
+        let _ = try await unFollowUseCase.execute(userId: userId)
     }
     
     func getItemCount() -> Int {
@@ -238,5 +263,10 @@ extension MyPageViewModel {
         if isUserCanContact(openChatUrl: user.openChatUrl, email: user.email) {
             coordinator?.navigate(to: .ask(user: user))
         }
+    }
+    
+    @MainActor
+    private func showFollowList() {
+        coordinator?.navigate(to: .followList)
     }
 }

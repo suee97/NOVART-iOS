@@ -12,7 +12,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     var userId: Int64?
     
     override func start() {
-        let viewModel = MyPageViewModel(coordinator: self, userId: nil, repository: MyPageRepository()) // MARK: - TEST
+        let viewModel = MyPageViewModel(coordinator: self, userId: nil, repository: MyPageRepository())
         let viewController = MyPageViewController(viewModel: viewModel)
         
         let tabBarItem = UITabBarItem(
@@ -53,7 +53,6 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
             close()
         case .login:
             presentLoginModal()
-            
         case let .product(id):
             presentProductDetailVC(productId: id)
         case let .artist(id):
@@ -72,6 +71,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
             showPolicy(policyType: policyType)
         case .deleteUser:
             deleteUser()
+        case .followList:
+            showFollowList()
         }
     }
     
@@ -214,5 +215,13 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
             childCoordinator.end()
         }
         appCoordinator.navigate(to: .login)
+    }
+    
+    @MainActor
+    private func showFollowList() {
+        let myPageCoordinator = MyPageCoordinator(navigator: navigator)
+        myPageCoordinator.userId = nil
+        add(coordinators: myPageCoordinator)
+        myPageCoordinator.startAsPush(selectedCategory: .Following)
     }
 }
