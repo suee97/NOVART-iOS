@@ -139,7 +139,7 @@ extension MyPageMainViewModel {
     }
     
     func onTapFollowButton() {
-        Task.detached { [weak self] in
+        Task { [weak self] in
             guard let self else { return }
             let isLoggedIn = Authentication.shared.isLoggedIn
             guard isLoggedIn, let otherUser else { return }
