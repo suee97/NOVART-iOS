@@ -11,7 +11,6 @@ enum MyPageUserState {
 final class MyPageViewModel {
     private weak var coordinator: MyPageCoordinator?
     
-    @Published private(set) var selectedCategory: MyPageCategory = .Work
     var interests = [ProductModel]()
     var followings = [ArtistModel]()
     var works = [MyPageWork]()
@@ -61,10 +60,6 @@ final class MyPageViewModel {
 }
 
 extension MyPageViewModel {
-    func setCategory(_ category: MyPageCategory) {
-        selectedCategory = category
-    }
-    
     func isUserCanContact(openChatUrl: String?, email: String?) -> Bool {
         if let openChatUrl, !openChatUrl.isEmpty { return true }
         if let email, !email.isEmpty { return true }
@@ -176,8 +171,8 @@ extension MyPageViewModel {
         let _ = try await unFollowUseCase.execute(userId: userId)
     }
     
-    func getItemCount() -> Int {
-        switch selectedCategory {
+    func getCategoryContentsCount(category: MyPageCategory) -> Int {
+        switch category {
         case .Interest:
             return interests.count
         case .Following:
