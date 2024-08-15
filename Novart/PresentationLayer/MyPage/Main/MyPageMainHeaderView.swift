@@ -184,12 +184,12 @@ final class MyPageMainHeaderView: UICollectionReusableView {
         return stackView
     }()
     
-    let interestButton = MyPageMainCategoryButton(category: .Interest)
-    let followingButton = MyPageMainCategoryButton(category: .Following)
-    let workButton = MyPageMainCategoryButton(category: .Work)
-    let exhibitionButton = MyPageMainCategoryButton(category: .Exhibition)
+    private let interestButton = MyPageMainCategoryButton(category: .Interest)
+    private let followingButton = MyPageMainCategoryButton(category: .Following)
+    private let workButton = MyPageMainCategoryButton(category: .Work)
+    private let exhibitionButton = MyPageMainCategoryButton(category: .Exhibition)
     
-    lazy var categoryButtons = [interestButton, followingButton, workButton, exhibitionButton]
+    private lazy var categoryButtons = [interestButton, followingButton, workButton, exhibitionButton]
     
     private lazy var categoryView: UIView = {
         let view = UIView()
@@ -591,6 +591,13 @@ final class MyPageMainHeaderView: UICollectionReusableView {
         case (_, true):
             guard let user else { return }
             setUpStickyHeaderView(user: user, userState: userState, category: category, isContentsEmpty: isContentsEmpty)
+        }
+    }
+    
+    func setCategory(to selectedCategory: MyPageCategory) {
+        for button in categoryButtons {
+            let isActive = (button.category == selectedCategory)
+            button.setState(isActive)
         }
     }
     

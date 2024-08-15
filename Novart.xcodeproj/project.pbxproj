@@ -304,7 +304,6 @@
 		5B41E0C92C6A607A00BA024A /* FollowUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0C82C6A607700BA024A /* FollowUseCase.swift */; };
 		5B41E0CB2C6A608B00BA024A /* UnFollowUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0CA2C6A608700BA024A /* UnFollowUseCase.swift */; };
 		5B41E0CD2C6A61A200BA024A /* FetchUserInfoUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0CC2C6A619F00BA024A /* FetchUserInfoUseCase.swift */; };
-		5B41E0D12C6C7F3300BA024A /* MyPageMainMeatBallsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B41E0D02C6C7F2A00BA024A /* MyPageMainMeatBallsMenu.swift */; };
 		5B5AC7E52C465E3E0037A0DB /* JobTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5AC7E42C465E3E0037A0DB /* JobTags.swift */; };
 		5B5AC7E72C465EDD0037A0DB /* RecommendTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5AC7E62C465EDD0037A0DB /* RecommendTags.swift */; };
 		5B5AC7F72C50E7A10037A0DB /* TagItemConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5AC7F62C50E7A10037A0DB /* TagItemConverter.swift */; };
@@ -670,7 +669,6 @@
 		5B41E0C82C6A607700BA024A /* FollowUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowUseCase.swift; sourceTree = "<group>"; };
 		5B41E0CA2C6A608700BA024A /* UnFollowUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnFollowUseCase.swift; sourceTree = "<group>"; };
 		5B41E0CC2C6A619F00BA024A /* FetchUserInfoUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchUserInfoUseCase.swift; sourceTree = "<group>"; };
-		5B41E0D02C6C7F2A00BA024A /* MyPageMainMeatBallsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageMainMeatBallsMenu.swift; sourceTree = "<group>"; };
 		5B5AC7E42C465E3E0037A0DB /* JobTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobTags.swift; sourceTree = "<group>"; };
 		5B5AC7E62C465EDD0037A0DB /* RecommendTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTags.swift; sourceTree = "<group>"; };
 		5B5AC7F62C50E7A10037A0DB /* TagItemConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagItemConverter.swift; sourceTree = "<group>"; };
@@ -1893,7 +1891,6 @@
 				5BDD4A102AC955A600937352 /* MyPageMainViewModel.swift */,
 				5BDD4A0E2AC955A600937352 /* MyPageMainHeaderView.swift */,
 				5BDD4A0D2AC955A600937352 /* MyPageMainCategoryButton.swift */,
-				5B41E0D02C6C7F2A00BA024A /* MyPageMainMeatBallsMenu.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -2253,7 +2250,6 @@
 				0EE0194B2A56EF6F00389A95 /* HomeStep.swift in Sources */,
 				0E4173882B25DEB80017AAD9 /* MediaPickerController.swift in Sources */,
 				0EE019412A56EEB200389A95 /* HomeViewController.swift in Sources */,
-				5B41E0D12C6C7F3300BA024A /* MyPageMainMeatBallsMenu.swift in Sources */,
 				0EE019C82A6BCCC400389A95 /* AccessTokenResponse.swift in Sources */,
 				0EB1A6752B53F2B30091D809 /* ExhibitionShortcutItemView.swift in Sources */,
 				5BB9F16A2AD90F5000C347F3 /* MyPageSettingViewController.swift in Sources */,
