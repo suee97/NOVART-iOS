@@ -198,18 +198,16 @@ final class MyPageMainViewController: BaseViewController {
             .sink(receiveValue: { [weak self] otherUser in
                 guard let self, let otherUser else { return }
                 self.isOtherUserFollowing = otherUser.following
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                    self.followButton.backgroundColor = otherUser.following ? Constants.FollowButton.followedColor : Constants.FollowButton.unFollowedColor
-                    let buttonTitle = otherUser.following ? Constants.FollowButton.followedText : Constants.FollowButton.unFollowedText
-                    self.followButton.setTitle(buttonTitle, for: .normal)
-                    if self.viewModel.isUserCanContact(openChatUrl: otherUser.openChatUrl, email: otherUser.email) {
-                        self.askButton.setTitleColor(Constants.AskButton.activeTextColor, for: .normal)
-                        self.askButton.backgroundColor = Constants.AskButton.activeBackgroundColor
-                    } else {
-                        self.askButton.setTitleColor(Constants.AskButton.inActiveTextColor, for: .normal)
-                        self.askButton.backgroundColor = Constants.AskButton.inActiveBackgroundColor
-                    }
+                self.collectionView.reloadData()
+                self.followButton.backgroundColor = otherUser.following ? Constants.FollowButton.followedColor : Constants.FollowButton.unFollowedColor
+                let buttonTitle = otherUser.following ? Constants.FollowButton.followedText : Constants.FollowButton.unFollowedText
+                self.followButton.setTitle(buttonTitle, for: .normal)
+                if self.viewModel.isUserCanContact(openChatUrl: otherUser.openChatUrl, email: otherUser.email) {
+                    self.askButton.setTitleColor(Constants.AskButton.activeTextColor, for: .normal)
+                    self.askButton.backgroundColor = Constants.AskButton.activeBackgroundColor
+                } else {
+                    self.askButton.setTitleColor(Constants.AskButton.inActiveTextColor, for: .normal)
+                    self.askButton.backgroundColor = Constants.AskButton.inActiveBackgroundColor
                 }
         }).store(in: &cancellables)
         
@@ -339,10 +337,8 @@ final class MyPageMainViewController: BaseViewController {
         let button = UIButton(frame: Constants.navIconSize)
         button.setBackgroundImage(UIImage(named: "icon_back"), for: .normal)
         button.addAction(UIAction(handler: { [weak self] _ in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.dismiss(animated: true)
-            }
+            guard let self else { return }
+            self.dismiss(animated: true)
             self.viewModel.close()
         }), for: .touchUpInside)
         return button
@@ -558,37 +554,24 @@ extension MyPageMainViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if viewModel.userState == .loggedOut { return }
         self.dismiss(animated: true)
-        
         switch selectedCategory {
         case .Interest:
             let item = viewModel.interests[indexPath.row]
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                self.viewModel.presentProductDetailScene(productId: item.id)
-            }
+            viewModel.presentProductDetailScene(productId: item.id)
         case .Following:
             let item = viewModel.followings[indexPath.row]
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                self.viewModel.showArtistProfile(userId: item.id)
-            }
+            viewModel.showArtistProfile(userId: item.id)
         case .Work:
             let item = viewModel.works[indexPath.row]
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                self.viewModel.presentProductDetailScene(productId: item.id)
-            }
+            viewModel.presentProductDetailScene(productId: item.id)
         case .Exhibition:
             let item = viewModel.exhibitions[indexPath.row]
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                self.viewModel.showExhibitionDetail(exhibitionId: item.id)
-            }
+            viewModel.showExhibitionDetail(exhibitionId: item.id)
         }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        scrollView.bounces = (scrollView.contentOffset.y > 10) // 상단 스크롤 방지
+        scrollView.bounces = (scrollView.contentOffset.y > 10)
         
         let headerBottomPositionFromWindow = getHeaderBottomPositionFromWindow()
         guard let headerBottomPositionFromWindow else { return }
