@@ -29,8 +29,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     @MainActor
     func startAsPush(selectedCategory: MyPageCategory = .Work) {
         let viewModel = MyPageViewModel(coordinator: self, userId: userId, repository: MyPageRepository())
-        viewModel.setCategory(selectedCategory)
-        let viewController = MyPageViewController(viewModel: viewModel)
+//        viewModel.setCategory(selectedCategory)
+        let viewController = MyPageViewController(viewModel: viewModel, selectedCategory: .Following)
         viewModel.isStartAsPush = true
         navigator.push(viewController, animated: true)
     }

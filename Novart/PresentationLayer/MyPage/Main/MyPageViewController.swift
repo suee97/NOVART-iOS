@@ -89,7 +89,7 @@ final class MyPageViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private var cellSize = Constants.CellSize.InterestCellSize
     private var cellCount: Int {
-        return self.viewModel.getItemCount()
+        return viewModel.getCategoryContentsCount(category: selectedCategory)
     }
     private var cellType: UICollectionViewCell.Type = ProductCell.self
     private var isHeaderSticky = false
@@ -98,11 +98,17 @@ final class MyPageViewController: BaseViewController {
     private var isOtherUserFollowing: Bool?
     private var headerHeight: CGFloat = 0
     private var transitionScrollHeight: CGFloat?
+    private var selectedCategory: MyPageCategory {
+        didSet {
+            updateCategory()
+        }
+    }
     
     
     // MARK: - LifeCycle
-    init(viewModel: MyPageViewModel) {
+    init(viewModel: MyPageViewModel, selectedCategory: MyPageCategory = .Work) {
         self.viewModel = viewModel
+        self.selectedCategory = selectedCategory
         super.init()
     }
     
@@ -175,48 +181,15 @@ final class MyPageViewController: BaseViewController {
             isGradient = true
         }
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateCategory()
+    }
 
     
     // MARK: - Binding
     override func setupBindings() {
-        viewModel.$selectedCategory
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] value in
-                guard let self else { return }
-                switch value {
-                case .Interest:
-                    self.cellSize = Constants.CellSize.InterestCellSize
-                    self.cellType = ProductCell.self
-                case .Following:
-                    self.cellSize = Constants.CellSize.FollowingCellSize
-                    self.cellType = SearchArtistCell.self
-                case .Work:
-                    self.cellSize = Constants.CellSize.WorkCellSize
-                    self.cellType = MyPageWorkCell.self
-                case .Exhibition:
-                    self.cellSize = Constants.CellSize.ExhibitionCellSize
-                    self.cellType = MyPageExhibitionCell.self
-                }
-                if self.isHeaderSticky {
-                    self.collectionView.contentOffset = CGPoint(x: 0, y: 220)
-                }
-                self.uploadProductButton.isHidden = (self.viewModel.userState == .me && value == .Work) ? false : true
-                
-                self.collectionView.reloadData()
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    if let header = self.collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView {
-                        for button in header.categoryButtons {
-                            if button.category == value {
-                                button.setState(true)
-                            } else {
-                                button.setState(false)
-                            }
-                        }
-                    }
-                }
-        }).store(in: &cancellables)
-        
         viewModel.shouldReloadCollectionViewSubject
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
@@ -459,7 +432,6 @@ final class MyPageViewController: BaseViewController {
         collectionView.dataSource = self
         
         view.addSubview(collectionView)
-//        view.addSubview(followToastView)
         view.addSubview(uploadProductButton)
         
         collectionView.snp.makeConstraints({ m in
@@ -496,6 +468,41 @@ final class MyPageViewController: BaseViewController {
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.16)
         view.layer.addSublayer(gradientLayer)
     }
+    
+    private func updateCategory() {
+        switch selectedCategory {
+        case .Interest:
+            self.cellSize = Constants.CellSize.InterestCellSize
+            self.cellType = ProductCell.self
+        case .Following:
+            self.cellSize = Constants.CellSize.FollowingCellSize
+            self.cellType = SearchArtistCell.self
+        case .Work:
+            self.cellSize = Constants.CellSize.WorkCellSize
+            self.cellType = MyPageWorkCell.self
+        case .Exhibition:
+            self.cellSize = Constants.CellSize.ExhibitionCellSize
+            self.cellType = MyPageExhibitionCell.self
+        }
+        if self.isHeaderSticky {
+            self.collectionView.contentOffset = CGPoint(x: 0, y: 220)
+        }
+        self.uploadProductButton.isHidden = (self.viewModel.userState == .me && selectedCategory == .Work) ? false : true
+        
+        self.collectionView.reloadData()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let header = self.collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView {
+                for button in header.categoryButtons {
+                    if button.category == self.selectedCategory {
+                        button.setState(true)
+                    } else {
+                        button.setState(false)
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -511,7 +518,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch viewModel.selectedCategory {
+        switch selectedCategory {
         case .Interest:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.reuseIdentifier, for: indexPath) as? ProductCell else {
                 return UICollectionViewCell()
@@ -553,28 +560,22 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard kind == UICollectionView.elementKindSectionHeader, let header = collectionView.dequeueReusableSupplementaryView( ofKind: kind, withReuseIdentifier: MyPageHeaderView.reuseIdentifier, for: indexPath ) as? MyPageHeaderView else { return UICollectionReusableView() }
-        
         header.delegate = self
-
         updateHeaderView(with: header)
-        
         if viewModel.userState == .me || viewModel.userState == .other {
             if isHeaderFirstSetup {
                 header.workButton.setState(true)
             }
         }
         isHeaderFirstSetup = false
-        
         return header
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if viewModel.userState == .loggedOut { return }
-        DispatchQueue.main.async {
-            self.dismiss(animated: true)
-        }
+        self.dismiss(animated: true)
         
-        switch viewModel.selectedCategory {
+        switch selectedCategory {
         case .Interest:
             let item = viewModel.interests[indexPath.row]
             DispatchQueue.main.async { [weak self] in
@@ -639,10 +640,10 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func updateHeaderView(with header: MyPageHeaderView) {
         switch self.viewModel.userState {
         case .loggedOut:
-            header.updateHeaderView(user: nil, userState: .loggedOut, category: viewModel.selectedCategory, isContentsEmpty: false, isSticky: isHeaderSticky)
+            header.updateHeaderView(user: nil, userState: .loggedOut, category: selectedCategory, isContentsEmpty: false, isSticky: isHeaderSticky)
         case .other, .me:
             var isEmpty: Bool = false
-            switch viewModel.selectedCategory {
+            switch selectedCategory {
             case .Following:
                 isEmpty = viewModel.isFollowingsEmpty
             case .Interest:
@@ -653,9 +654,9 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 isEmpty = viewModel.works.isEmpty
             }
             if self.viewModel.userState == .me {
-                header.updateHeaderView(user: Authentication.shared.user, userState: .me, category: viewModel.selectedCategory, isContentsEmpty: isEmpty, isSticky: isHeaderSticky)
+                header.updateHeaderView(user: Authentication.shared.user, userState: .me, category: selectedCategory, isContentsEmpty: isEmpty, isSticky: isHeaderSticky)
             } else if self.viewModel.userState == .other {
-                header.updateHeaderView(user: viewModel.otherUser, userState: .other, category: viewModel.selectedCategory, isContentsEmpty: isEmpty, isSticky: isHeaderSticky)
+                header.updateHeaderView(user: viewModel.otherUser, userState: .other, category: selectedCategory, isContentsEmpty: isEmpty, isSticky: isHeaderSticky)
             }
         }
     }
@@ -681,8 +682,8 @@ extension MyPageViewController: MyPageHeaderViewDelegate {
     }
     
     func onTapCategoryButton(header: MyPageHeaderView, selectedCategory: MyPageCategory) {
-        if viewModel.userState == .loggedOut || viewModel.selectedCategory == selectedCategory { return }
-        viewModel.setCategory(selectedCategory)
+        if viewModel.userState == .loggedOut || self.selectedCategory == selectedCategory { return }
+        self.selectedCategory = selectedCategory
         for button in header.categoryButtons {
             let state = (button.category == selectedCategory)
             button.setState(state)
