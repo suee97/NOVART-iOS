@@ -8,7 +8,7 @@ enum MyPageUserState {
     case loggedOut // 로그인X + 마이페이지
 }
 
-final class MyPageViewModel {
+final class MyPageMainViewModel {
     private weak var coordinator: MyPageCoordinator?
     
     var interests = [ProductModel]()
@@ -59,7 +59,7 @@ final class MyPageViewModel {
     }
 }
 
-extension MyPageViewModel {
+extension MyPageMainViewModel {
     func isUserCanContact(openChatUrl: String?, email: String?) -> Bool {
         if let openChatUrl, !openChatUrl.isEmpty { return true }
         if let email, !email.isEmpty { return true }
@@ -185,7 +185,7 @@ extension MyPageViewModel {
     }
 }
 
-extension MyPageViewModel {
+extension MyPageMainViewModel {
     @MainActor
     func showProfileEdit() {
         coordinator?.navigate(to: .MyPageProfileEdit)

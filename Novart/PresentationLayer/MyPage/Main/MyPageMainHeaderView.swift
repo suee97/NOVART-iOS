@@ -6,10 +6,10 @@ protocol MyPageHeaderViewDelegate {
     func onTapLoginButton()
     func onTapProfileImage()
     func onTapProfileLabel()
-    func onTapCategoryButton(header: MyPageHeaderView, selectedCategory: MyPageCategory)
+    func onTapCategoryButton(header: MyPageMainHeaderView, selectedCategory: MyPageCategory)
 }
 
-final class MyPageHeaderView: UICollectionReusableView {
+final class MyPageMainHeaderView: UICollectionReusableView {
     
     // MARK: - Constants
     private enum Constants {
@@ -184,10 +184,10 @@ final class MyPageHeaderView: UICollectionReusableView {
         return stackView
     }()
     
-    let interestButton = MyPageCategoryButton(category: .Interest)
-    let followingButton = MyPageCategoryButton(category: .Following)
-    let workButton = MyPageCategoryButton(category: .Work)
-    let exhibitionButton = MyPageCategoryButton(category: .Exhibition)
+    let interestButton = MyPageMainCategoryButton(category: .Interest)
+    let followingButton = MyPageMainCategoryButton(category: .Following)
+    let workButton = MyPageMainCategoryButton(category: .Work)
+    let exhibitionButton = MyPageMainCategoryButton(category: .Exhibition)
     
     lazy var categoryButtons = [interestButton, followingButton, workButton, exhibitionButton]
     

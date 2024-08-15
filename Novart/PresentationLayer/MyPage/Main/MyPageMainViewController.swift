@@ -3,7 +3,7 @@ import SnapKit
 import Combine
 import Kingfisher
 
-final class MyPageViewController: BaseViewController {
+final class MyPageMainViewController: BaseViewController {
     
     // MARK: - Constants
     private enum Constants {
@@ -85,7 +85,7 @@ final class MyPageViewController: BaseViewController {
     
     
     // MARK: - Properties
-    private let viewModel: MyPageViewModel
+    private let viewModel: MyPageMainViewModel
     private var cancellables = Set<AnyCancellable>()
     private var cellSize = Constants.CellSize.InterestCellSize
     private var cellCount: Int {
@@ -106,7 +106,7 @@ final class MyPageViewController: BaseViewController {
     
     
     // MARK: - LifeCycle
-    init(viewModel: MyPageViewModel, selectedCategory: MyPageCategory = .Work) {
+    init(viewModel: MyPageMainViewModel, selectedCategory: MyPageCategory = .Work) {
         self.viewModel = viewModel
         self.selectedCategory = selectedCategory
         super.init()
@@ -242,7 +242,7 @@ final class MyPageViewController: BaseViewController {
         collectionView.backgroundColor = .clear
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.delaysContentTouches = false
-        collectionView.register(MyPageHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageHeaderView.reuseIdentifier)
+        collectionView.register(MyPageMainHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MyPageMainHeaderView.reuseIdentifier)
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseIdentifier)
         collectionView.register(SearchArtistCell.self, forCellWithReuseIdentifier: SearchArtistCell.reuseIdentifier)
         collectionView.register(MyPageWorkCell.self, forCellWithReuseIdentifier: MyPageWorkCell.reuseIdentifier)
@@ -492,7 +492,7 @@ final class MyPageViewController: BaseViewController {
         self.collectionView.reloadData()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if let header = self.collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView {
+            if let header = self.collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageMainHeaderView {
                 for button in header.categoryButtons {
                     if button.category == self.selectedCategory {
                         button.setState(true)
@@ -507,7 +507,7 @@ final class MyPageViewController: BaseViewController {
 
 
 // MARK: - CollectionView + HeaderView
-extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MyPageMainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return cellCount
@@ -551,7 +551,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        lazy var header = MyPageHeaderView()
+        lazy var header = MyPageMainHeaderView()
         updateHeaderView(with: header)
         let headerSize = header.systemLayoutSizeFitting(.init(width: collectionView.bounds.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
         if !self.isHeaderSticky { self.headerHeight = headerSize.height }
@@ -559,7 +559,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard kind == UICollectionView.elementKindSectionHeader, let header = collectionView.dequeueReusableSupplementaryView( ofKind: kind, withReuseIdentifier: MyPageHeaderView.reuseIdentifier, for: indexPath ) as? MyPageHeaderView else { return UICollectionReusableView() }
+        guard kind == UICollectionView.elementKindSectionHeader, let header = collectionView.dequeueReusableSupplementaryView( ofKind: kind, withReuseIdentifier: MyPageMainHeaderView.reuseIdentifier, for: indexPath ) as? MyPageMainHeaderView else { return UICollectionReusableView() }
         header.delegate = self
         updateHeaderView(with: header)
         if viewModel.userState == .me || viewModel.userState == .other {
@@ -611,7 +611,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let scrollHeight = scrollView.contentOffset.y
         if !isHeaderSticky && headerBottomPositionFromWindow <= 195 {
             isHeaderSticky = true
-            guard let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView else { return }
+            guard let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageMainHeaderView else { return }
             updateHeaderView(with: header)
             collectionViewLayout.sectionHeadersPinToVisibleBounds = true
             transitionScrollHeight = scrollHeight
@@ -622,7 +622,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         if let transitionScrollHeight, isHeaderSticky, scrollHeight < transitionScrollHeight {
             isHeaderSticky = false
-            guard let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView else { return }
+            guard let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageMainHeaderView else { return }
             updateHeaderView(with: header)
             collectionViewLayout.sectionHeadersPinToVisibleBounds = false
             collectionViewLayout.sectionInset = UIEdgeInsets(top: 18, left: 24, bottom: 24, right: 24)
@@ -632,12 +632,12 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getHeaderBottomPositionFromWindow() -> CGFloat? {
         guard let window = self.view.window else { return nil }
-        guard let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageHeaderView else { return nil }
+        guard let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageMainHeaderView else { return nil }
         let frame = window.convert(header.frame, from: collectionView)
         return frame.maxY
     }
     
-    func updateHeaderView(with header: MyPageHeaderView) {
+    func updateHeaderView(with header: MyPageMainHeaderView) {
         switch self.viewModel.userState {
         case .loggedOut:
             header.updateHeaderView(user: nil, userState: .loggedOut, category: selectedCategory, isContentsEmpty: false, isSticky: isHeaderSticky)
@@ -664,7 +664,7 @@ extension MyPageViewController: UICollectionViewDelegate, UICollectionViewDataSo
 
 
 // MARK: - HeaderView Delegate
-extension MyPageViewController: MyPageHeaderViewDelegate {
+extension MyPageMainViewController: MyPageHeaderViewDelegate {
     func onTapLoginButton() {
         viewModel.showLoginModal()
     }
@@ -681,7 +681,7 @@ extension MyPageViewController: MyPageHeaderViewDelegate {
         }
     }
     
-    func onTapCategoryButton(header: MyPageHeaderView, selectedCategory: MyPageCategory) {
+    func onTapCategoryButton(header: MyPageMainHeaderView, selectedCategory: MyPageCategory) {
         if viewModel.userState == .loggedOut || self.selectedCategory == selectedCategory { return }
         self.selectedCategory = selectedCategory
         for button in header.categoryButtons {
