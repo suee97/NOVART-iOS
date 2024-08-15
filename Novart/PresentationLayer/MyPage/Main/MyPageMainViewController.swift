@@ -180,10 +180,6 @@ final class MyPageMainViewController: BaseViewController {
             addGradient()
             isGradient = true
         }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         updateCategory()
     }
 
@@ -257,9 +253,7 @@ final class MyPageMainViewController: BaseViewController {
                 return [
                     UIAction(title: "프로필 편집", image: UIImage(systemName: "person"), handler: { [weak self] _ in
                         guard let self else { return }
-                        if self.viewModel.userState == .me {
-                            self.viewModel.showProfileEdit()
-                        }
+                        self.viewModel.showProfileEdit()
                     }),
                     UIAction(title: "공유", image: UIImage(systemName: "square.and.arrow.up"), handler: { _ in
                         guard let myId = Authentication.shared.user?.id else { return }
@@ -318,7 +312,7 @@ final class MyPageMainViewController: BaseViewController {
     
     private lazy var notificationButton: UIButton = {
         let button = UIButton(frame: Constants.navIconSize)
-        button.setBackgroundImage(UIImage(named: "icon_notification2"), for: .normal) // 기존 icon_notification이 존재해서 숫자 2를 붙임. 기존 아이콘 사용 안하는거면 수정이 필요합니다
+        button.setBackgroundImage(UIImage(named: "icon_notification2"), for: .normal)
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             if self.viewModel.userState == .me {
@@ -488,20 +482,10 @@ final class MyPageMainViewController: BaseViewController {
             self.collectionView.contentOffset = CGPoint(x: 0, y: 220)
         }
         self.uploadProductButton.isHidden = (self.viewModel.userState == .me && selectedCategory == .Work) ? false : true
-        
-        self.collectionView.reloadData()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if let header = self.collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageMainHeaderView {
-                for button in header.categoryButtons {
-                    if button.category == self.selectedCategory {
-                        button.setState(true)
-                    } else {
-                        button.setState(false)
-                    }
-                }
-            }
+        if let header = self.collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? MyPageMainHeaderView {
+            header.setCategory(to: self.selectedCategory)
         }
+        self.collectionView.reloadData()
     }
 }
 
@@ -564,7 +548,7 @@ extension MyPageMainViewController: UICollectionViewDelegate, UICollectionViewDa
         updateHeaderView(with: header)
         if viewModel.userState == .me || viewModel.userState == .other {
             if isHeaderFirstSetup {
-                header.workButton.setState(true)
+                header.setCategory(to: .Work)
             }
         }
         isHeaderFirstSetup = false
@@ -684,9 +668,6 @@ extension MyPageMainViewController: MyPageHeaderViewDelegate {
     func onTapCategoryButton(header: MyPageMainHeaderView, selectedCategory: MyPageCategory) {
         if viewModel.userState == .loggedOut || self.selectedCategory == selectedCategory { return }
         self.selectedCategory = selectedCategory
-        for button in header.categoryButtons {
-            let state = (button.category == selectedCategory)
-            button.setState(state)
-        }
+        header.setCategory(to: selectedCategory)
     }
 }
