@@ -21,6 +21,8 @@ final class MyPageMainViewController: BaseViewController {
             return appearance
         }()
         
+        static let otherUserTabBarViewTag = 2000
+        
         enum Layout {
             static let sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 24, right: 24) // bottom은 임의로 추가
             static let navigationBarSpacerWidth: CGFloat = 16
@@ -127,30 +129,8 @@ final class MyPageMainViewController: BaseViewController {
         
         if viewModel.userState == .other {
             if let tab = tabBarController {
-                let backgroundView = UIView(frame: tab.tabBar.frame)
-                backgroundView.layer.cornerRadius = 12
-                backgroundView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-                backgroundView.layer.borderColor = UIColor.Common.grey01.cgColor
-                backgroundView.layer.borderWidth = 0.5
-                backgroundView.backgroundColor = .white
-                backgroundView.tag = 2000
-                
-                backgroundView.addSubview(askButton)
-                backgroundView.addSubview(followButton)
-                askButton.snp.makeConstraints({ m in
-                    m.left.equalToSuperview().inset(Constants.AskButton.leftMargin)
-                    m.top.equalToSuperview().inset(Constants.AskButton.topMargin)
-                    m.width.equalTo(Constants.AskButton.width)
-                    m.height.equalTo(Constants.AskButton.height)
-                })
-                followButton.snp.makeConstraints({ m in
-                    m.centerY.equalTo(askButton)
-                    m.left.equalTo(askButton.snp.right).offset(Constants.FollowButton.leftMargin)
-                    m.width.equalTo(Constants.FollowButton.width)
-                    m.height.equalTo(Constants.FollowButton.height)
-                })
-                
-                tab.view.addSubview(backgroundView)
+                let otherUserTabBarView = createOtherUserTabBarView(frame: tab.tabBar.frame, tag: Constants.otherUserTabBarViewTag)
+                tab.view.addSubview(otherUserTabBarView)
             }
         } else if viewModel.userState == .me,
                   !viewModel.isStartAsPush,
@@ -165,13 +145,7 @@ final class MyPageMainViewController: BaseViewController {
         navigationController?.navigationBar.compactAppearance = Constants.appearance
         navigationController?.navigationBar.standardAppearance = Constants.appearance
         navigationController?.navigationBar.scrollEdgeAppearance = Constants.appearance
-        if let tab = tabBarController {
-            for v in tab.view.subviews {
-                if v.tag == 2000 {
-                    v.removeFromSuperview()
-                }
-            }
-        }
+        removeViewFromTabBar(tag: Constants.otherUserTabBarViewTag)
     }
     
     override func viewDidLayoutSubviews() {
@@ -482,6 +456,42 @@ final class MyPageMainViewController: BaseViewController {
             header.setCategory(to: self.selectedCategory)
         }
         self.collectionView.reloadData()
+    }
+    
+    private func createOtherUserTabBarView(frame: CGRect, tag: Int) -> UIView {
+        let view = UIView(frame: frame)
+        view.layer.cornerRadius = 12
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        view.layer.borderColor = UIColor.Common.grey01.cgColor
+        view.layer.borderWidth = 0.5
+        view.backgroundColor = .white
+        view.tag = tag
+        view.addSubview(askButton)
+        view.addSubview(followButton)
+        
+        askButton.snp.makeConstraints({ m in
+            m.left.equalToSuperview().inset(Constants.AskButton.leftMargin)
+            m.top.equalToSuperview().inset(Constants.AskButton.topMargin)
+            m.width.equalTo(Constants.AskButton.width)
+            m.height.equalTo(Constants.AskButton.height)
+        })
+        followButton.snp.makeConstraints({ m in
+            m.centerY.equalTo(askButton)
+            m.left.equalTo(askButton.snp.right).offset(Constants.FollowButton.leftMargin)
+            m.width.equalTo(Constants.FollowButton.width)
+            m.height.equalTo(Constants.FollowButton.height)
+        })
+        return view
+    }
+    
+    private func removeViewFromTabBar(tag: Int) {
+        guard let tab = tabBarController else { return }
+        for view in tab.view.subviews {
+            if view.tag == tag {
+                view.removeFromSuperview()
+                return
+            }
+        }
     }
 }
 
