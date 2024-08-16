@@ -17,7 +17,6 @@ enum MyPageStep: Step {
     case Close
     case logout
     case login
-    
     case product(Int64)
     case artist(Int64)
     case exhibitionDetail(id: Int64)
@@ -26,6 +25,7 @@ enum MyPageStep: Step {
     case ask(user: PlainUser)
     case policy(policyType: PolicyType)
     case deleteUser
+    case followList
     
     var target: UIViewController.Type? { nil }
     var animated: Bool { false }

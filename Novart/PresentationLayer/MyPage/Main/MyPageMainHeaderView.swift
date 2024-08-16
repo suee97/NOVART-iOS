@@ -6,10 +6,10 @@ protocol MyPageHeaderViewDelegate {
     func onTapLoginButton()
     func onTapProfileImage()
     func onTapProfileLabel()
-    func onTapCategoryButton(header: MyPageHeaderView, selectedCategory: MyPageCategory)
+    func onTapCategoryButton(header: MyPageMainHeaderView, selectedCategory: MyPageCategory)
 }
 
-final class MyPageHeaderView: UICollectionReusableView {
+final class MyPageMainHeaderView: UICollectionReusableView {
     
     // MARK: - Constants
     private enum Constants {
@@ -184,12 +184,12 @@ final class MyPageHeaderView: UICollectionReusableView {
         return stackView
     }()
     
-    let interestButton = MyPageCategoryButton(category: .Interest)
-    let followingButton = MyPageCategoryButton(category: .Following)
-    let workButton = MyPageCategoryButton(category: .Work)
-    let exhibitionButton = MyPageCategoryButton(category: .Exhibition)
+    private let interestButton = MyPageMainCategoryButton(category: .Interest)
+    private let followingButton = MyPageMainCategoryButton(category: .Following)
+    private let workButton = MyPageMainCategoryButton(category: .Work)
+    private let exhibitionButton = MyPageMainCategoryButton(category: .Exhibition)
     
-    lazy var categoryButtons = [interestButton, followingButton, workButton, exhibitionButton]
+    private lazy var categoryButtons = [interestButton, followingButton, workButton, exhibitionButton]
     
     private lazy var categoryView: UIView = {
         let view = UIView()
@@ -591,6 +591,13 @@ final class MyPageHeaderView: UICollectionReusableView {
         case (_, true):
             guard let user else { return }
             setUpStickyHeaderView(user: user, userState: userState, category: category, isContentsEmpty: isContentsEmpty)
+        }
+    }
+    
+    func setCategory(to selectedCategory: MyPageCategory) {
+        for button in categoryButtons {
+            let isActive = (button.category == selectedCategory)
+            button.setState(isActive)
         }
     }
     
