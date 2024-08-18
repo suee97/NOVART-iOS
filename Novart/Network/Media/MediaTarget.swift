@@ -13,6 +13,8 @@ enum MediaTarget: TargetType {
     enum Category: String {
         case product
         case artist
+        case profile
+        case background
     }
     
     case getPresignedUrl(filename: String, category: Category)

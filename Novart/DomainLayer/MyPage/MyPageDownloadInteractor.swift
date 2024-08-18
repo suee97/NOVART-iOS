@@ -42,8 +42,9 @@ final class MyPageDownloadInteractor {
         try await APIClient.checkDuplicateNickname(nickname: nickname)
     }
     
-    func requestPresignedUrl(filename: String, category: String) async throws -> PresignedUrlModel {
-        try await APIClient.requestPresignedUrl(filename: filename, category: category)
+    func requestPresignedUrls(filenames: [String], category: MediaTarget.Category) async throws -> [PresignedUrlModel] {
+        let categories: [MediaTarget.Category] = [MediaTarget.Category](repeating: category, count: filenames.count)
+        return try await APIClient.getPresignedUrls(filenames: filenames, categories: categories)
     }
     
     func profileEdit(profileEditRequestBodyModel: ProfileEditRequestBodyModel) async throws -> ProfileEditRequestBodyModel {
