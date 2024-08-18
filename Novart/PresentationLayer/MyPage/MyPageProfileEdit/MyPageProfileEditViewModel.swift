@@ -6,6 +6,7 @@ import Kingfisher
 final class MyPageProfileEditViewModel {
     weak var coordinator: MyPageCoordinator?
     private var interactor = MyPageDownloadInteractor()
+    private let imageUploadInteractor = ProductUploadInteractor()
     let user: PlainUser
     @Published var isLoading: Bool = false
     @Published var categoryTagItemSelectCount: Int = 0
@@ -160,40 +161,73 @@ final class MyPageProfileEditViewModel {
                 
                 if let profileFileName = userData.profileFileName {
                     // presigned url + image url 요청
-                    let response = try await interactor.requestPresignedUrl(filename: profileFileName, category: "profile")
-                    userData.profileImageUrl = response.imageUrl
+                    
+                    let nsString = profileFileName as NSString
+                    let fileNameWithoutExtension = nsString.deletingPathExtension
+                    let fileExtension = nsString.pathExtension
+
+                    let response = try await interactor.requestPresignedUrls(filenames: [profileFileName, "\(fileNameWithoutExtension)_compressed.\(fileExtension)"], category: .profile)
+                    let originalPresignedUrlModel = response[0]
+                    let compressedPresignedUrlModel = response[1]
+                    userData.originalProfileImageUrl = originalPresignedUrlModel.imageUrl
+                    userData.compressedProfileImageUrl = compressedPresignedUrlModel.imageUrl
                     
                     // S3 업로드
-                    guard let file = userData.profileImage?.jpegData(compressionQuality: 0.5) else { return }
-                    guard let presignedUrl = URL(string: response.presignedUrl) else { return }
-                    var request = URLRequest(url: presignedUrl)
-                    request.httpMethod = "PUT"
-                    request.setValue("image/jpeg", forHTTPHeaderField: "Content-type")
-                    request.httpBody = file
+                    guard let originalFile = userData.profileImage?.jpegData(compressionQuality: 1) else { return }
+                    guard let originalPresignedUrl = URL(string: originalPresignedUrlModel.presignedUrl) else { return }
+                    var originalFilerequest = URLRequest(url: originalPresignedUrl)
+                    originalFilerequest.httpMethod = "PUT"
+                    originalFilerequest.setValue("image/jpeg", forHTTPHeaderField: "Content-type")
+                    originalFilerequest.httpBody = originalFile
 
-                    AF.request(request).response { _ in }
+                    AF.request(originalFilerequest).response { _ in }
+                    
+                    guard let compressedFile = userData.profileImage?.jpegData(compressionQuality: 0.2) else { return }
+                    guard let presignedUrl = URL(string: compressedPresignedUrlModel.presignedUrl) else { return }
+                    var compressedFilerequest = URLRequest(url: presignedUrl)
+                    compressedFilerequest.httpMethod = "PUT"
+                    compressedFilerequest.setValue("image/jpeg", forHTTPHeaderField: "Content-type")
+                    compressedFilerequest.httpBody = compressedFile
+
+                    AF.request(compressedFilerequest).response { _ in }
                 }
                 
                 if let backgroundFileName = userData.backgroundFileName {
                     // presigned url + image url 요청
-                    let response = try await interactor.requestPresignedUrl(filename: backgroundFileName, category: "background")
-                    userData.backgroundImageUrl = response.imageUrl
+                    let nsString = backgroundFileName as NSString
+                    let fileNameWithoutExtension = nsString.deletingPathExtension
+                    let fileExtension = nsString.pathExtension
+
+                    let response = try await interactor.requestPresignedUrls(filenames: [backgroundFileName, "\(fileNameWithoutExtension)_compressed.\(fileExtension)"], category: .background)
+                    let originalPresignedUrlModel = response[0]
+                    let compressedPresignedUrlModel = response[1]
+                    userData.originalBackgroundImageUrl = originalPresignedUrlModel.imageUrl
+                    userData.compressedBackgroundImageUrl = compressedPresignedUrlModel.imageUrl
                     
                     // S3 업로드
-                    guard let file = userData.backgroundImage?.jpegData(compressionQuality: 0.5) else { return }
-                    guard let presignedUrl = URL(string: response.presignedUrl) else { return }
-                    var request = URLRequest(url: presignedUrl)
-                    request.httpMethod = "PUT"
-                    request.setValue("image/jpeg", forHTTPHeaderField: "Content-type")
-                    request.httpBody = file
+                    guard let originalFile = userData.backgroundImage?.jpegData(compressionQuality: 1) else { return }
+                    guard let originalPresignedUrl = URL(string: originalPresignedUrlModel.presignedUrl) else { return }
+                    var originalFilerequest = URLRequest(url: originalPresignedUrl)
+                    originalFilerequest.httpMethod = "PUT"
+                    originalFilerequest.setValue("image/jpeg", forHTTPHeaderField: "Content-type")
+                    originalFilerequest.httpBody = originalFile
 
-                    AF.request(request).response { _ in }
+                    AF.request(originalFilerequest).response { _ in }
+                    
+                    guard let compressedFile = userData.backgroundImage?.jpegData(compressionQuality: 0.5) else { return }
+                    guard let presignedUrl = URL(string: compressedPresignedUrlModel.presignedUrl) else { return }
+                    var compressedFilerequest = URLRequest(url: presignedUrl)
+                    compressedFilerequest.httpMethod = "PUT"
+                    compressedFilerequest.setValue("image/jpeg", forHTTPHeaderField: "Content-type")
+                    compressedFilerequest.httpBody = compressedFile
+
+                    AF.request(compressedFilerequest).response { _ in }
                 }
                 
                 let categoryTags: [String] = categoryTagItems.filter{$0.isSelected}.compactMap{$0.tag}
                 let recommendTags: [String] = tagFieldString.components(separatedBy: ",").map{$0.trimmingCharacters(in: .whitespaces)}.filter{!$0.isEmpty}
                 
-                let _ = try await interactor.profileEdit(profileEditRequestBodyModel: ProfileEditRequestBodyModel(nickname: userData.nickname, profileImageUrl: userData.profileImageUrl, backgroundImageUrl: userData.backgroundImageUrl, tags: recommendTags, jobs: categoryTags, email: userData.email, openChatUrl: userData.link))
+                let _ = try await interactor.profileEdit(profileEditRequestBodyModel: ProfileEditRequestBodyModel(nickname: userData.nickname, profileImageUrl: userData.compressedProfileImageUrl, backgroundImageUrl: userData.compressedBackgroundImageUrl, originProfileImageUrl: userData.originalProfileImageUrl, originBackgroundImageUrl: userData.originalBackgroundImageUrl, tags: recommendTags, jobs: categoryTags, email: userData.email, openChatUrl: userData.link))
             
                 // 유저 정보 갱신
                 Authentication.shared.user = try await interactor.getUser()

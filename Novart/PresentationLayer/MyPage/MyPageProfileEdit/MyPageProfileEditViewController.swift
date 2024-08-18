@@ -214,10 +214,12 @@ final class MyPageProfileEditViewController: BaseViewController {
         nickname: viewModel.user.nickname, 
         profileFileName: nil,
         profileImage: nil,
-        profileImageUrl: viewModel.user.profileImageUrl,
+        originalProfileImageUrl: viewModel.user.originProfileImageUrl,
+        compressedProfileImageUrl: viewModel.user.profileImageUrl,
         backgroundFileName: nil,
         backgroundImage: nil,
-        backgroundImageUrl: viewModel.user.backgroundImageUrl,
+        originalBackgroundImageUrl: viewModel.user.originBackgroundImageUrl,
+        compressedBackgroundImageUrl: viewModel.user.backgroundImageUrl,
         email: viewModel.user.email,
         link: viewModel.user.openChatUrl
     )
