@@ -12,8 +12,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     var userId: Int64?
     
     override func start() {
-        let viewModel = MyPageViewModel(coordinator: self, userId: nil) // MARK: - TEST
-        let viewController = MyPageViewController(viewModel: viewModel)
+        let viewModel = MyPageMainViewModel(coordinator: self, userId: nil, repository: MyPageRepository())
+        let viewController = MyPageMainViewController(viewModel: viewModel)
         
         let tabBarItem = UITabBarItem(
             title: nil,
@@ -28,9 +28,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     
     @MainActor
     func startAsPush(selectedCategory: MyPageCategory = .Work) {
-        let viewModel = MyPageViewModel(coordinator: self, userId: userId)
-        viewModel.setCategory(selectedCategory)
-        let viewController = MyPageViewController(viewModel: viewModel)
+        let viewModel = MyPageMainViewModel(coordinator: self, userId: userId, repository: MyPageRepository())
+        let viewController = MyPageMainViewController(viewModel: viewModel, selectedCategory: .Following)
         viewModel.isStartAsPush = true
         navigator.push(viewController, animated: true)
     }
@@ -53,7 +52,6 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
             close()
         case .login:
             presentLoginModal()
-            
         case let .product(id):
             presentProductDetailVC(productId: id)
         case let .artist(id):
@@ -72,6 +70,8 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
             showPolicy(policyType: policyType)
         case .deleteUser:
             deleteUser()
+        case .followList:
+            showFollowList()
         }
     }
     
@@ -117,7 +117,7 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     func close() {
         navigator.pop(animated: true)
         
-        if !(navigator.rootViewController.topViewController is MyPageViewController) && !(navigator.rootViewController.topViewController is MyPageNotificationViewController) {
+        if !(navigator.rootViewController.topViewController is MyPageMainViewController) && !(navigator.rootViewController.topViewController is MyPageNotificationViewController) {
             end()
         }
 
@@ -136,9 +136,9 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
     
     @MainActor
     private func showArtistProfile(userId: Int64) {
-        let viewModel = MyPageViewModel(coordinator: self, userId: userId)
+        let viewModel = MyPageMainViewModel(coordinator: self, userId: userId, repository: MyPageRepository())
         viewModel.isStartAsPush = true
-        let viewController = MyPageViewController(viewModel: viewModel)
+        let viewController = MyPageMainViewController(viewModel: viewModel)
         navigator.push(viewController, animated: true)
     }
     
@@ -214,5 +214,13 @@ final class MyPageCoordinator: BaseStackCoordinator<MyPageStep>, LoginModalPrese
             childCoordinator.end()
         }
         appCoordinator.navigate(to: .login)
+    }
+    
+    @MainActor
+    private func showFollowList() {
+        let myPageCoordinator = MyPageCoordinator(navigator: navigator)
+        myPageCoordinator.userId = nil
+        add(coordinators: myPageCoordinator)
+        myPageCoordinator.startAsPush(selectedCategory: .Following)
     }
 }

@@ -1,6 +1,6 @@
 import UIKit
 
-final class MyPageCategoryButton: UIButton {
+final class MyPageMainCategoryButton: UIButton {
 
     private enum Constants {
         static let unSelectedFont = UIFont.systemFont(ofSize: 14, weight: .regular)
