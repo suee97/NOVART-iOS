@@ -73,8 +73,9 @@ extension ProductPreviewViewModel {
     }
     
     func uploadImages() async throws -> ([String], [String]) {
+        let imageCompresser = ImageCompresser()
         let imageData = (productPreviewData.coverImages + productPreviewData.detailImages).compactMap {
-            $0.image.jpegData(compressionQuality: 0.9)
+            imageCompresser.compressImage($0.image, toSizeInMegaBytes: 2)
         }
         
         guard !imageData.isEmpty else {

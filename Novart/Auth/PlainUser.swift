@@ -11,7 +11,9 @@ struct PlainUser: Codable {
     let id: Int64
     let nickname: String
     let profileImageUrl: String?
+    let originProfileImageUrl: String?
     let backgroundImageUrl: String?
+    let originBackgroundImageUrl: String?
     let tags: [String]
     let jobs: [String]
     let email: String?
