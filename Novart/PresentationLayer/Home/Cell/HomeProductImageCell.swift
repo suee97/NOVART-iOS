@@ -10,6 +10,13 @@ import Kingfisher
 
 final class HomeProductImageCell: UICollectionViewCell {
     
+    enum Constants {
+        static let screenWidth: CGFloat = UIScreen.main.bounds.width
+        static let leadingMargin: CGFloat = 24
+        static let itemWidth: CGFloat = screenWidth - leadingMargin * 2
+        static let itemHeight: CGFloat = itemWidth * 4 / 3
+    }
+    
     // MARK: - UI
     
     private lazy var imageView: UIImageView = {
@@ -41,6 +48,6 @@ final class HomeProductImageCell: UICollectionViewCell {
     
     func update(with item: String) {
         let url = URL(string: item)
-        imageView.kf.setImage(with: url)
+        imageView.kf.setImageWithDownsampling(with: url, size: CGSize(width: Constants.itemWidth, height: Constants.itemHeight))
     }
 }
