@@ -36,7 +36,7 @@
   </p>
 </div>
 
-# Functions
+# Features
 - 작품
   	- 리스트
   	- 검색
