@@ -15,19 +15,24 @@
 - Design : 1
 - PM : 1
 
+# Distribution
+<p>
+  <a href="https://apps.apple.com/kr/app/plain/id6483368012"><img src="https://img.shields.io/badge/App Store-0D96F6?style=flat-square&logo=AppStore&logoColor=white", width=152, height=40/></a> 
+</p>
+
 # Overview
 <div>
   <p align = "center">
-	<img width = "188" src = "https://github.com/user-attachments/assets/baf51e21-620d-440a-93a7-1d9dec7d34be">
-	  <img width = "188" src = "https://github.com/user-attachments/assets/280cb188-0fec-45cf-943f-aafe1aa1b5aa">
-    	<img width = "188" src = "https://github.com/user-attachments/assets/40f0abb1-190e-4d1c-9376-ddad2c8d22db">
+	<img width = "188" height = "390" src = "https://github.com/user-attachments/assets/baf51e21-620d-440a-93a7-1d9dec7d34be">
+	  <img width = "188" height = "390" src = "https://github.com/user-attachments/assets/280cb188-0fec-45cf-943f-aafe1aa1b5aa">
+    	<img width = "188" height = "390" src = "https://github.com/user-attachments/assets/40f0abb1-190e-4d1c-9376-ddad2c8d22db">
   </p>
 </div>
 <div>
   <p align = "center">
-	<img width = "188" src = "https://github.com/user-attachments/assets/47876889-25f2-4e82-a9dd-a196d67c8b5d">
-	  <img width = "188" src = "https://github.com/user-attachments/assets/a948b3cd-e760-4e7b-8c8f-b00eb8faa8a1">
-    	<img width = "188" src = "https://github.com/user-attachments/assets/e1da763b-a64b-440c-a936-2fc5d01d7094">
+	<img width = "188" height = "390" src = "https://github.com/user-attachments/assets/47876889-25f2-4e82-a9dd-a196d67c8b5d">
+	  <img width = "188" height = "390" src = "https://github.com/user-attachments/assets/a948b3cd-e760-4e7b-8c8f-b00eb8faa8a1">
+    	<img width = "188" height = "390" src = "https://github.com/user-attachments/assets/e1da763b-a64b-440c-a936-2fc5d01d7094">
   </p>
 </div>
 
