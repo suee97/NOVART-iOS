@@ -12,7 +12,7 @@
 xcuserdata
 Novart/Shared/
 *.plist
-APIConstants.swift
+*/APIConstants.swift
 
 # Build products
 build/
