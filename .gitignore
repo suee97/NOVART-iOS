@@ -11,6 +11,8 @@
 *.xcworkspace
 xcuserdata
 Novart/Shared/
+*.plist
+APIConstants.swift
 
 # Build products
 build/
